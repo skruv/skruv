@@ -1,0 +1,28 @@
+name: Test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up caching for npm
+      id: cache-node_modules
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.npm
+          **/node_modules
+        key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node_modules-
+    - name: Install Node packages
+      if: steps.cache-node_modules.outputs.cache-hit != 'true'
+      env:
+        NODE_ENV: development
+      run: |
+        npm ci --silent
+    - run: npm run test
+    - run: npm run typecheck
+    - run: npm run standard

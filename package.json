@@ -1,0 +1,17 @@
+{
+  "name": "skruv",
+  "version": "0.0.1",
+  "description": "Somewhat simple framwork for js applications",
+  "scripts": {
+    "test": "jest --coverage --no-cache --passWithNoTests",
+    "typecheck": "tsc",
+    "standard": "standard"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^26.4.2",
+    "standard": "^14.3.4",
+    "typescript": "^4.0.2"
+  }
+}
