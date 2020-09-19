@@ -5,18 +5,7 @@
  * @return  {*}
  */
 export const createState = (stateObj, callback) => {
-  // If we are proxying a plain object/array we should use an empty object and then append subobjects to ensure they are proxied too
-  /** @type {Boolean | Array<*> | Object} */
-  let plain = false
-  if (stateObj.constructor.name === 'Object') {
-    plain = {}
-  }
-  if (stateObj.constructor.name === 'Array') {
-    plain = []
-  }
-
-  // @ts-ignore
-  const proxy = new Proxy(plain !== false ? plain : stateObj, {
+  var handler = {
     /**
      *
      * @param {Object} target
@@ -24,42 +13,42 @@ export const createState = (stateObj, callback) => {
      * @param {*} receiver
      * @returns {* | function(Array<*>): Object | Array | string | number}
      */
-    get (target, prop, receiver) {
-      // Get the requested value
+    get: (target, prop, receiver) => {
+      if (prop === 'toJSON') {
+        return target
+      }
       const value = Reflect.get(target, prop, receiver)
-      // If the value is not function we can return directly
-      if (typeof value !== 'function') {
+      if (
+        ['undefined', 'boolean', 'number', 'string', 'bigint', 'symbol', 'function'].indexOf(typeof value) === -1 &&
+        value !== null
+      ) {
+        // Handle non-null objects
+        return new Proxy(value, handler)
+      } else if (typeof value !== 'function') {
+        // Handle scalar values and null
         return value
       }
-      // Save the old value to compare agains after function call
+      // Keep the old toString value for diffing
       const oldValue = target.toString()
-      // We need to wrap the fn call to ensure that we detect updated objects
+      // Handle function calls on objects and try to find diffs via toString
       return /** @type {function(Array<*>): Object | Array<*> | string | number} */ (...args) => {
         const retVal = value.bind(target)(...args)
-        // Schedule a new render if the call has change the target object
+        // Schedule a new render if the call has change the target object and is detectable via toString
         if (target.toString() !== oldValue) callback()
         return retVal
       }
     },
-
     /**
      * @param {Object.<string, *>} target
      * @param {string} prop
-     * @param {*} newVal
+     * @param {*} value
      */
-    set: (target, prop, newVal) => {
-      // Objects need to be converted to reactive proxies, reuse the same callback
-      target[prop] = typeof newVal !== 'object' || newVal === null ? newVal : createState(newVal, callback)
+    set: (target, prop, value) => {
+      target[prop] = value
       // Schedule a new render
       callback()
       return true
     }
-  })
-
-  // Reappend if it is a plain object/array
-  if (plain !== false) {
-    Object.keys(stateObj).forEach(key => { proxy[key] = stateObj[key] })
   }
-
-  return proxy
+  return new Proxy(stateObj, handler)
 }

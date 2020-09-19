@@ -1,6 +1,6 @@
 {
   "name": "skruv",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Somewhat simple framwork for js applications",
   "scripts": {
     "test": "jest --no-cache --passWithNoTests",
