@@ -4,11 +4,11 @@
  * @typedef Vnode
  * @prop {String} nodeName
  * @prop {String} [data]
- * @prop {Object<[string], [string]>} attributes
+ * @prop {Object<[String], [String | Boolean]>} attributes
  * @prop {Array<Vnode>} childNodes
  */
 
-/** @type WeakMap<HTMLElement | SVGElement, Object.<string, EventListener>> */
+/** @type WeakMap<HTMLElement | SVGElement, Object.<String, EventListener>> */
 const listenerMap = new WeakMap()
 /** @type WeakMap<HTMLElement | SVGElement | Text, Vnode> */
 const renderNodeMap = new WeakMap()
@@ -34,6 +34,10 @@ const updateAttributes = (oldVnode, vNode, node) => {
   for (const key in vNode.attributes) {
     // Node keys do not get added to the DOM
     if (key === 'key' || key === 'opaque') continue
+    if (vNode.attributes[key] === false) {
+      node.removeAttribute(key)
+      continue
+    }
     if (key.slice(0, 2) === 'on' && typeof vNode.attributes[key] === 'function') {
       let listeners = listenerMap.get(node)
       if (listeners && listeners[key.slice(2)]) {

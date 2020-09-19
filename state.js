@@ -1,5 +1,5 @@
 /**
- * @param   {Object<string, *>}  stateObj
+ * @param   {Object<String, *>}  stateObj
  * @param   {Function}  callback
  *
  * @return  {*}
@@ -9,9 +9,9 @@ export const createState = (stateObj, callback) => {
     /**
      *
      * @param {Object} target
-     * @param {string | number} prop
+     * @param {String | Number} prop
      * @param {*} receiver
-     * @returns {* | function(Array<*>): Object | Array | string | number}
+     * @returns {* | function(Array<*>): Object | Array | String | Number}
      */
     get: (target, prop, receiver) => {
       if (prop === 'toJSON') {
@@ -31,7 +31,7 @@ export const createState = (stateObj, callback) => {
       // Keep the old toString value for diffing
       const oldValue = target.toString()
       // Handle function calls on objects and try to find diffs via toString
-      return /** @type {function(Array<*>): Object | Array<*> | string | number} */ (...args) => {
+      return /** @type {function(Array<*>): Object | Array<*> | String | Number} */ (...args) => {
         const retVal = value.bind(target)(...args)
         // Schedule a new render if the call has change the target object and is detectable via toString
         if (target.toString() !== oldValue) callback()
@@ -39,8 +39,8 @@ export const createState = (stateObj, callback) => {
       }
     },
     /**
-     * @param {Object.<string, *>} target
-     * @param {string} prop
+     * @param {Object.<String, *>} target
+     * @param {String} prop
      * @param {*} value
      */
     set: (target, prop, value) => {

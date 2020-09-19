@@ -2,7 +2,7 @@
  * @typedef Vnode
  * @prop {String} nodeName
  * @prop {String} [data]
- * @prop {Object<[string], [string]>} attributes
+ * @prop {Object<[String], [String]>} attributes
  * @prop {Array<Vnode | (() => Vnode)>} childNodes
  */
 /** @type {Vnode} */
@@ -27,7 +27,7 @@ export const textNode = (data) => ({
  */
 export const h = nodeName =>
   /**
-   * @param {Object<string, *>} attributes
+   * @param {Object<String, *>} attributes
    * @param {Array<Boolean | String | Number | Vnode | Array<Boolean | String | Number | Vnode> | function(): Vnode | Array<function(): Vnode>>} childNodes
    * @returns {Vnode}
    */
