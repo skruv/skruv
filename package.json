@@ -2,6 +2,17 @@
   "name": "skruv",
   "version": "0.0.3",
   "description": "Somewhat simple framework for js applications",
+  "bugs": {
+    "url": "https://github.com/skruv/skruv/issues",
+    "email": "skruv@richter.id"
+  },
+  "files": [
+    "cache.js",
+    "html.js",
+    "state.js",
+    "vDOM.js",
+    "utils/importer.js"
+  ],
   "scripts": {
     "test": "jest --no-cache --passWithNoTests",
     "typecheck": "tsc",
