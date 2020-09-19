@@ -11,6 +11,8 @@ Somewhat simple framwork for js applications
 
 ## Example app
 
+[see it live](http://skruv.io/examples/todo)
+
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
 import { body, input, button, ul, li } from './node_modules/skruv/html.js'
@@ -78,6 +80,8 @@ Where index.js contains the example code shown.
 
 To do a onetime render of a single h1 on a root (in this case the body element) you can do:
 
+[see it live](http://skruv.io/examples/render)
+
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
 import { h1, body } from './node_modules/skruv/html.js'
@@ -90,6 +94,8 @@ renderNode(body({}, [
 ### State management
 
 To handle state updates we use the state helper which will call the supplied callback when state changes:
+
+[see it live](http://skruv.io/examples/state)
 
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
@@ -113,6 +119,8 @@ state = createState(state, render)
 
 This also works with deep constructs:
 
+[see it live](http://skruv.io/examples/state-deep)
+
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
 import { body, h1, input } from './node_modules/skruv/html.js'
@@ -134,6 +142,8 @@ state = createState(state, render)
 ```
 
 And most objects that implement `toString()` (which is how the state can tell if a method changed the object):
+
+[see it live](http://skruv.io/examples/state-url)
 
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
@@ -163,6 +173,8 @@ state = createState(state, render)
 * TODO: Add example of errorhandling 
 
 There is a small utility called the importer that helps with async imports and caches the imported modules:
+
+[see it live](http://skruv.io/examples/dynamic-import)
 
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
