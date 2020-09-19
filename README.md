@@ -11,7 +11,7 @@ Somewhat simple framework for js applications
 
 ## Example app
 
-[see it live](http://skruv.io/examples/todo)
+[see it live](https://skruv.io/examples/todo)
 
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
@@ -44,6 +44,8 @@ export const state = createState({
   todos: [],
   value: ""
 }, view)
+
+view()
 ```
 
 ## Browser support
@@ -80,7 +82,7 @@ Where index.js contains the example code shown.
 
 To do a onetime render of a single h1 on a root (in this case the body element) you can do:
 
-[see it live](http://skruv.io/examples/render)
+[see it live](https://skruv.io/examples/render)
 
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
@@ -95,7 +97,7 @@ renderNode(body({}, [
 
 To handle state updates we use the state helper which will call the supplied callback when state changes:
 
-[see it live](http://skruv.io/examples/state)
+[see it live](https://skruv.io/examples/state)
 
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
@@ -115,11 +117,13 @@ const render = () => {
 }
 
 state = createState(state, render)
+
+render()
 ```
 
 This also works with deep constructs:
 
-[see it live](http://skruv.io/examples/state-deep)
+[see it live](https://skruv.io/examples/state-deep)
 
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
@@ -139,11 +143,13 @@ const render = () => {
 }
 
 state = createState(state, render)
+
+render()
 ```
 
 And most objects that implement `toString()` (which is how the state can tell if a method changed the object):
 
-[see it live](http://skruv.io/examples/state-url)
+[see it live](https://skruv.io/examples/state-url)
 
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
@@ -166,6 +172,8 @@ const render = () => {
 }
 
 state = createState(state, render)
+
+render()
 ```
 
 ### Dynamically importing components
@@ -174,7 +182,7 @@ state = createState(state, render)
 
 There is a small utility called the importer that helps with async imports and caches the imported modules:
 
-[see it live](http://skruv.io/examples/dynamic-import)
+[see it live](https://skruv.io/examples/dynamic-import)
 
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
@@ -199,6 +207,8 @@ const render = () => {
 }
 
 state = createState(state, render)
+
+render()
 ```
 
 And components/one.js looks like this:
