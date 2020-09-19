@@ -51,6 +51,7 @@ const updateAttributes = (oldVnode, vNode, node) => {
     } else {
       if (!oldVnode.attributes[key] || oldVnode.attributes[key] !== vNode.attributes[key]) {
         if (key === 'value' || key === 'selected' || key === 'checked') {
+          // @ts-ignore
           node[key] = vNode.attributes[key]
         }
         if (vNode.attributes[key] === false) {
