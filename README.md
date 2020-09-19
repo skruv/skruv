@@ -1,6 +1,6 @@
 # skruv
 
-Somewhat simple framwork for js applications
+Somewhat simple framework for js applications
 
 * Small: 2kb vDOM, 1kb State management, 1.7kb HTML/SVG helpers (non-minified, gziped)
 * Useable (and meant to be used) without bundling/compilation/transpilation
