@@ -1,13 +1,13 @@
 {
   "name": "skruv",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Somewhat simple framwork for js applications",
   "scripts": {
-    "test": "jest --coverage --no-cache --passWithNoTests",
+    "test": "jest --no-cache --passWithNoTests",
     "typecheck": "tsc",
     "standard": "standard"
   },
-  "author": "",
+  "author": "Svante Richter",
   "license": "MIT",
   "devDependencies": {
     "jest": "^26.4.2",
