@@ -34,10 +34,6 @@ const updateAttributes = (oldVnode, vNode, node) => {
   for (const key in vNode.attributes) {
     // Node keys do not get added to the DOM
     if (key === 'key' || key === 'opaque') continue
-    if (vNode.attributes[key] === false) {
-      node.removeAttribute(key)
-      continue
-    }
     if (key.slice(0, 2) === 'on' && typeof vNode.attributes[key] === 'function') {
       let listeners = listenerMap.get(node)
       if (listeners && listeners[key.slice(2)]) {
@@ -54,6 +50,13 @@ const updateAttributes = (oldVnode, vNode, node) => {
       node.addEventListener(key.slice(2), listeners[key.slice(2)])
     } else {
       if (!oldVnode.attributes[key] || oldVnode.attributes[key] !== vNode.attributes[key]) {
+        if (key === 'value' || key === 'selected' || key === 'checked') {
+          node[key] = vNode.attributes[key]
+        }
+        if (vNode.attributes[key] === false) {
+          node.removeAttribute(key)
+          continue
+        }
         node.setAttribute(key, vNode.attributes[key])
       }
     }
