@@ -33,7 +33,7 @@ const emptyNode = {
 const updateAttributes = (oldVnode, vNode, node) => {
   for (const key in vNode.attributes) {
     // Node keys do not get added to the DOM
-    if (key === 'key' || key === 'opaque') continue
+    if (key === 'key' || key === 'opaque' || key === 'oncreate' || key === 'onremove') continue
     if (key.slice(0, 2) === 'on' && typeof vNode.attributes[key] === 'function') {
       let listeners = listenerMap.get(node)
       if (listeners && listeners[key.slice(2)]) {
@@ -51,6 +51,7 @@ const updateAttributes = (oldVnode, vNode, node) => {
     } else {
       if (!oldVnode.attributes[key] || oldVnode.attributes[key] !== vNode.attributes[key]) {
         if (key === 'value' || key === 'selected' || key === 'checked') {
+          // These need to be set directly to have the desired effect
           // @ts-ignore
           node[key] = vNode.attributes[key]
         }
@@ -95,7 +96,7 @@ const modifyNode = (parent, vNode, node) => {
     return node
   }
 
-  if (oldVnode.nodeName !== vNode.nodeName || keyChanged) {
+  if (oldVnode.nodeName !== vNode.nodeName || keyChanged || vNode.attributes.oncreate || oldVnode.attributes.onremove) {
     // General node overwriting other non text node or keyed change
     // We need to create a new node since changing node types is not stable/supported
     const oldNode = node
@@ -104,7 +105,9 @@ const modifyNode = (parent, vNode, node) => {
     updateAttributes(oldVnode, vNode, node)
     // Reuse the old children in case this is just changing the current node
     for (const child of oldNode.childNodes) { node.appendChild(child) }
+    oldVnode.attributes.onremove && oldVnode.attributes.onremove(oldNode)
     parent.replaceChild(node, oldNode)
+    vNode.attributes.oncreate && vNode.attributes.oncreate(node)
     vDomMap.set(node, vNode)
   } else if (node instanceof HTMLElement) {
     // Same as oldnode, but changed
@@ -117,7 +120,25 @@ const modifyNode = (parent, vNode, node) => {
     vDomMap.set(node, vNode)
   }
   // Remove childNodes after the length of vNode childNodes
-  Array.from(node.childNodes).slice(vNode.childNodes.length).forEach(child => node.removeChild(child))
+  Array.from(node.childNodes).slice(vNode.childNodes.length).forEach(child => {
+    // We need to recursively check for onremoves on grandchildren too (expensive but nessecary)
+    // @ts-ignore
+    const oldVnode = vDomMap.get(child)
+    if (oldVnode) {
+      oldVnode.attributes.onremove && oldVnode.attributes.onremove(child)
+      /** @param {ChildNode} node */
+      const callOnremoves = (node) => Array.from(node.childNodes).forEach(childNode => {
+        // @ts-ignore
+        const oldVnode = vDomMap.get(childNode)
+        if (oldVnode) {
+          oldVnode.attributes.onremove && oldVnode.attributes.onremove(childNode)
+        }
+        callOnremoves(childNode)
+      })
+      callOnremoves(child)
+    }
+    node.removeChild(child)
+  })
 
   return node
 }
@@ -140,8 +161,8 @@ const createNode = (parent, vNode, isSvg) => {
   }
 
   // New text node
-  if (vNode.nodeName === '#text' && vNode.data) {
-    const node = document.createTextNode(vNode.data)
+  if (vNode.nodeName === '#text') {
+    const node = document.createTextNode(vNode.data || '')
     parent.appendChild(node)
     vDomMap.set(node, vNode)
     return node
@@ -154,6 +175,7 @@ const createNode = (parent, vNode, isSvg) => {
   // Change/Add attributes
   updateAttributes(emptyNode, vNode, node)
   parent.appendChild(node)
+  vNode.attributes.oncreate && vNode.attributes.oncreate(node)
   vDomMap.set(node, vNode)
   if (vNode.attributes.key) {
     keyMap.set(vNode.attributes.key, node)
