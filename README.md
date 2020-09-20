@@ -48,6 +48,8 @@ export const state = createState({
 view()
 ```
 
+Or for a full impementation of todomvc see [here](https://skruv.io/examples/todomvc)
+
 ## Browser support
 
 Requires Modules, Proxies, Map/WeakMap, so Edge 16+, Safari 11+, and modern versions of all other browsers should work. If you still need to support IE or older Edge versions I'd reccommend that you build a separate minimal-functionality app using hyperapp (a great framework) or similar. That's how I have handled legacy support at a large global ecommerce company.
@@ -56,17 +58,31 @@ In some examples I use dynamic imports and optional chaining which requires Chro
 
 ## Why?
 
-I used hyperapp v1 a lot, both professionally and in hobby projects. I loved it's simplicity, and it introduced me to the idea that a complex app does not require a complex framework. I have also used hyperapp v2, but did not find it to fit as well into my use-cases as v1.
+I used hyperapp v1 a lot, both professionally and in hobby projects. I loved it's simplicity, and it introduced me to the idea that a complex app does not nessecarily require a complex framework. I wanted to decouple state managment and actions from it though and also make it easier to manually schedule a render for things like dynamic imports.
 
-## Arch
+## Architecture
 
 * state.js is a recursive proxy that can handle mutable objects that implement toString. It takes in an initial state object and a callback and returns a state that will recursivley listen for changes and call the callback on change
-* vDOM.js is a function that takes in a vDOM and target root and renders to a DOM node
+* vDOM.js is a function that takes in a vDOM and target root and renders to a DOM node. Since it renders directly to the root (not inside it) it returns a HTMLElement or SVGElement that is a reference to the new root.
 * html.js are helper functions to create a vDOM tree. Also exposes a function called `h` and `text` to create arbitrary vDOM nodes
 * cache.js is a recursive object cache that can be used to cache expensive function calls. It supports async resolving that notifies a callback to help with dynamic importing.
 * State updaters can be implemented as simple functions that modify state. They require nothing special.
 
 ## API
+
+Besides the normal attributes and events two lifecycle events are available:
+
+* `oncreate` is called with the element right after it is added to the DOM
+* `onremove` is called with the element right before it is removed from the DOM
+
+And two special attributes:
+
+* `key` means that the element will be bound to that key and will be reused even if reordering/moving it. The key is an object and will be keyed in a WeakMap to allow for garbage collection when nessecary.
+* `opaque` means that nothing will be done with childNodes on that element (removing/updating/adding will not happen)
+
+With these it should be pretty simple to add external libraries like editors since key & opaque can make skruv leave those libraries DOM alone even when moving the editor and oncreate/onremove means that you have a place to create/destroy instances of them.
+
+## Examples
 
 All these examples should be runnable with this HTML:
 
@@ -224,6 +240,7 @@ We use double wrapped function because one sets up the module (useful for creati
 
 ## TODO:
 
+* TODO: Add example of using skruv in skruv with opaque, key and oncreate. Useful for localstate and partial rerendering.
 * TODO: Add example with separation between view/state/actions
 * TODO: Add example of stateful component
 * TODO: Add example of contained component (with style, state, actions and view)

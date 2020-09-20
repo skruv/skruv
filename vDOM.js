@@ -79,6 +79,7 @@ const modifyNode = (parent, vNode, node) => {
   if (key && keyChanged) {
     const keyedNode = keyMap.get(key)
     if (keyedNode) {
+      oldVnode.attributes.onremove && oldVnode.attributes.onremove(node)
       parent.replaceChild(keyedNode, node)
       return keyedNode
     }
@@ -89,6 +90,7 @@ const modifyNode = (parent, vNode, node) => {
     if (oldVnode.nodeName !== vNode.nodeName || vNode.data !== oldVnode.data) {
       const oldNode = node
       node = document.createTextNode(vNode.data || '')
+      oldVnode.attributes.onremove && oldVnode.attributes.onremove(oldNode)
       parent.replaceChild(node, oldNode)
       vDomMap.set(node, vNode)
     }
@@ -119,26 +121,28 @@ const modifyNode = (parent, vNode, node) => {
     if (changed) { updateAttributes(oldVnode, vNode, node) }
     vDomMap.set(node, vNode)
   }
-  // Remove childNodes after the length of vNode childNodes
-  Array.from(node.childNodes).slice(vNode.childNodes.length).forEach(child => {
-    // We need to recursively check for onremoves on grandchildren too (expensive but nessecary)
-    // @ts-ignore
-    const oldVnode = vDomMap.get(child)
-    if (oldVnode) {
-      oldVnode.attributes.onremove && oldVnode.attributes.onremove(child)
-      /** @param {ChildNode} node */
-      const callOnremoves = (node) => Array.from(node.childNodes).forEach(childNode => {
-        // @ts-ignore
-        const oldVnode = vDomMap.get(childNode)
-        if (oldVnode) {
-          oldVnode.attributes.onremove && oldVnode.attributes.onremove(childNode)
-        }
-        callOnremoves(childNode)
-      })
-      callOnremoves(child)
-    }
-    node.removeChild(child)
-  })
+  if (!vNode.attributes.opaque) {
+    // Remove childNodes after the length of vNode childNodes
+    Array.from(node.childNodes).slice(vNode.childNodes.length).forEach(child => {
+      // We need to recursively check for onremoves on grandchildren too (expensive but nessecary)
+      // @ts-ignore
+      const oldVnode = vDomMap.get(child)
+      if (oldVnode) {
+        oldVnode.attributes.onremove && oldVnode.attributes.onremove(child)
+        /** @param {ChildNode} node */
+        const callOnremoves = (node) => Array.from(node.childNodes).forEach(childNode => {
+          // @ts-ignore
+          const oldVnode = vDomMap.get(childNode)
+          if (oldVnode) {
+            oldVnode.attributes.onremove && oldVnode.attributes.onremove(childNode)
+          }
+          callOnremoves(childNode)
+        })
+        callOnremoves(child)
+      }
+      node.removeChild(child)
+    })
+  }
 
   return node
 }
@@ -187,7 +191,7 @@ const createNode = (parent, vNode, isSvg) => {
  * Render a vDOM recursively
  * @param {Vnode | function(): Vnode} vNode
  * @param {HTMLElement | SVGElement | Text} node
- * @param {(Node & ParentNode) | null} parent
+ * @param {(Node & ParentNode) | null | HTMLElement | SVGElement | Text} parent
  * @param {Boolean} isSvg
  * @param {Number} startRender
  * @returns {HTMLElement | SVGElement | Text} The updated root
@@ -210,14 +214,21 @@ export const renderNode = (vNode, node, parent = node.parentNode, isSvg = false,
     node = createNode(parent, vNode, isSvg)
   }
   // If we have taken too much time to render we should wait until the next tick to continue
-  if (performance.now() - startRender > 10) {
+  if (performance.now() - startRender > 10 && !vNode.attributes.opaque) {
     if (!renderNodeMap.has(node)) {
       // Ideally this would be requestIdleCallback, but that is not available in safari
       setTimeout(() => {
-        const vNode = renderNodeMap.get(node)
-        if (!vNode) return
-        // Calling renderNode without startRender will start a new timer
-        renderNode(vNode, node, parent, isSvg)
+        if (node instanceof HTMLElement || node instanceof SVGElement) {
+          const vNode = renderNodeMap.get(node)
+          if (!vNode) return
+          vNode.childNodes.forEach((vNode, index) => {
+            const child = node.childNodes[index]
+            if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
+              // Calling renderNode without startRender will start a new timer
+              !!vNode && renderNode(vNode, child, node, isSvg)
+            }
+          })
+        }
         renderNodeMap.delete(node)
       }, 0)
     }
@@ -226,7 +237,7 @@ export const renderNode = (vNode, node, parent = node.parentNode, isSvg = false,
     return node
   }
   // Iterate over and render each child recursively
-  if (node instanceof HTMLElement || node instanceof SVGElement) {
+  if ((node instanceof HTMLElement || node instanceof SVGElement) && !vNode.attributes.opaque) {
     const parent = node
     vNode.childNodes.forEach((vNode, index) => {
       const child = node.childNodes[index]
