@@ -191,12 +191,20 @@ const createNode = (parent, vNode, isSvg) => {
  * Render a vDOM recursively
  * @param {Vnode | function(): Vnode} vNode
  * @param {HTMLElement | SVGElement | Text} node
+ * @param {Number} timeout
  * @param {(Node & ParentNode) | null | HTMLElement | SVGElement | Text} parent
  * @param {Boolean} isSvg
  * @param {Number} startRender
  * @returns {HTMLElement | SVGElement | Text} The updated root
  */
-export const renderNode = (vNode, node, parent = node.parentNode, isSvg = false, startRender = performance.now()) => {
+export const renderNode = (
+  vNode,
+  node,
+  timeout = Infinity,
+  parent = node.parentNode,
+  isSvg = false,
+  startRender = performance.now()
+) => {
   if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement)) {
     throw new Error('No parent to render to!')
   }
@@ -214,7 +222,7 @@ export const renderNode = (vNode, node, parent = node.parentNode, isSvg = false,
     node = createNode(parent, vNode, isSvg)
   }
   // If we have taken too much time to render we should wait until the next tick to continue
-  if (performance.now() - startRender > 10 && !vNode.attributes.opaque) {
+  if (!vNode.attributes.opaque && vNode.childNodes.length && performance.now() - startRender > timeout) {
     if (!renderNodeMap.has(node)) {
       // Ideally this would be requestIdleCallback, but that is not available in safari
       setTimeout(() => {
@@ -225,7 +233,7 @@ export const renderNode = (vNode, node, parent = node.parentNode, isSvg = false,
             const child = node.childNodes[index]
             if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
               // Calling renderNode without startRender will start a new timer
-              !!vNode && renderNode(vNode, child, node, isSvg)
+              !!vNode && renderNode(vNode, child, timeout, node, isSvg)
             }
           })
         }
@@ -242,7 +250,7 @@ export const renderNode = (vNode, node, parent = node.parentNode, isSvg = false,
     vNode.childNodes.forEach((vNode, index) => {
       const child = node.childNodes[index]
       if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
-        !!vNode && renderNode(vNode, child, parent, isSvg, startRender)
+        !!vNode && renderNode(vNode, child, timeout, parent, isSvg, startRender)
       }
     })
   }
