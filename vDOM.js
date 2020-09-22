@@ -208,12 +208,22 @@ export const renderNode = (
   if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement)) {
     throw new Error('No parent to render to!')
   }
+
   if (typeof vNode === 'function') {
     vNode = vNode()
   }
+
+  // Get the old vDOM and if they are equal we can assume the DOM is not dirty
+  const oldVnode = vDomMap.get(node)
+  if (vNode === oldVnode) {
+    return node
+  }
+
+  // If we are doing SVG we assume all child nodes are SVG namespaced too
   if (vNode.nodeName === 'svg') {
     isSvg = true
   }
+
   if (node) {
     // If old node exists, try to patch or replace it
     node = modifyNode(parent, vNode, node)
@@ -221,6 +231,7 @@ export const renderNode = (
     // Create a new node
     node = createNode(parent, vNode, isSvg)
   }
+
   // If we have taken too much time to render we should wait until the next tick to continue
   if (!vNode.attributes.opaque && vNode.childNodes.length && performance.now() - startRender > timeout) {
     if (!renderNodeMap.has(node)) {
@@ -244,6 +255,7 @@ export const renderNode = (
     renderNodeMap.set(node, vNode)
     return node
   }
+
   // Iterate over and render each child recursively
   if ((node instanceof HTMLElement || node instanceof SVGElement) && !vNode.attributes.opaque) {
     const parent = node

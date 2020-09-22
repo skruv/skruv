@@ -81,7 +81,7 @@ And two special attributes:
 
 With these it should be pretty simple to add external libraries like editors since key & opaque can make skruv leave those libraries DOM alone even when moving the editor and oncreate/onremove means that you have a place to create/destroy instances of them.
 
-The vDOM module takes three params: a vNode to use as a root (use html.js to generate this), the document root (usually document.body) and optionally a timeout. If a timeout is supplied the renderer will try to chunk work into as many miliseconds as supplied to allow for other event handling and browser paint while rendering.
+The vDOM module takes three params: a vNode to use as a root (use html.js to generate this), the document root (usually document.body) and optionally a timeout. If a timeout is supplied the renderer will try to chunk work into as many miliseconds as supplied to allow for other event handling and browser paint while rendering. This does not work on long lists yet, only DOM's on different depths.
 
 ## Examples
 
@@ -255,5 +255,7 @@ I used hyperapp v1 a lot, both professionally and in hobby projects. I loved it'
 * TODO: Add routing example based on URL and URLSearchParams
 * TODO: Add helpers for i18n, devtools, routing, error handling
 * TODO: Fix ts-ignores
+* TODO: Handle foreign objects in SVG
+* TODO: Add testing
 * IDEA: use web components to scope styles
 * IDEA: Create a separate 'vDom' for CSS
