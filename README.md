@@ -8,15 +8,17 @@ Features:
 * Useable (and meant to be used) without bundling/compilation/transpilation
 * Optionally does not block the main thread on large DOMs (has a backoff system to allow input events etc. to be run while rendering)
 * Somewhat Readable code: 300 LOC vDOM with comments
-* Fast enough for most usecases, benchmarks here: https://github.com/krausest/js-framework-benchmark/pull/791
+* Fast enough for most usecases, PR for benchmarks here: https://github.com/krausest/js-framework-benchmark/pull/791
 
-Values/rules/guidelines:
+Values/rules/guidelines/ideals/goals/stuff:
 
-* No build steps, no parsing templates. The way you write code should be the way it runs, without transpilation. It should be small enough that minification is an optimization step, not mandatory.
+* No build steps, no parsing templates and no build or runtime dependencies. The way you write code should be the way it runs, without transpilation.
+* It should be small enough that minification is an optional optimization step, not mandatory or always recommended.
 * Readability and useability are more important than performance, although too bad performance means it is not useable.
 * Size matters, but only if it makes the code more understandable. We're not playing golf here.
-* If possible parts (like state, cache, vDOM) should be separated
-* If possible embed typescript typings into jsdoc
+* Try to be easily forkable: Be small enough to maintain, simple enough to evolve and stable enough to not have to change unless you want to.
+* Parts (like state, cache, vDOM) should be separated and alternative implementations of them should be possible.
+* Add type info (via typescript jsdoc) but do not depend on the typescript compiler to build.
 
 ## Example app
 
@@ -85,7 +87,7 @@ The vDOM module takes three params: a vNode to use as a root (use html.js to gen
 
 ## Examples
 
-All these examples should be runnable with this HTML:
+All these examples should be runnable with this HTML and after running `npm i skruv` in the same directory. Changing `./node_modules/skruv/` to `https://unpkg.com/skruv@latest/` works too if you prefer to not install:
 
 ```html
 <!DOCTYPE html>
