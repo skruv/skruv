@@ -4,11 +4,11 @@ Somewhat simple framework for js applications
 
 Features:
 
-* Pretty small: 2kb vDOM, 1kb State management, 1.7kb HTML/SVG helpers (non-minified, gziped)
+* Pretty small: 2kb vDOM, 1kb State management, 2kb HTML/SVG helpers. All sizes non-minified but gziped.
 * Useable (and meant to be used) without bundling/compilation/transpilation
 * Optionally does not block the main thread on large DOMs (has a backoff system to allow input events etc. to be run while rendering)
-* Somewhat Readable code: 200 LOC vDOM with comments
-* Fast enough for most usecases
+* Somewhat Readable code: 300 LOC vDOM with comments
+* Fast enough for most usecases, benchmarks here: https://github.com/krausest/js-framework-benchmark/pull/791
 
 Values/rules/guidelines:
 
@@ -257,5 +257,6 @@ I used hyperapp v1 a lot, both professionally and in hobby projects. I loved it'
 * TODO: Fix ts-ignores
 * TODO: Handle foreign objects in SVG
 * TODO: Add testing
+* TODO: Get old childNodes length from oldVnode instead of DOM
 * IDEA: use web components to scope styles
 * IDEA: Create a separate 'vDom' for CSS
