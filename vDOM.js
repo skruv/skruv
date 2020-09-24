@@ -1,4 +1,4 @@
-/* global HTMLElement SVGElement Text performance */
+/* global HTMLElement SVGElement HTMLOptionElement HTMLInputElement HTMLButtonElement HTMLTextAreaElement Text performance */
 
 /**
  * @typedef Vnode
@@ -14,7 +14,7 @@ const listenerMap = new WeakMap()
 const renderNodeMap = new WeakMap()
 /** @type WeakMap<Object, HTMLElement | SVGElement | Text> */
 const keyMap = new WeakMap()
-/** @type WeakMap<HTMLElement | SVGElement | Text, Vnode> */
+/** @type WeakMap<HTMLElement | SVGElement | Text | ChildNode, Vnode> */
 export const vDomMap = new WeakMap()
 
 /** @type Vnode */
@@ -50,11 +50,17 @@ const updateAttributes = (oldVnode, vNode, node) => {
       node.addEventListener(key.slice(2), listeners[key.slice(2)])
     } else {
       if (!oldVnode.attributes[key] || oldVnode.attributes[key] !== vNode.attributes[key]) {
-        if (key === 'value' || key === 'selected' || key === 'checked') {
-          // These need to be set directly to have the desired effect
-          // @ts-ignore
+        // These need to be set directly to have the desired effect. All these ifs could be grouped, but doing so does not seem to please TS
+        if (key === 'value' && (node instanceof HTMLInputElement || node instanceof HTMLTextAreaElement || node instanceof HTMLButtonElement)) {
           node[key] = vNode.attributes[key]
         }
+        if (key === 'checked' && node instanceof HTMLInputElement) {
+          node[key] = vNode.attributes[key]
+        }
+        if (key === 'selected' && node instanceof HTMLOptionElement) {
+          node[key] = vNode.attributes[key]
+        }
+
         if (vNode.attributes[key] === false) {
           node.removeAttribute(key)
           continue
@@ -125,13 +131,11 @@ const modifyNode = (parent, vNode, node) => {
     // Remove childNodes after the length of vNode childNodes
     Array.from(node.childNodes).slice(vNode.childNodes.length).forEach(child => {
       // We need to recursively check for onremoves on grandchildren too (expensive but nessecary)
-      // @ts-ignore
       const oldVnode = vDomMap.get(child)
       if (oldVnode) {
         oldVnode.attributes.onremove && oldVnode.attributes.onremove(child)
         /** @param {ChildNode} node */
         const callOnremoves = (node) => Array.from(node.childNodes).forEach(childNode => {
-          // @ts-ignore
           const oldVnode = vDomMap.get(childNode)
           if (oldVnode) {
             oldVnode.attributes.onremove && oldVnode.attributes.onremove(childNode)

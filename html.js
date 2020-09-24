@@ -28,13 +28,12 @@ export const textNode = (data) => ({
 export const h = nodeName =>
   /**
    * @param {Object<String, *>} attributes
-   * @param {Array<Boolean | String | Number | Vnode | Array<Boolean | String | Number | Vnode> | function(): Vnode | Array<function(): Vnode>>} childNodes
+   * @param {Array<Boolean | String | Number | Vnode | Array<Boolean | String | Number | Vnode> | function(): Vnode>} childNodes
    * @returns {Vnode}
    */
   (attributes = {}, ...childNodes) => ({
     nodeName: nodeName,
     attributes,
-    // @ts-ignore
     childNodes: childNodes.filter(child => !(typeof child === 'undefined' || child === false))
       .flat()
       .map(child => typeof child !== 'function' ? child : child())

@@ -5,15 +5,24 @@ const createCache = () => ({
 
 const cache = createCache()
 
-// @ts-ignore
+/**
+ * @param   {*} value
+ * @return  {String}
+ */
 const getCacheType = (value) => {
   const t = typeof value
   const isObject = (t === 'object' || t === 'function') && value !== null
   return isObject ? 'weakmap' : 'map'
 }
 
-// @ts-ignore
-const get = (fn, prefix = [], callback = () => {}) => (...args) => {
+/**
+ * @param   {function} fn
+ * @param   {Array<*>} prefix
+ * @param   {function} callback
+ *
+ * @return  {*}
+ */
+const get = (fn, prefix = [], callback = () => {}) => /** @param {Array<*>} args */(...args) => {
   const item = [...prefix, fn.name, ...args].reduce((acc, cur) => {
     if (acc[getCacheType(cur)].get(cur)) {
       return acc[getCacheType(cur)].get(cur)

@@ -256,7 +256,6 @@ I used hyperapp v1 a lot, both professionally and in hobby projects. I loved it'
 * TODO: Add example of contained component (with style, state, actions and view)
 * TODO: Add routing example based on URL and URLSearchParams
 * TODO: Add helpers for i18n, devtools, routing, error handling
-* TODO: Fix ts-ignores
 * TODO: Handle foreign objects in SVG
 * TODO: Add testing
 * TODO: Get old childNodes length from oldVnode instead of DOM
