@@ -22,7 +22,7 @@ const getCacheType = (value) => {
  *
  * @return  {*}
  */
-const get = (fn, prefix = [], callback = () => {}) => /** @param {Array<*>} args */(...args) => {
+const get = (fn, prefix = [], callback = () => {}) => /** @param {Array<*>} args */ (...args) => {
   const item = [...prefix, fn.name, ...args].reduce((acc, cur) => {
     if (acc[getCacheType(cur)].get(cur)) {
       return acc[getCacheType(cur)].get(cur)

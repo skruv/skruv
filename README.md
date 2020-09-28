@@ -258,6 +258,7 @@ I used hyperapp v1 a lot, both professionally and in hobby projects. I loved it'
 * TODO: Add helpers for i18n, devtools, routing, error handling
 * TODO: Handle foreign objects in SVG
 * TODO: Add testing
+* TODO: Fix TS ignores in recursiveFlattenFilter
 * TODO: Get old childNodes length from oldVnode instead of DOM
 * IDEA: use web components to scope styles
 * IDEA: Create a separate 'vDom' for CSS

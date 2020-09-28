@@ -193,7 +193,7 @@ const createNode = (parent, vNode, isSvg) => {
 
 /**
  * Render a vDOM recursively
- * @param {Vnode | function(): Vnode} vNode
+ * @param {Vnode} vNode
  * @param {HTMLElement | SVGElement | Text} node
  * @param {Number} timeout
  * @param {(Node & ParentNode) | null | HTMLElement | SVGElement | Text} parent
@@ -211,10 +211,6 @@ export const renderNode = (
 ) => {
   if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement)) {
     throw new Error('No parent to render to!')
-  }
-
-  if (typeof vNode === 'function') {
-    vNode = vNode()
   }
 
   // Get the old vDOM and if they are equal we can assume the DOM is not dirty

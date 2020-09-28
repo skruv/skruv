@@ -1,9 +1,14 @@
 /**
+ * @typedef LooseVnode
+ * @type {Boolean | String | Number | Vnode | Vnode[] | function(): LooseVnode | function(): LooseVnode[]}
+ */
+
+/**
  * @typedef Vnode
  * @prop {String} nodeName
  * @prop {String} [data]
  * @prop {Object<[String], [String]>} attributes
- * @prop {Array<Vnode | (() => Vnode)>} childNodes
+ * @prop {Array<Vnode>} childNodes
  */
 /** @type {Vnode} */
 export const Vnode = {
@@ -14,6 +19,7 @@ export const Vnode = {
 
 /**
  * @param {String | Number | Boolean} data
+ * @returns {Vnode}
  */
 export const textNode = (data) => ({
   nodeName: '#text',
@@ -23,21 +29,37 @@ export const textNode = (data) => ({
 })
 
 /**
+   * @param {LooseVnode[]} childNodes
+   * @returns {Vnode[]}
+   */
+const recursiveFlattenFilter = childNodes => {
+  const processed = childNodes
+    .map(child => typeof child === 'function' ? child() : child)
+    .flat(Infinity)
+    .filter(child => (typeof child !== 'undefined' && typeof child !== 'boolean'))
+    .map(child => typeof child === 'string' || typeof child === 'number' ? textNode(child) : child)
+
+  if (processed.some(child => Array.isArray(child) || typeof child === 'function')) {
+    // @ts-ignore
+    return recursiveFlattenFilter(processed)
+  }
+  // @ts-ignore
+  return processed
+}
+
+/**
  * @param {String} nodeName
  */
 export const h = nodeName =>
   /**
    * @param {Object<String, *>} attributes
-   * @param {Array<Boolean | String | Number | Vnode | Array<Boolean | String | Number | Vnode> | function(): Vnode>} childNodes
+   * @param {LooseVnode[]} childNodes
    * @returns {Vnode}
    */
   (attributes = {}, ...childNodes) => ({
-    nodeName: nodeName,
+    nodeName,
     attributes,
-    childNodes: childNodes.filter(child => !(typeof child === 'undefined' || child === false))
-      .flat()
-      .map(child => typeof child !== 'function' ? child : child())
-      .map(child => typeof child !== 'object' ? textNode(child) : child)
+    childNodes: recursiveFlattenFilter(childNodes)
   })
 
 // HTML
