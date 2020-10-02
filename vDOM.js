@@ -1,4 +1,4 @@
-/* global HTMLElement SVGElement HTMLOptionElement HTMLInputElement HTMLButtonElement HTMLTextAreaElement Text performance */
+/* global HTMLElement SVGElement HTMLOptionElement HTMLInputElement HTMLButtonElement HTMLTextAreaElement ShadowRoot Text performance */
 
 /**
  * @typedef Vnode
@@ -209,7 +209,7 @@ export const renderNode = (
   isSvg = false,
   startRender = performance.now()
 ) => {
-  if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement)) {
+  if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot)) {
     throw new Error('No parent to render to!')
   }
 
