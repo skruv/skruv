@@ -197,32 +197,39 @@ render()
 
 ### Dynamically importing components
 
-* TODO: Add example of errorhandling 
-
 There is a small utility called the importer that helps with async imports and caches the imported modules:
 
 [see it live](https://skruv.io/examples/dynamic-import)
 
 ```js
 import { renderNode } from './node_modules/skruv/vDOM.js'
-import { body, h1, input, progress } from './node_modules/skruv/html.js'
+import { body, h1, input, progress, div } from './node_modules/skruv/html.js'
 import { createState } from './node_modules/skruv/state.js'
 import { importer } from './utils/importer.js'
 
 let root = document.body
 export let state = {
-  input: 'Testing!'
+  input: 'Global',
+  error: false
 }
 
 // Normalize the url so it is not relative to the importer
 const importUrl = (url) => (new URL(url, import.meta.url)).href
 
-const render = () => {
-  root = renderNode(body({}, [
-    h1({}, state.input),
-    input({ value: state.input, oninput: e => { state.input = e.target.value } }),
-    importer(importUrl('./components/one.js'), render) || progress(),
-  ]), root)
+const err = (err) => { state.error = err; console.error(err) }
+
+export const render = () => {
+  root = renderNode(body({},
+    state.error ? div({ class: 'error' }, 'Error!') : [
+      h1({}, state.input),
+      input({
+        value: state.input,
+        oninput: e => { state.input = e.target.value }
+      }),
+      importer(importUrl('./components/one.js'), { success: render, error: err }, 'one') || progress(),
+      importer(importUrl('./components/one.js'), { success: render, error: err }, 'two') || progress()
+    ]
+  ), root)
 }
 
 state = createState(state, render)
@@ -233,10 +240,31 @@ render()
 And components/one.js looks like this:
 
 ```js
-import { h2 } from '../node_modules/skruv/html.js'
-import { state } from '../index.js'
+import { input, h2, div, button } from '../node_modules/skruv/html.js'
 
-export default () => () => h2({}, state.input)
+import { createState } from '../node_modules/skruv/state.js'
+import { render, state as globalState } from '../index.js'
+
+export default (name) => {
+  const randomize = () => {
+    state.input = Math.random()
+  }
+
+  const state = createState({
+    input: `${name}`
+  }, render)
+
+  return () => div({},
+    h2({}, `${name} has ${state.input} and global has ${globalState.input}`),
+    input({
+      value: state.input,
+      oninput: e => { state.input = e.target.value }
+    }),
+    button({
+      onclick: randomize
+    }, 'randomize')
+  )
+}
 ```
 
 ## Browser support
