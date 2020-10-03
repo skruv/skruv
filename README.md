@@ -65,7 +65,7 @@ Or for a full impementation of todomvc see [here](https://skruv.io/examples/todo
 
 * state.js is a recursive proxy that can handle mutable objects that implement toString. It takes in an initial state object and a callback and returns a state that will recursivley listen for changes and call the callback on change
 * vDOM.js is a function that takes in a vDOM and target root and renders to a DOM node. Since it renders directly to the root (not inside it) it returns a HTMLElement or SVGElement that is a reference to the new root.
-* html.js are helper functions to create a vDOM tree. Also exposes a function called `h` and `text` to create arbitrary vDOM nodes
+* html.js are helper functions to create a vDOM tree. Also exposes a function called `h` and `textNode` to create arbitrary vDOM nodes. The HTML element `var` and the SVG element `switch` are suffixed by Elem (`varElem` and `switchElem`) because the names are reserved in js.
 * cache.js is a recursive object cache that can be used to cache expensive function calls. It supports async resolving that notifies a callback to help with dynamic importing.
 * State updaters can be implemented as simple functions that modify state. They require nothing special.
 
