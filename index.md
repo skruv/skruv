@@ -173,10 +173,10 @@ rerendering.
 * IDEA: Get old childNodes length from oldVnode instead of DOM?
 * IDEA: Create a separate 'vDom' for CSS
 
-<link href="./docs/index.css" rel="stylesheet" />
-<script src="./docs/index.js"></script>
-
 <script src="https://unpkg.com/marked@1.2.0/marked.min.js"></script>
 <link href="https://unpkg.com/prismjs@1.21.0/themes/prism.css" rel="stylesheet" />
 <script src="https://unpkg.com/prismjs@1.21.0/components/prism-core.min.js"></script>
 <script src="https://unpkg.com/prismjs@1.21.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+<link href="./docs/index.css" rel="stylesheet" />
+<script src="./docs/index.js"></script>
