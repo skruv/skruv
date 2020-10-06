@@ -1,5 +1,5 @@
-import { input, h2, hr, button, slot } from '../../../html.js'
-import { createState } from '../../../state.js'
+import { input, h2, hr, button, slot } from 'https://unpkg.com/skruv@0.0.7/html.js'
+import { createState } from 'https://unpkg.com/skruv@0.0.7/state.js'
 import { render, state as globalState } from '../index.js'
 
 export default (name) => {
