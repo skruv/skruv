@@ -1,6 +1,6 @@
 {
   "name": "skruv",
-  "version": "0.0.7",
+  "version": "0.0.7-1",
   "description": "Somewhat simple framework for js applications",
   "bugs": {
     "url": "https://github.com/skruv/skruv/issues",
@@ -11,7 +11,9 @@
     "html.js",
     "state.js",
     "vDOM.js",
-    "utils/importer.js"
+    "utils/importer.js",
+    "webcomponents/stateful.js",
+    "webcomponents/stateless.js"
   ],
   "scripts": {
     "test": "jest --no-cache --passWithNoTests",
