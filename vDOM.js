@@ -1,4 +1,4 @@
-/* global HTMLElement SVGElement HTMLOptionElement HTMLInputElement HTMLButtonElement HTMLTextAreaElement Text performance */
+/* global HTMLElement SVGElement HTMLOptionElement HTMLInputElement HTMLButtonElement HTMLTextAreaElement ShadowRoot Text performance */
 
 /**
  * @typedef Vnode
@@ -34,7 +34,7 @@ const updateAttributes = (oldVnode, vNode, node) => {
   for (const key in vNode.attributes) {
     // Node keys do not get added to the DOM
     if (key === 'key' || key === 'opaque' || key === 'oncreate' || key === 'onremove') continue
-    if (key.slice(0, 2) === 'on' && typeof vNode.attributes[key] === 'function') {
+    if (key.slice(0, 2) === 'on' && vNode.attributes[key] instanceof Function) {
       let listeners = listenerMap.get(node)
       if (listeners && listeners[key.slice(2)]) {
         node.removeEventListener(key.slice(2), listeners[key.slice(2)])
@@ -60,6 +60,11 @@ const updateAttributes = (oldVnode, vNode, node) => {
         if (key === 'selected' && node instanceof HTMLOptionElement) {
           node[key] = vNode.attributes[key]
         }
+        if (key === 'initState' && node.nodeName.includes('-')) {
+          // @ts-ignore
+          node[key] = vNode.attributes[key]
+          continue
+        }
 
         if (vNode.attributes[key] === false) {
           node.removeAttribute(key)
@@ -73,7 +78,7 @@ const updateAttributes = (oldVnode, vNode, node) => {
 
 /**
  * Modify an existing node
- * @param {HTMLElement | SVGElement} parent
+ * @param {HTMLElement | SVGElement | ShadowRoot} parent
  * @param {Vnode} vNode
  * @param {HTMLElement | SVGElement | Text} node
  * @returns {HTMLElement | SVGElement | Text}
@@ -153,7 +158,7 @@ const modifyNode = (parent, vNode, node) => {
 
 /**
  * Create a new node
- * @param {HTMLElement | SVGElement} parent
+ * @param {HTMLElement | SVGElement | ShadowRoot} parent
  * @param {Vnode} vNode
  * @param {Boolean} isSvg
  * @returns {HTMLElement | SVGElement | Text}
@@ -209,7 +214,7 @@ export const renderNode = (
   isSvg = false,
   startRender = performance.now()
 ) => {
-  if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement)) {
+  if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot)) {
     throw new Error('No parent to render to!')
   }
 
@@ -230,6 +235,12 @@ export const renderNode = (
   } else {
     // Create a new node
     node = createNode(parent, vNode, isSvg)
+  }
+
+  // @ts-ignore
+  if (node._update instanceof Function) {
+    // @ts-ignore
+    node._update()
   }
 
   // If we have taken too much time to render we should wait until the next tick to continue
