@@ -44,9 +44,10 @@ export const createState = (stateObj, callback) => {
      * @param {*} value
      */
     set: (target, prop, value) => {
+      const changed = target[prop] !== value
       target[prop] = value
       // Schedule a new render
-      callback()
+      if (changed) callback()
       return true
     }
   }

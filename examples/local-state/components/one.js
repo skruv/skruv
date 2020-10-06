@@ -1,25 +1,21 @@
-import { input, h2, div, button } from 'https://unpkg.com/skruv@0.0.6/html.js'
-import { createState } from 'https://unpkg.com/skruv@0.0.6/state.js'
+import { input, h2, hr, button, slot } from 'https://unpkg.com/skruv@0.0.7/html.js'
+import { createState } from 'https://unpkg.com/skruv@0.0.7/state.js'
 import { render, state as globalState } from '../index.js'
 
-/** @param {string} name */
 export default (name) => {
   const randomize = () => {
     state.input = Math.random()
   }
 
   const state = createState({
-    input: `${name}`
+    input: 'local state'
   }, render)
 
-  return () => div({},
+  return () => slot({},
     h2({}, `${name} has ${state.input} and global has ${globalState.input}`),
+    hr(),
     input({
       value: state.input,
-      /**
-       * @param {Object} e
-       * @param {HTMLInputElement} e.target
-       */
       oninput: e => { state.input = e.target.value }
     }),
     button({
