@@ -8,7 +8,7 @@ export const createState = (stateObj, callback) => {
   var handler = {
     /**
      *
-     * @param {Object} target
+     * @param {*} target
      * @param {String | Number} prop
      * @param {*} receiver
      * @returns {* | function(Array<*>): Object | Array | String | Number}
@@ -17,7 +17,7 @@ export const createState = (stateObj, callback) => {
       if (prop === 'toJSON') {
         return target
       }
-      const value = Reflect.get(target, prop, receiver)
+      const value = target[prop]
       if (
         ['undefined', 'boolean', 'number', 'string', 'bigint', 'symbol', 'function'].indexOf(typeof value) === -1 &&
         value !== null
@@ -31,8 +31,10 @@ export const createState = (stateObj, callback) => {
       // Keep the old toString value for diffing
       const oldValue = target.toString()
       // Handle function calls on objects and try to find diffs via toString
-      return /** @type {function(Array<*>): Object | Array<*> | String | Number} */ (...args) => {
-        const retVal = value.bind(target)(...args)
+      return /** @type {function(Array<*>): Object | Array<*> | String | Number} */ function (...args) {
+        // @ts-ignore
+        var thisVal = this === receiver ? target : this /* Unwrap the proxy */
+        const retVal = Reflect.apply(value, thisVal, args)
         // Schedule a new render if the call has change the target object and is detectable via toString
         if (target.toString() !== oldValue) callback()
         return retVal
