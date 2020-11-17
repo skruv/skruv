@@ -37,6 +37,13 @@ export const createState = (stateObj, callback) => {
         const retVal = Reflect.apply(value, thisVal, args)
         // Schedule a new render if the call has change the target object and is detectable via toString
         if (target.toString() !== oldValue) callback()
+        if (
+          ['undefined', 'boolean', 'number', 'string', 'bigint', 'symbol', 'function'].indexOf(typeof retVal) === -1 &&
+          retVal !== null
+        ) {
+          // Handle non-null objects
+          return new Proxy(retVal, handler)
+        }
         return retVal
       }
     },
