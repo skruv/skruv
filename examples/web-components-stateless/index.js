@@ -1,7 +1,7 @@
-import { renderNode } from 'https://unpkg.com/skruv@0.0.9/vDOM.js'
-import { body, h1, progress, div } from 'https://unpkg.com/skruv@0.0.9/html.js'
-import { createState } from 'https://unpkg.com/skruv@0.0.9/state.js'
-import { importer } from 'https://unpkg.com/skruv@0.0.9/utils/importer.js'
+import { renderNode } from 'https://unpkg.com/skruv@0.0.10/vDOM.js'
+import { body, h1, progress, div } from 'https://unpkg.com/skruv@0.0.10/html.js'
+import { createState } from 'https://unpkg.com/skruv@0.0.10/state.js'
+import { importer } from 'https://unpkg.com/skruv@0.0.10/utils/importer.js'
 
 let root = document.body
 

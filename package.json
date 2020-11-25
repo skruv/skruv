@@ -1,6 +1,6 @@
 {
   "name": "skruv",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Somewhat simple framework for js applications",
   "bugs": {
     "url": "https://github.com/skruv/skruv/issues",
