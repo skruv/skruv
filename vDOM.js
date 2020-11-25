@@ -218,6 +218,10 @@ export const renderNode = (
     throw new Error('No parent to render to!')
   }
 
+  if (!vNode.nodeName) {
+    throw new Error(`Non-vNode Object passed to render: ${JSON.stringify(vNode)}`)
+  }
+
   // Get the old vDOM and if they are equal we can assume the DOM is not dirty
   const oldVnode = vDomMap.get(node)
   if (vNode === oldVnode) {
