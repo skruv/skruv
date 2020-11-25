@@ -278,3 +278,19 @@ export const tspan = h('tspan')
 export const unknown = h('unknown')
 export const use = h('use')
 export const view = h('view')
+
+// CSS template literal
+/**
+ * @param {String[]} strings
+ * @param {[String | Number | Boolean]} keys
+ * @returns {Vnode}
+ */
+export const css = (strings, ...keys) => {
+  /** @type {Vnode[]} */
+  const vNodeArr = []
+  return style({}, strings.reduce((prev, curr, i) => {
+    prev.push(textNode(curr))
+    keys[i] && prev.push(textNode(keys[i]))
+    return prev
+  }, vNodeArr))
+}
