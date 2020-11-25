@@ -14,6 +14,9 @@ export const createState = (stateObj, callback) => {
      * @returns {* | function(Array<*>): Object | Array | String | Number}
      */
     get: (target, prop, receiver) => {
+      if (prop === '__skruv_state') {
+        return true
+      }
       if (prop === 'toJSON') {
         return target
       }
@@ -53,8 +56,10 @@ export const createState = (stateObj, callback) => {
      * @param {*} value
      */
     set: (target, prop, value) => {
-      const changed = target[prop] !== value
-      target[prop] = value
+      // Prevent us setting a proxy within the proxy
+      const newValue = value && value.__skruv_state ? value.toJSON : value
+      const changed = target[prop] !== newValue
+      target[prop] = newValue
       // Schedule a new render
       if (changed) callback()
       return true
