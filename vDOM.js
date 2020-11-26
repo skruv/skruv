@@ -109,7 +109,7 @@ const modifyNode = (parent, vNode, node) => {
     return node
   }
 
-  if (oldVnode.nodeName !== vNode.nodeName || keyChanged || vNode.attributes.oncreate || oldVnode.attributes.onremove) {
+  if (oldVnode.nodeName !== vNode.nodeName || keyChanged) {
     // General node overwriting other non text node or keyed change
     // We need to create a new node since changing node types is not stable/supported
     const oldNode = node
