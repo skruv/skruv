@@ -10,13 +10,13 @@ Or for a full impementation of todomvc see [here](./examples/todomvc)
 
 ## Architecture
 
-* state.js is a recursive proxy that can handle mutable objects that implement toString. It takes in an initial state
+* state.js is a recursive proxy for plain objects and arrays. It takes in an initial state
 object and a callback and returns a state that will recursivley listen for changes and call the callback on change
 * vDOM.js is a function that takes in a vDOM and target root and renders to a DOM node. Since it renders directly to the
 root (not inside it) it returns a HTMLElement or SVGElement that is a reference to the new root.
 * html.js are helper functions to create a vDOM tree. Also exposes a function called `h` and `textNode` to create
-arbitrary vDOM nodes. The HTML element `var` and the SVG element `switch` are suffixed by Elem (`varElem` and
-`switchElem`) because the names are reserved in js.
+arbitrary vDOM nodes and a tagged template function called `css` to help with creating styles. The HTML element `var`
+and the SVG element `switch` are suffixed by Elem (`varElem` and `switchElem`) because the names are reserved in js.
 * cache.js is a recursive object cache that can be used to cache expensive function calls. It supports async resolving
 that notifies a callback to help with dynamic importing.
 * State updaters can be implemented as simple functions that modify state. They require nothing special.
@@ -92,7 +92,7 @@ This also works with deep constructs:
 Result ([Open by itself](./examples/state-deep)):
 <iframe src="./examples/state-deep"></iframe>
 
-And most objects that implement `toString()` (which is how the state can tell if a method changed the object):
+The state can contain non-plain objects, but for changes to them you need to manually tell skruv to rerender:
 
 <example-code language="js" href="./examples/state-url/index.js"></example-code>
 Result ([Open by itself](./examples/state-url)):
@@ -129,7 +129,7 @@ Result ([Open by itself](./examples/web-components-stateful)):
 
 ### Using web-components for CSS scoping
 
-Stateless web-components are useful for scoping CSS to a single subtree. In this case we have loaded a css file to make
+Stateless web-components are useful for scoping CSS to a single subtree. In this case we have css template to make
 all h1's pink within the scoped component, but the global h1 is unaffected.
 
 <example-code language="js" href="./examples/web-components-stateless/index.js"></example-code>
