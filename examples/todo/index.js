@@ -14,9 +14,11 @@ const render = () => {
   ), root)
 }
 
-export const state = createState({
+let state = {
   todos: [],
   value: ''
-}, render)
+}
+
+state = createState(state, render)
 
 render()
