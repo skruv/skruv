@@ -1,6 +1,6 @@
-import { input, h1, button, slot, div } from 'https://unpkg.com/skruv@0.0.11/html.js'
+import { input, h1, button, slot, div } from 'https://unpkg.com/skruv@0.0.12/html.js'
 import { state } from '../index.js'
-import { stateful } from 'https://unpkg.com/skruv@0.0.11/webcomponents/stateful.js'
+import { stateful } from 'https://unpkg.com/skruv@0.0.12/webcomponents/stateful.js'
 
 const randomColor = () => {
   var letters = '0123456789ABCDEF'
