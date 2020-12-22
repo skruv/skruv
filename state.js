@@ -1,9 +1,5 @@
-/**
- * @param   {Object<String, *>}  stateObj
- * @param   {Function}  callback
- *
- * @return  {*}
- */
+// As this is a recursive proxy typechecking it seems hard/impossible
+// @ts-nocheck
 export const createState = (stateObj, callback) => {
   // Taken from https://codepen.io/Escu/pen/MeKeVQ
   const Handler = class Handler {
@@ -14,7 +10,7 @@ export const createState = (stateObj, callback) => {
     set (o, p, v) {
       v = this.recurse(p, v)
       o[p] = v
-      this.log('set', p, v)
+      callback()
       return true
     }
 
@@ -24,7 +20,7 @@ export const createState = (stateObj, callback) => {
 
     deleteProperty (o, p) {
       const res = delete o[p]
-      this.log('delete', p)
+      callback()
       return res
     }
 
@@ -32,7 +28,6 @@ export const createState = (stateObj, callback) => {
       // check for falsy values
       if (v && v.constructor) {
         if (v.constructor === Object) {
-          v.__skruv_state = true
           // check object properties for other objects or arrays
           v = Object.keys(v).reduce((pp, cc) => {
             pp[cc] = this.recurse(`${p}.${cc}`, v[cc])
@@ -41,7 +36,6 @@ export const createState = (stateObj, callback) => {
           // proxify objects
           v = new Proxy(v, new this.constructor(`${this.name}.${p}`))
         } else if (v.constructor === Array) {
-          v.__skruv_state = true
           // check arrays for objects or arrays
           v = v.map((vv, vk) => this.recurse(`${p}[${vk}]`, vv));
 
@@ -49,18 +43,14 @@ export const createState = (stateObj, callback) => {
           ['push', 'pop', 'shift', 'unshift', 'splice', 'sort'].forEach(m => {
             v[m] = (...data) => {
               data = data.map((vv, vk) => this.recurse(`${p}[${vk}]`, vv))
-              this.log(m, data)
-              return Array.prototype[m].call(v, ...data)
+              const ret = Array.prototype[m].call(v, ...data)
+              callback()
+              return ret
             }
           })
         }
       }
       return v
-    }
-
-    log (msg, ...vals) {
-      window.skruv_debug_active && console.log(`{${this.name}}: ${msg} ${JSON.stringify(vals)}`)
-      callback()
     }
   }
 
