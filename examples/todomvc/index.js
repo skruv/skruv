@@ -34,9 +34,9 @@ const viewroot = () => section({ class: 'todoapp' },
       id: 'toggle-all',
       class: 'toggle-all',
       type: 'checkbox',
-      onclick: () => {
+      onchange: () => {
         const onoroff = state.todos.filter(todo => !todo.completed).length
-        state.todos.forEach((todo, index) => { state.todos[index].completed = !!onoroff })
+        state.todos.forEach((todo) => { todo.completed = !!onoroff })
       }
     }),
     label({ for: 'toggle-all' }, 'Mark all as complete'),
@@ -53,8 +53,8 @@ const viewroot = () => section({ class: 'todoapp' },
           ].join(' '),
           ondblclick: () => {
             if (!todo.editing) {
-              state.todos.forEach((todo, index) => { state.todos[index].editing = false })
-              state.todos[index].editing = true
+              state.todos.forEach((todo) => { todo.editing = false })
+              todo.editing = true
             }
           }
         },
@@ -68,8 +68,8 @@ const viewroot = () => section({ class: 'todoapp' },
               if (!evt.target.value.trim()) {
                 state.todos.splice(index, 1)
               } else {
-                state.todos[index].title = evt.target.value.trim()
-                state.todos[index].editing = false
+                todo.title = evt.target.value.trim()
+                todo.editing = false
               }
             },
             onkeydown: (evt) => {
@@ -83,7 +83,7 @@ const viewroot = () => section({ class: 'todoapp' },
               class: 'toggle',
               type: 'checkbox',
               checked: !!todo.completed,
-              onclick: () => { state.todos[index].completed = !todo.completed }
+              onchange: () => { todo.completed = !todo.completed }
             }),
             label({}, todo.title),
             button({
@@ -134,33 +134,25 @@ const viewroot = () => section({ class: 'todoapp' },
 
 let root = document.querySelector('.todoapp')
 
-const render = () => { root = renderNode(viewroot(), root) }
-
-let scheduled = false
-export const view = () => {
-  if (scheduled) return
-  scheduled = true
-  window.requestAnimationFrame(() => {
-    scheduled = false
-    render()
-    // Save todos on updates
-    window.localStorage.setItem('todos-skruv', JSON.stringify(state.todos.map(todo => ({
-      title: todo.title, completed: todo.completed
-    }))))
-  })
-}
-
-view()
-
-const persistedState = {
+export let state = {
   todos: [],
   filter: window.location.hash.slice(2) || 'all'
 }
 
 try {
-  persistedState.todos = JSON.parse(window.localStorage.getItem('todos-skruv')) || []
+  state.todos = JSON.parse(window.localStorage.getItem('todos-skruv')) || []
 } catch (e) {
   console.warn('No or invalid state in storage, using default')
 }
 
-export const state = createState(persistedState, view)
+export const view = () => {
+  root = renderNode(viewroot(), root)
+  // Save todos on updates
+  window.localStorage.setItem('todos-skruv', JSON.stringify(state.todos.map(todo => ({
+    title: todo.title, completed: todo.completed
+  }))))
+}
+
+state = createState(state, view)
+
+view()

@@ -12,7 +12,7 @@ const render = () => {
     h1({}, state.objtest.toString()),
     input({
       value: state.objtest.toString(),
-      oninput: e => { state.objtest.append('input', e.target.value) }
+      oninput: e => { state.objtest.append('input', e.target.value); render() }
     })
   ]), root)
 }

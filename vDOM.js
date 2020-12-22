@@ -1,4 +1,4 @@
-/* global HTMLElement SVGElement HTMLOptionElement HTMLInputElement HTMLButtonElement HTMLTextAreaElement ShadowRoot Text performance */
+/* global HTMLElement SVGElement HTMLOptionElement HTMLInputElement HTMLButtonElement HTMLTextAreaElement ShadowRoot Text performance requestAnimationFrame */
 
 /**
  * @typedef Vnode
@@ -203,15 +203,17 @@ const createNode = (parent, vNode, isSvg) => {
  * @param {Number} timeout
  * @param {(Node & ParentNode) | null | HTMLElement | SVGElement | Text} parent
  * @param {Boolean} isSvg
+ * @param {Boolean} root
  * @param {Number} startRender
  * @returns {HTMLElement | SVGElement | Text} The updated root
  */
 export const renderNode = (
   vNode,
   node,
-  timeout = Infinity,
+  timeout = 16,
   parent = node.parentNode,
   isSvg = false,
+  root = true,
   startRender = performance.now()
 ) => {
   if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot)) {
@@ -248,10 +250,10 @@ export const renderNode = (
   }
 
   // If we have taken too much time to render we should wait until the next tick to continue
-  if (!vNode.attributes.opaque && vNode.childNodes.length && performance.now() - startRender > timeout) {
+  if (root || (!vNode.attributes.opaque && vNode.childNodes.length && performance.now() - startRender > timeout)) {
     if (!renderNodeMap.has(node)) {
       // Ideally this would be requestIdleCallback, but that is not available in safari
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         if (node instanceof HTMLElement || node instanceof SVGElement) {
           const vNode = renderNodeMap.get(node)
           if (!vNode) return
@@ -259,12 +261,12 @@ export const renderNode = (
             const child = node.childNodes[index]
             if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
               // Calling renderNode without startRender will start a new timer
-              !!vNode && renderNode(vNode, child, timeout, node, isSvg)
+              !!vNode && renderNode(vNode, child, timeout, node, isSvg, false)
             }
           })
         }
         renderNodeMap.delete(node)
-      }, 0)
+      })
     }
     // Update the vNode to set on this node in case it has changed while waiting
     renderNodeMap.set(node, vNode)
@@ -277,7 +279,7 @@ export const renderNode = (
     vNode.childNodes.forEach((vNode, index) => {
       const child = node.childNodes[index]
       if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
-        !!vNode && renderNode(vNode, child, timeout, parent, isSvg, startRender)
+        !!vNode && renderNode(vNode, child, timeout, parent, isSvg, false, startRender)
       }
     })
   }
