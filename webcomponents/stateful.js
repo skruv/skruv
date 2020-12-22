@@ -6,6 +6,7 @@ import { renderNode } from '../vDOM.js'
 export const stateful = (name, attributes, dom, ...children) => {
   const elementName = `skruv-stateful-${name}`
   if (!customElements.get(elementName)) {
+    let state
     customElements.define(elementName, class extends HTMLElement {
       /* Keeping this here for best practice and clarity */
       // eslint-disable-next-line
@@ -15,11 +16,12 @@ export const stateful = (name, attributes, dom, ...children) => {
 
       connectedCallback () {
         this.root = this.attachShadow({ mode: 'open' })
-        this.state = createState(
-          {
-            ...this.initState,
-            ...this.getAttributeNames().reduce((prev, curr) => { prev[curr] = this.getAttribute(curr); return prev }, {})
-          },
+        state = {
+          ...this.initState,
+          ...this.getAttributeNames().reduce((prev, curr) => { prev[curr] = this.getAttribute(curr); return prev }, {})
+        }
+        state = createState(
+          state,
           this._update.bind(this)
         )
         this._update()
@@ -30,13 +32,13 @@ export const stateful = (name, attributes, dom, ...children) => {
       }
 
       attributeChangedCallback (name, oldValue, newValue) {
-        if (this.state && oldValue !== newValue) this.state[name] = newValue
+        if (state && oldValue !== newValue) state[name] = newValue
       }
 
       _update () {
-        const event = new CustomEvent('statechanged', { detail: this.state.toJSON })
+        const event = new CustomEvent('statechanged', { detail: state })
         this.dispatchEvent(event)
-        this.rootDom = renderNode(dom(this.state), this.rootDom, Infinity, this.root)
+        this.rootDom = renderNode(dom(state), this.rootDom, Infinity, this.root)
       }
     })
   }

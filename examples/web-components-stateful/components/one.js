@@ -19,7 +19,7 @@ export default () => () => slot({},
         arr: []
       },
       stuff: state.input,
-      onstatechanged: e => { state.input = e.detail.stuff }
+      onstatechanged: e => { if (state.input !== e.detail.stuff) state.input = e.detail.stuff }
     },
     state => slot({ name: 'root' }, [
       h1({ style: `color: ${randomColor()}` }, 'Scoped element: ', state.stuff),
