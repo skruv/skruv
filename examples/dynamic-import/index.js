@@ -1,5 +1,5 @@
 import { renderNode } from '../../vDOM.js'
-import { body, h1, input, progress, div, slot } from '../../html.js'
+import { body, h1, input, div } from '../../html.js'
 import { sub } from './state.js'
 
 let root = document.body

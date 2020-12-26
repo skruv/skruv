@@ -59,6 +59,7 @@ export const createState = (stateObj) => {
           // proxify objects
           v = new Proxy(v, new this.constructor(`${this.name}.${p}`));
           (async () => {
+            // eslint-disable-next-line no-unused-vars
             for await (const _ of v) {
               this._resolve()
             }
@@ -78,6 +79,7 @@ export const createState = (stateObj) => {
             }
           });
           (async () => {
+            // eslint-disable-next-line no-unused-vars
             for await (const _ of v) {
               this._resolve()
             }

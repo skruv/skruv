@@ -1,4 +1,4 @@
-import { b, h2 } from '../../../html.js'
+import { h2 } from '../../../html.js'
 import { sub } from '../state.js'
 
 async function * count (subState) {
