@@ -14,6 +14,8 @@ const listenerMap = new WeakMap()
 const keyMap = new WeakMap()
 /** @type WeakMap<HTMLElement | SVGElement | Text | ChildNode, Vnode> */
 export const vDomMap = new WeakMap()
+/** @type WeakMap<HTMLElement | SVGElement | Text | ChildNode, Vnode> */
+export const iteratorMap = new WeakMap()
 
 /** @type Vnode */
 const emptyNode = {
@@ -59,7 +61,6 @@ const updateAttributes = (oldVnode, vNode, node) => {
           node[key] = vNode.attributes[key]
         }
         if (key === 'initState' && node.nodeName.includes('-')) {
-          // @ts-ignore
           node[key] = vNode.attributes[key]
           continue
         }
@@ -232,14 +233,14 @@ export const renderNode = async (
           childNodes: []
         }, isSvg)
       }
-      node._skruv_iterator = vNode
+      iteratorMap.set(node, vNode)
       for await (const value of vNode) {
         // TODO: document breaking iterators when changed
-        if (!root.contains(node) || node._skruv_iterator !== vNode) {
+        if (!root.contains(node) || iteratorMap.get(node) !== vNode) {
           break
         }
         node = await renderNode(value, node, parent, isSvg, root)
-        node._skruv_iterator = vNode
+        iteratorMap.set(node, vNode)
       }
       return node
     }
@@ -277,9 +278,7 @@ export const renderNode = async (
     }
 
     // This is to trigger webcomponents to update their own DOM
-    // @ts-ignore
     if (node._update instanceof Function) {
-    // @ts-ignore
       node._update()
     }
 
@@ -300,7 +299,7 @@ export const renderNode = async (
       bubbles: true,
       detail: { error: e, vNode, node }
     })
-    parent.dispatchEvent(event)
+    if (parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot) parent.dispatchEvent(event)
   }
   return node
 }

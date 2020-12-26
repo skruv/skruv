@@ -1,5 +1,3 @@
-// As this is a recursive proxy typechecking it seems hard/impossible
-// @ts-nocheck
 export const createState = (stateObj) => {
   // Modified from https://codepen.io/Escu/pen/MeKeVQ
   const Handler = class Handler {

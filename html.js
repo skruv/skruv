@@ -40,10 +40,8 @@ const recursiveFlattenFilter = childNodes => {
     .map(child => typeof child === 'string' || typeof child === 'number' ? textNode(child) : child)
 
   if (processed.some(child => Array.isArray(child) || typeof child === 'function')) {
-    // @ts-ignore
     return recursiveFlattenFilter(processed)
   }
-  // @ts-ignore
   return processed
 }
 
