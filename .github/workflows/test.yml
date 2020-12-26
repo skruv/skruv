@@ -21,8 +21,15 @@ jobs:
       if: steps.cache-node_modules.outputs.cache-hit != 'true'
       env:
         NODE_ENV: development
+        NODE_OPTIONS: --experimental-vm-modules
       run: |
         npm ci --silent
     - run: npm run test
+      env:
+        NODE_OPTIONS: --experimental-vm-modules
     - run: npm run typecheck
+      env:
+        NODE_OPTIONS: --experimental-vm-modules
     - run: npm run standard
+      env:
+        NODE_OPTIONS: --experimental-vm-modules
