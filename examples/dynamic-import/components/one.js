@@ -1,4 +1,10 @@
-import { h2 } from 'https://unpkg.com/skruv@0.0.12/html.js'
-import { state } from '../index.js'
+import { b, h2 } from '../../../html.js'
+import { sub } from '../state.js'
 
-export default (name) => () => h2({}, state.input, name)
+async function * count (subState) {
+  for await (const arr of sub[subState]) {
+    yield h2({}, JSON.stringify(arr))
+  }
+}
+
+export default count

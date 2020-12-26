@@ -1,4 +1,4 @@
-/* global HTMLElement SVGElement HTMLOptionElement HTMLInputElement HTMLButtonElement HTMLTextAreaElement ShadowRoot Text performance requestAnimationFrame */
+/* global HTMLElement SVGElement HTMLOptionElement HTMLInputElement HTMLButtonElement HTMLTextAreaElement ShadowRoot Text */
 
 /**
  * @typedef Vnode
@@ -10,8 +10,6 @@
 
 /** @type WeakMap<HTMLElement | SVGElement, Object.<String, EventListener>> */
 const listenerMap = new WeakMap()
-/** @type WeakMap<HTMLElement | SVGElement | Text, Vnode> */
-const renderNodeMap = new WeakMap()
 /** @type WeakMap<Object, HTMLElement | SVGElement | Text> */
 const keyMap = new WeakMap()
 /** @type WeakMap<HTMLElement | SVGElement | Text | ChildNode, Vnode> */
@@ -198,90 +196,111 @@ const createNode = (parent, vNode, isSvg) => {
 
 /**
  * Render a vDOM recursively
- * @param {Vnode} vNode
+ * @param {Vnode | Promise<Vnode>} vNode
  * @param {HTMLElement | SVGElement | Text} node
- * @param {Number} timeout
  * @param {(Node & ParentNode) | null | HTMLElement | SVGElement | Text} parent
  * @param {Boolean} isSvg
- * @param {Boolean} root
- * @param {Number} startRender
- * @returns {HTMLElement | SVGElement | Text} The updated root
+ * @returns {Promise<HTMLElement | SVGElement | Text>} The updated root
  */
-export const renderNode = (
+export const renderNode = async (
   vNode,
   node,
-  timeout = 16,
   parent = node.parentNode,
   isSvg = false,
-  root = true,
-  startRender = performance.now()
+  root = true
 ) => {
-  if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot)) {
-    throw new Error('No parent to render to!')
-  }
-
-  if (!vNode.nodeName) {
-    throw new Error(`Non-vNode Object passed to render: ${JSON.stringify(vNode)}`)
-  }
-
-  // Get the old vDOM and if they are equal we can assume the DOM is not dirty
-  const oldVnode = vDomMap.get(node)
-  if (vNode === oldVnode) {
-    return node
-  }
-
-  // If we are doing SVG we assume all child nodes are SVG namespaced too
-  if (vNode.nodeName === 'svg') {
-    isSvg = true
-  }
-
-  if (node) {
-    // If old node exists, try to patch or replace it
-    node = modifyNode(parent, vNode, node)
-  } else {
-    // Create a new node
-    node = createNode(parent, vNode, isSvg)
-  }
-
-  // @ts-ignore
-  if (node._update instanceof Function) {
-    // @ts-ignore
-    node._update()
-  }
-
-  // If we have taken too much time to render we should wait until the next tick to continue
-  if (root || (!vNode.attributes.opaque && vNode.childNodes.length && performance.now() - startRender > timeout)) {
-    if (!renderNodeMap.has(node)) {
-      // Ideally this would be requestIdleCallback, but that is not available in safari
-      requestAnimationFrame(() => {
-        if (node instanceof HTMLElement || node instanceof SVGElement) {
-          const vNode = renderNodeMap.get(node)
-          if (!vNode) return
-          vNode.childNodes.forEach((vNode, index) => {
-            const child = node.childNodes[index]
-            if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
-              // Calling renderNode without startRender will start a new timer
-              !!vNode && renderNode(vNode, child, timeout, node, isSvg, false)
-            }
-          })
-        }
-        renderNodeMap.delete(node)
-      })
-    }
-    // Update the vNode to set on this node in case it has changed while waiting
-    renderNodeMap.set(node, vNode)
-    return node
-  }
-
-  // Iterate over and render each child recursively
-  if ((node instanceof HTMLElement || node instanceof SVGElement) && !vNode.attributes.opaque) {
-    const parent = node
-    vNode.childNodes.forEach((vNode, index) => {
-      const child = node.childNodes[index]
-      if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
-        !!vNode && renderNode(vNode, child, timeout, parent, isSvg, false, startRender)
+  try {
+  // TODO: breakout these into something to handle async rendering
+  // TODO: add loading indicators
+    if (vNode instanceof Promise) {
+      if (!node) {
+        node = createNode(parent, {
+          nodeName: 'slot',
+          attributes: {},
+          childNodes: []
+        }, isSvg)
       }
+      node = await renderNode(await vNode, node, parent, isSvg, root)
+      return node
+    }
+
+    if (vNode[Symbol.asyncIterator] instanceof Function) {
+      if (!node) {
+        node = createNode(parent, {
+          nodeName: 'slot',
+          attributes: {},
+          childNodes: []
+        }, isSvg)
+      }
+      node._skruv_iterator = vNode
+      for await (const value of vNode) {
+        // TODO: document breaking iterators when changed
+        if (!root.contains(node) || node._skruv_iterator !== vNode) {
+          break
+        }
+        node = await renderNode(value, node, parent, isSvg, root)
+        node._skruv_iterator = vNode
+      }
+      return node
+    }
+
+    if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot)) {
+      throw new Error('No parent to render to!')
+    }
+
+    if (!vNode.nodeName) {
+      throw new Error(`Non-vNode Object passed to render: ${JSON.stringify(vNode)}`)
+    }
+
+    // Get the old vDOM and if they are equal we can assume the DOM is not dirty
+    const oldVnode = vDomMap.get(node)
+    if (vNode === oldVnode) {
+      return node
+    }
+
+    // If we are doing SVG we assume all child nodes are SVG namespaced too
+    if (vNode.nodeName === 'svg') {
+      isSvg = true
+    }
+
+    if (node) {
+    // If old node exists, try to patch or replace it
+      node = modifyNode(parent, vNode, node)
+    } else {
+    // Create a new node
+      node = createNode(parent, vNode, isSvg)
+    }
+
+    if (root === true) {
+      // Update the root reference to make sure that generators can break
+      root = node
+    }
+
+    // This is to trigger webcomponents to update their own DOM
+    // @ts-ignore
+    if (node._update instanceof Function) {
+    // @ts-ignore
+      node._update()
+    }
+
+    // Iterate over and render each child recursively
+    if (!vNode.attributes.opaque) {
+      const parent = node
+      for (let index = 0; index < vNode.childNodes.length; index++) {
+        const vChild = vNode.childNodes[index]
+        const child = node.childNodes[index]
+        if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
+          !!vChild && renderNode(vChild, child, parent, isSvg, root)
+        }
+      }
+    }
+  } catch (e) {
+    const event = new CustomEvent('skruverror', {
+      cancelable: true,
+      bubbles: true,
+      detail: { error: e, vNode, node }
     })
+    parent.dispatchEvent(event)
   }
   return node
 }

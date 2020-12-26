@@ -2,6 +2,7 @@
   "name": "skruv",
   "version": "0.0.12",
   "description": "Somewhat simple framework for js applications",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/skruv/skruv/issues",
     "email": "skruv@richter.id"
