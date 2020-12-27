@@ -155,7 +155,6 @@ supported in for example Samsung Internet, UC Browser and other smaller browsers
   * state: skruv_unwrap_proxy
   * state: skruv_resolve (Rename?)
 * TODO: Try SRI for docs and add example in docs
-* TODO: Handle foreign objects in SVG (some SVG children can be non-SVG)
 * TODO: Should I keep cache and import helpers?
 
 <script src="https://unpkg.com/marked@1.2.0/marked.min.js"></script>

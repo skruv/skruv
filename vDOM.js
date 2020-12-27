@@ -289,6 +289,11 @@ export const renderNode = async (
       node = createNode(parent, vNode, isSvg)
     }
 
+    // Childnodes of foreignObject are no longer in the SVG namespace
+    if (vNode.nodeName === 'foreignObject') {
+      isSvg = false
+    }
+
     if (root === true) {
       // Update the root reference to make sure that generators can break
       root = node
