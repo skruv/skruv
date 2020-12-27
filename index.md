@@ -136,6 +136,15 @@ all h1's pink within the scoped component, but the global h1 is unaffected.
 Result ([Open by itself](./examples/web-components-stateless)):
 <iframe src="./examples/web-components-stateless"></iframe>
 
+### SVG
+
+SVG works too (including foreignObjects).
+
+<example-code language="js" href="./examples/svg-foreignobject/index.js"></example-code>
+Result ([Open by itself](./examples/svg-foreignobject)):
+<iframe src="./examples/svg-foreignobject"></iframe>
+
+
 ## Browser support
 
 Requires Modules, Proxies, Map/WeakMap, Generators, async/await so Edge 16+, Safari 11+, and modern versions of all other browsers should work.
