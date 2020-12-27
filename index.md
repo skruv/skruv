@@ -147,31 +147,15 @@ company.
 In some examples I use dynamic imports and optional chaining which requires Chromium Edge and Safari 13.1+ and are not
 supported in for example Samsung Internet, UC Browser and other smaller browsers.
 
-## Why?
-
-I used hyperapp v1 a lot, both professionally and in hobby projects. I loved it's simplicity, and it introduced me to
-the idea that a complex app does not nessecarily require a complex framework. I wanted to decouple state managment and
-actions from it though and also make it easier to manually schedule a render for things like dynamic imports. I also
-find that while hyperapp is small, the code is not easily readable for me (and I like to understand how the tools I use
-work).
-
 ## TODO:
 
-* TODO: Add example of using skruv in skruv with opaque, key and oncreate. Useful for local state and partial
-rerendering.
-* TODO: Add example with using something like prosemirror/prismjs/codemirror in skruv either via webcomponents or opaque, key and oncreate.
 * TODO: Add example with combined view/state/actions
-* TODO: Add example of contained component (with style, state, actions and view)
-* TODO: Add routing example based on URL and URLSearchParams
+* TODO: Add routing example
 * TODO: Add helpers for i18n, devtools, routing, error handling
-* TODO: Handle foreign objects in SVG
 * TODO: Add testing
-* TODO: Fix TS ignores in recursiveFlattenFilter
-* TODO: Document special cases like `initState` and `_update`. Perhaps extend all components that have `_update` from a single component?
-* TODO: Document `changed` in state.js
-* TODO: Add SRI for all subresources in docs.
-* IDEA: Get old childNodes length from oldVnode instead of DOM?
-* IDEA: Create a separate 'vDom' for CSS
+* TODO: Document special/private methods
+* TODO: Try SRI for docs and add example in docs
+* TODO: Handle foreign objects in SVG
 
 <script src="https://unpkg.com/marked@1.2.0/marked.min.js"></script>
 <link href="https://unpkg.com/prismjs@1.21.0/themes/prism.css" rel="stylesheet" />

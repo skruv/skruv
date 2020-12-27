@@ -11,11 +11,13 @@
 /** @type WeakMap<HTMLElement | SVGElement, Object.<String, EventListener>> */
 const listenerMap = new WeakMap()
 /** @type WeakMap<Object, HTMLElement | SVGElement | Text> */
-const keyMap = new WeakMap()
+const keyMapObj = new WeakMap()
+const keyMapScalar = new Map()
 /** @type WeakMap<HTMLElement | SVGElement | Text | ChildNode, Vnode> */
 export const vDomMap = new WeakMap()
 /** @type WeakMap<HTMLElement | SVGElement | Text | ChildNode, Vnode> */
-export const iteratorMap = new WeakMap()
+export const asyncMap = new WeakMap()
+export const iterMap = new WeakMap()
 
 /** @type Vnode */
 const emptyNode = {
@@ -87,7 +89,7 @@ const modifyNode = (parent, vNode, node) => {
   const key = vNode.attributes.key
   const keyChanged = vNode.attributes.key && oldVnode.attributes.key !== vNode.attributes.key
   if (key && keyChanged) {
-    const keyedNode = keyMap.get(key)
+    const keyedNode = keyMapObj.get(key) || keyMapScalar.get(key)
     if (keyedNode) {
       oldVnode.attributes.onremove && oldVnode.attributes.onremove(node)
       parent.replaceChild(keyedNode, node)
@@ -164,8 +166,8 @@ const modifyNode = (parent, vNode, node) => {
  */
 const createNode = (parent, vNode, isSvg) => {
   // If this is a keyed node and we have it in the map we can just use it directly
-  if (vNode.attributes.key && keyMap.has(vNode.attributes.key)) {
-    const keyedNode = keyMap.get(vNode.attributes.key)
+  if (vNode.attributes.key && (keyMapObj.has(vNode.attributes.key) || keyMapScalar.has(vNode.attributes.key))) {
+    const keyedNode = keyMapObj.get(vNode.attributes.key) || keyMapScalar.get(vNode.attributes.key)
     if (keyedNode) {
       parent.appendChild(keyedNode)
       return keyedNode
@@ -190,7 +192,11 @@ const createNode = (parent, vNode, isSvg) => {
   vNode.attributes.oncreate && vNode.attributes.oncreate(node)
   vDomMap.set(node, vNode)
   if (vNode.attributes.key) {
-    keyMap.set(vNode.attributes.key, node)
+    if (typeof vNode.attributes.key === 'object') {
+      keyMapObj.set(vNode.attributes.key, node)
+    } else {
+      keyMapScalar.set(vNode.attributes.key, node)
+    }
   }
   return node
 }
@@ -221,11 +227,21 @@ export const renderNode = async (
           childNodes: []
         }, isSvg)
       }
-      node = await renderNode(await vNode, node, parent, isSvg, root)
+      asyncMap.set(node, vNode)
+      ;(async () => {
+        const resolved = await vNode
+        if (!root.contains(node) || asyncMap.get(node) !== vNode) {
+          return
+        }
+        node = await renderNode(resolved, node, parent, isSvg, root)
+      })()
       return node
     }
 
     if (vNode[Symbol.asyncIterator] instanceof Function) {
+      if (iterMap.get(node) === vNode[Symbol.asyncIterator]) {
+        return node
+      }
       if (!node) {
         node = createNode(parent, {
           nodeName: 'slot',
@@ -233,15 +249,16 @@ export const renderNode = async (
           childNodes: []
         }, isSvg)
       }
-      iteratorMap.set(node, vNode)
-      for await (const value of vNode) {
-        // TODO: document breaking iterators when changed
-        if (!root.contains(node) || iteratorMap.get(node) !== vNode) {
-          break
+      iterMap.set(node, vNode[Symbol.asyncIterator])
+      ;(async () => {
+        for await (const value of vNode) {
+          if (!root.contains(node) || iterMap.get(node) !== vNode[Symbol.asyncIterator]) {
+            break
+          }
+          node = await renderNode(value, node, parent, isSvg, root)
+          iterMap.set(node, vNode[Symbol.asyncIterator])
         }
-        node = await renderNode(value, node, parent, isSvg, root)
-        iteratorMap.set(node, vNode)
-      }
+      })()
       return node
     }
 
@@ -265,10 +282,10 @@ export const renderNode = async (
     }
 
     if (node) {
-    // If old node exists, try to patch or replace it
+      // If old node exists, try to patch or replace it
       node = modifyNode(parent, vNode, node)
     } else {
-    // Create a new node
+      // Create a new node
       node = createNode(parent, vNode, isSvg)
     }
 
@@ -289,7 +306,7 @@ export const renderNode = async (
         const vChild = vNode.childNodes[index]
         const child = node.childNodes[index]
         if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
-          !!vChild && renderNode(vChild, child, parent, isSvg, root)
+          !!vChild && await renderNode(vChild, child, parent, isSvg, root)
         }
       }
     }

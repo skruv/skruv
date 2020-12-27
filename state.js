@@ -3,15 +3,28 @@ export const createState = (stateObj) => {
   const Handler = class Handler {
     constructor (name) {
       this.name = name
+      this._scheduled = false
       this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
     }
 
     _resolve () {
-      this._skruv_resolve()
-      this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
+      if (this._skruv_parent && this._skruv_parent._resolve) {
+        this._skruv_parent._resolve()
+      }
+      if (this._scheduled) { return }
+      this._scheduled = true
+      window.requestAnimationFrame(() => {
+        this._skruv_resolve()
+        this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
+        this._scheduled = false
+      })
     }
 
     set (o, p, v) {
+      if (p === '_skruv_parent') {
+        this._skruv_parent = v
+        return true
+      }
       v = this.recurse(p, v)
       o[p] = v
       this._resolve()
@@ -19,6 +32,9 @@ export const createState = (stateObj) => {
     }
 
     get (o, p, proxy) {
+      if (p === '_skruv_resolve') {
+        return () => this._resolve()
+      }
       if (p === 'skruv_unwrap_proxy') {
         return o
       }
@@ -54,20 +70,21 @@ export const createState = (stateObj) => {
           // check object properties for other objects or arrays
           v = Object.keys(v).reduce((pp, cc) => {
             pp[cc] = this.recurse(`${p}.${cc}`, v[cc])
+            if (typeof pp[cc] === 'object') pp[cc]._skruv_parent = v
             return pp
           }, {})
           // proxify objects
-          v = new Proxy(v, new this.constructor(`${this.name}.${p}`));
-          (async () => {
-            // eslint-disable-next-line no-unused-vars
-            for await (const _ of v) {
-              this._resolve()
-            }
-          })()
+          v = new Proxy(v, new this.constructor(`${this.name}.${p}`))
+          v._skruv_parent = this
         } else if (v.constructor === Array) {
           // check arrays for objects or arrays
-          v = v.map((vv, vk) => this.recurse(`${p}[${vk}]`, vv))
-          v = new Proxy(v, new this.constructor(`${this.name}.${p}`));
+          v = v.map((vv, vk) => {
+            const cc = this.recurse(`${p}[${vk}]`, vv)
+            if (typeof cc === 'object') cc._skruv_parent = v
+            return cc
+          })
+          v = new Proxy(v, new this.constructor(`${this.name}.${p}`))
+          v._skruv_parent = this;
 
           // set observers on some array methods
           ['push', 'pop', 'shift', 'unshift', 'splice', 'sort'].forEach(m => {
@@ -77,13 +94,7 @@ export const createState = (stateObj) => {
               this._resolve()
               return ret
             }
-          });
-          (async () => {
-            // eslint-disable-next-line no-unused-vars
-            for await (const _ of v) {
-              this._resolve()
-            }
-          })()
+          })
         }
       }
       return v

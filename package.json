@@ -18,7 +18,6 @@
   ],
   "scripts": {
     "test": "jest --no-cache --passWithNoTests",
-    "typecheck": "tsc",
     "standard": "standard"
   },
   "author": "Svante Richter",

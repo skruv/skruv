@@ -2,11 +2,11 @@
 import { renderNode } from '../vDOM.js'
 import { body, div } from '../html.js'
 
-test('render deep elements', () => {
+test('render deep elements', async () => {
   const html = document.createElement('html')
   const root = document.createElement('body')
   html.appendChild(root)
-  renderNode(
+  await renderNode(
     body({},
       div({},
         div({}, 'deep')

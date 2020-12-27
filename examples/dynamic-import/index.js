@@ -1,5 +1,5 @@
 import { renderNode } from '../../vDOM.js'
-import { body, h1, input, div } from '../../html.js'
+import { body, div } from '../../html.js'
 import { sub } from './state.js'
 
 let root = document.body
@@ -12,19 +12,10 @@ let root = document.body
         console.error(err)
       }
     },
-    state.error ? div({ class: 'error' }, 'Error!') : [
-      h1({}, state.obj.obj2.nest),
-      input({
-        value: state.obj.obj2.nest,
-        oninput: e => {
-          state.obj.obj2.nest = e.target.value
-          state.arr.push(e.target.value)
-        }
-      }),
-      import('./components/one.js').then(i => i.default('obj')),
-      import('./components/one.js').then(i => i.default('arr')),
-      state.arr.map(a => div({}, a))
-    ]
+    state.error.msg ? div({ class: 'error' }, 'Error!') : div({},
+      import('./components/componentWithLoader.js').then(i => i.default()),
+      import('./components/stateSub.js').then(i => i.default())
+    )
     ), root)
   }
 })()
