@@ -32,7 +32,7 @@ export const createState = (stateObj) => {
     }
 
     get (o, p, proxy) {
-      if (p === '_skruv_resolve') {
+      if (p === 'skruv_resolve') {
         return () => this._resolve()
       }
       if (p === 'skruv_unwrap_proxy') {

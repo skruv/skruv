@@ -11,9 +11,9 @@ Or for a full impementation of todomvc see [here](./examples/todomvc)
 ## Architecture
 
 * state.js is a recursive proxy for plain objects and arrays. It takes in an initial state
-object and a callback and returns a state that will recursivley listen for changes and call the callback on change
+object and can then be used as a generator to listen for changes. It is recursive, so subobjects or subarrays can also be listened to.
 * vDOM.js is a function that takes in a vDOM and target root and renders to a DOM node. Since it renders directly to the
-root (not inside it) it returns a HTMLElement or SVGElement that is a reference to the new root.
+root (not inside it) it returns a HTMLElement or SVGElement that is a reference to the new root. This is because skruv does not render to a child of the root, instead it renders to the root itself so that for example body can be the root.
 * html.js are helper functions to create a vDOM tree. Also exposes a function called `h` and `textNode` to create
 arbitrary vDOM nodes and a tagged template function called `css` to help with creating styles. The HTML element `var`
 and the SVG element `switch` are suffixed by Elem (`varElem` and `switchElem`) because the names are reserved in js.
@@ -30,8 +30,7 @@ Besides the normal attributes and events two lifecycle events are available:
 
 And two special attributes:
 
-* `key` means that the element will be bound to that key and will be reused even if reordering/moving it. The key is an
-object and will be keyed in a WeakMap to allow for garbage collection when nessecary.
+* `key` means that the element will be bound to that key and will be reused even if reordering/moving it. The key is either a object or a scalar value. It is stored in either a weakmap or a map.
 * `opaque` means that nothing will be done with childNodes on that element (removing/updating/adding will not happen)
 
 With these it should be pretty simple to add external libraries like editors since key & opaque can make skruv leave
@@ -139,7 +138,7 @@ Result ([Open by itself](./examples/web-components-stateless)):
 
 ## Browser support
 
-Requires Modules, Proxies, Map/WeakMap, so Edge 16+, Safari 11+, and modern versions of all other browsers should work.
+Requires Modules, Proxies, Map/WeakMap, Generators, async/await so Edge 16+, Safari 11+, and modern versions of all other browsers should work.
 If you still need to support IE or older Edge versions I'd reccommend that you build a separate minimal-functionality
 app using hyperapp (a great framework) or similar. That's how I have handled legacy support at a large global ecommerce
 company.
@@ -150,12 +149,14 @@ supported in for example Samsung Internet, UC Browser and other smaller browsers
 ## TODO:
 
 * TODO: Add example with combined view/state/actions
-* TODO: Add routing example
-* TODO: Add helpers for i18n, devtools, routing, error handling
-* TODO: Add testing
+* TODO: Add helpers/examples for i18n, devtools, routing, error handling
+* TODO: Add more testing
 * TODO: Document special/private methods
+  * state: skruv_unwrap_proxy
+  * state: skruv_resolve (Rename?)
 * TODO: Try SRI for docs and add example in docs
-* TODO: Handle foreign objects in SVG
+* TODO: Handle foreign objects in SVG (some SVG children can be non-SVG)
+* TODO: Should I keep cache and import helpers?
 
 <script src="https://unpkg.com/marked@1.2.0/marked.min.js"></script>
 <link href="https://unpkg.com/prismjs@1.21.0/themes/prism.css" rel="stylesheet" />
