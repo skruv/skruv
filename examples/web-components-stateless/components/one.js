@@ -1,5 +1,5 @@
-import { h1, slot, css, div } from '../../../html.js'
-import { stateless } from '../../../webcomponents/stateless.js'
+import { h1, slot, css, div } from 'https://unpkg.com/skruv@0.1.0/html.js'
+import { stateless } from 'https://unpkg.com/skruv@0.1.0/webcomponents/stateless.js'
 
 const style = css`
 h1 {
