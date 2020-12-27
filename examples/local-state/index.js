@@ -3,7 +3,7 @@ import { body, div } from 'https://unpkg.com/skruv@0.1.0/html.js'
 import { createState } from 'https://unpkg.com/skruv@0.1.0/state.js'
 
 export const sub = createState({
-  error: {},
+  error: {}
 })
 
 let root = document.body

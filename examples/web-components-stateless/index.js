@@ -21,7 +21,6 @@ export const sub = createState({
       h1({}, state.input),
       import('./components/one.js').then(i => i.default())
     ]
-  ), root)
-}
+    ), root)
+  }
 })()
-

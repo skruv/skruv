@@ -11,14 +11,14 @@ Or for a full impementation of todomvc see [here](./examples/todomvc)
 ## Architecture
 
 * state.js is a recursive proxy for plain objects and arrays. It takes in an initial state
-object and can then be used as a generator to listen for changes. It is recursive, so subobjects or subarrays can also be listened to.
+object and can then be used as a generator to listen for changes. It is recursive, so subobjects or subarrays
+can also be listened to.
 * vDOM.js is a function that takes in a vDOM and target root and renders to a DOM node. Since it renders directly to the
-root (not inside it) it returns a HTMLElement or SVGElement that is a reference to the new root. This is because skruv does not render to a child of the root, instead it renders to the root itself so that for example body can be the root.
+root (not inside it) it returns a HTMLElement or SVGElement that is a reference to the new root. This is because
+skruv does not render to a child of the root, instead it renders to the root itself so that for example body can be the root.
 * html.js are helper functions to create a vDOM tree. Also exposes a function called `h` and `textNode` to create
 arbitrary vDOM nodes and a tagged template function called `css` to help with creating styles. The HTML element `var`
 and the SVG element `switch` are suffixed by Elem (`varElem` and `switchElem`) because the names are reserved in js.
-* cache.js is a recursive object cache that can be used to cache expensive function calls. It supports async resolving
-that notifies a callback to help with dynamic importing.
 * State updaters can be implemented as simple functions that modify state. They require nothing special.
 
 ## API
@@ -30,7 +30,8 @@ Besides the normal attributes and events two lifecycle events are available:
 
 And two special attributes:
 
-* `key` means that the element will be bound to that key and will be reused even if reordering/moving it. The key is either a object or a scalar value. It is stored in either a weakmap or a map.
+* `key` means that the element will be bound to that key and will be reused even if reordering/moving it. The key is
+either a object or a scalar value. It is stored in either a weakmap or a map.
 * `opaque` means that nothing will be done with childNodes on that element (removing/updating/adding will not happen)
 
 With these it should be pretty simple to add external libraries like editors since key & opaque can make skruv leave
@@ -43,6 +44,9 @@ miliseconds as supplied to allow for other event handling and browser paint whil
 lists yet, only DOM's on different depths.
 
 ## Webcomponents
+
+**BETA**: Stateful components are still a WIP and most of their usefulness is gone since generators provide localized
+rendering.
 
 Skruv comes with two webcomponents built in, `stateful` and `stateless`. As the names imply `stateful` has internal
 state and can be rerendered on changes without rerendering the whole tree. `stateless` has no internal state and will
@@ -95,7 +99,10 @@ Result ([Open by itself](./examples/generators)):
 
 ### Components with local state
 
-Components can also have local state, so that you don't have to keep everything in the global state. In this example we have one root state for error handling and one local state. When the local state is modified only the corresponding element is updated since that is the only one subscribed.
+Components can also have local state, so that you don't have to keep everything
+in the global state. In this example we have one root state for error handling and
+one local state. When the local state is modified only the corresponding element
+is updated since that is the only one subscribed.
 
 <example-code language="js" href="./examples/local-state/index.js"></example-code>
 <example-code language="js" href="./examples/local-state/components/localState.js"></example-code>
@@ -138,7 +145,7 @@ supported in for example Samsung Internet, UC Browser and other smaller browsers
 * TODO: Add more testing
 * TODO: Document special/private methods
   * state: skruv_unwrap_proxy
-  * state: skruv_resolve (Rename?)
+  * state: skruv_resolve (Rename? Perhaps useful for triggering updates of non-plain objects)
 * TODO: Try SRI for docs and add example in docs
 * TODO: Should I keep cache and import helpers?
 

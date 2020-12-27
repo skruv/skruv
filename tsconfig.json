@@ -17,7 +17,5 @@
         "vDOM.js",
         "state.js",
         "html.js",
-        "cache.js",
-        "utils/importer.js",
     ]
 }
