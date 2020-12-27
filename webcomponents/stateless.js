@@ -14,11 +14,14 @@ export const stateless = (name, attributes, dom, ...children) => {
 
       connectedCallback () {
         this.root = this.attachShadow({ mode: 'open' })
+        // Create our initial render root
+        this.rootDom = document.createElement('slot')
+        this.root.appendChild(this.rootDom)
         this._update()
       }
 
-      _update () {
-        this.rootDom = renderNode(dom(this.initState), this.rootDom, Infinity, this.root)
+      async _update () {
+        this.rootDom = await renderNode(dom(this.initState), this.rootDom)
       }
     })
   }

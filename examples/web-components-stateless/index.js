@@ -1,29 +1,27 @@
-import { renderNode } from 'https://unpkg.com/skruv@0.0.12/vDOM.js'
-import { body, h1, progress, div } from 'https://unpkg.com/skruv@0.0.12/html.js'
-import { createState } from 'https://unpkg.com/skruv@0.0.12/state.js'
-import { importer } from 'https://unpkg.com/skruv@0.0.12/utils/importer.js'
+import { renderNode } from '../../vDOM.js'
+import { body, h1, div } from '../../html.js'
+import { createState } from '../../state.js'
 
 let root = document.body
 
-export let state = {
+export const sub = createState({
   input: 'Global',
   error: false
-}
+})
 
-/* Normalize the url so it is not relative to the importer */
-const importUrl = (url) => (new URL(url, import.meta.url)).href
-
-const err = (err) => { state.error = err; console.error(err) }
-
-export const render = () => {
-  root = renderNode(body({},
+;(async () => {
+  for await (const state of sub) {
+    root = await renderNode(body({
+      onskruverror: (err) => {
+        state.error = err
+        console.error(err)
+      }
+    },
     state.error ? div({ class: 'error' }, 'Error!') : [
       h1({}, state.input),
-      importer(importUrl('./components/one.js'), { success: render, error: err }, 'one') || progress()
+      import('./components/one.js').then(i => i.default())
     ]
   ), root)
 }
+})()
 
-state = createState(state, render)
-
-render()

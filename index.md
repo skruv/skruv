@@ -77,54 +77,30 @@ To do a onetime render of a single h1 on a root (in this case the body element) 
 Result ([Open by itself](./examples/render)):
 <iframe src="./examples/render"></iframe>
 
-### State management
+### Using generators
 
-To handle state updates we use the state helper which will call the supplied callback when state changes:
+You can use generators to handle partial updates or to handle local state changes
+(like progress bars). In this example componentWithLoader first resolves to a progress
+bar and then to the actual component when it is loaded. stateSub and subAndModify
+only subscribe and update when their specific states update. We also separate out
+the root state for convienience.
 
-<example-code language="js" href="./examples/state/index.js"></example-code>
-Result ([Open by itself](./examples/state)):
-<iframe src="./examples/state"></iframe>
-
-This also works with deep constructs:
-
-<example-code language="js" href="./examples/state-deep/index.js"></example-code>
-Result ([Open by itself](./examples/state-deep)):
-<iframe src="./examples/state-deep"></iframe>
-
-The state can contain non-plain objects, but for changes to them you need to manually tell skruv to rerender:
-
-<example-code language="js" href="./examples/state-url/index.js"></example-code>
-Result ([Open by itself](./examples/state-url)):
-<iframe src="./examples/state-url"></iframe>
-
-### Dynamically importing components
-
-There is a small utility called the importer that helps with async imports and caches the imported modules:
-
-<example-code language="js" href="./examples/dynamic-import/index.js"></example-code>
-<example-code language="js" href="./examples/dynamic-import/components/one.js"></example-code>
-Result ([Open by itself](./examples/dynamic-import)):
-<iframe src="./examples/dynamic-import"></iframe>
+<example-code language="js" href="./examples/generators/index.js"></example-code>
+<example-code language="js" href="./examples/generators/state.js"></example-code>
+<example-code language="js" href="./examples/generators/components/componentWithLoader.js"></example-code>
+<example-code language="js" href="./examples/generators/components/stateSub.js"></example-code>
+<example-code language="js" href="./examples/generators/components/subAndModify.js"></example-code>
+Result ([Open by itself](./examples/generators)):
+<iframe src="./examples/generators"></iframe>
 
 ### Components with local state
 
-Components can also have local state, so that you don't have to keep everything in the global state.
+Components can also have local state, so that you don't have to keep everything in the global state. In this example we have one root state for error handling and one local state. When the local state is modified only the corresponding element is updated since that is the only one subscribed.
 
 <example-code language="js" href="./examples/local-state/index.js"></example-code>
-<example-code language="js" href="./examples/local-state/components/one.js"></example-code>
+<example-code language="js" href="./examples/local-state/components/localState.js"></example-code>
 Result ([Open by itself](./examples/local-state)):
 <iframe src="./examples/local-state"></iframe>
-
-### Using web-components for partial rendering
-
-Stateful web-components can also have localized rendering. In this example typing in the field will modify the global
-state via a change event, but clicking the add button only modifies local state. When only local state is modified only
-the component itself is rerendered. Rerendering in this example is indicated by changing the text color.
-
-<example-code language="js" href="./examples/web-components-stateful/index.js"></example-code>
-<example-code language="js" href="./examples/web-components-stateful/components/one.js"></example-code>
-Result ([Open by itself](./examples/web-components-stateful)):
-<iframe src="./examples/web-components-stateful"></iframe>
 
 ### Using web-components for CSS scoping
 
