@@ -218,7 +218,6 @@ export const renderNode = async (
 ) => {
   try {
   // TODO: breakout these into something to handle async rendering
-  // TODO: add loading indicators
     if (vNode instanceof Promise) {
       if (!node) {
         node = createNode(parent, {
