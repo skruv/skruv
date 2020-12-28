@@ -251,8 +251,7 @@ export const renderNode = async (
       iterMap.set(node, vNode.toString())
       ;(async () => {
         for await (const value of vNode()) {
-          if (!root.contains(node) || iterMap.get(node) !== vNode.toString()) {
-            await renderNode(value, node, parent, isSvg, root)
+          if (!root.contains(node)) {
             break
           }
           node = await renderNode(value, node, parent, isSvg, root)
