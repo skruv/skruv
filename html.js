@@ -34,7 +34,7 @@ export const textNode = (data) => ({
    */
 const recursiveFlattenFilter = childNodes => {
   const processed = childNodes
-    .map(child => typeof child === 'function' && child.prototype.toString() !== '[object AsyncGenerator]' ? child() : child)
+    .map(child => typeof child === 'function' && !(child.prototype && child.prototype.toString() === '[object AsyncGenerator]') ? child() : child)
     .flat(Infinity)
     .filter(child => (typeof child !== 'undefined' && typeof child !== 'boolean'))
     .map(child => typeof child === 'string' || typeof child === 'number' ? textNode(child) : child)
