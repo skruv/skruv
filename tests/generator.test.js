@@ -17,7 +17,7 @@ test('use slots as placeholders', async () => {
   const html = document.createElement('html')
   const root = document.createElement('body')
   html.appendChild(root)
-  await renderNode(body({}, generator), root)
+  renderNode(body({}, generator), root)
   return expect(html.childNodes[0].childNodes[0].nodeName).toBe('SLOT')
 })
 
@@ -25,7 +25,7 @@ test('update on state update: Array', async () => {
   const html = document.createElement('html')
   const root = document.createElement('body')
   html.appendChild(root)
-  await renderNode(body({}, generator), root)
+  renderNode(body({}, generator), root)
   state.arr.push('test')
   await wait(20)
   return expect(html.childNodes[0].childNodes[0].textContent).toBe('test')

@@ -26,7 +26,7 @@ try {
 let root = document.querySelector('.todoapp');
 (async () => {
   for await (const state of sub) {
-    root = await renderNode(section({
+    root = renderNode(section({
       class: 'todoapp',
       onskruverror: (err) => {
         state.error = err

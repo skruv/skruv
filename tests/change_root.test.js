@@ -6,7 +6,7 @@ test('change root node type', async () => {
   const html = document.createElement('body')
   const root = document.createElement('div')
   html.appendChild(root)
-  await renderNode(
+  renderNode(
     header({},
       div({},
         div({}, 'test')

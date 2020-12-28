@@ -10,7 +10,7 @@ test('simple render', async () => {
   const html = document.createElement('html')
   const root = document.createElement('body')
   html.appendChild(root)
-  await renderNode(body({}, async), root)
+  renderNode(body({}, async), root)
   await wait(1)
   expect(html.childNodes[0].textContent).toBe('test')
 })

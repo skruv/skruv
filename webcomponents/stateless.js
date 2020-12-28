@@ -21,7 +21,7 @@ export const stateless = (name, attributes, dom, ...children) => {
       }
 
       async _update () {
-        this.rootDom = await renderNode(dom(this.initState), this.rootDom)
+        this.rootDom = renderNode(dom(this.initState), this.rootDom)
       }
     })
   }

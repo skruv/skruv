@@ -11,7 +11,7 @@ export const sub = createState({
 
 ;(async () => {
   for await (const state of sub) {
-    root = await renderNode(body({
+    root = renderNode(body({
       onskruverror: (err) => {
         state.error = err
         console.error(err)

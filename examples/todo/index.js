@@ -10,7 +10,7 @@ const sub = createState({
 
 ;(async () => {
   for await (const state of sub) {
-    root = await renderNode(body({},
+    root = renderNode(body({},
       input({ type: 'text', oninput: e => { state.value = e.target.value }, value: state.value }),
       button({ onclick: () => { state.todos.push(state.value) } }, 'Add'),
       ul({},

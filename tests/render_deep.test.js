@@ -6,7 +6,7 @@ test('render deep elements', async () => {
   const html = document.createElement('html')
   const root = document.createElement('body')
   html.appendChild(root)
-  await renderNode(
+  renderNode(
     body({},
       div({},
         div({}, 'deep')

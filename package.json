@@ -11,6 +11,7 @@
     "html.js",
     "state.js",
     "vDOM.js",
+    "cache.js",
     "webcomponents/stateful.js",
     "webcomponents/stateless.js"
   ],

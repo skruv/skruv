@@ -209,7 +209,7 @@ const createNode = (parent, vNode, isSvg) => {
  * @param {Boolean} isSvg
  * @returns {Promise<HTMLElement | SVGElement | Text>} The updated root
  */
-export const renderNode = async (
+export const renderNode = (
   vNode,
   node,
   parent = node.parentNode,
@@ -232,7 +232,7 @@ export const renderNode = async (
         if (!root.contains(node) || asyncMap.get(node) !== vNode) {
           return
         }
-        node = await renderNode(resolved, node, parent, isSvg, root)
+        node = renderNode(resolved, node, parent, isSvg, root)
       })()
       return node
     }
@@ -254,7 +254,7 @@ export const renderNode = async (
           if (!root.contains(node)) {
             break
           }
-          node = await renderNode(value, node, parent, isSvg, root)
+          node = renderNode(value, node, parent, isSvg, root)
           iterMap.set(node, vNode.toString())
         }
       })()
@@ -310,7 +310,7 @@ export const renderNode = async (
         const vChild = vNode.childNodes[index]
         const child = node.childNodes[index]
         if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
-          !!vChild && await renderNode(vChild, child, parent, isSvg, root)
+          !!vChild && renderNode(vChild, child, parent, isSvg, root)
         }
       }
     }

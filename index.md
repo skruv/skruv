@@ -19,6 +19,7 @@ skruv does not render to a child of the root, instead it renders to the root its
 * html.js are helper functions to create a vDOM tree. Also exposes a function called `h` and `textNode` to create
 arbitrary vDOM nodes and a tagged template function called `css` to help with creating styles. The HTML element `var`
 and the SVG element `switch` are suffixed by Elem (`varElem` and `switchElem`) because the names are reserved in js.
+* cache.js is a recursive object cache that can be used to cache expensive function calls or unchanging vNodes.
 * State updaters can be implemented as simple functions that modify state. They require nothing special.
 
 ## API
