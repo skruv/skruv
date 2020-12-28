@@ -1,5 +1,5 @@
-import { h1, slot, css } from 'https://unpkg.com/skruv@0.0.12/html.js'
-import { stateless } from 'https://unpkg.com/skruv@0.0.12/webcomponents/stateless.js'
+import { h1, css, div } from 'https://unpkg.com/skruv@0.1.0/html.js'
+import { stateless } from 'https://unpkg.com/skruv@0.1.0/webcomponents/stateless.js'
 
 const style = css`
 h1 {
@@ -7,13 +7,11 @@ h1 {
 }
 `
 
-export default () => () => slot({},
-  stateless(
-    'test',
-    {},
-    () => slot({ name: 'root' }, [
-      h1({}, 'Testing!'),
-      style
-    ])
-  )
+export default () => stateless(
+  'test',
+  {},
+  () => div({}, [
+    h1({}, 'Testing!'),
+    style
+  ])
 )

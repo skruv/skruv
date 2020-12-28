@@ -1,61 +1,99 @@
-// As this is a recursive proxy typechecking it seems hard/impossible
-// @ts-nocheck
-export const createState = (stateObj, callback) => {
-  // Taken from https://codepen.io/Escu/pen/MeKeVQ
+export const createState = (stateObj) => {
+  // Modified from https://codepen.io/Escu/pen/MeKeVQ
   const Handler = class Handler {
     constructor (name) {
       this.name = name
+      this._scheduled = false
+      this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
     }
 
-    set (o, p, v) {
-      v = this.recurse(p, v)
-      o[p] = v
-      callback()
+    _resolve () {
+      if (this._skruv_parent && this._skruv_parent._resolve) {
+        this._skruv_parent._resolve()
+      }
+      if (this._scheduled) { return }
+      this._scheduled = true
+      window.requestAnimationFrame(() => {
+        this._skruv_resolve()
+        this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
+        this._scheduled = false
+      })
+    }
+
+    set (target, key, value) {
+      if (key === '_skruv_parent') {
+        this._skruv_parent = value
+        return true
+      }
+      target[key] = this.recurse(key, value)
+      this._resolve()
       return true
     }
 
-    get (o, p) {
-      return o[p]
+    get (target, key, proxy) {
+      if (key === 'skruv_resolve') {
+        return () => this._resolve()
+      }
+      if (key === 'skruv_unwrap_proxy') {
+        return target
+      }
+      if (key === Symbol.asyncIterator) {
+        return () => {
+          // If this is the first loop for this sub we should return directly for first value
+          let booted = false
+          return {
+            next: async () => {
+              if (booted) {
+                await this._skruv_promise
+              } else {
+                booted = true
+              }
+              return { done: false, value: proxy }
+            }
+          }
+        }
+      }
+      return target[key]
     }
 
-    deleteProperty (o, p) {
-      const res = delete o[p]
-      callback()
+    deleteProperty (target, key) {
+      const res = delete target[key]
+      this._resolve()
       return res
     }
 
-    recurse (p, v) {
+    // TODO: Refactor, perhaps pass down parent as argument instead
+    recurse (path, value) {
       // check for falsy values
-      if (v && v.constructor) {
-        if (v.constructor === Object) {
+      if (value && value.constructor) {
+        if (value.constructor === Object) {
+          const subProxy = new this.constructor(`${this.name}.${path}`)
           // check object properties for other objects or arrays
-          v = Object.keys(v).reduce((pp, cc) => {
-            pp[cc] = this.recurse(`${p}.${cc}`, v[cc])
-            return pp
+          value = Object.keys(value).reduce((acc, key) => {
+            acc[key] = this.recurse(`${path}.${key}`, value[key])
+            if (typeof acc[key] === 'object') acc[key]._skruv_parent = subProxy
+            return acc
           }, {})
-          // proxify objects
-          v = new Proxy(v, new this.constructor(`${this.name}.${p}`))
-        } else if (v.constructor === Array) {
+          value = new Proxy(value, subProxy)
+          value._skruv_parent = this
+        } else if (value.constructor === Array) {
+          const subProxy = new this.constructor(`${this.name}.${path}`)
           // check arrays for objects or arrays
-          v = v.map((vv, vk) => this.recurse(`${p}[${vk}]`, vv));
-
-          // set observers on some array methods
-          ['push', 'pop', 'shift', 'unshift', 'splice', 'sort'].forEach(m => {
-            v[m] = (...data) => {
-              data = data.map((vv, vk) => this.recurse(`${p}[${vk}]`, vv))
-              const ret = Array.prototype[m].call(v, ...data)
-              callback()
-              return ret
-            }
+          value = value.map((child, key) => {
+            const newValue = this.recurse(`${path}[${key}]`, child)
+            if (typeof newValue === 'object') newValue._skruv_parent = subProxy
+            return newValue
           })
+          value = new Proxy(value, subProxy)
+          value._skruv_parent = this
         }
       }
-      return v
+      return value
     }
   }
 
   // create root proxy
-  var p = new Proxy({}, new Handler('root'))
-  Object.assign(p, stateObj)
-  return p
+  var rootProxy = new Proxy({}, new Handler('root'))
+  Object.assign(rootProxy, stateObj)
+  return rootProxy
 }

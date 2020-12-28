@@ -11,14 +11,15 @@ Or for a full impementation of todomvc see [here](./examples/todomvc)
 ## Architecture
 
 * state.js is a recursive proxy for plain objects and arrays. It takes in an initial state
-object and a callback and returns a state that will recursivley listen for changes and call the callback on change
+object and can then be used as a generator to listen for changes. It is recursive, so subobjects or subarrays
+can also be listened to.
 * vDOM.js is a function that takes in a vDOM and target root and renders to a DOM node. Since it renders directly to the
-root (not inside it) it returns a HTMLElement or SVGElement that is a reference to the new root.
+root (not inside it) it returns a HTMLElement or SVGElement that is a reference to the new root. This is because
+skruv does not render to a child of the root, instead it renders to the root itself so that for example body can be the root.
 * html.js are helper functions to create a vDOM tree. Also exposes a function called `h` and `textNode` to create
 arbitrary vDOM nodes and a tagged template function called `css` to help with creating styles. The HTML element `var`
 and the SVG element `switch` are suffixed by Elem (`varElem` and `switchElem`) because the names are reserved in js.
-* cache.js is a recursive object cache that can be used to cache expensive function calls. It supports async resolving
-that notifies a callback to help with dynamic importing.
+* cache.js is a recursive object cache that can be used to cache expensive function calls or unchanging vNodes.
 * State updaters can be implemented as simple functions that modify state. They require nothing special.
 
 ## API
@@ -30,8 +31,8 @@ Besides the normal attributes and events two lifecycle events are available:
 
 And two special attributes:
 
-* `key` means that the element will be bound to that key and will be reused even if reordering/moving it. The key is an
-object and will be keyed in a WeakMap to allow for garbage collection when nessecary.
+* `key` means that the element will be bound to that key and will be reused even if reordering/moving it. The key is
+either a object or a scalar value. It is stored in either a weakmap or a map.
 * `opaque` means that nothing will be done with childNodes on that element (removing/updating/adding will not happen)
 
 With these it should be pretty simple to add external libraries like editors since key & opaque can make skruv leave
@@ -44,6 +45,9 @@ miliseconds as supplied to allow for other event handling and browser paint whil
 lists yet, only DOM's on different depths.
 
 ## Webcomponents
+
+**BETA**: Stateful components are still a WIP and most of their usefulness is gone since generators provide localized
+rendering.
 
 Skruv comes with two webcomponents built in, `stateful` and `stateless`. As the names imply `stateful` has internal
 state and can be rerendered on changes without rerendering the whole tree. `stateless` has no internal state and will
@@ -78,54 +82,33 @@ To do a onetime render of a single h1 on a root (in this case the body element) 
 Result ([Open by itself](./examples/render)):
 <iframe src="./examples/render"></iframe>
 
-### State management
+### Using generators
 
-To handle state updates we use the state helper which will call the supplied callback when state changes:
+You can use generators to handle partial updates or to handle local state changes
+(like progress bars). In this example componentWithLoader first resolves to a progress
+bar and then to the actual component when it is loaded. stateSub and subAndModify
+only subscribe and update when their specific states update. We also separate out
+the root state for convienience.
 
-<example-code language="js" href="./examples/state/index.js"></example-code>
-Result ([Open by itself](./examples/state)):
-<iframe src="./examples/state"></iframe>
-
-This also works with deep constructs:
-
-<example-code language="js" href="./examples/state-deep/index.js"></example-code>
-Result ([Open by itself](./examples/state-deep)):
-<iframe src="./examples/state-deep"></iframe>
-
-The state can contain non-plain objects, but for changes to them you need to manually tell skruv to rerender:
-
-<example-code language="js" href="./examples/state-url/index.js"></example-code>
-Result ([Open by itself](./examples/state-url)):
-<iframe src="./examples/state-url"></iframe>
-
-### Dynamically importing components
-
-There is a small utility called the importer that helps with async imports and caches the imported modules:
-
-<example-code language="js" href="./examples/dynamic-import/index.js"></example-code>
-<example-code language="js" href="./examples/dynamic-import/components/one.js"></example-code>
-Result ([Open by itself](./examples/dynamic-import)):
-<iframe src="./examples/dynamic-import"></iframe>
+<example-code language="js" href="./examples/generators/index.js"></example-code>
+<example-code language="js" href="./examples/generators/state.js"></example-code>
+<example-code language="js" href="./examples/generators/components/componentWithLoader.js"></example-code>
+<example-code language="js" href="./examples/generators/components/stateSub.js"></example-code>
+<example-code language="js" href="./examples/generators/components/subAndModify.js"></example-code>
+Result ([Open by itself](./examples/generators)):
+<iframe src="./examples/generators"></iframe>
 
 ### Components with local state
 
-Components can also have local state, so that you don't have to keep everything in the global state.
+Components can also have local state, so that you don't have to keep everything
+in the global state. In this example we have one root state for error handling and
+one local state. When the local state is modified only the corresponding element
+is updated since that is the only one subscribed.
 
 <example-code language="js" href="./examples/local-state/index.js"></example-code>
-<example-code language="js" href="./examples/local-state/components/one.js"></example-code>
+<example-code language="js" href="./examples/local-state/components/localState.js"></example-code>
 Result ([Open by itself](./examples/local-state)):
 <iframe src="./examples/local-state"></iframe>
-
-### Using web-components for partial rendering
-
-Stateful web-components can also have localized rendering. In this example typing in the field will modify the global
-state via a change event, but clicking the add button only modifies local state. When only local state is modified only
-the component itself is rerendered. Rerendering in this example is indicated by changing the text color.
-
-<example-code language="js" href="./examples/web-components-stateful/index.js"></example-code>
-<example-code language="js" href="./examples/web-components-stateful/components/one.js"></example-code>
-Result ([Open by itself](./examples/web-components-stateful)):
-<iframe src="./examples/web-components-stateful"></iframe>
 
 ### Using web-components for CSS scoping
 
@@ -137,9 +120,18 @@ all h1's pink within the scoped component, but the global h1 is unaffected.
 Result ([Open by itself](./examples/web-components-stateless)):
 <iframe src="./examples/web-components-stateless"></iframe>
 
+### SVG
+
+SVG works too (including foreignObjects).
+
+<example-code language="js" href="./examples/svg-foreignobject/index.js"></example-code>
+Result ([Open by itself](./examples/svg-foreignobject)):
+<iframe src="./examples/svg-foreignobject"></iframe>
+
+
 ## Browser support
 
-Requires Modules, Proxies, Map/WeakMap, so Edge 16+, Safari 11+, and modern versions of all other browsers should work.
+Requires Modules, Proxies, Map/WeakMap, Generators, async/await so Edge 16+, Safari 11+, and modern versions of all other browsers should work.
 If you still need to support IE or older Edge versions I'd reccommend that you build a separate minimal-functionality
 app using hyperapp (a great framework) or similar. That's how I have handled legacy support at a large global ecommerce
 company.
@@ -147,31 +139,16 @@ company.
 In some examples I use dynamic imports and optional chaining which requires Chromium Edge and Safari 13.1+ and are not
 supported in for example Samsung Internet, UC Browser and other smaller browsers.
 
-## Why?
-
-I used hyperapp v1 a lot, both professionally and in hobby projects. I loved it's simplicity, and it introduced me to
-the idea that a complex app does not nessecarily require a complex framework. I wanted to decouple state managment and
-actions from it though and also make it easier to manually schedule a render for things like dynamic imports. I also
-find that while hyperapp is small, the code is not easily readable for me (and I like to understand how the tools I use
-work).
-
 ## TODO:
 
-* TODO: Add example of using skruv in skruv with opaque, key and oncreate. Useful for local state and partial
-rerendering.
-* TODO: Add example with using something like prosemirror/prismjs/codemirror in skruv either via webcomponents or opaque, key and oncreate.
 * TODO: Add example with combined view/state/actions
-* TODO: Add example of contained component (with style, state, actions and view)
-* TODO: Add routing example based on URL and URLSearchParams
-* TODO: Add helpers for i18n, devtools, routing, error handling
-* TODO: Handle foreign objects in SVG
-* TODO: Add testing
-* TODO: Fix TS ignores in recursiveFlattenFilter
-* TODO: Document special cases like `initState` and `_update`. Perhaps extend all components that have `_update` from a single component?
-* TODO: Document `changed` in state.js
-* TODO: Add SRI for all subresources in docs.
-* IDEA: Get old childNodes length from oldVnode instead of DOM?
-* IDEA: Create a separate 'vDom' for CSS
+* TODO: Add helpers/examples for i18n, devtools, routing, error handling
+* TODO: Add more testing
+* TODO: Document special/private methods
+  * state: skruv_unwrap_proxy
+  * state: skruv_resolve (Rename? Perhaps useful for triggering updates of non-plain objects)
+* TODO: Try SRI for docs and add example in docs
+* TODO: Should I keep cache and import helpers?
 
 <script src="https://unpkg.com/marked@1.2.0/marked.min.js"></script>
 <link href="https://unpkg.com/prismjs@1.21.0/themes/prism.css" rel="stylesheet" />

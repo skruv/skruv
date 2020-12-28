@@ -24,5 +24,6 @@ jobs:
       run: |
         npm ci --silent
     - run: npm run test
-    - run: npm run typecheck
+      env:
+        NODE_OPTIONS: --experimental-vm-modules
     - run: npm run standard

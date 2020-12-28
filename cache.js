@@ -5,24 +5,13 @@ const createCache = () => ({
 
 const cache = createCache()
 
-/**
- * @param   {*} value
- * @return  {String}
- */
 const getCacheType = (value) => {
   const t = typeof value
   const isObject = (t === 'object' || t === 'function') && value !== null
   return isObject ? 'weakmap' : 'map'
 }
 
-/**
- * @param   {function} fn
- * @param   {Array<*>} prefix
- * @param   {function} callback
- *
- * @return  {*}
- */
-const get = (fn, prefix = [], callback = () => {}) => /** @param {Array<*>} args */ (...args) => {
+const get = (fn, prefix = []) => (...args) => {
   const item = [...prefix, fn.name, ...args].reduce((acc, cur) => {
     if (acc[getCacheType(cur)].get(cur)) {
       return acc[getCacheType(cur)].get(cur)
@@ -32,20 +21,7 @@ const get = (fn, prefix = [], callback = () => {}) => /** @param {Array<*>} args
   }, cache)
   if (!item.map.has('value')) {
     const res = fn(...args)
-    if (typeof res !== 'object' || typeof res.then !== 'function') {
-      item.map.set('value', res)
-    } else {
-      (async () => {
-        try {
-          const value = await res
-          item.map.set('value', value)
-          callback()
-        } catch (e) {
-          item.map.set('value', e)
-          callback()
-        }
-      })()
-    }
+    item.map.set('value', res)
   }
   return item.map.get('value')
 }

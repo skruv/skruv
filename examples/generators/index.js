@@ -1,10 +1,6 @@
 import { renderNode } from 'https://unpkg.com/skruv@0.1.0/vDOM.js'
 import { body, div } from 'https://unpkg.com/skruv@0.1.0/html.js'
-import { createState } from 'https://unpkg.com/skruv@0.1.0/state.js'
-
-export const sub = createState({
-  error: {}
-})
+import { sub } from './state.js'
 
 let root = document.body
 
@@ -17,7 +13,8 @@ let root = document.body
       }
     },
     state.error.msg ? div({ class: 'error' }, 'Error!') : div({},
-      import('./components/localState.js').then(i => i.default())
+      import('./components/componentWithLoader.js').then(i => i.default),
+      import('./components/stateSub.js').then(i => i.default)
     )
     ), root)
   }
