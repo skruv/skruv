@@ -34,12 +34,12 @@ export const textNode = (data) => ({
    */
 const recursiveFlattenFilter = childNodes => {
   const processed = childNodes
-    .map(child => typeof child === 'function' ? child() : child)
+    .map(child => typeof child === 'function' && child.prototype.toString() !== '[object AsyncGenerator]' ? child() : child)
     .flat(Infinity)
     .filter(child => (typeof child !== 'undefined' && typeof child !== 'boolean'))
     .map(child => typeof child === 'string' || typeof child === 'number' ? textNode(child) : child)
 
-  if (processed.some(child => Array.isArray(child) || typeof child === 'function')) {
+  if (processed.some(child => Array.isArray(child) || (typeof child === 'function' && child.prototype.toString() !== '[object AsyncGenerator]'))) {
     return recursiveFlattenFilter(processed)
   }
   return processed

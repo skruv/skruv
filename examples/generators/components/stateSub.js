@@ -7,4 +7,4 @@ async function * stateSub () {
   }
 }
 
-export default () => div({}, stateSub)
+export default div({}, stateSub)

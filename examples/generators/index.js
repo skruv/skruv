@@ -13,8 +13,8 @@ let root = document.body
       }
     },
     state.error.msg ? div({ class: 'error' }, 'Error!') : div({},
-      import('./components/componentWithLoader.js').then(i => i.default()),
-      import('./components/stateSub.js').then(i => i.default())
+      import('./components/componentWithLoader.js').then(i => i.default),
+      import('./components/stateSub.js').then(i => i.default)
     )
     ), root)
   }

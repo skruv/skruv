@@ -237,8 +237,8 @@ export const renderNode = async (
       return node
     }
 
-    if (vNode[Symbol.asyncIterator] instanceof Function) {
-      if (iterMap.get(node) === vNode[Symbol.asyncIterator]) {
+    if (vNode instanceof Function && vNode.prototype.toString() === '[object AsyncGenerator]') {
+      if (iterMap.get(node) === vNode.toString()) {
         return node
       }
       if (!node) {
@@ -248,14 +248,15 @@ export const renderNode = async (
           childNodes: []
         }, isSvg)
       }
-      iterMap.set(node, vNode[Symbol.asyncIterator])
+      iterMap.set(node, vNode.toString())
       ;(async () => {
-        for await (const value of vNode) {
-          if (!root.contains(node) || iterMap.get(node) !== vNode[Symbol.asyncIterator]) {
+        for await (const value of vNode()) {
+          if (!root.contains(node) || iterMap.get(node) !== vNode.toString()) {
+            await renderNode(value, node, parent, isSvg, root)
             break
           }
           node = await renderNode(value, node, parent, isSvg, root)
-          iterMap.set(node, vNode[Symbol.asyncIterator])
+          iterMap.set(node, vNode.toString())
         }
       })()
       return node
