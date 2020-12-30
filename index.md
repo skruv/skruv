@@ -44,7 +44,7 @@ document.body) and optionally a timeout. If a timeout is supplied the renderer w
 miliseconds as supplied to allow for other event handling and browser paint while rendering. This does not work on long
 lists yet, only DOM's on different depths.
 
-## Webcomponents
+### Webcomponents
 
 **BETA**: Stateful components are still a WIP and most of their usefulness is gone since generators provide localized
 rendering.
