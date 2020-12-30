@@ -1,4 +1,4 @@
-import { div } from 'https://unpkg.com/skruv@0.1.0/html.js'
+import { div } from 'https://unpkg.com/skruv@0.1.2/html.js'
 import { sub } from '../state.js'
 
 async function * stateSub () {

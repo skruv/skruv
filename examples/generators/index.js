@@ -1,5 +1,5 @@
-import { renderNode } from 'https://unpkg.com/skruv@0.1.0/vDOM.js'
-import { body, div } from 'https://unpkg.com/skruv@0.1.0/html.js'
+import { renderNode } from 'https://unpkg.com/skruv@0.1.2/vDOM.js'
+import { body, div } from 'https://unpkg.com/skruv@0.1.2/html.js'
 import { sub } from './state.js'
 
 let root = document.body
