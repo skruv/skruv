@@ -34,5 +34,7 @@ I wanted a framework that:
 * has simple state management (state usable/imitates as a normal object)
 * uses plain JS for building up the vDOM tree (normal functions, no JSX or template tags)
 * allows for or implements css scoping
+* was small enough to be hackable and understandable
 
 No framework that I have found satisfies more than two or three of those, so I built my own.
+I think skruv mostly satisfies the above points.

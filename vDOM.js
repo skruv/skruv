@@ -84,7 +84,7 @@ const updateAttributes = (oldVnode, vNode, node) => {
  * @param {HTMLElement | SVGElement | Text} node
  * @returns {HTMLElement | SVGElement | Text}
  */
-const modifyNode = (parent, vNode, node) => {
+const modifyNode = (parent, vNode, node, isSvg) => {
   const oldVnode = vDomMap.get(node) || emptyNode
   const key = vNode.attributes.key
   const keyChanged = vNode.attributes.key && oldVnode.attributes.key !== vNode.attributes.key
@@ -110,11 +110,26 @@ const modifyNode = (parent, vNode, node) => {
     return node
   }
 
+  if (vNode.nodeName === '#comment') {
+    // Text node overwriting a general node or new text
+    if (oldVnode.nodeName !== vNode.nodeName || vNode.data !== oldVnode.data) {
+      const oldNode = node
+      node = document.createComment(vNode.data || '')
+      oldVnode.attributes.onremove && oldVnode.attributes.onremove(oldNode)
+      parent.replaceChild(node, oldNode)
+      vDomMap.set(node, vNode)
+    }
+
+    return node
+  }
+
   if (oldVnode.nodeName !== vNode.nodeName || keyChanged) {
     // General node overwriting other non text node or keyed change
     // We need to create a new node since changing node types is not stable/supported
     const oldNode = node
-    node = document.createElement(vNode.nodeName)
+    node = !isSvg
+      ? document.createElement(vNode.nodeName)
+      : document.createElementNS('http://www.w3.org/2000/svg', vNode.nodeName)
     // Change/Add attributes
     updateAttributes(oldVnode, vNode, node)
     // Reuse the old children in case this is just changing the current node
@@ -123,7 +138,7 @@ const modifyNode = (parent, vNode, node) => {
     parent.replaceChild(node, oldNode)
     vNode.attributes.oncreate && vNode.attributes.oncreate(node)
     vDomMap.set(node, vNode)
-  } else if (node instanceof HTMLElement) {
+  } else if (node instanceof HTMLElement || node instanceof SVGElement) {
     // Same as oldnode, but changed
     // Remove all older attributes not defined on vNode
     for (const key in oldVnode.attributes) { vNode.attributes[key] === undefined && node.removeAttribute(key) }
@@ -177,6 +192,14 @@ const createNode = (parent, vNode, isSvg) => {
   // New text node
   if (vNode.nodeName === '#text') {
     const node = document.createTextNode(vNode.data || '')
+    parent.appendChild(node)
+    vDomMap.set(node, vNode)
+    return node
+  }
+
+  // New comment node
+  if (vNode.nodeName === '#comment') {
+    const node = document.createComment(vNode.data || '')
     parent.appendChild(node)
     vDomMap.set(node, vNode)
     return node
@@ -282,7 +305,7 @@ export const renderNode = (
 
     if (node) {
       // If old node exists, try to patch or replace it
-      node = modifyNode(parent, vNode, node)
+      node = modifyNode(parent, vNode, node, isSvg)
     } else {
       // Create a new node
       node = createNode(parent, vNode, isSvg)

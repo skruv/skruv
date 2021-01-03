@@ -14,13 +14,12 @@ Or for a full impementation of todomvc see [here](./examples/todomvc)
 object and can then be used as a generator to listen for changes. It is recursive, so subobjects or subarrays
 can also be listened to.
 * vDOM.js is a function that takes in a vDOM and target root and renders to a DOM node. Since it renders directly to the
-root (not inside it) it returns a HTMLElement or SVGElement that is a reference to the new root. This is because
-skruv does not render to a child of the root, instead it renders to the root itself so that for example body can be the root.
+root (not inside it) it returns a HTMLElement or SVGElement that is a reference to the new root.
+Either set this as the new root or use `querySelector()` to find the root each render
 * html.js are helper functions to create a vDOM tree. Also exposes a function called `h` and `textNode` to create
 arbitrary vDOM nodes and a tagged template function called `css` to help with creating styles. The HTML element `var`
 and the SVG element `switch` are suffixed by Elem (`varElem` and `switchElem`) because the names are reserved in js.
 * cache.js is a recursive object cache that can be used to cache expensive function calls or unchanging vNodes.
-* State updaters can be implemented as simple functions that modify state. They require nothing special.
 
 ## API
 
@@ -39,10 +38,8 @@ With these it should be pretty simple to add external libraries like editors sin
 those libraries DOM alone even when moving the editor and oncreate/onremove means that you have a place to
 create/destroy instances of them.
 
-The vDOM module takes three params: a vNode to use as a root (use html.js to generate this), the document root (usually
-document.body) and optionally a timeout. If a timeout is supplied the renderer will try to chunk work into as many
-miliseconds as supplied to allow for other event handling and browser paint while rendering. This does not work on long
-lists yet, only DOM's on different depths.
+The vDOM module takes two params: a vNode to use as a root (use html.js to generate this), the document root (usually
+document.body).
 
 ### Webcomponents
 
@@ -60,17 +57,17 @@ emit a statechanged event that contains the full state which can be used to comm
 **IMPORTANT**: When using `stateful` components any components of the same name must also use the exact same attribute
 keys!
 
-Non-skruv webcomponents should work normally by creating them with `h` like this: `h('my-web-component')({myattribute:
-'value'}, div({}, 'childnode'))`
+Non-skruv webcomponents should work normally by creating them with `h` like this: `h('my-web-component')({myattribute: 'value'}, div({}, 'childnode'))`
 
 ## Examples
 
-All these examples should be runnable with this HTML and after running `npm i skruv` in the same directory. Changing
-`./node_modules/skruv/` to `https://unpkg.com/skruv@latest/` works too if you prefer to not install:
+All these examples should be runnable with this HTML and after running `npm i skruv` in the same directory:
 
 <example-code language="markup" href="./examples/todo/index.html"></example-code>
 
 Where index.js contains the example code shown.
+
+These examples use `https://unpkg.com/skruv@latest/` as the source but you can load it locally by just changing that to `./node_modules/skruv/`.
 
 Examples shown here are marked by a red border to indicate them.
 
@@ -143,12 +140,14 @@ supported in for example Samsung Internet, UC Browser and other smaller browsers
 
 * TODO: Add example with combined view/state/actions
 * TODO: Add helpers/examples for i18n, devtools, routing, error handling
-* TODO: Add more testing
+* TODO: Add more testing and separate tests for state, cache, vDOM, html
 * TODO: Document special/private methods
   * state: skruv_unwrap_proxy
   * state: skruv_resolve (Rename? Perhaps useful for triggering updates of non-plain objects)
-* TODO: Try SRI for docs and add example in docs
-* TODO: Should I keep cache and import helpers?
+* TODO: Prerender docs
+* TODO: Fix SRI for docs
+* TODO: Add SSR and Prerender to docs
+* TODO: Add examples of using each component by itself
 
 <script src="https://unpkg.com/marked@1.2.0/marked.min.js"></script>
 <link href="https://unpkg.com/prismjs@1.21.0/themes/prism.css" rel="stylesheet" />
