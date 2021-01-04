@@ -1,6 +1,6 @@
-import { renderNode } from 'https://unpkg.com/skruv@0.1.2/vDOM.js'
-import { createState } from 'https://unpkg.com/skruv@0.1.2/state.js'
-import { section, header, footer, input, label, span, div, button, ul, li, h1, a, strong } from 'https://unpkg.com/skruv@0.1.2/html.js'
+import { renderNode } from 'https://unpkg.com/skruv@0.1.3/vDOM.js'
+import { createState } from 'https://unpkg.com/skruv@0.1.3/state.js'
+import { section, header, footer, input, label, span, div, button, ul, li, h1, a, strong } from 'https://unpkg.com/skruv@0.1.3/html.js'
 
 const ENTER_KEY = 13
 

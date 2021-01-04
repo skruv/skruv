@@ -1,5 +1,5 @@
-import { renderNode } from 'https://unpkg.com/skruv@0.1.2/vDOM.js'
-import { body, div, foreignObject, svg, css, polygon } from 'https://unpkg.com/skruv@0.1.2/html.js'
+import { renderNode } from 'https://unpkg.com/skruv@0.1.3/vDOM.js'
+import { body, div, foreignObject, svg, css, polygon } from 'https://unpkg.com/skruv@0.1.3/html.js'
 
 // Example taken from mdn: https://developer.mozilla.org/en-US/docs/Web/SVG/Element/foreignObject
 

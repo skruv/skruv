@@ -1,4 +1,4 @@
-import { div, progress } from 'https://unpkg.com/skruv@0.1.2/html.js'
+import { div, progress } from 'https://unpkg.com/skruv@0.1.3/html.js'
 
 async function * componentWithLoader () {
   yield progress()
