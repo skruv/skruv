@@ -132,8 +132,6 @@ const modifyNode = (parent, vNode, node, isSvg) => {
       : document.createElementNS('http://www.w3.org/2000/svg', vNode.nodeName)
     // Change/Add attributes
     updateAttributes(oldVnode, vNode, node)
-    // Reuse the old children in case this is just changing the current node
-    for (const child of oldNode.childNodes) { node.appendChild(child) }
     oldVnode.attributes.onremove && oldVnode.attributes.onremove(oldNode)
     parent.replaceChild(node, oldNode)
     vNode.attributes.oncreate && vNode.attributes.oncreate(node)

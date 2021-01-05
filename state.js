@@ -25,8 +25,10 @@ export const createState = (stateObj) => {
         this._skruv_parent = value
         return true
       }
-      target[key] = this.recurse(key, value)
-      this._resolve()
+      if (target[key] !== value) {
+        target[key] = this.recurse(key, value)
+        this._resolve()
+      }
       return true
     }
 
