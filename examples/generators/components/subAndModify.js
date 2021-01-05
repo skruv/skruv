@@ -1,4 +1,4 @@
-import { h2, h3, input, div } from 'https://unpkg.com/skruv@0.1.3/html.js'
+import { h2, h3, input, div } from 'https://unpkg.com/skruv@0.1.4/html.js'
 import { sub } from '../state.js'
 
 async function * subAndModify () {

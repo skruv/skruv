@@ -1,6 +1,6 @@
-import { renderNode } from 'https://unpkg.com/skruv@0.1.3/vDOM.js'
-import { body, div } from 'https://unpkg.com/skruv@0.1.3/html.js'
-import { createState } from 'https://unpkg.com/skruv@0.1.3/state.js'
+import { renderNode } from 'https://unpkg.com/skruv@0.1.4/vDOM.js'
+import { body, div } from 'https://unpkg.com/skruv@0.1.4/html.js'
+import { createState } from 'https://unpkg.com/skruv@0.1.4/state.js'
 
 export const sub = createState({
   error: {}
