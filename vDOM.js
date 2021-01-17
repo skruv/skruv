@@ -51,7 +51,7 @@ const updateAttributes = (oldVnode, vNode, node) => {
       }
       node.addEventListener(key.slice(2), listeners[key.slice(2)])
     } else {
-      if (!oldVnode.attributes[key] || oldVnode.attributes[key] !== vNode.attributes[key]) {
+      if (!oldVnode.attributes[key] || oldVnode.attributes[key] !== vNode.attributes[key] || (vNode.attributes[key] !== false && node.getAttribute(key) !== vNode.attributes[key])) {
         // These need to be set directly to have the desired effect. All these ifs could be grouped, but doing so does not seem to please TS
         if (key === 'value' && (node instanceof HTMLInputElement || node instanceof HTMLTextAreaElement || node instanceof HTMLButtonElement)) {
           node[key] = vNode.attributes[key]
@@ -93,6 +93,7 @@ const modifyNode = (parent, vNode, node, isSvg) => {
     if (keyedNode) {
       oldVnode.attributes.onremove && oldVnode.attributes.onremove(node)
       parent.replaceChild(keyedNode, node)
+      updateAttributes(emptyNode, vNode, keyedNode)
       return keyedNode
     }
   }
@@ -183,6 +184,7 @@ const createNode = (parent, vNode, isSvg) => {
     const keyedNode = keyMapObj.get(vNode.attributes.key) || keyMapScalar.get(vNode.attributes.key)
     if (keyedNode) {
       parent.appendChild(keyedNode)
+      updateAttributes(emptyNode, vNode, keyedNode)
       return keyedNode
     }
   }
