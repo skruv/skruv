@@ -148,6 +148,8 @@ supported in for example Samsung Internet, UC Browser and other smaller browsers
 * TODO: Fix SRI for docs
 * TODO: Add SSR and Prerender to docs
 * TODO: Add examples of using each component by itself
+* TODO: Add example of parseHTMLtoVDOM
+* TODO: Try with undom for easier SSR (should work with cloudflare workers)
 
 <script src="https://unpkg.com/marked@1.2.0/marked.min.js"></script>
 <link href="https://unpkg.com/prismjs@1.21.0/themes/prism.css" rel="stylesheet" />
