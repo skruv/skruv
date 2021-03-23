@@ -1,10 +1,14 @@
 # skruv
 
-<img src="./icon.svg">
+<img src="https://skruv.io/icon.svg">
 
 Somewhat simple framework for js applications.
 
-[Docs](https://skruv.io)
+* [Github](https://github.com/skruv/skruv)
+* [NPM](https://npmjs.com/skruv)
+* [Docs/Examples](https://skruv.io)
+
+`npm install skruv`
 
 ## Features:
 
