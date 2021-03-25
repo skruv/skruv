@@ -41,24 +41,6 @@ create/destroy instances of them.
 The vDOM module takes two params: a vNode to use as a root (use html.js to generate this), the document root (usually
 document.body).
 
-### Webcomponents
-
-**BETA**: Stateful components are still a WIP and most of their usefulness is gone since generators provide localized
-rendering.
-
-Skruv comes with two webcomponents built in, `stateful` and `stateless`. As the names imply `stateful` has internal
-state and can be rerendered on changes without rerendering the whole tree. `stateless` has no internal state and will
-only be rerendered with the rest of the tree but provides CSS scoping. For usage see the examples below. Both will
-trigger a rerender when the parent element does.
-
-`stateful` takes in a initState object for initial state and combines it with any attributes. On state change it will
-emit a statechanged event that contains the full state which can be used to communicate state back to global states.
-
-**IMPORTANT**: When using `stateful` components any components of the same name must also use the exact same attribute
-keys!
-
-Non-skruv webcomponents should work normally by creating them with `h` like this: `h('my-web-component')({myattribute: 'value'}, div({}, 'childnode'))`
-
 ## Examples
 
 All these examples should be runnable with this HTML and after running `npm i skruv` in the same directory:
@@ -73,31 +55,42 @@ Examples shown here are marked by a red border to indicate them.
 
 ### Rendering
 
-To do a onetime render of a single h1 on a root (in this case the body element) you can do:
+To render you use the renderNode function. It takes two arguments, the vDOM to
+render and the node to render to. It returns the new root node, since skruv renders
+directly to the node, not within it.
 
 <example-code language="js" href="./examples/render/index.js"></example-code>
 Result ([Open by itself](./examples/render)):
 <iframe src="./examples/render"></iframe>
 
+### State handling
+
+You create state with the createState function. The state will then be a proxy and
+a async generator that you can subscribe to updates from or set new values.
+
+<example-code language="js" href="./examples/state/index.js"></example-code>
+Result ([Open by itself](./examples/state)):
+<iframe src="./examples/state"></iframe>
+
 ### Using generators
 
-You can use generators to handle partial updates or to handle local state changes
-(like progress bars). In this example componentWithLoader first resolves to a progress
-bar and then to the actual component when it is loaded. stateSub and subAndModify
-only subscribe and update when their specific states update. We also separate out
-the root state for convienience.
+You can use generators to handle async loaders or situations where you want to
+output a stream of events. In this example the generator Timer will first output
+a loader and then return the current time each second. Generators give you a lot
+of freedom of when to rerender a component without having to trigger updates via
+state.
+
+If you are unfamiliar with generators and want to find out more I reccomend you read [MDN's docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators#generator_functions)
 
 <example-code language="js" href="./examples/generators/index.js"></example-code>
-<example-code language="js" href="./examples/generators/state.js"></example-code>
-<example-code language="js" href="./examples/generators/components/componentWithLoader.js"></example-code>
-<example-code language="js" href="./examples/generators/components/stateSub.js"></example-code>
-<example-code language="js" href="./examples/generators/components/subAndModify.js"></example-code>
 Result ([Open by itself](./examples/generators)):
 <iframe src="./examples/generators"></iframe>
 
 ### Using generators with fetch
 
-A good use case when using generators is when you are fetching data from an external resource.
+A good use case for using generators is when you are fetching data from an external
+resource and want to show a loader while you wait. You can do the same with dynamic
+imports or other async work.
 
 <example-code language="js" href="./examples/fetch/index.js"></example-code>
 <example-code language="js" href="./examples/fetch/components/componentWithLoader.js"></example-code>
@@ -105,25 +98,15 @@ A good use case when using generators is when you are fetching data from an exte
 Result ([Open by itself](./examples/fetch)):
 <iframe src="./examples/fetch"></iframe>
 
-### Components with local state
-
-Components can also have local state, so that you don't have to keep everything
-in the global state. In this example we have one root state for error handling and
-one local state. When the local state is modified only the corresponding element
-is updated since that is the only one subscribed.
-
-<example-code language="js" href="./examples/local-state/index.js"></example-code>
-<example-code language="js" href="./examples/local-state/components/localState.js"></example-code>
-Result ([Open by itself](./examples/local-state)):
-<iframe src="./examples/local-state"></iframe>
-
-
 ### Routing
 
 There is no built in router, but a simple one can be constructed as below. The
 routes are defined as an object with regex keys and it allows for named matchers
 to be passed to the imported components. The component `Link.js` creates an `a`
-tag that sets new urls on navigation.
+tag that sets new urls on navigation. The router in this example is also a good
+way to show how to use state outside of components. In this example we also wrap
+renderNode in `for await (const state of sub) {}` to make it rerender on state
+updates. This is the normal way to handle rerendering on state changes.
 
 <example-code language="js" href="./examples/routing/index.js"></example-code>
 <example-code language="js" href="./examples/routing/router.js"></example-code>
@@ -138,8 +121,9 @@ Result ([Open by itself](./examples/routing)):
 
 ### Using web-components for CSS scoping
 
-Stateless web-components are useful for scoping CSS to a single subtree. In this case we have css template to make
-all h1's pink within the scoped component, but the global h1 is unaffected.
+Stateless web-components are useful for scoping CSS to a single subtree. In this case we have css to make
+all h1's pink within the scoped component, but the global h1 is unaffected. The scoping goes both ways
+(global CSS does not leak into the component and the components CSS does not leak out to global).
 
 <example-code language="js" href="./examples/web-components-stateless/index.js"></example-code>
 <example-code language="js" href="./examples/web-components-stateless/components/one.js"></example-code>
@@ -164,6 +148,25 @@ company.
 
 In some examples I use dynamic imports and optional chaining which requires Chromium Edge and Safari 13.1+ and are not
 supported in for example Samsung Internet, UC Browser and other smaller browsers.
+
+
+## Webcomponents
+
+**BETA**: Stateful components are still a WIP and most of their usefulness is gone since generators provide localized
+rendering.
+
+Skruv comes with two webcomponents built in, `stateful` and `stateless`. As the names imply `stateful` has internal
+state and can be rerendered on changes without rerendering the whole tree. `stateless` has no internal state and will
+only be rerendered with the rest of the tree but provides CSS scoping. For usage see the examples below. Both will
+trigger a rerender when the parent element does.
+
+`stateful` takes in a initState object for initial state and combines it with any attributes. On state change it will
+emit a statechanged event that contains the full state which can be used to communicate state back to global states.
+
+**IMPORTANT**: When using `stateful` components any components of the same name must also use the exact same attribute
+keys!
+
+Non-skruv webcomponents should work normally by creating them with `h` like this: `h('my-web-component')({myattribute: 'value'}, div({}, 'childnode'))`
 
 ## TODO:
 

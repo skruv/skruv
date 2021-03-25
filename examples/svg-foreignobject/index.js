@@ -3,7 +3,6 @@ import { body, div, foreignObject, svg, css, polygon } from 'https://unpkg.com/s
 
 // Example taken from mdn: https://developer.mozilla.org/en-US/docs/Web/SVG/Element/foreignObject
 
-const root = document.body
 const style = css`
 div {
   height: 100%;
@@ -25,4 +24,4 @@ renderNode(body({},
         erat volutpat.`
       )
     )
-  )), root)
+  )), document.body)
