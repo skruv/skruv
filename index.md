@@ -117,6 +117,25 @@ is updated since that is the only one subscribed.
 Result ([Open by itself](./examples/local-state)):
 <iframe src="./examples/local-state"></iframe>
 
+
+### Routing
+
+There is no built in router, but a simple one can be constructed as below. The
+routes are defined as an object with regex keys and it allows for named matchers
+to be passed to the imported components. The component `Link.js` creates an `a`
+tag that sets new urls on navigation.
+
+<example-code language="js" href="./examples/routing/index.js"></example-code>
+<example-code language="js" href="./examples/routing/router.js"></example-code>
+<example-code language="js" href="./examples/routing/state.js"></example-code>
+<example-code language="js" href="./examples/routing/components/Link.js"></example-code>
+<example-code language="js" href="./examples/routing/components/index.js"></example-code>
+<example-code language="js" href="./examples/routing/components/page1.js"></example-code>
+<example-code language="js" href="./examples/routing/components/page2.js"></example-code>
+<example-code language="js" href="./examples/routing/components/404.js"></example-code>
+Result ([Open by itself](./examples/routing)):
+<iframe src="./examples/routing"></iframe>
+
 ### Using web-components for CSS scoping
 
 Stateless web-components are useful for scoping CSS to a single subtree. In this case we have css template to make
