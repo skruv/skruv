@@ -66,7 +66,9 @@ Result ([Open by itself](./examples/render)):
 ### State handling
 
 You create state with the createState function. The state will then be a proxy and
-a async generator that you can subscribe to updates from or set new values.
+a async generator that you can subscribe to updates from or set new values. In this
+example we also wrap renderNode in `for await (const state of sub) {}` to make it
+rerender on state updates. This is the normal way to handle rerendering on state changes.
 
 <example-code language="js" href="./examples/state/index.js"></example-code>
 Result ([Open by itself](./examples/state)):
@@ -104,9 +106,7 @@ There is no built in router, but a simple one can be constructed as below. The
 routes are defined as an object with regex keys and it allows for named matchers
 to be passed to the imported components. The component `Link.js` creates an `a`
 tag that sets new urls on navigation. The router in this example is also a good
-way to show how to use state outside of components. In this example we also wrap
-renderNode in `for await (const state of sub) {}` to make it rerender on state
-updates. This is the normal way to handle rerendering on state changes.
+way to show how to use state outside of components.
 
 <example-code language="js" href="./examples/routing/index.js"></example-code>
 <example-code language="js" href="./examples/routing/router.js"></example-code>
