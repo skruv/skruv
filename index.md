@@ -43,7 +43,7 @@ document.body).
 
 ## Examples
 
-All these examples should be runnable with this HTML and after running `npm i skruv` in the same directory:
+All these examples should be runnable with this HTML and after running `npm install skruv` in the same directory:
 
 <example-code language="markup" href="./examples/todo/index.html"></example-code>
 
@@ -78,11 +78,11 @@ Result ([Open by itself](./examples/state)):
 
 You can use generators to handle async loaders or situations where you want to
 output a stream of events. In this example the generator Timer will first output
-a loader and then return the current time each second. Generators give you a lot
+a loader and then return the count upwards each second. Generators give you a lot
 of freedom of when to rerender a component without having to trigger updates via
 state.
 
-If you are unfamiliar with generators and want to find out more I reccomend you read [MDN's docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators#generator_functions)
+If you are unfamiliar with generators and want to find out more I recommend you read [MDN's docs.](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators#generator_functions)
 
 <example-code language="js" href="./examples/generators/index.js"></example-code>
 Result ([Open by itself](./examples/generators)):
@@ -173,16 +173,12 @@ Non-skruv webcomponents should work normally by creating them with `h` like this
 * TODO: Add example with combined view/state/actions
 * TODO: Add helpers/examples for i18n, devtools, routing, error handling
 * TODO: Add more testing and separate tests for state, cache, vDOM, html
-* TODO: Document special/private methods
+* TODO: Document special/private methods/events
   * state: skruv_unwrap_proxy
   * state: skruv_resolve (Rename? Perhaps useful for triggering updates of non-plain objects)
-* TODO: Prerender docs
-* TODO: Fix SRI for docs
+  * vDOM: onskruverror
 * TODO: Add SSR and Prerender to docs
-* TODO: Add examples of using each component by itself
-* TODO: Add example of parseHTMLtoVDOM
-* TODO: Try with undom for easier SSR (should work with cloudflare workers)
-* TODO: Look over possability to read packages from node_modules instead of unpkt to improve ease of copy/paste
+* TODO: Look over possability to read packages from node_modules instead of unpkg to improve ease of copy/paste
 
 <script src="https://unpkg.com/marked@1.2.0/marked.min.js"></script>
 <link href="https://unpkg.com/prismjs@1.21.0/themes/prism.css" rel="stylesheet" />
