@@ -100,8 +100,8 @@ Result ([Open by itself](./examples/generators)):
 A good use case when using generators is when you are fetching data from an external resource.
 
 <example-code language="js" href="./examples/fetch/index.js"></example-code>
-<example-code language="js" href="./examples/fetch/state.js"></example-code>
 <example-code language="js" href="./examples/fetch/components/componentWithLoader.js"></example-code>
+<example-code language="js" href="./examples/fetch/example.json"></example-code>
 Result ([Open by itself](./examples/fetch)):
 <iframe src="./examples/fetch"></iframe>
 
