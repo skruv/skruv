@@ -95,6 +95,16 @@ the root state for convienience.
 Result ([Open by itself](./examples/generators)):
 <iframe src="./examples/generators"></iframe>
 
+### Using generators with fetch
+
+A good use case when using generators is when you are fetching data from an external resource.
+
+<example-code language="js" href="./examples/fetch/index.js"></example-code>
+<example-code language="js" href="./examples/fetch/state.js"></example-code>
+<example-code language="js" href="./examples/fetch/components/componentWithLoader.js"></example-code>
+Result ([Open by itself](./examples/fetch)):
+<iframe src="./examples/fetch"></iframe>
+
 ### Components with local state
 
 Components can also have local state, so that you don't have to keep everything
@@ -150,6 +160,7 @@ supported in for example Samsung Internet, UC Browser and other smaller browsers
 * TODO: Add examples of using each component by itself
 * TODO: Add example of parseHTMLtoVDOM
 * TODO: Try with undom for easier SSR (should work with cloudflare workers)
+* TODO: Look over possability to read packages from node_modules instead of unpkt to improve ease of copy/paste
 
 <script src="https://unpkg.com/marked@1.2.0/marked.min.js"></script>
 <link href="https://unpkg.com/prismjs@1.21.0/themes/prism.css" rel="stylesheet" />
