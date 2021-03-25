@@ -1,14 +1,10 @@
 /* global fetch */
-import { div, progress, ul, li } from 'https://unpkg.com/skruv@0.1.5/html.js'
+import { progress, ul, li } from 'https://unpkg.com/skruv@0.1.5/html.js'
 
-async function * componentWithLoader () {
+export default async function * componentWithLoader () {
   yield progress()
 
-  const result = await fetch('/examples/fetch/example.json', {
-    accept: 'application/json'
-  }).then(res => res.json())
+  const result = await fetch('./example.json').then(res => res.json())
 
   yield ul({}, result.map(weekday => li({}, weekday)))
 }
-
-export default div({}, componentWithLoader)
