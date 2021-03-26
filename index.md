@@ -168,18 +168,6 @@ keys!
 
 Non-skruv webcomponents should work normally by creating them with `h` like this: `h('my-web-component')({myattribute: 'value'}, div({}, 'childnode'))`
 
-## TODO:
-
-* TODO: Add example with combined view/state/actions
-* TODO: Add helpers/examples for i18n, devtools, routing, error handling
-* TODO: Add more testing and separate tests for state, cache, vDOM, html
-* TODO: Document special/private methods/events
-  * state: skruv_unwrap_proxy
-  * state: skruv_resolve (Rename? Perhaps useful for triggering updates of non-plain objects)
-  * vDOM: onskruverror
-* TODO: Add SSR and Prerender to docs
-* TODO: Look over possability to read packages from node_modules instead of unpkg to improve ease of copy/paste
-
 <script src="https://unpkg.com/marked@1.2.0/marked.min.js"></script>
 <link href="https://unpkg.com/prismjs@1.21.0/themes/prism.css" rel="stylesheet" />
 <script src="https://unpkg.com/prismjs@1.21.0/components/prism-core.min.js"></script>

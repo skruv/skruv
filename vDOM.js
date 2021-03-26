@@ -82,6 +82,7 @@ const updateAttributes = (oldVnode, vNode, node) => {
  * @param {HTMLElement | SVGElement | ShadowRoot} parent
  * @param {Vnode} vNode
  * @param {HTMLElement | SVGElement | Text} node
+ * @param {Boolean} isSvg
  * @returns {HTMLElement | SVGElement | Text}
  */
 const modifyNode = (parent, vNode, node, isSvg) => {
@@ -230,6 +231,7 @@ const createNode = (parent, vNode, isSvg) => {
  * @param {HTMLElement | SVGElement | Text} node
  * @param {(Node & ParentNode) | null | HTMLElement | SVGElement | Text} parent
  * @param {Boolean} isSvg
+ * @param {Boolean} root
  * @returns {Promise<HTMLElement | SVGElement | Text>} The updated root
  */
 export const renderNode = (
@@ -240,7 +242,6 @@ export const renderNode = (
   root = true
 ) => {
   try {
-  // TODO: breakout these into something to handle async rendering
     if (vNode instanceof Promise) {
       if (!node) {
         node = createNode(parent, {

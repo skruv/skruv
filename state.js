@@ -1,5 +1,4 @@
 export const createState = (stateObj) => {
-  // Modified from https://codepen.io/Escu/pen/MeKeVQ
   const Handler = class Handler {
     constructor (name) {
       this.name = name
@@ -64,7 +63,6 @@ export const createState = (stateObj) => {
       return res
     }
 
-    // TODO: Refactor, perhaps pass down parent as argument instead
     recurse (path, value) {
       // check for falsy values
       if (value && value.constructor) {
