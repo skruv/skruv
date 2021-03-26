@@ -154,6 +154,25 @@ SVG works too (including foreignObjects).
 Result ([Open by itself](./examples/svg-foreignobject)):
 <iframe src="./examples/svg-foreignobject"></iframe>
 
+### App example
+
+Here's a full example where we combine view, state and actions.
+
+<example-code language="js" href="./examples/app/index.js"></example-code>
+<example-code language="js" href="./examples/app/router.js"></example-code>
+<example-code language="js" href="./examples/app/state.js"></example-code>
+<example-code language="js" href="./examples/app/components/Countries.js"></example-code>
+<example-code language="js" href="./examples/app/components/Link.js"></example-code>
+<example-code language="js" href="./examples/app/components/Menu.js"></example-code>
+<example-code language="js" href="./examples/app/views/404.js"></example-code>
+<example-code language="js" href="./examples/app/views/index.js"></example-code>
+<example-code language="js" href="./examples/app/views/page1.js"></example-code>
+<example-code language="js" href="./examples/app/example_part1.json"></example-code>
+<example-code language="js" href="./examples/app/example_part2.json"></example-code>
+<example-code language="js" href="./examples/app/example_part3.json"></example-code>
+Result ([Open by itself](./examples/app)):
+<iframe src="./examples/app"></iframe>
+
 
 ## Browser support
 
