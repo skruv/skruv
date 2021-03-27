@@ -250,13 +250,19 @@ export const renderNode = (
           childNodes: []
         }, isSvg)
       }
+
+      const event = new CustomEvent('skruvloading', { bubbles: true })
+      node.dispatchEvent(event)
       asyncMap.set(node, vNode)
       ;(async () => {
         const resolved = await vNode
-        if (!root.contains(node) || asyncMap.get(node) !== vNode) {
+        const shadowHost = node?.getRootNode?.()?.host
+        if ((!root.contains(node) && (shadowHost !== undefined && !root.contains(shadowHost))) || asyncMap.get(node) !== vNode) {
           return
         }
         node = renderNode(resolved, node, parent, isSvg, root)
+        const event = new CustomEvent('skruvfinished', { bubbles: true })
+        node.dispatchEvent(event)
       })()
       return node
     }
@@ -272,13 +278,24 @@ export const renderNode = (
           childNodes: []
         }, isSvg)
       }
+
+      const event = new CustomEvent('skruvloading', { bubbles: true })
+      node.dispatchEvent(event)
       iterMap.set(node, vNode.toString())
       ;(async () => {
         for await (const value of vNode()) {
-          if (!root.contains(node)) {
+          const shadowHost = node?.getRootNode?.()?.host
+          if (!root.contains(node) && (shadowHost !== undefined && !root.contains(shadowHost))) {
             break
           }
-          node = renderNode(value, node, parent, isSvg, root)
+          if (!node.getAttribute('data-skruv-finished') || value.attributes['data-skruv-finished'] === true) {
+            node = renderNode(value, node, parent, isSvg, root)
+          }
+
+          if (value.attributes['data-skruv-finished'] === true) {
+            const event = new CustomEvent('skruvfinished', { bubbles: true })
+            node.dispatchEvent(event)
+          }
           iterMap.set(node, vNode.toString())
         }
       })()
