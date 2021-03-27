@@ -10,10 +10,7 @@
   "files": [
     "html.js",
     "state.js",
-    "vDOM.js",
-    "cache.js",
-    "webcomponents/stateful.js",
-    "webcomponents/stateless.js"
+    "vDOM.js"
   ],
   "scripts": {
     "test": "jest --no-cache --passWithNoTests",

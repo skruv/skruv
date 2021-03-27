@@ -37,7 +37,7 @@ I wanted a framework that:
 
 * had no build-time or run-time dependencies (for both the framework and apps built in it)
 * worked with async components (like dynamic imports and async generators)
-* has simple state management (for me this means state is usable/imitates a normal object)
+* has simple state management (state is usable/imitates a normal object)
 * uses plain JS for building up the vDOM tree (normal functions, no JSX or template tags)
 * allows for or implements css scoping (without compilation)
 * was small enough to be hackable and understandable
