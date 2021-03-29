@@ -13,7 +13,7 @@
     "vDOM.js"
   ],
   "scripts": {
-    "test": "jest --no-cache --passWithNoTests",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --no-cache --passWithNoTests",
     "standard": "standard"
   },
   "author": "Svante Richter",

@@ -24,6 +24,4 @@ jobs:
       run: |
         npm ci --silent
     - run: npm run test
-      env:
-        NODE_OPTIONS: --experimental-vm-modules
     - run: npm run standard
