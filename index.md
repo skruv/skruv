@@ -119,7 +119,7 @@ Some backwards compatability with older versions might be possible by compiling 
 
 ## Webcomponents
 
-Webcomponents should work normally by creating them with `h` like this: `h('my-web-component')({myattribute: 'value', opaque: true}, div({}, 'childnode'))`. Be sure to set opaque to true so that skruv does not try to handle the elements shadow dom.
+Webcomponents should work normally by creating them with `h` like this: `h('my-web-component', {myattribute: 'value', opaque: true}, div({}, 'childnode'))`. Be sure to set opaque to true so that skruv does not try to handle the elements shadow dom.
 
 <script src="https://unpkg.com/marked@1.2.0/marked.min.js"></script>
 <link href="https://unpkg.com/prismjs@1.21.0/themes/prism.css" rel="stylesheet" />

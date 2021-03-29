@@ -124,8 +124,8 @@ const modifyNode = (parent, vNode, node, isSvg) => {
     return node
   }
 
-  if (oldVnode.nodeName !== vNode.nodeName || keyChanged) {
-    // General node overwriting other non text node or keyed change
+  if (oldVnode.nodeName !== vNode.nodeName || keyChanged || oldVnode.attributes['data-shadowed'] !== vNode.attributes['data-shadowed']) {
+    // General node overwriting other non text node or keyed change or when doing shadow dom changes
     // We need to create a new node since changing node types is not stable/supported
     const oldNode = node
     node = !isSvg
