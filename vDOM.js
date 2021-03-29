@@ -62,9 +62,8 @@ const updateAttributes = (oldVnode, vNode, node) => {
         if (key === 'selected' && node instanceof HTMLOptionElement) {
           node[key] = vNode.attributes[key]
         }
-        if (key === 'shadowed' && vNode.attributes[key]) {
+        if (key === 'data-shadowed' && vNode.attributes[key]) {
           node.attachShadow({ mode: 'open' })
-          continue
         }
 
         if (vNode.attributes[key] === false) {
@@ -93,7 +92,7 @@ const modifyNode = (parent, vNode, node, isSvg) => {
     const keyedNode = keyMapObj.get(key) || keyMapScalar.get(key)
     if (keyedNode) {
       oldVnode.attributes.onremove && oldVnode.attributes.onremove(node)
-      ;(parent.shadowRoot || parent).replaceChild(keyedNode, node)
+      ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).replaceChild(keyedNode, node)
       updateAttributes(emptyNode, vNode, keyedNode)
       return keyedNode
     }
@@ -105,7 +104,7 @@ const modifyNode = (parent, vNode, node, isSvg) => {
       const oldNode = node
       node = document.createTextNode(vNode.data || '')
       oldVnode.attributes.onremove && oldVnode.attributes.onremove(oldNode)
-      ;(parent.shadowRoot || parent).replaceChild(node, oldNode)
+      ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).replaceChild(node, oldNode)
       vDomMap.set(node, vNode)
     }
 
@@ -118,7 +117,7 @@ const modifyNode = (parent, vNode, node, isSvg) => {
       const oldNode = node
       node = document.createComment(vNode.data || '')
       oldVnode.attributes.onremove && oldVnode.attributes.onremove(oldNode)
-      ;(parent.shadowRoot || parent).replaceChild(node, oldNode)
+      ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).replaceChild(node, oldNode)
       vDomMap.set(node, vNode)
     }
 
@@ -135,7 +134,7 @@ const modifyNode = (parent, vNode, node, isSvg) => {
     // Change/Add attributes
     updateAttributes(oldVnode, vNode, node)
     oldVnode.attributes.onremove && oldVnode.attributes.onremove(oldNode)
-    ;(parent.shadowRoot || parent).replaceChild(node, oldNode)
+    ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).replaceChild(node, oldNode)
     vNode.attributes.oncreate && vNode.attributes.oncreate(node)
     vDomMap.set(node, vNode)
   } else if (node instanceof HTMLElement || node instanceof SVGElement) {
@@ -184,7 +183,7 @@ const createNode = (parent, vNode, isSvg) => {
   if (vNode.attributes.key && (keyMapObj.has(vNode.attributes.key) || keyMapScalar.has(vNode.attributes.key))) {
     const keyedNode = keyMapObj.get(vNode.attributes.key) || keyMapScalar.get(vNode.attributes.key)
     if (keyedNode) {
-      (parent.shadowRoot || parent).appendChild(keyedNode)
+      (parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).appendChild(keyedNode)
       updateAttributes(emptyNode, vNode, keyedNode)
       return keyedNode
     }
@@ -193,7 +192,7 @@ const createNode = (parent, vNode, isSvg) => {
   // New text node
   if (vNode.nodeName === '#text') {
     const node = document.createTextNode(vNode.data || '')
-    ;(parent.shadowRoot || parent).appendChild(node)
+    ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).appendChild(node)
     vDomMap.set(node, vNode)
     return node
   }
@@ -201,7 +200,7 @@ const createNode = (parent, vNode, isSvg) => {
   // New comment node
   if (vNode.nodeName === '#comment') {
     const node = document.createComment(vNode.data || '')
-    ;(parent.shadowRoot || parent).appendChild(node)
+    ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).appendChild(node)
     vDomMap.set(node, vNode)
     return node
   }
@@ -212,7 +211,7 @@ const createNode = (parent, vNode, isSvg) => {
     : document.createElementNS('http://www.w3.org/2000/svg', vNode.nodeName)
   // Change/Add attributes
   updateAttributes(emptyNode, vNode, node)
-  ;(parent.shadowRoot || parent).appendChild(node)
+  ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).appendChild(node)
   vNode.attributes.oncreate && vNode.attributes.oncreate(node)
   vDomMap.set(node, vNode)
   if (vNode.attributes.key) {
@@ -349,7 +348,7 @@ export const renderNode = (
       const parent = node
       for (let index = 0; index < vNode.childNodes.length; index++) {
         const vChild = vNode.childNodes[index]
-        const child = (node?.shadowRoot?.childNodes || node.childNodes)[index]
+        const child = (node.attributes['data-shadowed'] ? node.shadowRoot.childNodes : node.childNodes)[index]
         if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
           !!vChild && renderNode(vChild, child, parent, isSvg, root)
         }

@@ -21,7 +21,7 @@ div {
 renderNode(
   body({},
     div({}, 'global'),
-    section({ shadowed: true }, div({}, 'local', localStyle)),
+    section({ 'data-shadowed': true }, div({}, 'local', localStyle)),
     globalStyle
   ),
   document.body

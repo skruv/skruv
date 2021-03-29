@@ -97,7 +97,7 @@ Result ([Open by itself](./examples/routing)):
 
 ### CSS scoping
 
-CSS scoping can be done by setting the `shadowed` attribute to true. Skruv will then set the children in a shadow DOM that scopes styles to that component. In this example we define a global style to set all divs to green and define a variable. In the local (scoped) styles we set the divs to red and use the variable to set the font size. The scoping goes both ways (global CSS does not leak into the component and the components CSS does not leak out to global) but variables from the global scope can be used in the local scope.
+CSS scoping can be done by setting the `'data-shadowed'` attribute to true. Skruv will then set the children in a shadow DOM that scopes styles to that component. In this example we define a global style to set all divs to green and define a variable. In the local (scoped) styles we set the divs to red and use the variable to set the font size. The scoping goes both ways (global CSS does not leak into the component and the components CSS does not leak out to global) but variables from the global scope can be used in the local scope.
 
 <example-code language="js" href="./examples/css-scoping/index.js"></example-code>
 Result ([Open by itself](./examples/css-scoping)):
