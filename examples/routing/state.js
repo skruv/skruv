@@ -1,4 +1,4 @@
-import { createState } from 'https://unpkg.com/skruv@0.1.5/state.js'
+import { createState } from 'https://unpkg.com/skruv@0.2.0/state.js'
 
 export const sub = createState({
   url: window.location.href,

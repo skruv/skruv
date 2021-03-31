@@ -1,6 +1,6 @@
-import { renderNode } from 'https://unpkg.com/skruv@0.1.5/vDOM.js'
-import { body, input, button, ul, li } from 'https://unpkg.com/skruv@0.1.5/html.js'
-import { createState } from 'https://unpkg.com/skruv@0.1.5/state.js'
+import { renderNode } from 'https://unpkg.com/skruv@0.2.0/vDOM.js'
+import { body, input, button, ul, li } from 'https://unpkg.com/skruv@0.2.0/html.js'
+import { createState } from 'https://unpkg.com/skruv@0.2.0/state.js'
 
 let root = document.body
 const sub = createState({

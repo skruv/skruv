@@ -1,4 +1,4 @@
-import { a } from 'https://unpkg.com/skruv@0.1.5/html.js'
+import { a } from 'https://unpkg.com/skruv@0.2.0/html.js'
 
 import { sub } from '../state.js'
 

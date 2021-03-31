@@ -1,6 +1,6 @@
 {
   "name": "skruv",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Somewhat simple framework for js applications",
   "type": "module",
   "bugs": {
