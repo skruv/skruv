@@ -12,9 +12,9 @@ No-dependency, no-build, small JS framework.
 
 * No buildtime or runtime dependencies, no parsers
 * Pretty small:
-  * ~350 LOC vDOM
+  * ~400 LOC vDOM
   * ~100 LOC State management
-  * ~300 LOC HTML/SVG helpers
+  * ~250 LOC HTML/SVG helpers
 * Useable without bundling/compilation/transpilation
 * Fast enough for most normal usecases: [benchmark](https://krausest.github.io/js-framework-benchmark/index.html)
 * Supports async components like `import()` and async generators

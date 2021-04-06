@@ -1,61 +1,4 @@
-/**
- * @typedef LooseVnode
- * @type {Boolean | String | Number | Vnode | Vnode[] | function(): LooseVnode | function(): LooseVnode[]}
- */
-
-/**
- * @typedef Vnode
- * @prop {String} nodeName
- * @prop {String} [data]
- * @prop {Object<[String], [String]>} attributes
- * @prop {Array<Vnode>} childNodes
- */
-/** @type {Vnode} */
-export const Vnode = {
-  nodeName: '',
-  attributes: {},
-  childNodes: []
-}
-
-/**
- * @param {String | Number | Boolean} data
- * @returns {Vnode}
- */
-export const textNode = (data) => ({
-  nodeName: '#text',
-  attributes: {},
-  childNodes: [],
-  data: data.toString()
-})
-
-/**
-   * @param {LooseVnode[]} childNodes
-   * @returns {Vnode[]}
-   */
-const recursiveFlattenFilter = childNodes => {
-  const processed = childNodes
-    .map(child => typeof child === 'function' && !(child.prototype && child.prototype.toString() === '[object AsyncGenerator]') ? child() : child)
-    .flat(Infinity)
-    .filter(child => (typeof child !== 'undefined' && typeof child !== 'boolean'))
-    .map(child => typeof child === 'string' || typeof child === 'number' ? textNode(child) : child)
-
-  if (processed.some(child => Array.isArray(child) || (typeof child === 'function' && child.prototype.toString() !== '[object AsyncGenerator]'))) {
-    return recursiveFlattenFilter(processed)
-  }
-  return processed
-}
-
-/**
- * @param {String} nodeName
-  * @param {Object<String, *>} attributes
-  * @param {LooseVnode[]} childNodes
-  * @returns {Vnode}
- */
-export const h = (nodeName, attributes = {}, ...childNodes) => ({
-  nodeName,
-  attributes,
-  childNodes: recursiveFlattenFilter(childNodes)
-})
+export const h = (nodeName, attributes = {}, ...childNodes) => ({ nodeName, attributes, childNodes })
 
 // HTML
 export const a = (...args) => h('a', ...args)
@@ -284,8 +227,8 @@ export const css = (strings, ...keys) => {
   /** @type {Vnode[]} */
   const vNodeArr = []
   return style({}, strings.reduce((prev, curr, i) => {
-    prev.push(textNode(curr))
-    keys[i] && prev.push(textNode(keys[i]))
+    prev.push(curr)
+    keys[i] && prev.push(keys[i])
     return prev
-  }, vNodeArr))
+  }, vNodeArr).join(''))
 }

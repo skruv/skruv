@@ -1,4 +1,4 @@
-/* global HTMLElement SVGElement HTMLOptionElement HTMLInputElement HTMLButtonElement HTMLTextAreaElement ShadowRoot Text CustomEvent */
+/* global HTMLDocument HTMLElement SVGElement HTMLOptionElement HTMLInputElement HTMLButtonElement HTMLTextAreaElement ShadowRoot Text CustomEvent */
 
 /**
  * @typedef Vnode
@@ -6,6 +6,11 @@
  * @prop {String} [data]
  * @prop {Object<[String], [String | Boolean]>} attributes
  * @prop {Array<Vnode>} childNodes
+ */
+
+/**
+ * @typedef LooseVnode
+ * @type {Boolean | String | Number | Vnode | Vnode[] | function(): LooseVnode | function(): LooseVnode[]}
  */
 
 /** @type WeakMap<HTMLElement | SVGElement, Object.<String, EventListener>> */
@@ -78,7 +83,7 @@ const updateAttributes = (oldVnode, vNode, node) => {
 
 /**
  * Modify an existing node
- * @param {HTMLElement | SVGElement | ShadowRoot} parent
+ * @param {HTMLElement | SVGElement | ShadowRoot | HTMLDocument} parent
  * @param {Vnode} vNode
  * @param {HTMLElement | SVGElement | Text} node
  * @param {Boolean} isSvg
@@ -92,7 +97,7 @@ const modifyNode = (parent, vNode, node, isSvg) => {
     const keyedNode = keyMapObj.get(key) || keyMapScalar.get(key)
     if (keyedNode) {
       oldVnode.attributes.onremove && oldVnode.attributes.onremove(node)
-      ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).replaceChild(keyedNode, node)
+      ;(parent?.attributes?.['data-shadowed'] ? parent.shadowRoot : parent).replaceChild(keyedNode, node)
       updateAttributes(emptyNode, vNode, keyedNode)
       return keyedNode
     }
@@ -104,7 +109,7 @@ const modifyNode = (parent, vNode, node, isSvg) => {
       const oldNode = node
       node = document.createTextNode(vNode.data || '')
       oldVnode.attributes.onremove && oldVnode.attributes.onremove(oldNode)
-      ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).replaceChild(node, oldNode)
+      ;(parent?.attributes?.['data-shadowed'] ? parent.shadowRoot : parent).replaceChild(node, oldNode)
       vDomMap.set(node, vNode)
     }
 
@@ -117,7 +122,7 @@ const modifyNode = (parent, vNode, node, isSvg) => {
       const oldNode = node
       node = document.createComment(vNode.data || '')
       oldVnode.attributes.onremove && oldVnode.attributes.onremove(oldNode)
-      ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).replaceChild(node, oldNode)
+      ;(parent?.attributes?.['data-shadowed'] ? parent.shadowRoot : parent).replaceChild(node, oldNode)
       vDomMap.set(node, vNode)
     }
 
@@ -134,7 +139,7 @@ const modifyNode = (parent, vNode, node, isSvg) => {
     // Change/Add attributes
     updateAttributes(oldVnode, vNode, node)
     oldVnode.attributes.onremove && oldVnode.attributes.onremove(oldNode)
-    ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).replaceChild(node, oldNode)
+    ;(parent?.attributes?.['data-shadowed'] ? parent.shadowRoot : parent).replaceChild(node, oldNode)
     vNode.attributes.oncreate && vNode.attributes.oncreate(node)
     vDomMap.set(node, vNode)
   } else if (node instanceof HTMLElement || node instanceof SVGElement) {
@@ -173,7 +178,7 @@ const modifyNode = (parent, vNode, node, isSvg) => {
 
 /**
  * Create a new node
- * @param {HTMLElement | SVGElement | ShadowRoot} parent
+ * @param {HTMLElement | SVGElement | ShadowRoot | HTMLDocument} parent
  * @param {Vnode} vNode
  * @param {Boolean} isSvg
  * @returns {HTMLElement | SVGElement | Text}
@@ -183,7 +188,7 @@ const createNode = (parent, vNode, isSvg) => {
   if (vNode.attributes.key && (keyMapObj.has(vNode.attributes.key) || keyMapScalar.has(vNode.attributes.key))) {
     const keyedNode = keyMapObj.get(vNode.attributes.key) || keyMapScalar.get(vNode.attributes.key)
     if (keyedNode) {
-      (parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).appendChild(keyedNode)
+      (parent?.attributes?.['data-shadowed'] ? parent.shadowRoot : parent).appendChild(keyedNode)
       updateAttributes(emptyNode, vNode, keyedNode)
       return keyedNode
     }
@@ -192,7 +197,7 @@ const createNode = (parent, vNode, isSvg) => {
   // New text node
   if (vNode.nodeName === '#text') {
     const node = document.createTextNode(vNode.data || '')
-    ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).appendChild(node)
+    ;(parent?.attributes?.['data-shadowed'] ? parent.shadowRoot : parent).appendChild(node)
     vDomMap.set(node, vNode)
     return node
   }
@@ -200,7 +205,7 @@ const createNode = (parent, vNode, isSvg) => {
   // New comment node
   if (vNode.nodeName === '#comment') {
     const node = document.createComment(vNode.data || '')
-    ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).appendChild(node)
+    ;(parent?.attributes?.['data-shadowed'] ? parent.shadowRoot : parent).appendChild(node)
     vDomMap.set(node, vNode)
     return node
   }
@@ -211,7 +216,7 @@ const createNode = (parent, vNode, isSvg) => {
     : document.createElementNS('http://www.w3.org/2000/svg', vNode.nodeName)
   // Change/Add attributes
   updateAttributes(emptyNode, vNode, node)
-  ;(parent.attributes['data-shadowed'] ? parent.shadowRoot : parent).appendChild(node)
+  ;(parent?.attributes?.['data-shadowed'] ? parent.shadowRoot : parent).appendChild(node)
   vNode.attributes.oncreate && vNode.attributes.oncreate(node)
   vDomMap.set(node, vNode)
   if (vNode.attributes.key) {
@@ -225,13 +230,41 @@ const createNode = (parent, vNode, isSvg) => {
 }
 
 /**
+ * @param {String | Number | Boolean} data
+ * @returns {Vnode}
+ */
+const textNode = (data) => ({
+  nodeName: '#text',
+  attributes: {},
+  childNodes: [],
+  data: data.toString()
+})
+
+/**
+ * @param {LooseVnode[]} childNodes
+ * @returns {Vnode[]}
+ */
+const recursiveFlattenFilter = childNodes => {
+  const processed = childNodes
+    .map(child => typeof child === 'function' && !(child.prototype && child.prototype.toString() === '[object AsyncGenerator]') ? child() : child)
+    .flat(Infinity)
+    .filter(child => (typeof child !== 'undefined' && typeof child !== 'boolean'))
+    .map(child => typeof child === 'string' || typeof child === 'number' ? textNode(child) : child)
+
+  if (processed.some(child => Array.isArray(child) || (typeof child === 'function' && child.prototype.toString() !== '[object AsyncGenerator]'))) {
+    return recursiveFlattenFilter(processed)
+  }
+  return processed
+}
+
+/**
  * Render a vDOM recursively
- * @param {Vnode | Promise<Vnode>} vNode
+ * @param {Vnode | Promise<Vnode> | Function} vNode
  * @param {HTMLElement | SVGElement | Text} node
- * @param {(Node & ParentNode) | null | HTMLElement | SVGElement | Text} parent
+ * @param {(Node & ParentNode) | null | HTMLElement | SVGElement | HTMLDocument | Text} parent
  * @param {Boolean} isSvg
  * @param {Boolean} root
- * @returns {Promise<HTMLElement | SVGElement | Text>} The updated root
+ * @returns {HTMLElement | SVGElement | Text} The updated root
  */
 export const renderNode = (
   vNode,
@@ -257,6 +290,9 @@ export const renderNode = (
       asyncMap.set(node, vNode)
       ;(async () => {
         const resolved = await vNode
+        if (!resolved.nodeName) {
+          throw new Error(`Non-vNode Object returned from generator: ${JSON.stringify(vNode)}`)
+        }
         const shadowHost = node?.getRootNode?.()?.host
         if ((!root.contains(node) && (shadowHost === undefined || !root.contains(shadowHost))) || asyncMap.get(node) !== vNode) {
           return
@@ -287,6 +323,9 @@ export const renderNode = (
       iterMap.set(node, vNode.toString())
       ;(async () => {
         for await (const value of vNode()) {
+          if (!value.nodeName) {
+            throw new Error(`Non-vNode Object returned from generator: ${JSON.stringify(vNode)}`)
+          }
           const shadowHost = node?.getRootNode?.()?.host
           if (!root.contains(node) && (shadowHost === undefined || !root.contains(shadowHost))) {
             break
@@ -307,7 +346,7 @@ export const renderNode = (
       return node
     }
 
-    if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot)) {
+    if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot || parent instanceof HTMLDocument)) {
       throw new Error('No parent to render to!')
     }
 
@@ -344,16 +383,12 @@ export const renderNode = (
       root = node
     }
 
-    // This is to trigger webcomponents to update their own DOM
-    if (node._update instanceof Function) {
-      node._update()
-    }
-
     // Iterate over and render each child recursively
     if (!vNode.attributes.opaque) {
       const parent = node
-      for (let index = 0; index < vNode.childNodes.length; index++) {
-        const vChild = vNode.childNodes[index]
+      const childNodes = recursiveFlattenFilter(vNode.childNodes)
+      for (let index = 0; index < childNodes.length; index++) {
+        const vChild = childNodes[index]
         const child = (node.attributes['data-shadowed'] ? node.shadowRoot.childNodes : node.childNodes)[index]
         if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
           !!vChild && renderNode(vChild, child, parent, isSvg, root)
@@ -366,7 +401,11 @@ export const renderNode = (
       bubbles: true,
       detail: { error: e, vNode, node }
     })
-    if (parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot) parent.dispatchEvent(event)
+    if (parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot) {
+      parent.dispatchEvent(event)
+    } else {
+      console.error(e)
+    }
   }
   return node
 }
