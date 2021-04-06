@@ -290,9 +290,6 @@ export const renderNode = (
       asyncMap.set(node, vNode)
       ;(async () => {
         const resolved = await vNode
-        if (!resolved.nodeName) {
-          throw new Error(`Non-vNode Object returned from generator: ${JSON.stringify(vNode)}`)
-        }
         const shadowHost = node?.getRootNode?.()?.host
         if ((!root.contains(node) && (shadowHost === undefined || !root.contains(shadowHost))) || asyncMap.get(node) !== vNode) {
           return
