@@ -1,7 +1,7 @@
 {
   "name": "skruv",
-  "version": "0.2.0",
-  "description": "Somewhat simple framework for js applications",
+  "version": "0.2.1",
+  "description": "No-dependency, no-build, small JS framework.",
   "type": "module",
   "bugs": {
     "url": "https://github.com/skruv/skruv/issues",

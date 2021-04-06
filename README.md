@@ -1,24 +1,28 @@
+![skruv](./icon.svg)
+
 # skruv
 
-No dependency, no build, small & simple js framework
+No-dependency, no-build, small JS framework.
 
 * [Github](https://github.com/skruv/skruv)
 * [NPM](https://npmjs.com/skruv)
-* [Docs/Examples](https://skruv.io)
+* [Documentation](https://skruv.io)
 
 ## Features:
 
 * No buildtime or runtime dependencies, no parsers
-* Pretty small: ~350 LOC vDOM, ~100 LOC State management, ~300 LOC HTML/SVG helpers
+* Pretty small:
+  * ~350 LOC vDOM
+  * ~100 LOC State management
+  * ~300 LOC HTML/SVG helpers
 * Useable without bundling/compilation/transpilation
 * Fast enough for most normal usecases: [benchmark](https://krausest.github.io/js-framework-benchmark/index.html)
 * Supports async components like `import()` and async generators
 * CSS scoping via shadow DOM
 * Hopefully grokable/understandable code
-<!--- * Works with web components: [tests](https://custom-elements-everywhere.com/libraries/skruv/results/results.html) -->
+<!-- * Works with web components: [tests](https://custom-elements-everywhere.com/libraries/skruv/results/results.html) -->
 
-
-## Why create another JS framework?
+## Why another JS framework?
 
 I wanted a framework that:
 
@@ -32,7 +36,7 @@ I wanted a framework that:
 No framework that I have found satisfies more than two or three of those, so I built my own.
 I think skruv mostly satisfies the above points.
 
-## Values/guidelines/ideals/goals:
+## Goals:
 
 * No build steps, no parsing templates and no build or runtime dependencies: the way you write code should be the way it runs
 * It should be small enough that minification is a optional optimization step

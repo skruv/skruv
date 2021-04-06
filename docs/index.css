@@ -1,8 +1,0 @@
-iframe {
-    width: 100%;
-    border: 5px solid red;
-}
-example-code {
-    min-width: 0;
-    overflow: auto;
-}
