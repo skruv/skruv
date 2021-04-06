@@ -242,10 +242,12 @@ export const renderNode = (
 ) => {
   try {
     if (vNode instanceof Promise) {
+      // Create a random key so that we know if the node has been replaced
+      const key = Math.random()
       if (!node) {
         node = createNode(parent, {
           nodeName: 'slot',
-          attributes: {},
+          attributes: { key },
           childNodes: []
         }, isSvg)
       }
@@ -256,7 +258,7 @@ export const renderNode = (
       ;(async () => {
         const resolved = await vNode
         const shadowHost = node?.getRootNode?.()?.host
-        if ((!root.contains(node) && (shadowHost !== undefined && !root.contains(shadowHost))) || asyncMap.get(node) !== vNode) {
+        if ((!root.contains(node) && (shadowHost === undefined || !root.contains(shadowHost))) || asyncMap.get(node) !== vNode) {
           return
         }
         node = renderNode(resolved, node, parent, isSvg, root)
@@ -267,13 +269,15 @@ export const renderNode = (
     }
 
     if (vNode instanceof Function && vNode.prototype.toString() === '[object AsyncGenerator]') {
+      // We need to key the node to make sure we can break correctly when replacing the generator
+      const key = Math.random()
       if (iterMap.get(node) === vNode.toString()) {
         return node
       }
       if (!node) {
         node = createNode(parent, {
           nodeName: 'slot',
-          attributes: {},
+          attributes: { key },
           childNodes: []
         }, isSvg)
       }
@@ -284,9 +288,11 @@ export const renderNode = (
       ;(async () => {
         for await (const value of vNode()) {
           const shadowHost = node?.getRootNode?.()?.host
-          if (!root.contains(node) && (shadowHost !== undefined && !root.contains(shadowHost))) {
+          if (!root.contains(node) && (shadowHost === undefined || !root.contains(shadowHost))) {
             break
           }
+
+          value.attributes.key = value.attributes.key || key
           if (!node.getAttribute('data-skruv-finished') || value.attributes['data-skruv-finished'] === true) {
             node = renderNode(value, node, parent, isSvg, root)
           }
