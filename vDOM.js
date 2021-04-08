@@ -382,15 +382,19 @@ export const renderNode = (
 
     // Iterate over and render each child recursively
     if (!vNode.attributes.opaque) {
-      const parent = node
+      const children = Array.from(node.attributes['data-shadowed'] ? node.shadowRoot.childNodes : node.childNodes)
       const childNodes = recursiveFlattenFilter(vNode.childNodes)
-      for (let index = 0; index < childNodes.length; index++) {
-        const vChild = childNodes[index]
-        const child = (node.attributes['data-shadowed'] ? node.shadowRoot.childNodes : node.childNodes)[index]
+      
+      // Cleanup extra nodes that might have been injected
+      children.slice(childNodes.length).forEach(elem => elem.parentNode.removeChild(elem))
+
+      const parent = node
+      childNodes.forEach((vChild, index) => {
+        const child = children[index]
         if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
           !!vChild && renderNode(vChild, child, parent, isSvg, root)
         }
-      }
+      })
     }
   } catch (e) {
     const event = new CustomEvent('skruverror', {
