@@ -384,7 +384,7 @@ export const renderNode = (
     if (!vNode.attributes.opaque) {
       const children = Array.from(node.attributes['data-shadowed'] ? node.shadowRoot.childNodes : node.childNodes)
       const childNodes = recursiveFlattenFilter(vNode.childNodes)
-      
+
       // Cleanup extra nodes that might have been injected
       children.slice(childNodes.length).forEach(elem => elem.parentNode.removeChild(elem))
 
