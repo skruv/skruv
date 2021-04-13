@@ -154,7 +154,7 @@ const modifyNode = (parent, vNode, node, isSvg) => {
   }
   if (!vNode.attributes.opaque) {
     // Remove childNodes after the length of vNode childNodes
-    Array.from(node.childNodes).slice(vNode.childNodes.length).forEach(child => {
+    Array.from(node.childNodes).slice(recursiveFlattenFilter(vNode.childNodes).length).forEach(child => {
       // We need to recursively check for onremoves on grandchildren too (expensive but nessecary)
       const oldVnode = vDomMap.get(child)
       if (oldVnode) {
@@ -302,33 +302,32 @@ export const renderNode = (
     }
 
     if (vNode instanceof Function && vNode.prototype.toString() === '[object AsyncGenerator]') {
-      // We need to key the node to make sure we can break correctly when replacing the generator
-      const key = Math.random()
-      if (iterMap.get(node) === vNode.toString()) {
+      // Create a key based on fuction body and optionally a key set on it
+      const key = JSON.stringify(vNode.key) + vNode.toString()
+      if (iterMap.get(node) === key) {
         return node
       }
       if (!node) {
         node = createNode(parent, {
           nodeName: 'slot',
-          attributes: { key },
+          attributes: {},
           childNodes: []
         }, isSvg)
       }
 
       const event = new CustomEvent('skruvloading', { bubbles: true })
       node.dispatchEvent(event)
-      iterMap.set(node, vNode.toString())
+      iterMap.set(node, key)
       ;(async () => {
         for await (const value of vNode()) {
           if (!value.nodeName) {
             throw new Error(`Non-vNode Object returned from generator: ${JSON.stringify(vNode)}`)
           }
           const shadowHost = node?.getRootNode?.()?.host
-          if (!root.contains(node) && (shadowHost === undefined || !root.contains(shadowHost))) {
+          if (iterMap.get(node) !== key || (!root.contains(node) && (shadowHost === undefined || !root.contains(shadowHost)))) {
             break
           }
 
-          value.attributes.key = value.attributes.key || key
           if (!node.getAttribute('data-skruv-finished') || value.attributes['data-skruv-finished'] === true) {
             node = renderNode(value, node, parent, isSvg, root)
           }
@@ -337,7 +336,7 @@ export const renderNode = (
             const event = new CustomEvent('skruvfinished', { bubbles: true })
             node.dispatchEvent(event)
           }
-          iterMap.set(node, vNode.toString())
+          iterMap.set(node, key)
         }
       })()
       return node
