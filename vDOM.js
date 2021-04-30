@@ -67,7 +67,7 @@ const updateAttributes = (oldVnode, vNode, node) => {
         if (key === 'selected' && node instanceof HTMLOptionElement) {
           node[key] = vNode.attributes[key]
         }
-        if (key === 'data-shadowed' && vNode.attributes[key]) {
+        if (key === 'data-shadowed' && vNode.attributes[key] && !node.shadowRoot) {
           node.attachShadow({ mode: 'open' })
         }
 
