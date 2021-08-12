@@ -25,7 +25,7 @@ export const createState = (stateObj) => {
         return true
       }
       if (target[key] !== value) {
-        target[key] = this.recurse(key, value)
+        target[key] = this.recurse(key, value, target)
         this._resolve()
       }
       return true
@@ -82,10 +82,18 @@ export const createState = (stateObj) => {
       return res
     }
 
-    recurse (path, value) {
+    recurse (path, value, target) {
       // check for falsy values
       if (value && value.constructor) {
-        if (value.constructor === Object) {
+        if ((value.constructor === Object && target?.[path]?.constructor === Object) || (value.constructor === Array && target?.[path]?.constructor === Array)) {
+          for (const key of Object.getOwnPropertyNames(value)) {
+            target[path][key] = value[key]
+          }
+          for (const key of Object.getOwnPropertyNames(target[path]).filter(item => !Object.getOwnPropertyNames(value).includes(item))) {
+            delete target[path][key]
+          }
+          return target[path]
+        } else if (value.constructor === Object) {
           const subProxy = new this.constructor(`${this.name}.${path}`)
           // check object properties for other objects or arrays
           value = Object.keys(value).reduce((acc, key) => {
