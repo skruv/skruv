@@ -274,141 +274,128 @@ export const renderNode = (
   isSvg = false,
   root = true
 ) => {
-  try {
-    if (vNode instanceof Promise) {
-      // Create a random key so that we know if the node has been replaced
-      const key = Math.random()
-      if (!node) {
-        node = createNode(parent, {
-          nodeName: 'slot',
-          attributes: { key },
-          childNodes: []
-        }, isSvg)
-      }
+  if (vNode instanceof Promise) {
+    // Create a random key so that we know if the node has been replaced
+    const key = Math.random()
+    if (!node) {
+      node = createNode(parent, {
+        nodeName: 'slot',
+        attributes: { key },
+        childNodes: []
+      }, isSvg)
+    }
 
-      const event = new CustomEvent('skruvloading', { bubbles: true })
-      node.dispatchEvent(event)
-      asyncMap.set(node, vNode)
-      ;(async () => {
+    const event = new CustomEvent('skruvloading', { bubbles: true })
+    node.dispatchEvent(event)
+    asyncMap.set(node, vNode)
+    ;(async () => {
       const _resolved = await vNode
       const resolved = coerceTextorNode(_resolved)
-        const shadowHost = node?.getRootNode?.()?.host
-        if ((!root.contains(node) && (shadowHost === undefined || !root.contains(shadowHost))) || asyncMap.get(node) !== vNode) {
-          return
-        }
-        node = renderNode(resolved, node, parent, isSvg, root)
-        const event = new CustomEvent('skruvfinished', { bubbles: true })
-        node.dispatchEvent(event)
-      })()
-      return node
-    }
+      const shadowHost = node?.getRootNode?.()?.host
+      if ((!root.contains(node) && (shadowHost === undefined || !root.contains(shadowHost))) || asyncMap.get(node) !== vNode) {
+        return
+      }
+      node = renderNode(resolved, node, parent, isSvg, root)
+      const event = new CustomEvent('skruvfinished', { bubbles: true })
+      node.dispatchEvent(event)
+    })()
+    return node
+  }
 
   if (vNode?.[Symbol.asyncIterator] || (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')) {
-      // Create a key based on fuction body and optionally a key set on it
-      const key = JSON.stringify(vNode.key) + vNode.toString()
-      if (iterMap.get(node) === key) {
-        return node
-      }
-      if (!node) {
-        node = createNode(parent, {
-          nodeName: 'slot',
-          attributes: {},
-          childNodes: []
-        }, isSvg)
-      }
+    // Create a key based on fuction body and optionally a key set on it
+    const key = JSON.stringify(vNode.key) + vNode.toString()
+    if (iterMap.get(node) === key) {
+      return node
+    }
+    if (!node) {
+      node = createNode(parent, {
+        nodeName: 'slot',
+        attributes: {},
+        childNodes: []
+      }, isSvg)
+    }
 
-      const event = new CustomEvent('skruvloading', { bubbles: true })
-      node.dispatchEvent(event)
-      iterMap.set(node, key)
-      ;(async () => {
+    const event = new CustomEvent('skruvloading', { bubbles: true })
+    node.dispatchEvent(event)
+    iterMap.set(node, key)
+    ;(async () => {
       for await (const _value of (vNode?.[Symbol.asyncIterator] ? vNode : vNode())) {
         const value = coerceTextorNode(_value)
-          if (!value.nodeName) {
-            throw new Error(`Non-vNode Object returned from generator: ${JSON.stringify(vNode)}`)
-          }
-          const shadowHost = node?.getRootNode?.()?.host
-          if (iterMap.get(node) !== key || (!root.contains(node) && (shadowHost === undefined || !root.contains(shadowHost)))) {
-            break
-          }
+        if (!value.nodeName) {
+          throw new Error(`Non-vNode Object returned from generator: ${JSON.stringify(vNode)}`)
+        }
+        const shadowHost = node?.getRootNode?.()?.host
+        if (iterMap.get(node) !== key || (!root.contains(node) && (shadowHost === undefined || !root.contains(shadowHost)))) {
+          break
+        }
 
         if (!node?.getAttribute?.('data-skruv-finished') || value.attributes['data-skruv-finished'] === true) {
-            node = renderNode(value, node, parent, isSvg, root)
-          }
+          node = renderNode(value, node, parent, isSvg, root)
+        }
 
         if (value.attributes['data-skruv-finished'] === undefined || value.attributes['data-skruv-finished'] === true) {
-            const event = new CustomEvent('skruvfinished', { bubbles: true })
-            node.dispatchEvent(event)
-          }
-          iterMap.set(node, key)
+          const event = new CustomEvent('skruvfinished', { bubbles: true })
+          node.dispatchEvent(event)
         }
-      })()
-      return node
-    }
+        iterMap.set(node, key)
+      }
+    })()
+    return node
+  }
 
-    if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot || parent instanceof HTMLDocument)) {
-      throw new Error('No parent to render to!')
-    }
+  if (parent === null || !(parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot || parent instanceof HTMLDocument)) {
+    throw new Error('No parent to render to!')
+  }
 
-    if (!vNode.nodeName) {
-      throw new Error(`Non-vNode Object passed to render: ${JSON.stringify(vNode)}`)
-    }
+  if (!vNode.nodeName) {
+    throw new Error(`Non-vNode Object passed to render: ${JSON.stringify(vNode)}`)
+  }
 
-    // Get the old vDOM and if they are equal we can assume the DOM is not dirty
-    const oldVnode = vDomMap.get(node)
-    if (vNode === oldVnode) {
-      return node
-    }
+  // Get the old vDOM and if they are equal we can assume the DOM is not dirty
+  const oldVnode = vDomMap.get(node)
+  if (vNode === oldVnode) {
+    return node
+  }
 
-    // If we are doing SVG we assume all child nodes are SVG namespaced too
-    if (vNode.nodeName === 'svg') {
-      isSvg = true
-    }
+  // If we are doing SVG we assume all child nodes are SVG namespaced too
+  if (vNode.nodeName === 'svg') {
+    isSvg = true
+  }
 
-    if (node) {
-      // If old node exists, try to patch or replace it
-      node = modifyNode(parent, vNode, node, isSvg)
-    } else {
-      // Create a new node
-      node = createNode(parent, vNode, isSvg)
-    }
+  if (node) {
+    // If old node exists, try to patch or replace it
+    node = modifyNode(parent, vNode, node, isSvg)
+  } else {
+    // Create a new node
+    node = createNode(parent, vNode, isSvg)
+  }
 
-    // Childnodes of foreignObject are no longer in the SVG namespace
-    if (vNode.nodeName === 'foreignObject') {
-      isSvg = false
-    }
+  // Childnodes of foreignObject are no longer in the SVG namespace
+  if (vNode.nodeName === 'foreignObject') {
+    isSvg = false
+  }
 
-    if (root === true) {
-      // Update the root reference to make sure that generators can break
-      root = node
-    }
+  if (root === true) {
+    // Update the root reference to make sure that generators can break
+    root = node
+  }
 
-    // Iterate over and render each child recursively
-    if (!vNode?.attributes?.opaque) {
-      const children = Array.from(node?.attributes?.['data-shadowed'] ? node.shadowRoot.childNodes : node.childNodes)
-      const childNodes = recursiveFlattenFilter(vNode.childNodes)
+  // Iterate over and render each child recursively
+  if (!vNode?.attributes?.opaque) {
+    const children = Array.from(node?.attributes?.['data-shadowed'] ? node.shadowRoot.childNodes : node.childNodes)
+    const childNodes = recursiveFlattenFilter(vNode.childNodes)
 
-      // Cleanup extra nodes that might have been injected
-      children.slice(childNodes.length).forEach(elem => elem.parentNode.removeChild(elem))
+    // Cleanup extra nodes that might have been injected
+    children.slice(childNodes.length).forEach(elem => elem.parentNode.removeChild(elem))
 
-      const parent = node
-      childNodes.forEach((vChild, index) => {
-        const child = children[index]
-        if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
-          !!vChild && renderNode(vChild, child, parent, isSvg, root)
-        }
-      })
-    }
-  } catch (e) {
-    const event = new CustomEvent('skruverror', {
-      cancelable: true,
-      bubbles: true,
-      detail: { error: e, vNode, node }
+    const parent = node
+    childNodes.forEach((vChild, index) => {
+      const child = children[index]
+      if (child instanceof HTMLElement || child instanceof SVGElement || child instanceof Text || child === undefined) {
+        !!vChild && renderNode(vChild, child, parent, isSvg, root)
+      }
     })
-    if (parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof ShadowRoot) {
-      parent.dispatchEvent(event)
-    } else {
-      console.error(e)
-    }
   }
   return node
 }
