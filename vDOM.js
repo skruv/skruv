@@ -412,3 +412,6 @@ export const renderNode = (
   }
   return node
 }
+
+// Helper to render the whole document
+export const html = (attributes = {}, ...childNodes) => renderNode({ nodeName: 'html', childNodes, attributes }, document.documentElement)
