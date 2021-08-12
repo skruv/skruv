@@ -240,6 +240,8 @@ const textNode = (data) => ({
   data: data.toString()
 })
 
+const coerceTextorNode = (child) => typeof child === 'string' || typeof child === 'number' ? textNode(child) : child
+
 /**
  * @param {LooseVnode[]} childNodes
  * @returns {Vnode[]}
@@ -249,9 +251,8 @@ const recursiveFlattenFilter = childNodes => {
     .map(child => typeof child === 'function' && !(child.prototype && child.prototype.toString() === '[object AsyncGenerator]') ? child() : child)
     .flat(Infinity)
     .filter(child => (typeof child !== 'undefined' && typeof child !== 'boolean'))
-    .map(child => typeof child === 'string' || typeof child === 'number' ? textNode(child) : child)
-
-  if (processed.some(child => Array.isArray(child) || (typeof child === 'function' && child.prototype.toString() !== '[object AsyncGenerator]'))) {
+    .map(child => coerceTextorNode(child))
+  if (processed.some(child => Array.isArray(child) || (typeof child === 'function' && !(child.prototype && child.prototype.toString() === '[object AsyncGenerator]')))) {
     return recursiveFlattenFilter(processed)
   }
   return processed
@@ -289,7 +290,8 @@ export const renderNode = (
       node.dispatchEvent(event)
       asyncMap.set(node, vNode)
       ;(async () => {
-        const resolved = await vNode
+      const _resolved = await vNode
+      const resolved = coerceTextorNode(_resolved)
         const shadowHost = node?.getRootNode?.()?.host
         if ((!root.contains(node) && (shadowHost === undefined || !root.contains(shadowHost))) || asyncMap.get(node) !== vNode) {
           return
@@ -301,7 +303,7 @@ export const renderNode = (
       return node
     }
 
-    if (vNode instanceof Function && vNode.prototype.toString() === '[object AsyncGenerator]') {
+  if (vNode?.[Symbol.asyncIterator] || (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')) {
       // Create a key based on fuction body and optionally a key set on it
       const key = JSON.stringify(vNode.key) + vNode.toString()
       if (iterMap.get(node) === key) {
@@ -319,7 +321,8 @@ export const renderNode = (
       node.dispatchEvent(event)
       iterMap.set(node, key)
       ;(async () => {
-        for await (const value of vNode()) {
+      for await (const _value of (vNode?.[Symbol.asyncIterator] ? vNode : vNode())) {
+        const value = coerceTextorNode(_value)
           if (!value.nodeName) {
             throw new Error(`Non-vNode Object returned from generator: ${JSON.stringify(vNode)}`)
           }
@@ -328,11 +331,11 @@ export const renderNode = (
             break
           }
 
-          if (!node.getAttribute('data-skruv-finished') || value.attributes['data-skruv-finished'] === true) {
+        if (!node?.getAttribute?.('data-skruv-finished') || value.attributes['data-skruv-finished'] === true) {
             node = renderNode(value, node, parent, isSvg, root)
           }
 
-          if (value.attributes['data-skruv-finished'] === true) {
+        if (value.attributes['data-skruv-finished'] === undefined || value.attributes['data-skruv-finished'] === true) {
             const event = new CustomEvent('skruvfinished', { bubbles: true })
             node.dispatchEvent(event)
           }
