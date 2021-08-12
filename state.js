@@ -32,6 +32,25 @@ export const createState = (stateObj) => {
     }
 
     get (target, key, proxy) {
+      if (key === 'getGenerator') {
+        return (key) => ({
+          key: [key, target],
+          [Symbol.asyncIterator]: () => {
+          // If this is the first loop for this sub we should return directly for first value
+            let booted = false
+            return {
+              next: async () => {
+                if (booted) {
+                  await this._skruv_promise
+                } else {
+                  booted = true
+                }
+                return { done: false, value: proxy[key] }
+              }
+            }
+          }
+        })
+      }
       if (key === 'skruv_resolve') {
         return () => this._resolve()
       }
