@@ -55,6 +55,15 @@ export const createState = (stateObj) => {
         return () => this._resolve()
       }
       if (key === 'skruv_unwrap_proxy') {
+        if (target.constructor === Object) {
+          return Object.getOwnPropertyNames(target).reduce((acc, curr) => {
+            acc[curr] = target[curr]?.skruv_unwrap_proxy || target[curr]
+            return acc
+          }, {})
+        }
+        if (target.constructor === Array) {
+          return target.map(curr => curr?.skruv_unwrap_proxy || curr)
+        }
         return target
       }
       if (key === Symbol.asyncIterator) {
