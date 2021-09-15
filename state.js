@@ -26,7 +26,6 @@ export const createState = (stateObj) => {
       }
       if (target[key] !== value) {
         target[key] = this.recurse(key, value, target)
-        this._resolve()
       }
       return true
     }
@@ -96,10 +95,13 @@ export const createState = (stateObj) => {
       if (value && value.constructor) {
         if ((value.constructor === Object && target?.[path]?.constructor === Object) || (value.constructor === Array && target?.[path]?.constructor === Array)) {
           for (const key of Object.getOwnPropertyNames(value)) {
-            target[path][key] = value[key]
+            if (target[path][key] !== value[key]) {
+              target[path][key] = value[key]
+            }
           }
           for (const key of Object.getOwnPropertyNames(target[path]).filter(item => !Object.getOwnPropertyNames(value).includes(item))) {
             delete target[path][key]
+            this._resolve()
           }
           return target[path]
         } else if (value.constructor === Object) {
@@ -112,6 +114,7 @@ export const createState = (stateObj) => {
           }, {})
           value = new Proxy(value, subProxy)
           value._skruv_parent = this
+          this._resolve()
         } else if (value.constructor === Array) {
           const subProxy = new this.constructor(`${this.name}.${path}`)
           // check arrays for objects or arrays
@@ -122,7 +125,12 @@ export const createState = (stateObj) => {
           })
           value = new Proxy(value, subProxy)
           value._skruv_parent = this
+          this._resolve()
+        } else {
+          this._resolve()
         }
+      } else {
+        this._resolve()
       }
       return value
     }
