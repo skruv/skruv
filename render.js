@@ -216,7 +216,6 @@ const renderSingle = (vNode, _node, parent, isSvg) => {
   // Check for keyed nodes
   if (keyMap.has(vNode.attributes?.key)) {
     const keyedNode = keyMap.get(vNode.attributes?.key)
-    console.log(keyedNode, _node, parent)
     if (_node && keyedNode !== _node) {
       parent.replaceChild && parent.replaceChild(keyedNode, _node)
     }
@@ -276,8 +275,7 @@ const render = (
   vNode,
   node = document.documentElement,
   parent = node.parentNode,
-  isSvg = false,
-  root = node
+  isSvg = false
 ) => {
   if (!parent) {
     throw new Error('Skruv: No parent to render to')
