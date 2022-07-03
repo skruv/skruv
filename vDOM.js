@@ -37,7 +37,7 @@
         updateOnChange(value, rerender)
       }
       return vNode.result
-    }else if (key.slice(0, 2) === 'on' && value instanceof Function) {
+    } else if (key.slice(0, 2) === 'on' && value instanceof Function) {
       if (!node.skruvListeners) {
         node.skruvListeners = {}
       }
@@ -97,7 +97,7 @@ const createNode = (vNode, isSvg) => {
 const generatorCache = new Map()
 
 const updateOnChange = async (gen, rerender) => {
-  for await (const result of gen) {
+  for await (const result of (gen?.[Symbol.asyncIterator] ? gen : gen())) {
     gen.result = result
     if (!rerender()) break
   }
@@ -113,16 +113,14 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, root, actualVNodeArray = vNode
   const retVal = vNodeArray.map((vNode) => {
     if (typeof vNode === 'boolean' || typeof vNode === 'undefined') {
       return false
-    }else if (typeof vNode === 'function') {
-      return vNode()
-    }else if (typeof vNode === 'string' || typeof vNode === 'number') {
+    } else if (typeof vNode === 'string' || typeof vNode === 'number') {
       return {
         nodeName: '#text',
         attributes: {},
         childNodes: [],
         data: vNode.toString()
       }
-    }else if (vNode?.[Symbol.asyncIterator]) {
+    } else if (vNode?.[Symbol.asyncIterator] || (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')) {
       // TODO: Create a random key here if we failed to get a useful one
       parent.skruvActiveGenerators.add(vNode)
       if (!vNode.booted) {
@@ -136,6 +134,8 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, root, actualVNodeArray = vNode
         updateOnChange(vNode, rerender)
       }
       return vNode.result
+    } else if (typeof vNode === 'function') {
+      return vNode()
     } else if (vNode.nodeName || Array.isArray(vNode)) {
       return vNode
     }
@@ -175,7 +175,7 @@ const renderArray = (vNodeArray, parent, isSvg, root) => {
  * @param {HTMLElement | SVGElement | ShadowRoot | Document} root
  * @returns {HTMLElement | SVGElement | Text}
  */
- const renderSingle = (vNode, _node, parent, isSvg, root) => {
+const renderSingle = (vNode, _node, parent, isSvg, root) => {
   if (!vNode.nodeName) {
     return
   }
