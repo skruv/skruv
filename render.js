@@ -47,13 +47,13 @@ const updateAttributes = (vNode, node) => {
     // Node keys do not get added to the DOM
     if (key === 'key' || key === 'opaque') continue
     // @ts-ignore
-    if (vNode?.[Symbol.asyncIterator] || (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')) {
-      node.skruvActiveAttributeGenerators.add(vNode)
+    if (value?.[Symbol.asyncIterator] || (value instanceof Function && value?.prototype?.toString?.() === '[object AsyncGenerator]')) {
+      node.skruvActiveAttributeGenerators.add(value)
       if (!value.booted) {
         value.booted = true
         const rerender = () => {
           // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
-          if (!node.skruvActiveAttributeGenerators?.has(vNode)) return false
+          if (!node.skruvActiveAttributeGenerators?.has(value)) return false
           if (value.result === false && node.getAttribute?.(key)) {
             node.removeAttribute && node.removeAttribute(key)
           } else {
@@ -143,7 +143,7 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, actualVNodeArray = vNodeArray)
         childNodes: [],
         data: vNode.toString()
       }
-    // @ts-ignore
+      // @ts-ignore
     } else if (vNode?.[Symbol.asyncIterator] || (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')) {
       /** @type {SkruvIterableType} */
       // @ts-ignore
@@ -162,7 +162,7 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, actualVNodeArray = vNodeArray)
       return vNodeIterator.result
     } else if (typeof vNode === 'function') {
       return vNode()
-    // @ts-ignore
+      // @ts-ignore
     } else if (vNode?.nodeName || Array.isArray(vNode)) {
       return vNode
     }
