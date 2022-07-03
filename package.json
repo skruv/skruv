@@ -1,6 +1,6 @@
 {
   "name": "skruv",
-  "version": "0.2.9",
+  "version": "0.2.10-alpha.0",
   "description": "No-dependency, no-build, small JS framework.",
   "type": "module",
   "main": "skruv.min.js",
