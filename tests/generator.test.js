@@ -1,6 +1,6 @@
 /* global test expect */
-import { renderNode } from '../vDOM.js'
-import { createState } from '../state.js'
+import render from '../render.js'
+import createState from '../createState.js'
 import { body, div } from '../html.js'
 
 const wait = time => new Promise(resolve => setTimeout(resolve, time))
@@ -13,19 +13,11 @@ async function * generator () {
   }
 }
 
-test('use slots as placeholders', async () => {
-  const html = document.createElement('html')
-  const root = document.createElement('body')
-  html.appendChild(root)
-  renderNode(body({}, generator), root)
-  return expect(html.childNodes[0].childNodes[0].nodeName).toBe('SLOT')
-})
-
 test('update on state update: Array', async () => {
   const html = document.createElement('html')
   const root = document.createElement('body')
   html.appendChild(root)
-  renderNode(body({}, generator), root)
+  render(body({}, generator), root)
   state.arr.push('test')
   await wait(20)
   return expect(html.childNodes[0].childNodes[0].textContent).toBe('test')

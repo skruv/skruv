@@ -25,3 +25,4 @@ jobs:
         npm ci --silent
     - run: npm run test
     - run: npm run standard
+    - run: npm run typecheck

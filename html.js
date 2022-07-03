@@ -1,221 +1,1299 @@
+/**
+ * @typedef Vnode
+ * @prop {String} nodeName
+ * @prop {String} [data]
+ * @prop {Object<[String], [String | Boolean]>} attributes
+ * @prop {(ChildNodes|ChildNodes[])} childNodes
+ */
+
+/**
+ * @typedef {(ChildNodes[]|ChildNodes|Vnode|Function|String|Boolean|Number|AsyncGenerator<ChildNodes>|AsyncIterable<ChildNodes>)[]} ChildNodes
+ */
+
+/**
+ * @param {String} nodeName
+ * @param {Object} attributes
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
 export const h = (nodeName, attributes = {}, ...childNodes) => ({ nodeName, attributes, childNodes })
 
 // HTML
-export const a = (...args) => h('a', ...args)
-export const abbr = (...args) => h('abbr', ...args)
-export const acronym = (...args) => h('acronym', ...args)
-export const address = (...args) => h('address', ...args)
-export const applet = (...args) => h('applet', ...args)
-export const area = (...args) => h('area', ...args)
-export const article = (...args) => h('article', ...args)
-export const aside = (...args) => h('aside', ...args)
-export const audio = (...args) => h('audio', ...args)
-export const b = (...args) => h('b', ...args)
-export const base = (...args) => h('base', ...args)
-export const basefont = (...args) => h('basefont', ...args)
-export const bdi = (...args) => h('bdi', ...args)
-export const bdo = (...args) => h('bdo', ...args)
-export const bgsound = (...args) => h('bgsound', ...args)
-export const big = (...args) => h('big', ...args)
-export const blink = (...args) => h('blink', ...args)
-export const blockquote = (...args) => h('blockquote', ...args)
-export const body = (...args) => h('body', ...args)
-export const br = (...args) => h('br', ...args)
-export const button = (...args) => h('button', ...args)
-export const canvas = (...args) => h('canvas', ...args)
-export const caption = (...args) => h('caption', ...args)
-export const center = (...args) => h('center', ...args)
-export const cite = (...args) => h('cite', ...args)
-export const code = (...args) => h('code', ...args)
-export const col = (...args) => h('col', ...args)
-export const colgroup = (...args) => h('colgroup', ...args)
-export const command = (...args) => h('command', ...args)
-export const content = (...args) => h('content', ...args)
-export const data = (...args) => h('data', ...args)
-export const datalist = (...args) => h('datalist', ...args)
-export const dd = (...args) => h('dd', ...args)
-export const del = (...args) => h('del', ...args)
-export const details = (...args) => h('details', ...args)
-export const dfn = (...args) => h('dfn', ...args)
-export const dialog = (...args) => h('dialog', ...args)
-export const dir = (...args) => h('dir', ...args)
-export const div = (...args) => h('div', ...args)
-export const dl = (...args) => h('dl', ...args)
-export const dt = (...args) => h('dt', ...args)
-export const element = (...args) => h('element', ...args)
-export const em = (...args) => h('em', ...args)
-export const embed = (...args) => h('embed', ...args)
-export const fieldset = (...args) => h('fieldset', ...args)
-export const figcaption = (...args) => h('figcaption', ...args)
-export const figure = (...args) => h('figure', ...args)
-export const font = (...args) => h('font', ...args)
-export const footer = (...args) => h('footer', ...args)
-export const form = (...args) => h('form', ...args)
-export const frame = (...args) => h('frame', ...args)
-export const frameset = (...args) => h('frameset', ...args)
-export const h1 = (...args) => h('h1', ...args)
-export const h2 = (...args) => h('h2', ...args)
-export const h3 = (...args) => h('h3', ...args)
-export const h4 = (...args) => h('h4', ...args)
-export const h5 = (...args) => h('h5', ...args)
-export const h6 = (...args) => h('h6', ...args)
-export const head = (...args) => h('head', ...args)
-export const header = (...args) => h('header', ...args)
-export const hgroup = (...args) => h('hgroup', ...args)
-export const hr = (...args) => h('hr', ...args)
-export const html = (...args) => h('html', ...args)
-export const i = (...args) => h('i', ...args)
-export const iframe = (...args) => h('iframe', ...args)
-export const image = (...args) => h('image', ...args)
-export const img = (...args) => h('img', ...args)
-export const input = (...args) => h('input', ...args)
-export const ins = (...args) => h('ins', ...args)
-export const isindex = (...args) => h('isindex', ...args)
-export const kbd = (...args) => h('kbd', ...args)
-export const keygen = (...args) => h('keygen', ...args)
-export const label = (...args) => h('label', ...args)
-export const legend = (...args) => h('legend', ...args)
-export const li = (...args) => h('li', ...args)
-export const link = (...args) => h('link', ...args)
-export const listing = (...args) => h('listing', ...args)
-export const main = (...args) => h('main', ...args)
-export const map = (...args) => h('map', ...args)
-export const mark = (...args) => h('mark', ...args)
-export const marquee = (...args) => h('marquee', ...args)
-export const menu = (...args) => h('menu', ...args)
-export const menuitem = (...args) => h('menuitem', ...args)
-export const meta = (...args) => h('meta', ...args)
-export const meter = (...args) => h('meter', ...args)
-export const multicol = (...args) => h('multicol', ...args)
-export const nav = (...args) => h('nav', ...args)
-export const nextid = (...args) => h('nextid', ...args)
-export const nobr = (...args) => h('nobr', ...args)
-export const noembed = (...args) => h('noembed', ...args)
-export const noframes = (...args) => h('noframes', ...args)
-export const noscript = (...args) => h('noscript', ...args)
-export const object = (...args) => h('object', ...args)
-export const ol = (...args) => h('ol', ...args)
-export const optgroup = (...args) => h('optgroup', ...args)
-export const option = (...args) => h('option', ...args)
-export const output = (...args) => h('output', ...args)
-export const p = (...args) => h('p', ...args)
-export const param = (...args) => h('param', ...args)
-export const picture = (...args) => h('picture', ...args)
-export const plaintext = (...args) => h('plaintext', ...args)
-export const pre = (...args) => h('pre', ...args)
-export const progress = (...args) => h('progress', ...args)
-export const q = (...args) => h('q', ...args)
-export const rb = (...args) => h('rb', ...args)
-export const rp = (...args) => h('rp', ...args)
-export const rt = (...args) => h('rt', ...args)
-export const rtc = (...args) => h('rtc', ...args)
-export const ruby = (...args) => h('ruby', ...args)
-export const s = (...args) => h('s', ...args)
-export const samp = (...args) => h('samp', ...args)
-export const script = (...args) => h('script', ...args)
-export const section = (...args) => h('section', ...args)
-export const select = (...args) => h('select', ...args)
-export const shadow = (...args) => h('shadow', ...args)
-export const slot = (...args) => h('slot', ...args)
-export const small = (...args) => h('small', ...args)
-export const source = (...args) => h('source', ...args)
-export const spacer = (...args) => h('spacer', ...args)
-export const span = (...args) => h('span', ...args)
-export const strike = (...args) => h('strike', ...args)
-export const strong = (...args) => h('strong', ...args)
-export const style = (...args) => h('style', ...args)
-export const sub = (...args) => h('sub', ...args)
-export const summary = (...args) => h('summary', ...args)
-export const sup = (...args) => h('sup', ...args)
-export const table = (...args) => h('table', ...args)
-export const tbody = (...args) => h('tbody', ...args)
-export const td = (...args) => h('td', ...args)
-export const template = (...args) => h('template', ...args)
-export const textarea = (...args) => h('textarea', ...args)
-export const tfoot = (...args) => h('tfoot', ...args)
-export const th = (...args) => h('th', ...args)
-export const thead = (...args) => h('thead', ...args)
-export const time = (...args) => h('time', ...args)
-export const title = (...args) => h('title', ...args)
-export const tr = (...args) => h('tr', ...args)
-export const track = (...args) => h('track', ...args)
-export const tt = (...args) => h('tt', ...args)
-export const u = (...args) => h('u', ...args)
-export const ul = (...args) => h('ul', ...args)
-export const varElem = (...args) => h('var', ...args)
-export const video = (...args) => h('video', ...args)
-export const wbr = (...args) => h('wbr', ...args)
-export const xmp = (...args) => h('xmp', ...args)
+
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const a = (attributes = {}, ...childNodes) => h('a', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const abbr = (attributes = {}, ...childNodes) => h('abbr', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const acronym = (attributes = {}, ...childNodes) => h('acronym', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const address = (attributes = {}, ...childNodes) => h('address', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const applet = (attributes = {}, ...childNodes) => h('applet', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const area = (attributes = {}, ...childNodes) => h('area', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const article = (attributes = {}, ...childNodes) => h('article', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const aside = (attributes = {}, ...childNodes) => h('aside', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const audio = (attributes = {}, ...childNodes) => h('audio', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const b = (attributes = {}, ...childNodes) => h('b', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const base = (attributes = {}, ...childNodes) => h('base', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const basefont = (attributes = {}, ...childNodes) => h('basefont', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const bdi = (attributes = {}, ...childNodes) => h('bdi', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const bdo = (attributes = {}, ...childNodes) => h('bdo', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const bgsound = (attributes = {}, ...childNodes) => h('bgsound', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const big = (attributes = {}, ...childNodes) => h('big', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const blink = (attributes = {}, ...childNodes) => h('blink', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const blockquote = (attributes = {}, ...childNodes) => h('blockquote', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const body = (attributes = {}, ...childNodes) => h('body', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const br = (attributes = {}, ...childNodes) => h('br', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const button = (attributes = {}, ...childNodes) => h('button', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const canvas = (attributes = {}, ...childNodes) => h('canvas', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const caption = (attributes = {}, ...childNodes) => h('caption', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const center = (attributes = {}, ...childNodes) => h('center', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const cite = (attributes = {}, ...childNodes) => h('cite', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const code = (attributes = {}, ...childNodes) => h('code', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const col = (attributes = {}, ...childNodes) => h('col', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const colgroup = (attributes = {}, ...childNodes) => h('colgroup', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const command = (attributes = {}, ...childNodes) => h('command', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const content = (attributes = {}, ...childNodes) => h('content', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const data = (attributes = {}, ...childNodes) => h('data', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const datalist = (attributes = {}, ...childNodes) => h('datalist', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const dd = (attributes = {}, ...childNodes) => h('dd', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const del = (attributes = {}, ...childNodes) => h('del', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const details = (attributes = {}, ...childNodes) => h('details', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const dfn = (attributes = {}, ...childNodes) => h('dfn', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const dialog = (attributes = {}, ...childNodes) => h('dialog', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const dir = (attributes = {}, ...childNodes) => h('dir', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const div = (attributes = {}, ...childNodes) => h('div', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const dl = (attributes = {}, ...childNodes) => h('dl', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const dt = (attributes = {}, ...childNodes) => h('dt', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const element = (attributes = {}, ...childNodes) => h('element', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const em = (attributes = {}, ...childNodes) => h('em', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const embed = (attributes = {}, ...childNodes) => h('embed', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const fieldset = (attributes = {}, ...childNodes) => h('fieldset', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const figcaption = (attributes = {}, ...childNodes) => h('figcaption', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const figure = (attributes = {}, ...childNodes) => h('figure', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const font = (attributes = {}, ...childNodes) => h('font', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const footer = (attributes = {}, ...childNodes) => h('footer', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const form = (attributes = {}, ...childNodes) => h('form', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const frame = (attributes = {}, ...childNodes) => h('frame', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const frameset = (attributes = {}, ...childNodes) => h('frameset', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const h1 = (attributes = {}, ...childNodes) => h('h1', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const h2 = (attributes = {}, ...childNodes) => h('h2', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const h3 = (attributes = {}, ...childNodes) => h('h3', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const h4 = (attributes = {}, ...childNodes) => h('h4', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const h5 = (attributes = {}, ...childNodes) => h('h5', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const h6 = (attributes = {}, ...childNodes) => h('h6', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const head = (attributes = {}, ...childNodes) => h('head', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const header = (attributes = {}, ...childNodes) => h('header', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const hgroup = (attributes = {}, ...childNodes) => h('hgroup', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const hr = (attributes = {}, ...childNodes) => h('hr', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const html = (attributes = {}, ...childNodes) => h('html', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const i = (attributes = {}, ...childNodes) => h('i', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const iframe = (attributes = {}, ...childNodes) => h('iframe', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const image = (attributes = {}, ...childNodes) => h('image', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const img = (attributes = {}, ...childNodes) => h('img', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const input = (attributes = {}, ...childNodes) => h('input', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const ins = (attributes = {}, ...childNodes) => h('ins', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const isindex = (attributes = {}, ...childNodes) => h('isindex', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const kbd = (attributes = {}, ...childNodes) => h('kbd', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const keygen = (attributes = {}, ...childNodes) => h('keygen', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const label = (attributes = {}, ...childNodes) => h('label', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const legend = (attributes = {}, ...childNodes) => h('legend', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const li = (attributes = {}, ...childNodes) => h('li', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const link = (attributes = {}, ...childNodes) => h('link', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const listing = (attributes = {}, ...childNodes) => h('listing', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const main = (attributes = {}, ...childNodes) => h('main', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const map = (attributes = {}, ...childNodes) => h('map', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const mark = (attributes = {}, ...childNodes) => h('mark', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const marquee = (attributes = {}, ...childNodes) => h('marquee', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const menu = (attributes = {}, ...childNodes) => h('menu', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const menuitem = (attributes = {}, ...childNodes) => h('menuitem', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const meta = (attributes = {}, ...childNodes) => h('meta', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const meter = (attributes = {}, ...childNodes) => h('meter', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const multicol = (attributes = {}, ...childNodes) => h('multicol', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const nav = (attributes = {}, ...childNodes) => h('nav', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const nextid = (attributes = {}, ...childNodes) => h('nextid', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const nobr = (attributes = {}, ...childNodes) => h('nobr', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const noembed = (attributes = {}, ...childNodes) => h('noembed', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const noframes = (attributes = {}, ...childNodes) => h('noframes', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const noscript = (attributes = {}, ...childNodes) => h('noscript', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const object = (attributes = {}, ...childNodes) => h('object', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const ol = (attributes = {}, ...childNodes) => h('ol', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const optgroup = (attributes = {}, ...childNodes) => h('optgroup', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const option = (attributes = {}, ...childNodes) => h('option', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const output = (attributes = {}, ...childNodes) => h('output', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const p = (attributes = {}, ...childNodes) => h('p', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const param = (attributes = {}, ...childNodes) => h('param', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const picture = (attributes = {}, ...childNodes) => h('picture', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const plaintext = (attributes = {}, ...childNodes) => h('plaintext', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const pre = (attributes = {}, ...childNodes) => h('pre', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const progress = (attributes = {}, ...childNodes) => h('progress', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const q = (attributes = {}, ...childNodes) => h('q', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const rb = (attributes = {}, ...childNodes) => h('rb', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const rp = (attributes = {}, ...childNodes) => h('rp', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const rt = (attributes = {}, ...childNodes) => h('rt', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const rtc = (attributes = {}, ...childNodes) => h('rtc', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const ruby = (attributes = {}, ...childNodes) => h('ruby', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const s = (attributes = {}, ...childNodes) => h('s', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const samp = (attributes = {}, ...childNodes) => h('samp', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const script = (attributes = {}, ...childNodes) => h('script', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const section = (attributes = {}, ...childNodes) => h('section', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const select = (attributes = {}, ...childNodes) => h('select', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const shadow = (attributes = {}, ...childNodes) => h('shadow', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const slot = (attributes = {}, ...childNodes) => h('slot', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const small = (attributes = {}, ...childNodes) => h('small', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const source = (attributes = {}, ...childNodes) => h('source', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const spacer = (attributes = {}, ...childNodes) => h('spacer', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const span = (attributes = {}, ...childNodes) => h('span', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const strike = (attributes = {}, ...childNodes) => h('strike', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const strong = (attributes = {}, ...childNodes) => h('strong', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const style = (attributes = {}, ...childNodes) => h('style', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const sub = (attributes = {}, ...childNodes) => h('sub', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const summary = (attributes = {}, ...childNodes) => h('summary', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const sup = (attributes = {}, ...childNodes) => h('sup', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const table = (attributes = {}, ...childNodes) => h('table', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const tbody = (attributes = {}, ...childNodes) => h('tbody', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const td = (attributes = {}, ...childNodes) => h('td', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const template = (attributes = {}, ...childNodes) => h('template', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const textarea = (attributes = {}, ...childNodes) => h('textarea', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const tfoot = (attributes = {}, ...childNodes) => h('tfoot', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const th = (attributes = {}, ...childNodes) => h('th', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const thead = (attributes = {}, ...childNodes) => h('thead', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const time = (attributes = {}, ...childNodes) => h('time', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const title = (attributes = {}, ...childNodes) => h('title', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const tr = (attributes = {}, ...childNodes) => h('tr', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const track = (attributes = {}, ...childNodes) => h('track', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const tt = (attributes = {}, ...childNodes) => h('tt', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const u = (attributes = {}, ...childNodes) => h('u', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const ul = (attributes = {}, ...childNodes) => h('ul', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const varElem = (attributes = {}, ...childNodes) => h('var', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const video = (attributes = {}, ...childNodes) => h('video', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const wbr = (attributes = {}, ...childNodes) => h('wbr', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const xmp = (attributes = {}, ...childNodes) => h('xmp', attributes, ...childNodes)
 
 // SVG
-export const animate = (...args) => h('animate', ...args)
-export const animateMotion = (...args) => h('animateMotion', ...args)
-export const animateTransform = (...args) => h('animateTransform', ...args)
-export const circle = (...args) => h('circle', ...args)
-export const clipPath = (...args) => h('clipPath', ...args)
-export const colorProfile = (...args) => h('color, ...args-profile')
-export const defs = (...args) => h('defs', ...args)
-export const desc = (...args) => h('desc', ...args)
-export const discard = (...args) => h('discard', ...args)
-export const ellipse = (...args) => h('ellipse', ...args)
-export const feBlend = (...args) => h('feBlend', ...args)
-export const feColorMatrix = (...args) => h('feColorMatrix', ...args)
-export const feComponentTransfer = (...args) => h('feComponentTransfer', ...args)
-export const feComposite = (...args) => h('feComposite', ...args)
-export const feConvolveMatrix = (...args) => h('feConvolveMatrix', ...args)
-export const feDiffuseLighting = (...args) => h('feDiffuseLighting', ...args)
-export const feDisplacementMap = (...args) => h('feDisplacementMap', ...args)
-export const feDistantLight = (...args) => h('feDistantLight', ...args)
-export const feDropShadow = (...args) => h('feDropShadow', ...args)
-export const feFlood = (...args) => h('feFlood', ...args)
-export const feFuncA = (...args) => h('feFuncA', ...args)
-export const feFuncB = (...args) => h('feFuncB', ...args)
-export const feFuncG = (...args) => h('feFuncG', ...args)
-export const feFuncR = (...args) => h('feFuncR', ...args)
-export const feGaussianBlur = (...args) => h('feGaussianBlur', ...args)
-export const feImage = (...args) => h('feImage', ...args)
-export const feMerge = (...args) => h('feMerge', ...args)
-export const feMergeNode = (...args) => h('feMergeNode', ...args)
-export const feMorphology = (...args) => h('feMorphology', ...args)
-export const feOffset = (...args) => h('feOffset', ...args)
-export const fePointLight = (...args) => h('fePointLight', ...args)
-export const feSpecularLighting = (...args) => h('feSpecularLighting', ...args)
-export const feSpotLight = (...args) => h('feSpotLight', ...args)
-export const feTile = (...args) => h('feTile', ...args)
-export const feTurbulence = (...args) => h('feTurbulence', ...args)
-export const filter = (...args) => h('filter', ...args)
-export const foreignObject = (...args) => h('foreignObject', ...args)
-export const g = (...args) => h('g', ...args)
-export const hatch = (...args) => h('hatch', ...args)
-export const hatchpath = (...args) => h('hatchpath', ...args)
-export const line = (...args) => h('line', ...args)
-export const linearGradient = (...args) => h('linearGradient', ...args)
-export const marker = (...args) => h('marker', ...args)
-export const mask = (...args) => h('mask', ...args)
-export const mesh = (...args) => h('mesh', ...args)
-export const meshgradient = (...args) => h('meshgradient', ...args)
-export const meshpatch = (...args) => h('meshpatch', ...args)
-export const meshrow = (...args) => h('meshrow', ...args)
-export const metadata = (...args) => h('metadata', ...args)
-export const mpath = (...args) => h('mpath', ...args)
-export const path = (...args) => h('path', ...args)
-export const pattern = (...args) => h('pattern', ...args)
-export const polygon = (...args) => h('polygon', ...args)
-export const polyline = (...args) => h('polyline', ...args)
-export const radialGradient = (...args) => h('radialGradient', ...args)
-export const rect = (...args) => h('rect', ...args)
-export const set = (...args) => h('set', ...args)
-export const solidcolor = (...args) => h('solidcolor', ...args)
-export const stop = (...args) => h('stop', ...args)
-export const svg = (...args) => h('svg', ...args)
-export const switchElem = (...args) => h('switch', ...args)
-export const symbol = (...args) => h('symbol', ...args)
-export const text = (...args) => h('text', ...args)
-export const textPath = (...args) => h('textPath', ...args)
-export const tspan = (...args) => h('tspan', ...args)
-export const unknown = (...args) => h('unknown', ...args)
-export const use = (...args) => h('use', ...args)
-export const view = (...args) => h('view', ...args)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const animate = (attributes = {}, ...childNodes) => h('animate', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const animateMotion = (attributes = {}, ...childNodes) => h('animateMotion', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const animateTransform = (attributes = {}, ...childNodes) => h('animateTransform', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const circle = (attributes = {}, ...childNodes) => h('circle', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const clipPath = (attributes = {}, ...childNodes) => h('clipPath', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const defs = (attributes = {}, ...childNodes) => h('defs', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const desc = (attributes = {}, ...childNodes) => h('desc', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const discard = (attributes = {}, ...childNodes) => h('discard', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const ellipse = (attributes = {}, ...childNodes) => h('ellipse', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feBlend = (attributes = {}, ...childNodes) => h('feBlend', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feColorMatrix = (attributes = {}, ...childNodes) => h('feColorMatrix', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feComponentTransfer = (attributes = {}, ...childNodes) => h('feComponentTransfer', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feComposite = (attributes = {}, ...childNodes) => h('feComposite', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feConvolveMatrix = (attributes = {}, ...childNodes) => h('feConvolveMatrix', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feDiffuseLighting = (attributes = {}, ...childNodes) => h('feDiffuseLighting', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feDisplacementMap = (attributes = {}, ...childNodes) => h('feDisplacementMap', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feDistantLight = (attributes = {}, ...childNodes) => h('feDistantLight', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feDropShadow = (attributes = {}, ...childNodes) => h('feDropShadow', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feFlood = (attributes = {}, ...childNodes) => h('feFlood', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feFuncA = (attributes = {}, ...childNodes) => h('feFuncA', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feFuncB = (attributes = {}, ...childNodes) => h('feFuncB', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feFuncG = (attributes = {}, ...childNodes) => h('feFuncG', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feFuncR = (attributes = {}, ...childNodes) => h('feFuncR', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feGaussianBlur = (attributes = {}, ...childNodes) => h('feGaussianBlur', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feImage = (attributes = {}, ...childNodes) => h('feImage', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feMerge = (attributes = {}, ...childNodes) => h('feMerge', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feMergeNode = (attributes = {}, ...childNodes) => h('feMergeNode', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feMorphology = (attributes = {}, ...childNodes) => h('feMorphology', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feOffset = (attributes = {}, ...childNodes) => h('feOffset', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const fePointLight = (attributes = {}, ...childNodes) => h('fePointLight', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feSpecularLighting = (attributes = {}, ...childNodes) => h('feSpecularLighting', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feSpotLight = (attributes = {}, ...childNodes) => h('feSpotLight', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feTile = (attributes = {}, ...childNodes) => h('feTile', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const feTurbulence = (attributes = {}, ...childNodes) => h('feTurbulence', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const filter = (attributes = {}, ...childNodes) => h('filter', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const foreignObject = (attributes = {}, ...childNodes) => h('foreignObject', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const g = (attributes = {}, ...childNodes) => h('g', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const hatch = (attributes = {}, ...childNodes) => h('hatch', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const hatchpath = (attributes = {}, ...childNodes) => h('hatchpath', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const line = (attributes = {}, ...childNodes) => h('line', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const linearGradient = (attributes = {}, ...childNodes) => h('linearGradient', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const marker = (attributes = {}, ...childNodes) => h('marker', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const mask = (attributes = {}, ...childNodes) => h('mask', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const mesh = (attributes = {}, ...childNodes) => h('mesh', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const meshgradient = (attributes = {}, ...childNodes) => h('meshgradient', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const meshpatch = (attributes = {}, ...childNodes) => h('meshpatch', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const meshrow = (attributes = {}, ...childNodes) => h('meshrow', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const metadata = (attributes = {}, ...childNodes) => h('metadata', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const mpath = (attributes = {}, ...childNodes) => h('mpath', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const path = (attributes = {}, ...childNodes) => h('path', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const pattern = (attributes = {}, ...childNodes) => h('pattern', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const polygon = (attributes = {}, ...childNodes) => h('polygon', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const polyline = (attributes = {}, ...childNodes) => h('polyline', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const radialGradient = (attributes = {}, ...childNodes) => h('radialGradient', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const rect = (attributes = {}, ...childNodes) => h('rect', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const set = (attributes = {}, ...childNodes) => h('set', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const solidcolor = (attributes = {}, ...childNodes) => h('solidcolor', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const stop = (attributes = {}, ...childNodes) => h('stop', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const svg = (attributes = {}, ...childNodes) => h('svg', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const switchElem = (attributes = {}, ...childNodes) => h('switch', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const symbol = (attributes = {}, ...childNodes) => h('symbol', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const text = (attributes = {}, ...childNodes) => h('text', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const textPath = (attributes = {}, ...childNodes) => h('textPath', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const tspan = (attributes = {}, ...childNodes) => h('tspan', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const unknown = (attributes = {}, ...childNodes) => h('unknown', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const use = (attributes = {}, ...childNodes) => h('use', attributes, ...childNodes)
+/**
+ * @param {Object} [attributes={}]
+ * @param {...ChildNodes} childNodes
+ * @returns {Vnode}
+ */
+export const view = (attributes = {}, ...childNodes) => h('view', attributes, ...childNodes)
 
 // CSS template literal
 /**
@@ -223,12 +1301,15 @@ export const view = (...args) => h('view', ...args)
  * @param {[String | Number | Boolean]} keys
  * @returns {Vnode}
  */
-export const css = (strings, ...keys) => {
-  /** @type {Vnode[]} */
-  const vNodeArr = []
-  return style({}, strings.reduce((prev, curr, i) => {
+export const css = (strings, ...keys) => style({}, strings.reduce(
+  /**
+   * @param {String[]} prev
+   * @param {String} curr
+   * @returns {String[]}
+   */
+  (prev, curr, i) => {
     prev.push(curr)
-    keys[i] && prev.push(keys[i])
+    keys[i] && prev.push(keys[i].toString())
     return prev
-  }, vNodeArr).join(''))
-}
+  }, [])
+)
