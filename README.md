@@ -22,5 +22,4 @@ No-dependency, no-build, small JS framework.
 * Useable without bundling/compilation/transpilation
 * Fast enough for most normal usecases: [benchmark](https://krausest.github.io/js-framework-benchmark/index.html)
 * Supports async generators
-* Basic typescript support (via jsDoc)
 <!-- * Works with web components: [tests](https://custom-elements-everywhere.com/libraries/skruv/results/results.html) -->

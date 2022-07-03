@@ -1,6 +1,6 @@
 {
   "name": "skruv",
-  "version": "0.3.1-alpha.5",
+  "version": "0.3.1-alpha.6",
   "description": "No-dependency, no-build, small JS framework.",
   "type": "module",
   "main": "skruv.min.js",
@@ -20,7 +20,8 @@
     "test": "node --experimental-vm-modules node_modules/.bin/jest --no-cache --passWithNoTests",
     "standard": "standard",
     "typecheck": "tsc",
-    "build": "esbuild index.js --bundle --sourcemap --minify --outfile=skruv.min.js --format=esm"
+    "build": "esbuild index.js --bundle --sourcemap --minify --outfile=skruv.min.js --format=esm",
+    "release-prep": "npm update && npm run test && npm run standard -- --fix && npm run typecheck && npm run build"
   },
   "author": "Svante Richter",
   "license": "MIT",
