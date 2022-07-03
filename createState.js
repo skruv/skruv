@@ -1,4 +1,7 @@
-export const createState = (stateObj) => {
+// @ts-nocheck
+// TODO: This file will be hard to typecheck without generic types, check how to do it with TS later
+
+const createState = (stateObj) => {
   const Handler = class Handler {
     constructor (name) {
       this.name = name
@@ -141,3 +144,5 @@ export const createState = (stateObj) => {
   Object.assign(rootProxy, stateObj)
   return rootProxy
 }
+
+export default createState

@@ -1,12 +1,12 @@
 /* global test expect */
-import { renderNode } from '../vDOM.js'
+import render from '../render.js'
 import { body, div } from '../html.js'
 
 test('render deep elements', async () => {
   const html = document.createElement('html')
   const root = document.createElement('body')
   html.appendChild(root)
-  renderNode(
+  render(
     body({},
       div({},
         div({}, 'deep')

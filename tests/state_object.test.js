@@ -1,6 +1,6 @@
 /* global test expect */
-import { renderNode } from '../vDOM.js'
-import { createState } from '../state.js'
+import render from '../render.js'
+import createState from '../createState.js'
 import { body, div } from '../html.js'
 
 const wait = time => new Promise(resolve => setTimeout(resolve, time))
@@ -12,7 +12,7 @@ test('update on array push', async () => {
   html.appendChild(root)
   ;(async () => {
     for await (const state of sub) {
-      root = renderNode(body({}, Object.keys(state.obj).map(key => div({ 'data-key': key }, state.obj[key]))), root)
+      root = render(body({}, Object.keys(state.obj).map(key => div({ 'data-key': key }, state.obj[key]))), root)
     }
   })()
   sub.obj.test = 'testvalue'

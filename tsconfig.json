@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+      "checkJs": true,
+      "allowJs": true,
+      "noEmit": true,
+      "esModuleInterop": true,
+      "strict": true
+  },
+  "exclude": [
+      "node_modules"
+  ],
+  "files": [
+      "render.js",
+      "html.js",
+      "createState.js",
+  ]
+}
