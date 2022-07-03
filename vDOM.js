@@ -12,31 +12,51 @@
  * @param {HTMLElement | SVGElement} node
  */
  const updateAttributes = (vNode, node) => {
-  for (const key in vNode.attributes) {
+  node.skruvActiveAttributeGenerators = new Set()
+  for (const [key, value] of Object.entries(vNode.attributes)) {
     // Node keys do not get added to the DOM
     if (key === 'key' || key === 'opaque') continue
-    if (key.slice(0, 2) === 'on' && vNode.attributes[key] instanceof Function) {
+    if (value?.[Symbol.asyncIterator]) {
+      // TODO: Create a random key here if we failed to get a useful one
+      node.skruvActiveAttributeGenerators.add(vNode)
+      if (!value.booted) {
+        value.booted = true
+        const rerender = () => {
+          // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
+          if (!node.skruvActiveAttributeGenerators.has(vNode)) return false
+          if (value.result === false && node.getAttribute(key)) {
+            node.removeAttribute(key)
+          } else {
+            if (key === 'value' || key === 'checked' || key === 'selected') {
+              node[key] = value.result
+            }
+            node.setAttribute(key, value.result)
+          }
+          return true
+        }
+        updateOnChange(value, rerender)
+      }
+      return vNode.result
+    }else if (key.slice(0, 2) === 'on' && value instanceof Function) {
       if (!node.skruvListeners) {
         node.skruvListeners = {}
       }
-      let listeners = node.skruvListeners
       if (node.skruvListeners[key]) {
-        node.removeEventListener(key.slice(2), listeners[key])
+        node.removeEventListener(key.slice(2), node.skruvListeners[key])
       }
       // TODO: don't remove/readd event listeners all the time, check how to diff the functions
-      listeners[key.slice(2)] = vNode.attributes[key]
-      node.addEventListener(key.slice(2), listeners[key.slice(2)])
+      node.skruvListeners[key.slice(2)] = value
+      node.addEventListener(key.slice(2), node.skruvListeners[key.slice(2)])
     } else {
-      if (vNode.attributes[key] !== false && node.getAttribute(key) !== vNode.attributes[key]) {
+      if (value !== false && node.getAttribute(key) !== value) {
         // These need to be set directly to have the desired effect.
         if (key === 'value' || key === 'checked' || key === 'selected') {
-          node[key] = vNode.attributes[key]
+          node[key] = value
         }
-        node.setAttribute(key, vNode.attributes[key])
+        node.setAttribute(key, value)
       }
-      if (vNode.attributes[key] === false && node.getAttribute(key)) {
+      if (value === false && node.getAttribute(key)) {
         node.removeAttribute(key)
-        continue
       }
     }
   }
