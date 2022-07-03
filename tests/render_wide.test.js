@@ -1,6 +1,6 @@
 /* global test expect */
 import render from '../render.js'
-import { body, div } from '../html.js'
+import { body, div } from '../elements.js'
 
 test('render multiple elements', async () => {
   const html = document.createElement('html')
