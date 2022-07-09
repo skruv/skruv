@@ -1,6 +1,6 @@
 {
   "name": "skruv",
-  "version": "0.3.1-alpha.18",
+  "version": "0.3.1-alpha.19",
   "description": "No-dependency, no-build, small JS framework.",
   "keywords": [
     "small",
@@ -19,9 +19,9 @@
     "default": "./skruv.min.js"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/skruv/skruv.git"
-  },  
+    "type": "git",
+    "url": "https://github.com/skruv/skruv.git"
+  },
   "bugs": {
     "url": "https://github.com/skruv/skruv/issues",
     "email": "skruv@richter.id"
