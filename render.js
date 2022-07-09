@@ -38,8 +38,8 @@ const updateAttributes = (vNode, node) => {
     // SHAME 🔔 SHAME 🔔 SHAME 🔔
     // SHAME 🔔 SHAME 🔔 SHAME 🔔
     // TODO: unshame
-    // @ts-ignore
     if (
+      // @ts-ignore
       value?.[Symbol.asyncIterator] ||
       (value instanceof Function && value?.prototype?.toString?.() === '[object AsyncGenerator]')
     ) {
@@ -146,8 +146,8 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, actualVNodeArray = vNodeArray)
         childNodes: [],
         data: vNode.toString()
       }
-      // @ts-ignore
     } else if (
+      // @ts-ignore
       vNode?.[Symbol.asyncIterator] ||
       (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')
     ) {

@@ -13,7 +13,7 @@
     "node_modules"
   ],
   "files": [
-    "index.js",
+    "skruv.js",
     "render.js",
     "elements.js",
     "createState.js",

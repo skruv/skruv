@@ -71,7 +71,8 @@
     "**/skruv.min.js",
     "**/skruv.min.cjs.js",
     "**/tsconfig.json",
-    ".vscode/**"
+    ".vscode/**",
+    "comparisons/**"
   ],
   "globals": {
     "fetch": "readonly",
