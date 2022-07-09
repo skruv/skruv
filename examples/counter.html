@@ -2,7 +2,7 @@
 <title>Skruv counter example</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="module">
-  import { createState, elements, render } from '../skruv.min.js'
+  import { createState, elements, render } from '../skruv.js'
   const {
     html,
     head,
@@ -22,10 +22,25 @@
     value: ""
   })
 
+
+  const shuffle = (a) => {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  setInterval(() => {state.todos = shuffle(state.todos)}, 3000)
+
   render(
     html({ lang: 'en-US' },
       head({},
-        title({}, 'Skruv counter example'),
+        title({}, async function* () {
+          for await (const currentTodos of state.todos) {
+            yield currentTodos[0]
+          }
+        }),
         meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' })
       ),
       body({},
@@ -34,7 +49,7 @@
           async function* () {
             for await (const currentState of state) {
               yield [
-                input({ type: "text", oninput: e => currentState.value = e.target.value }),
+                input({ type: "text", value, oninput: e => currentState.value = e.target.value }),
                 ul({},
                   currentState.todos.map((todo) => li({}, todo))
                 ),

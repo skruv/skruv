@@ -27,32 +27,38 @@
     "default": "./skruv.min.js"
   },
   "main": "skruv.min.js",
-  "types": "./types/index.js",
+  "types": "./types/skruv.js",
   "files": [
     "elements.js",
     "createState.js",
     "render.js",
-    "index.js",
+    "skruv.js",
     "skruv.min.js",
     "skruv.min.js.map",
     "skruv.min.cjs.js",
     "skruv.min.cjs.js.map",
-    "types/index.d.ts",
+    "types/skruv.d.ts",
     "types/render.d.ts",
     "types/elements.d.ts",
     "types/createState.d.ts",
-    "types/index.d.ts.map",
+    "types/skruv.d.ts.map",
     "types/render.d.ts.map",
     "types/elements.d.ts.map",
     "types/createState.d.ts.map"
   ],
   "scripts": {
-    "build": "esbuild index.js --bundle --sourcemap --minify --outfile=skruv.min.js --format=esm && esbuild index.js --bundle --sourcemap --minify --outfile=skruv.min.cjs.js --format=cjs",
+    "build": "esbuild skruv.js --bundle --sourcemap --minify --outfile=skruv.min.js --format=esm && esbuild skruv.js --bundle --sourcemap --minify --outfile=skruv.min.cjs.js --format=cjs",
     "compress": "gzip -fk9 skruv.min.js && brotli -fkZ skruv.min.js",
     "eslint": "eslint . --ext js,json",
-    "release-prep": "npm update && npm run test && npm run standard -- --fix && npm run typecheck && npm run build",
+    "release-prep": "npm update && npm run test && npm run eslint -- --fix && npm run typecheck && npm run build",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --no-cache --passWithNoTests",
     "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@hyperapp/dom": "^1.0.0",
+    "@hyperapp/html": "^2.0.0",
+    "@hyperapp/svg": "^2.0.0",
+    "hyperapp": "^2.0.22"
   },
   "devDependencies": {
     "esbuild": "^0.14.48",
