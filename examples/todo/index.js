@@ -17,7 +17,7 @@ const {
 const state = createState({
   language: 'en-US',
   title: 'To do list',
-  todos: [],
+  todos: ['Write todos'],
   value: ''
 })
 
@@ -30,7 +30,7 @@ render(
     ),
     body({},
       main({},
-        h1({}, state.getGenerator('title')),
+        h1({}, state.todos.getGenerator(0)),
         async function * () {
           for await (const currentState of state) {
             yield form(
