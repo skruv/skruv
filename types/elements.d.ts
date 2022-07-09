@@ -219,11 +219,11 @@ export type Vnode = {
     attributes: any;
     childNodes: ChildNodes;
 };
-export type ChildNodes = (ChildNode[] | ChildNode)[];
+export type ChildNodes = Array<(Array<ChildNode> | ChildNode)>;
 export type ChildNode = Vnode | Function | string | boolean | number | SkruvIterableType;
 export type SkruvAdditionalIterableProperties = {
-    result?: ChildNodes | undefined;
+    result?: ChildNodes | ChildNode | undefined;
     booted?: boolean | undefined;
 };
-export type SkruvIterableType = (AsyncGenerator<(ChildNode | ChildNode[])[]> | AsyncIterable<ChildNodes>) & SkruvAdditionalIterableProperties;
+export type SkruvIterableType = (AsyncGenerator<Vnode | Function | string | boolean | number | ChildNodes> | AsyncIterable<Vnode | Function | string | boolean | number | ChildNodes>) & SkruvAdditionalIterableProperties;
 //# sourceMappingURL=elements.d.ts.map
