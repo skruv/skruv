@@ -4,14 +4,25 @@
  * @typedef Vnode
  * @prop {String} nodeName
  * @prop {String} [data]
- * @prop {Object<[String], [String | Boolean]>} attributes
- * @prop {(ChildNodes|ChildNodes[])} childNodes
- * @prop {Boolean} [booted]
  * @prop {ChildNodes} [result]
+ * @prop {Object<[String], [String | Boolean]>} attributes
+ * @prop {ChildNodes} childNodes
  */
 
 /**
- * @typedef {(ChildNodes[]|ChildNodes|Vnode|Function|String|Boolean|Number|SkruvIterableType|SkruvIterableType)[]} ChildNodes
+ * @typedef {(ChildNode[]|ChildNode)[]} ChildNodes
+ */
+
+/**
+ * @typedef {Vnode|Function|String|Boolean|Number|SkruvIterableType} ChildNode
+ */
+
+/**
+ * @typedef {Object} SkruvAdditionalIterableProperties
+ * @property {ChildNodes} [result]
+ * @property {Boolean} [booted]
+ *
+ * @typedef {(AsyncGenerator<any, ChildNodes> | AsyncIterable<ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
  */
 
 /**
@@ -27,14 +38,6 @@
  * @property {Function} [setAttribute]
  *
  * @typedef {Node & SkruvAdditionalProperties} SkruvDomType
- */
-
-/**
- * @typedef {Object} SkruvAdditionalIterableProperties
- * @property {ChildNodes} [result]
- * @property {Boolean} [booted]
- *
- * @typedef {(AsyncGenerator<any, ChildNodes> | AsyncIterable<ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
  */
 
 const keyMap = new WeakMap()
