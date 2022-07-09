@@ -33,6 +33,8 @@
     "index.js",
     "skruv.min.js",
     "skruv.min.js.map",
+    "skruv.min.cjs.js",
+    "skruv.min.cjs.js.map",
     "types/index.d.ts",
     "types/render.d.ts",
     "types/elements.d.ts",
@@ -47,6 +49,7 @@
     "standard": "standard",
     "typecheck": "tsc",
     "build": "esbuild index.js --bundle --sourcemap --minify --outfile=skruv.min.js --format=esm && esbuild index.js --bundle --sourcemap --minify --outfile=skruv.min.cjs.js --format=cjs",
+    "compress": "gzip -fk9 skruv.min.js && brotli -fkZ skruv.min.js",
     "release-prep": "npm update && npm run test && npm run standard -- --fix && npm run typecheck && npm run build"
   },
   "author": "Svante Richter",
