@@ -34,9 +34,9 @@ const updateAttributes = (vNode, node) => {
       node.skruvkey = value
       continue
     }
-    // SHAME SHAME SHAME
-    // SHAME SHAME SHAME
-    // SHAME SHAME SHAME
+    // SHAME 🔔 SHAME 🔔 SHAME 🔔
+    // SHAME 🔔 SHAME 🔔 SHAME 🔔
+    // SHAME 🔔 SHAME 🔔 SHAME 🔔
     // TODO: unshame
     // @ts-ignore
     if (value?.[Symbol.asyncIterator] || (value instanceof Function && value?.prototype?.toString?.() === '[object AsyncGenerator]')) {
