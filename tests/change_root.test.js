@@ -1,6 +1,6 @@
 /* global test expect */
-import render from '../render.js'
 import { div, header } from '../elements.js'
+import render from '../render.js'
 
 test('change root node type', async () => {
   const html = document.createElement('body')

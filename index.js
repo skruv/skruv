@@ -1,5 +1,5 @@
 import createState from './createState.js'
-import render from './render.js'
 import * as elements from './elements.js'
+import render from './render.js'
 
-export { createState, render, elements }
+export { createState, elements, render } // eslint-disable-line import/no-unused-modules

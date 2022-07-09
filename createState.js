@@ -1,7 +1,7 @@
 // @ts-nocheck
 // TODO: This file will be hard to typecheck without generic types, check how to do it with TS later
 
-const createState = (stateObj) => {
+const createState = stateObj => {
   const Handler = class Handler {
     constructor (name) {
       this.name = name
@@ -35,7 +35,7 @@ const createState = (stateObj) => {
 
     get (target, key, proxy) {
       if (key === 'getGenerator') {
-        return (key) => ({
+        return key => ({
           key: [key, target],
           [Symbol.asyncIterator]: () => {
           // If this is the first loop for this sub we should return directly for first value
@@ -96,13 +96,18 @@ const createState = (stateObj) => {
     recurse (path, value, target) {
       // check for falsy values
       if (value && value.constructor) {
-        if ((value.constructor === Object && target?.[path]?.constructor === Object) || (value.constructor === Array && target?.[path]?.constructor === Array)) {
+        if (
+          (value.constructor === Object && target?.[path]?.constructor === Object) ||
+          (value.constructor === Array && target?.[path]?.constructor === Array)
+        ) {
           for (const key of Object.getOwnPropertyNames(value)) {
             if (target[path][key] !== value[key]) {
               target[path][key] = value[key]
             }
           }
-          for (const key of Object.getOwnPropertyNames(target[path]).filter(item => !Object.getOwnPropertyNames(value).includes(item))) {
+          for (const key of Object.getOwnPropertyNames(target[path])
+            .filter(item => !Object.getOwnPropertyNames(value).includes(item))
+          ) {
             delete target[path][key]
             this._resolve()
           }
@@ -112,7 +117,7 @@ const createState = (stateObj) => {
           // check object properties for other objects or arrays
           value = Object.keys(value).reduce((acc, key) => {
             acc[key] = this.recurse(`${path}.${key}`, value[key])
-            if (typeof acc[key] === 'object' && acc[key] !== null) acc[key]._skruv_parent = subProxy
+            if (typeof acc[key] === 'object' && acc[key] !== null) { acc[key]._skruv_parent = subProxy }
             return acc
           }, {})
           value = new Proxy(value, subProxy)
@@ -123,7 +128,7 @@ const createState = (stateObj) => {
           // check arrays for objects or arrays
           value = value.map((child, key) => {
             const newValue = this.recurse(`${path}[${key}]`, child)
-            if (typeof newValue === 'object' && newValue !== null) newValue._skruv_parent = subProxy
+            if (typeof newValue === 'object' && newValue !== null) { newValue._skruv_parent = subProxy }
             return newValue
           })
           value = new Proxy(value, subProxy)
