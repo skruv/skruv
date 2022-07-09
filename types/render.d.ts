@@ -7,7 +7,7 @@ export type SkruvAdditionalProperties = {
     skruvActiveAttributeGenerators?: Set<import("./elements.js").Vnode> | undefined;
     skruvActiveGenerators?: Set<import("./elements.js").SkruvIterableType> | undefined;
     skruvListeners?: any;
-    skruvkey?: Object | undefined;
+    skruvkey?: Object | null | undefined;
     data?: string | undefined;
     append?: Function | undefined;
     removeAttribute?: Function | undefined;
