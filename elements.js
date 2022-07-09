@@ -8,19 +8,20 @@
  */
 
 /**
- * @typedef {(ChildNode[]|ChildNode)[]} ChildNodes
+ * @typedef {Array<(Array<ChildNode>|ChildNode)>} ChildNodes
  */
 
 /**
  * @typedef {Vnode|Function|String|Boolean|Number|SkruvIterableType} ChildNode
  */
 
+// TODO: these types would be much nicer as ChildNode|ChildNodes, but then typescript complains about recursiveness, because the SkruvIterableType can return a SkruvIterableType. Look into how to solve
 /**
  * @typedef {Object} SkruvAdditionalIterableProperties
- * @property {ChildNodes} [result]
+ * @property {ChildNodes|ChildNode} [result]
  * @property {Boolean} [booted]
  *
- * @typedef {(AsyncGenerator<ChildNodes> | AsyncIterable<ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
+ * @typedef {(AsyncGenerator<Vnode|Function|String|Boolean|Number|ChildNodes> | AsyncIterable<Vnode|Function|String|Boolean|Number|ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
  */
 
 /**

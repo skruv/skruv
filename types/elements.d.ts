@@ -225,5 +225,5 @@ export type SkruvAdditionalIterableProperties = {
     result?: ChildNodes | undefined;
     booted?: boolean | undefined;
 };
-export type SkruvIterableType = (AsyncGenerator<any, (ChildNode | ChildNode[])[]> | AsyncIterable<ChildNodes>) & SkruvAdditionalIterableProperties;
+export type SkruvIterableType = (AsyncGenerator<(ChildNode | ChildNode[])[]> | AsyncIterable<ChildNodes>) & SkruvAdditionalIterableProperties;
 //# sourceMappingURL=elements.d.ts.map
