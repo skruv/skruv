@@ -1,9 +1,10 @@
 {
   "name": "skruv",
-  "version": "0.3.1-alpha.6",
+  "version": "0.3.1-alpha.7",
   "description": "No-dependency, no-build, small JS framework.",
   "type": "module",
   "main": "skruv.min.js",
+  "types": "./types/index.js",
   "bugs": {
     "url": "https://github.com/skruv/skruv/issues",
     "email": "skruv@richter.id"
@@ -14,7 +15,15 @@
     "render.js",
     "index.js",
     "skruv.min.js",
-    "skruv.min.js.map"
+    "skruv.min.js.map",
+    "types/index.d.ts",
+    "types/render.d.ts",
+    "types/elements.d.ts",
+    "types/createState.d.ts",
+    "types/index.d.ts.map",
+    "types/render.d.ts.map",
+    "types/elements.d.ts.map",
+    "types/createState.d.ts.map"
   ],
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/.bin/jest --no-cache --passWithNoTests",

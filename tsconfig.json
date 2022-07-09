@@ -1,17 +1,21 @@
 {
   "compilerOptions": {
-      "checkJs": true,
-      "allowJs": true,
-      "noEmit": true,
-      "esModuleInterop": true,
-      "strict": true
+    "checkJs": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "types",
+    "declarationMap": true
   },
   "exclude": [
-      "node_modules"
+    "node_modules"
   ],
   "files": [
-      "render.js",
-      "elements.js",
-      "createState.js",
+    "index.js",
+    "render.js",
+    "elements.js",
+    "createState.js",
   ]
 }
