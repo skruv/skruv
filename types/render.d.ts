@@ -12,7 +12,7 @@ export type SkruvAdditionalIterableProperties = {
     result?: ChildNodes | undefined;
     booted?: boolean | undefined;
 };
-export type SkruvIterableType = (AsyncGenerator<any, (ChildNode | ChildNode[])[]> | AsyncIterable<ChildNodes>) & SkruvAdditionalIterableProperties;
+export type SkruvIterableType = (AsyncGenerator<(ChildNode | ChildNode[])[]> | AsyncIterable<ChildNodes>) & SkruvAdditionalIterableProperties;
 export type SkruvAdditionalProperties = {
     skruvActiveAttributeGenerators?: Set<Vnode> | undefined;
     skruvActiveGenerators?: Set<SkruvIterableType> | undefined;
