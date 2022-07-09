@@ -7,7 +7,7 @@
  */
 
 /**
- * @typedef {Partial<GlobalEventHandlers> & Partial<SkruvEvents> & Object.<string, (string | boolean | function | number | undefined)>} VnodeAtrributes
+ * @typedef {Partial<GlobalEventHandlers> & Partial<SkruvEvents> & Object.<string, (string | boolean | function | number | undefined | Object | AsyncGenerator<string | boolean | number | undefined> | AsyncIterable<string | boolean | number | undefined>)>} VnodeAtrributes
  */
 
 /**
@@ -46,7 +46,7 @@ export const ChildNode = Vnode
  * @typedef {(AsyncGenerator<Vnode|Function|String|Boolean|Number|ChildNodes> | AsyncIterable<Vnode|Function|String|Boolean|Number|ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
  */
 /** @type {SkruvIterableType} */
-export const SkruvIterableType = (async function * () {yield Vnode})()
+export const SkruvIterableType = (async function * () { yield Vnode })()
 
 /**
  * @param {String} nodeName
