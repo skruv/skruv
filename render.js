@@ -22,7 +22,7 @@
  * @property {ChildNodes} [result]
  * @property {Boolean} [booted]
  *
- * @typedef {(AsyncGenerator<any, ChildNodes> | AsyncIterable<ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
+ * @typedef {(AsyncGenerator<ChildNodes> | AsyncIterable<ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
  */
 
 /**
