@@ -2,12 +2,17 @@ export default render;
 export type Vnode = {
     nodeName: string;
     data?: string | undefined;
-    attributes: any;
-    childNodes: (ChildNodes | ChildNodes[]);
-    booted?: boolean | undefined;
     result?: ChildNodes | undefined;
+    attributes: any;
+    childNodes: ChildNodes;
 };
-export type ChildNodes = ((string | number | boolean | Function | ChildNodes | ChildNodes[] | Vnode | SkruvIterableType)[][] | ChildNodes | Vnode | Function | string | boolean | number | SkruvIterableType | SkruvIterableType)[];
+export type ChildNodes = (ChildNode[] | ChildNode)[];
+export type ChildNode = Vnode | Function | string | boolean | number | SkruvIterableType;
+export type SkruvAdditionalIterableProperties = {
+    result?: ChildNodes | undefined;
+    booted?: boolean | undefined;
+};
+export type SkruvIterableType = (AsyncGenerator<any, (ChildNode | ChildNode[])[]> | AsyncIterable<ChildNodes>) & SkruvAdditionalIterableProperties;
 export type SkruvAdditionalProperties = {
     skruvActiveAttributeGenerators?: Set<Vnode> | undefined;
     skruvActiveGenerators?: Set<SkruvIterableType> | undefined;
@@ -20,11 +25,6 @@ export type SkruvAdditionalProperties = {
     setAttribute?: Function | undefined;
 };
 export type SkruvDomType = Node & SkruvAdditionalProperties;
-export type SkruvAdditionalIterableProperties = {
-    result?: ChildNodes | undefined;
-    booted?: boolean | undefined;
-};
-export type SkruvIterableType = (AsyncGenerator<any, (string | number | boolean | Function | ChildNodes | ChildNodes[] | Vnode | SkruvIterableType)[]> | AsyncIterable<ChildNodes>) & SkruvAdditionalIterableProperties;
 /**
  * @param {Vnode} vNode
  * @param {SkruvDomType} node
