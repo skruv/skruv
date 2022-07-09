@@ -9,7 +9,7 @@
  * @property {Set<Vnode>} [skruvActiveAttributeGenerators]
  * @property {Set<SkruvIterableType>} [skruvActiveGenerators]
  * @property {Object<[String], Function>} [skruvListeners]
- * @property {Object} [skruvkey]
+ * @property {Object | null} [skruvkey]
  * @property {String} [data]
  * @property {Function} [append]
  * @property {Function} [removeAttribute]
