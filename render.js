@@ -109,6 +109,7 @@ const updateAttributes = (vNode, node) => {
  */
 const createNode = (vNode, isSvg) => {
   if (vNode.nodeName === '#comment') {
+    // TODO: get the current document from the root node, don't rely on the global document
     return document.createComment(vNode.data || '')
   }
   if (vNode.nodeName === '#text') {
@@ -278,6 +279,7 @@ const render = (
   isSvg = false
 ) => {
   if (!parent) {
+    // TODO: create error classes for skruv, inherit from one single error class
     throw new Error('Skruv: No parent to render to')
   }
   // render the single first root node
