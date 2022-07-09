@@ -39,7 +39,7 @@
                 {
                   onsubmit: (e) => {
                     e.preventDefault()
-                    currentState.todos.push(currentState.value)
+                    currentState.todos.unshift(currentState.value)
                   }
                 },
                 input({ type: "text", value: currentState.value, oninput: e => currentState.value = e.target.value }),
