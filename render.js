@@ -1,30 +1,8 @@
 /* global CustomEvent */
-
-/**
- * @typedef Vnode
- * @prop {String} nodeName
- * @prop {String} [data]
- * @prop {ChildNodes} [result]
- * @prop {Object<[String], [String | Boolean]>} attributes
- * @prop {ChildNodes} childNodes
- */
-
-/**
- * @typedef {Array<(Array<ChildNode>|ChildNode)>} ChildNodes
- */
-
-/**
- * @typedef {Vnode|Function|String|Boolean|Number|SkruvIterableType} ChildNode
- */
-
-// TODO: these types would be much nicer as ChildNode|ChildNodes, but then typescript complains about recursiveness, because the SkruvIterableType can return a SkruvIterableType. Look into how to solve
-/**
- * @typedef {Object} SkruvAdditionalIterableProperties
- * @property {ChildNodes|ChildNode} [result]
- * @property {Boolean} [booted]
- *
- * @typedef {(AsyncGenerator<Vnode|Function|String|Boolean|Number|ChildNodes> | AsyncIterable<Vnode|Function|String|Boolean|Number|ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
- */
+/** @typedef {typeof import("./elements.js").Vnode} Vnode */
+/** @typedef {typeof import("./elements.js").ChildNodes} ChildNodes */
+/** @typedef {typeof import("./elements.js").ChildNode} ChildNode */
+/** @typedef {typeof import("./elements.js").SkruvIterableType} SkruvIterableType */
 
 /**
  * @typedef {Object} SkruvAdditionalProperties
@@ -56,14 +34,23 @@ const updateAttributes = (vNode, node) => {
       node.skruvkey = value
       continue
     }
+    // SHAME SHAME SHAME
+    // SHAME SHAME SHAME
+    // SHAME SHAME SHAME
+    // TODO: unshame
     // @ts-ignore
     if (value?.[Symbol.asyncIterator] || (value instanceof Function && value?.prototype?.toString?.() === '[object AsyncGenerator]')) {
+      // @ts-ignore
       node.skruvActiveAttributeGenerators.add(value)
+      // @ts-ignore
       if (!value.booted) {
+        // @ts-ignore
         value.booted = true
         const rerender = () => {
           // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
+          // @ts-ignore
           if (!node.skruvActiveAttributeGenerators?.has(value)) return false
+          // @ts-ignore
           if (value.result === false && node.getAttribute?.(key)) {
             node.removeAttribute && node.removeAttribute(key)
           } else {
@@ -71,10 +58,12 @@ const updateAttributes = (vNode, node) => {
               // @ts-ignore
               node[key] = value.result
             }
+            // @ts-ignore
             node.setAttribute && node.setAttribute(key, value.result)
           }
           return true
         }
+        // @ts-ignore
         updateOnChange(value, rerender)
       }
       return vNode.result
@@ -219,7 +208,7 @@ const renderSingle = (vNode, _node, parent, isSvg) => {
 
   let node
   // Check for keyed nodes
-  if (keyMap.has(vNode.attributes?.key)) {
+  if (vNode.attributes?.key && keyMap.has(vNode.attributes?.key)) {
     const keyedNode = keyMap.get(vNode.attributes?.key)
     if (_node && keyedNode !== _node) {
       parent.replaceChild && parent.replaceChild(keyedNode, _node)
