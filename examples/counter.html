@@ -49,7 +49,7 @@
           async function* () {
             for await (const currentState of state) {
               yield [
-                input({ type: "text", value, oninput: e => currentState.value = e.target.value }),
+                input({ type: "text", value: currentState.value, oninput: e => currentState.value = e.target.value }),
                 ul({},
                   currentState.todos.map((todo) => li({}, todo))
                 ),
