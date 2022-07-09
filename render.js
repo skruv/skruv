@@ -39,7 +39,10 @@ const updateAttributes = (vNode, node) => {
     // SHAME 🔔 SHAME 🔔 SHAME 🔔
     // TODO: unshame
     // @ts-ignore
-    if (value?.[Symbol.asyncIterator] || (value instanceof Function && value?.prototype?.toString?.() === '[object AsyncGenerator]')) {
+    if (
+      value?.[Symbol.asyncIterator] ||
+      (value instanceof Function && value?.prototype?.toString?.() === '[object AsyncGenerator]')
+    ) {
       // @ts-ignore
       node.skruvActiveAttributeGenerators.add(value)
       // @ts-ignore
@@ -49,7 +52,7 @@ const updateAttributes = (vNode, node) => {
         const rerender = () => {
           // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
           // @ts-ignore
-          if (!node.skruvActiveAttributeGenerators?.has(value)) return false
+          if (!node.skruvActiveAttributeGenerators?.has(value)) { return false }
           // @ts-ignore
           if (value.result === false && node.getAttribute?.(key)) {
             node.removeAttribute && node.removeAttribute(key)
@@ -122,7 +125,7 @@ const updateOnChange = async (gen, rerender) => {
   // @ts-ignore
   for await (const result of (gen?.[Symbol.asyncIterator] ? gen : gen())) {
     gen.result = result
-    if (!rerender()) break
+    if (!rerender()) { break }
   }
 }
 
@@ -133,7 +136,7 @@ const updateOnChange = async (gen, rerender) => {
  * @returns {Array<Vnode>}
  */
 const sanitizeTypes = (vNodeArray, parent, isSvg, actualVNodeArray = vNodeArray) => {
-  const retVal = vNodeArray.map((vNode) => {
+  const retVal = vNodeArray.map(vNode => {
     if (typeof vNode === 'boolean' || typeof vNode === 'undefined') {
       return false
     } else if (typeof vNode === 'string' || typeof vNode === 'number') {
@@ -144,7 +147,10 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, actualVNodeArray = vNodeArray)
         data: vNode.toString()
       }
       // @ts-ignore
-    } else if (vNode?.[Symbol.asyncIterator] || (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')) {
+    } else if (
+      vNode?.[Symbol.asyncIterator] ||
+      (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')
+    ) {
       /** @type {SkruvIterableType} */
       // @ts-ignore
       const vNodeIterator = vNode
@@ -153,7 +159,10 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, actualVNodeArray = vNodeArray)
         vNodeIterator.booted = true
         const rerender = () => {
           // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
-          if (!parent.skruvActiveGenerators || (parent.skruvActiveGenerators && !parent.skruvActiveGenerators.has(vNodeIterator))) return false
+          if (
+            !parent.skruvActiveGenerators ||
+            (parent.skruvActiveGenerators && !parent.skruvActiveGenerators.has(vNodeIterator))
+          ) { return false }
           renderArray(actualVNodeArray, parent, isSvg)
           return true
         }
@@ -169,7 +178,8 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, actualVNodeArray = vNodeArray)
     // Unkown type passed
     console.log('unkown type in render: ', vNode)
     return false
-  }).flat(Infinity).filter(vNode => !!vNode)
+  }).flat(Infinity)
+    .filter(vNode => !!vNode)
 
   // Handle results from generators returning generators, functions returning functions, etc.
   return retVal.find(vNode => !vNode?.nodeName) ? sanitizeTypes(retVal, parent, isSvg, actualVNodeArray) : retVal
@@ -181,7 +191,7 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, actualVNodeArray = vNodeArray)
  * @param {Boolean} isSvg
  */
 const renderArray = (vNodeArray, parent, isSvg) => {
-  if (!Array.isArray(vNodeArray)) return
+  if (!Array.isArray(vNodeArray)) { return }
   parent.skruvActiveGenerators = new Set()
   const nodes = Array.from(parent.childNodes)
   const newNodes = sanitizeTypes(vNodeArray, parent, isSvg)
@@ -231,7 +241,10 @@ const renderSingle = (vNode, _node, parent, isSvg) => {
     node = createNode(vNode, isSvg)
     parent.append && parent.append(node)
     vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
-  } else if (_node.nodeName.toLowerCase() !== vNode.nodeName.toLowerCase() || vNode.attributes?.key !== _node.skruvkey) {
+  } else if (
+    _node.nodeName.toLowerCase() !== vNode.nodeName.toLowerCase() ||
+    vNode.attributes?.key !== _node.skruvkey
+  ) {
     node = createNode(vNode, isSvg)
     parent.replaceChild(node, _node)
     vNode.attributes?.oncreate && vNode.attributes.oncreate(node)

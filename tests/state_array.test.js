@@ -1,7 +1,7 @@
 /* global test expect */
-import render from '../render.js'
 import createState from '../createState.js'
 import { body, div } from '../elements.js'
+import render from '../render.js'
 
 const wait = time => new Promise(resolve => setTimeout(resolve, time))
 
