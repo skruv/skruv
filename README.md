@@ -25,6 +25,6 @@ No-dependency, no-build, small JS framework.
 
 ## Examples
 
-### Counter
+### Basic TODO
 
-<iframe src="./examples/counter.html">
+<iframe src="./examples/todo/index.html">
