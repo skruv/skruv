@@ -7,7 +7,7 @@
  */
 
 /**
- * @typedef {Partial<GlobalEventHandlers> & Partial<SkruvEvents> & Object.<string, (string | boolean | function | number | undefined | Object | AsyncGenerator<string | boolean | number | undefined> | AsyncIterable<string | boolean | number | undefined>)>} VnodeAtrributes
+ * @typedef {Partial<GlobalEventHandlers> & Partial<SkruvEvents> & Object.<string, (string | boolean | function | number | undefined | null | Object | AsyncGenerator<string | boolean | number | undefined | null> | AsyncIterable<string | boolean | number | undefined | null>)>} VnodeAtrributes
  */
 
 /**

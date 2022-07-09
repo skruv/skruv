@@ -13,7 +13,7 @@ export type Vnode = {
  * @prop {Boolean} opaque
  */
 /**
- * @typedef {Partial<GlobalEventHandlers> & Partial<SkruvEvents> & Object.<string, (string | boolean | function | number | undefined)>} VnodeAtrributes
+ * @typedef {Partial<GlobalEventHandlers> & Partial<SkruvEvents> & Object.<string, (string | boolean | function | number | undefined | Object | AsyncGenerator<string | boolean | number | undefined> | AsyncIterable<string | boolean | number | undefined>)>} VnodeAtrributes
  */
 /**
  * @typedef Vnode
@@ -268,7 +268,7 @@ export type SkruvEvents = {
     opaque: boolean;
 };
 export type VnodeAtrributes = Partial<GlobalEventHandlers> & Partial<SkruvEvents> & {
-    [x: string]: (string | boolean | Function | number | undefined);
+    [x: string]: (string | boolean | Function | number | undefined | Object | AsyncGenerator<string | boolean | number | undefined> | AsyncIterable<string | boolean | number | undefined>);
 };
 export type SkruvAdditionalIterableProperties = {
     result?: ChildNodes | ChildNode | undefined;
