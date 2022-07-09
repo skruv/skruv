@@ -11,6 +11,7 @@
     body,
     main,
     h1,
+    form,
     input,
     ul,
     li,
@@ -21,17 +22,6 @@
     todos: [],
     value: ""
   })
-
-
-  const shuffle = (a) => {
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
-  setInterval(() => {state.todos = shuffle(state.todos)}, 3000)
 
   render(
     html({ lang: 'en-US' },
@@ -45,13 +35,19 @@
           h1({}, 'To do list'),
           async function* () {
             for await (const currentState of state) {
-              yield [
+              yield form(
+                {
+                  onsubmit: (e) => {
+                    e.preventDefault()
+                    currentState.todos.push(currentState.value)
+                  }
+                },
                 input({ type: "text", value: currentState.value, oninput: e => currentState.value = e.target.value }),
                 ul({},
                   currentState.todos.map((todo) => li({}, todo))
                 ),
-                button({ onclick: () => { currentState.todos.push(currentState.value) } }, 'New!')
-              ]
+                button({}, 'New!')
+              )
             }
           }
         )
