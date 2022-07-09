@@ -1311,8 +1311,8 @@ export const view = (attributes = {}, ...childNodes) => h('view', attributes, ..
 
 // CSS template literal
 /**
- * @param {String[]} strings
- * @param {[String | Number | Boolean]} keys
+ * @param {TemplateStringsArray} strings
+ * @param {(String | Number | Boolean| undefined)[]} keys
  * @returns {Vnode}
  */
 export const css = (strings, ...keys) => style({}, ...strings.reduce(
@@ -1323,7 +1323,7 @@ export const css = (strings, ...keys) => style({}, ...strings.reduce(
    */
   (prev, curr, i) => {
     prev.push(curr)
-    keys[i] && prev.push(keys[i].toString())
+    prev.push(keys?.[i]?.toString() || '')
     return prev
   }, [])
 )
