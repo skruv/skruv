@@ -1,7 +1,9 @@
-const worker = new Worker(new URL("./ssr-deno-worker.js", import.meta.url).href, {
-  type: "module",
-});
+console.time('ssr')
+const worker = new Worker('https://local.nangija.la/skruv-test/examples/todo/ssr-deno-worker.js', {
+  type: "module"
+})
 
 worker.addEventListener('message', ev => {
   console.log(ev.data.document)
+  console.timeEnd('ssr')
 })

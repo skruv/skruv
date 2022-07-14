@@ -1,12 +1,12 @@
-import { parseHTML } from "https://esm.sh/linkedom";
+import { parseHTML } from "https://esm.sh/linkedom"
 
-// const html = await fetch('/index.html')
-console.log(location)
-const html = await Deno.readTextFile('./index.html')
+const html = await fetch('/index.html').then(res => res.text())
 const { document } = parseHTML(html)
+const cacheBust = document.querySelector('body').getAttribute('data-cache-bust')
 self.window = self
 window.document = document
-window.requestAnimationFrame = (cb) => cb()
+window.SSRlocation = new URL('/', window.location.href)
+window.requestAnimationFrame = cb => cb()
 window.isSSR = true
 window.SSRFinished = () => {
   self.postMessage({
@@ -14,4 +14,10 @@ window.SSRFinished = () => {
   })
   self.close()
 }
-await import('./index.js')
+// Polyfill CSSOM support
+const cssom = await import('/skruv-test/examples/todo/cssom.esm.js').then(res => res.default)
+self.CSSOM = cssom
+self.CSSMediaRule = cssom.CSSMediaRule
+self.CSSStyleRule = cssom.CSSStyleRule
+
+await import(`/${cacheBust}/out.js`)

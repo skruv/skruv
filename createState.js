@@ -1,6 +1,8 @@
 // @ts-nocheck
 // TODO: This file will be hard to typecheck without generic types, check how to do it with TS later
 
+const resolveTimer = window.requestAnimationFrame || ((cb) => setTimeout(cb, 1))
+
 const createState = stateObj => {
   const Handler = class Handler {
     constructor (name) {
@@ -15,7 +17,7 @@ const createState = stateObj => {
       }
       if (this._scheduled) { return }
       this._scheduled = true
-      window.requestAnimationFrame(() => {
+      resolveTimer(() => {
         this._skruv_resolve()
         this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
         this._scheduled = false

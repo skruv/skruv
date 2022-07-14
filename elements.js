@@ -46,7 +46,7 @@ export const ChildNode = Vnode
  * @typedef {(AsyncGenerator<Vnode|Function|String|Boolean|Number|ChildNodes> | AsyncIterable<Vnode|Function|String|Boolean|Number|ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
  */
 /** @type {SkruvIterableType} */
-export const SkruvIterableType = (async function * () { yield Vnode })()
+export const SkruvIterableType = (async function* () { yield Vnode })()
 
 /**
  * @param {String} nodeName
@@ -1333,21 +1333,216 @@ export const use = (attributes = {}, ...childNodes) => h('use', attributes, ...c
  */
 export const view = (attributes = {}, ...childNodes) => h('view', attributes, ...childNodes)
 
+const styleMap = new Map()
+
+/**
+ * @param {String} str
+ * @returns {Number}
+ */
+const hash = (str) => {
+  var hash = 0, i, chr
+  if (str.length === 0) return hash
+  for (i = 0; i < str.length; i++) {
+    chr = str.charCodeAt(i)
+    hash = ((hash << 5) - hash) + chr
+    hash |= 0 // Convert to 32bit integer
+  }
+  return hash
+}
+
+/**
+ * @param {TemplateStringsArray} strings
+ * @param {(String | Number | Boolean | undefined)[]} keys
+ * @returns {String}
+ */
+const combineCssTemplate = (strings, ...keys) => strings.reduce(
+    /**
+     * @param {String[]} prev
+     * @param {String} curr
+     * @returns {String[]}
+     */
+    (prev, curr, i) => {
+      prev.push(curr)
+      prev.push(keys?.[i]?.toString() || '')
+      return prev
+    }, []).join('')
+
 // CSS template literal
 /**
  * @param {TemplateStringsArray} strings
  * @param {(String | Number | Boolean | undefined)[]} keys
  * @returns {Vnode}
  */
-export const css = (strings, ...keys) => style({}, ...strings.reduce(
+export const css = (strings, ...keys) => {
+  const stylesheet = combineCssTemplate(strings, ...keys)
+
+  const unscopedHash = `unscoped${hash(stylesheet)}`
+
+  if (styleMap.has(unscopedHash)) return style({}, styleMap.get(unscopedHash))
+  let sheet
+  if (window?.CSSOM) {
+    sheet = CSSOM.parse(stylesheet)
+  } else {
+    sheet = new CSSStyleSheet()
+    sheet.replaceSync(stylesheet)
+  }
+  const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '').join('')
+  styleMap.set(unscopedHash, upgradedStyles)
+  return style({}, upgradedStyles)
+}
+
+// Scoped CSS template literal
+/**
+ * @param {TemplateStringsArray} strings
+ * @param {(String | Number | Boolean | undefined)[]} keys
+ * @returns {Vnode}
+ */
+export const scopedcss = (strings, ...keys) => {
+  const attrRe = /^\[.*?(?:(["'])(?:.|\\\1)*\1.*)*\]/
+  const walkSelectorRe = /([([,]|:scope\b)/ // "interesting" setups
+  const scopeRe = /^:scope\b/
+  const stylesheet = combineCssTemplate(strings, ...keys)
+
+  // The implementation of this is lifted from https://github.com/samthor/scoped
+
   /**
-   * @param {String[]} prev
-   * @param {String} curr
-   * @returns {String[]}
+   * Consumes a single selector from candidate selector text, which may contain many.
+   *
+   * @param {string} raw selector text
+   * @param {string} prefix prefix to apply
+   * @return {?{selector: string, rest: string}}
    */
-  (prev, curr, i) => {
-    prev.push(curr)
-    prev.push(keys?.[i]?.toString() || '')
-    return prev
-  }, [])
-)
+  function consumeSelector(raw, prefix) {
+    let i = raw.search(walkSelectorRe)
+    if (i === -1) {
+      // found literally nothing interesting, success
+      return {
+        selector: `${prefix} ${raw}`,
+        rest: '',
+      }
+    } else if (raw[i] === ',') {
+      // found comma without anything interesting, yield rest
+      return {
+        selector: `${prefix} ${raw.substring(0, i)}`,
+        rest: raw.substring(i + 1),
+      }
+    }
+
+    let leftmost = true // whether we're past a descendant or similar selector
+    let scope = false // whether :scope has been found + replaced
+    i = raw.search(/\S/) // place i after initial whitespace only
+
+    let depth = 0
+    outer:
+    for (; i < raw.length; ++i) {
+      const char = raw[i]
+      switch (char) {
+        case '[':
+          const match = attrRe.exec(raw.substring(i))
+          i += (match ? match[0].length : 1) - 1 // we add 1 every loop
+          continue
+        case '(':
+          ++depth
+          continue
+        case ':':
+          if (!leftmost) {
+            continue // doesn't matter if :scope is here, it'll always be ignored
+          } else if (!scopeRe.test(raw.substring(i))) {
+            continue // not ':scope', ignore
+          } else if (depth) {
+            return null
+          }
+          // Replace ':scope' with our prefix. This can happen many times; ':scope:scope' is valid.
+          // It will never apply to a descendant selector (e.g., ".foo :scope") as this is ignored
+          // by browsers anyway (invalid).
+          raw = raw.substring(0, i) + prefix + raw.substring(i + 6)
+          i += prefix.length
+          scope = true
+          --i // we'd skip over next character otherwise
+          continue // run loop again
+        case ')':
+          if (depth) {
+            --depth
+          }
+          continue
+      }
+      if (depth) {
+        continue
+      }
+
+      switch (char) {
+        case ',':
+          break outer
+        case ' ':
+        case '>':
+        case '~':
+        case '+':
+          if (!leftmost) {
+            continue
+          }
+          leftmost = false
+      }
+    }
+
+    const selector = (scope ? '' : `${prefix} `) + raw.substring(0, i)
+    return { selector, rest: raw.substring(i + 1) }
+  }
+
+  /**
+  * @param {string} selectorText
+  * @param {string} prefix to apply
+  */
+  function updateSelectorText(selectorText, prefix) {
+    const found = []
+
+    while (selectorText) {
+      const consumed = consumeSelector(selectorText, prefix)
+      if (consumed === null) {
+        return ':not(*)'
+      }
+      found.push(consumed.selector)
+      selectorText = consumed.rest
+    }
+
+    return found.join(', ')
+  }
+
+  /**
+  * Upgrades a specific CSSRule.
+  *
+  * @param {!CSSRule} rule
+  * @param {string} prefix to apply
+  */
+  function upgradeRule(rule, prefix) {
+    if (rule instanceof CSSMediaRule) {
+      // upgrade children
+      const l = rule.cssRules.length
+      for (let j = 0; j < l; ++j) {
+        upgradeRule(rule.cssRules[j], prefix)
+      }
+      return
+    }
+
+    if (!(rule instanceof CSSStyleRule)) {
+      return // unknown rule type, ignore
+    }
+
+    rule.selectorText = updateSelectorText(rule.selectorText, prefix)
+  }
+  const scope = `scope${hash(stylesheet)}`
+  const prefix = `[data-css-scope~=${scope}]`
+
+  if (styleMap.has(scope)) return style({ 'data-css-for-scope': scope }, styleMap.get(scope))
+  let sheet
+  if (window?.CSSOM) {
+    sheet = CSSOM.parse(stylesheet)
+  } else {
+    // TODO: this will not work in safari. Replace with a oncreate trigger that updates a empty inserted style element, getting the StyleSheet via the oncreate hook
+    sheet = new CSSStyleSheet()
+    sheet.replaceSync(stylesheet)
+  }
+  Array.from(sheet.cssRules).forEach(e => upgradeRule(e, prefix))
+  const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '').join('')
+  styleMap.set(scope, upgradedStyles)
+  return style({ 'data-css-for-scope': scope }, upgradedStyles)
+}
