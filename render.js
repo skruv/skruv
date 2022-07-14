@@ -19,11 +19,12 @@
  * @typedef {Node & SkruvAdditionalProperties} SkruvDomType
  */
 
-let renderWaiting = 0
+// A Set to hold generators we are waiting for in SSR
+let renderWaiting = new Set()
 
 const checkRender = () => {
   // @ts-ignore
-  if (renderWaiting === 0 && typeof window?.SSRFinished === 'function') {
+  if (renderWaiting.size === 0 && typeof window?.SSRFinished === 'function') {
     // Microsleep to enable the rendering to finish
     // @ts-ignore
     setTimeout(() => window.SSRFinished(), 0)
@@ -36,13 +37,20 @@ const keyMap = new WeakMap()
  * Update the attributes on a node
  * @param {Vnode} vNode
  * @param {SkruvDomType} node
+ * @param {SkruvDomType} parent
  */
-const updateAttributes = (vNode, node) => {
+const updateAttributes = (vNode, node, parent) => {
   node.skruvActiveAttributeGenerators = new Set()
   for (const [key, value] of Object.entries(vNode.attributes)) {
     // Node keys do not get added to the DOM
     if (key === 'key') {
       node.skruvkey = value
+      continue
+    }
+    if (key === 'data-css-for-scope') {
+      const old = (parent?.getAttribute?.('data-css-scope') || '').split(' ')
+      old.push(value)
+      parent?.setAttribute?.('data-css-scope', Array.from(new Set(old)).join(' ').trim())
       continue
     }
     // SHAME 🔔 SHAME 🔔 SHAME 🔔
@@ -58,13 +66,23 @@ const updateAttributes = (vNode, node) => {
       node.skruvActiveAttributeGenerators.add(value)
       // @ts-ignore
       if (!value.booted) {
-        renderWaiting++
+        renderWaiting.add(value)
         // @ts-ignore
         value.booted = true
         const rerender = () => {
           // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
           // @ts-ignore
           if (!node.skruvActiveAttributeGenerators?.has(value)) { return false }
+          if (key === 'key') {
+            node.skruvkey = value
+            return true
+          }
+          if (key === 'data-css-for-scope') {
+            const old = (parent?.getAttribute?.('data-css-scope') || '').split(' ')
+            old.push(value)
+            parent?.setAttribute?.('data-css-scope', Array.from(new Set(old)).join(' '))
+            return true
+          }
           // @ts-ignore
           if (value.result === false && node.getAttribute?.(key)) {
             node.removeAttribute && node.removeAttribute(key)
@@ -75,7 +93,7 @@ const updateAttributes = (vNode, node) => {
             }
             // @ts-ignore
             node.setAttribute && node.setAttribute(key, value.result)
-            renderWaiting--
+            renderWaiting.delete(value)
             checkRender()
           }
           return true
@@ -170,7 +188,7 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, actualVNodeArray = vNodeArray)
       const vNodeIterator = vNode
       parent.skruvActiveGenerators && parent.skruvActiveGenerators.add(vNodeIterator)
       if (!vNodeIterator.booted) {
-        renderWaiting++
+        renderWaiting.add(vNodeIterator)
         vNodeIterator.booted = true
         const rerender = () => {
           // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
@@ -180,7 +198,7 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, actualVNodeArray = vNodeArray)
           ) { return false }
           renderArray(actualVNodeArray, parent, isSvg)
           // @ts-ignore
-          if (vNodeIterator?.result?.attributes?.['data-skruv-finished'] !== false) renderWaiting--
+          if (vNodeIterator?.result?.attributes?.['data-skruv-finished'] !== false) renderWaiting.delete(vNodeIterator)
           checkRender()
           return true
         }
@@ -215,6 +233,7 @@ const renderArray = (vNodeArray, parent, isSvg) => {
   const newNodes = sanitizeTypes(vNodeArray, parent, isSvg)
   nodes.slice(newNodes.length).forEach(elem => {
     elem.parentNode && elem.parentNode.removeChild && elem.parentNode.removeChild(elem)
+    // @ts-ignore
     !window?.isSSR && elem.dispatchEvent(new CustomEvent('remove'))
   })
   newNodes.forEach((vNode, index) => {
@@ -246,7 +265,7 @@ const renderSingle = (vNode, _node, parent, isSvg) => {
     }
     // Diff node attributes
     // TODO: below this should only be done for SVG/HTML, not for Comment/Text
-    updateAttributes(vNode, keyedNode)
+    updateAttributes(vNode, keyedNode, parent)
     // Call renderArray with children
     if (!vNode?.attributes?.opaque && (vNode.childNodes.length || keyedNode.childNodes.length)) {
       renderArray(vNode.childNodes, keyedNode, isSvg)
@@ -266,6 +285,7 @@ const renderSingle = (vNode, _node, parent, isSvg) => {
     node = createNode(vNode, isSvg)
     parent.replaceChild(node, _node)
     vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
+    // @ts-ignore
     !window?.isSSR && _node.dispatchEvent(new CustomEvent('remove', {
       detail: {
         newNode: node
@@ -283,7 +303,7 @@ const renderSingle = (vNode, _node, parent, isSvg) => {
   }
   // Diff node attributes
   // TODO: below this should only be done for SVG/HTML, not for Comment/Text
-  updateAttributes(vNode, node)
+  updateAttributes(vNode, node, parent)
   // Call renderArray with children
   if (!vNode?.attributes?.opaque && (vNode.childNodes.length || node.childNodes.length)) {
     renderArray(vNode.childNodes, node, isSvg)
