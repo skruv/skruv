@@ -34,11 +34,12 @@ const createState = stateObj => {
     }
 
     get (target, key, proxy) {
+      // TODO: add a mode where you always return a generator here, extending String, Number, etc
       if (key === 'getGenerator') {
         return key => ({
           key: [key, target],
           [Symbol.asyncIterator]: () => {
-          // If this is the first loop for this sub we should return directly for first value
+            // If this is the first loop for this sub we should return directly for first value
             let booted = false
             return {
               next: async () => {

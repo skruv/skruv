@@ -58,7 +58,8 @@
     "@hyperapp/dom": "^1.0.0",
     "@hyperapp/html": "^2.0.0",
     "@hyperapp/svg": "^2.0.0",
-    "hyperapp": "^2.0.22"
+    "hyperapp": "^2.0.22",
+    "jsdom": "^20.0.0"
   },
   "devDependencies": {
     "esbuild": "^0.14.48",

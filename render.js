@@ -19,6 +19,17 @@
  * @typedef {Node & SkruvAdditionalProperties} SkruvDomType
  */
 
+let renderWaiting = 0
+
+const checkRender = () => {
+  // @ts-ignore
+  if (renderWaiting === 0 && typeof window?.SSRFinished === 'function') {
+    // Microsleep to enable the rendering to finish
+    // @ts-ignore
+    setTimeout(() => window.SSRFinished(), 0)
+  }
+}
+
 const keyMap = new WeakMap()
 
 /**
@@ -47,6 +58,7 @@ const updateAttributes = (vNode, node) => {
       node.skruvActiveAttributeGenerators.add(value)
       // @ts-ignore
       if (!value.booted) {
+        renderWaiting++
         // @ts-ignore
         value.booted = true
         const rerender = () => {
@@ -63,6 +75,8 @@ const updateAttributes = (vNode, node) => {
             }
             // @ts-ignore
             node.setAttribute && node.setAttribute(key, value.result)
+            renderWaiting--
+            checkRender()
           }
           return true
         }
@@ -156,6 +170,7 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, actualVNodeArray = vNodeArray)
       const vNodeIterator = vNode
       parent.skruvActiveGenerators && parent.skruvActiveGenerators.add(vNodeIterator)
       if (!vNodeIterator.booted) {
+        renderWaiting++
         vNodeIterator.booted = true
         const rerender = () => {
           // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
@@ -164,6 +179,9 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, actualVNodeArray = vNodeArray)
             (parent.skruvActiveGenerators && !parent.skruvActiveGenerators.has(vNodeIterator))
           ) { return false }
           renderArray(actualVNodeArray, parent, isSvg)
+          // @ts-ignore
+          if (vNodeIterator?.result?.attributes?.['data-skruv-finished'] !== false) renderWaiting--
+          checkRender()
           return true
         }
         updateOnChange(vNodeIterator, rerender)
@@ -197,7 +215,7 @@ const renderArray = (vNodeArray, parent, isSvg) => {
   const newNodes = sanitizeTypes(vNodeArray, parent, isSvg)
   nodes.slice(newNodes.length).forEach(elem => {
     elem.parentNode && elem.parentNode.removeChild && elem.parentNode.removeChild(elem)
-    elem.dispatchEvent(new CustomEvent('remove'))
+    !window?.isSSR && elem.dispatchEvent(new CustomEvent('remove'))
   })
   newNodes.forEach((vNode, index) => {
     const node = nodes[index]
@@ -248,7 +266,7 @@ const renderSingle = (vNode, _node, parent, isSvg) => {
     node = createNode(vNode, isSvg)
     parent.replaceChild(node, _node)
     vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
-    _node.dispatchEvent(new CustomEvent('remove', {
+    !window?.isSSR && _node.dispatchEvent(new CustomEvent('remove', {
       detail: {
         newNode: node
       }
@@ -290,6 +308,7 @@ const render = (
   }
   // render the single first root node
   renderSingle(vNode, node, parent, isSvg)
+  checkRender()
 }
 
 export default render
