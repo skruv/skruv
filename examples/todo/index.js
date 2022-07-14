@@ -22,7 +22,7 @@ const state = createState({
 })
 
 render(
-  html({ lang: 'en-US', 'data-ssr': !!window.isSSR },
+  html({ lang: 'en-US', 'data-ssr': !!document.documentElement.isSkruvSSR },
     head({},
       title({}, state.todos.getGenerator(0)),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
