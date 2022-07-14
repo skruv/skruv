@@ -42,6 +42,7 @@ export const ChildNode = Vnode
  * @typedef {Object} SkruvAdditionalIterableProperties
  * @property {ChildNodes|ChildNode} [result]
  * @property {Boolean} [booted]
+ * @property {Boolean} [hydrating]
  *
  * @typedef {(AsyncGenerator<Vnode|Function|String|Boolean|Number|ChildNodes> | AsyncIterable<Vnode|Function|String|Boolean|Number|ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
  */
