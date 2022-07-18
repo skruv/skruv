@@ -47,7 +47,7 @@ export const ChildNode = Vnode
  * @typedef {(AsyncGenerator<Vnode|Function|String|Boolean|Number|ChildNodes> | AsyncIterable<Vnode|Function|String|Boolean|Number|ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
  */
 /** @type {SkruvIterableType} */
-export const SkruvIterableType = (async function* () { yield Vnode })()
+export const SkruvIterableType = (async function * () { yield Vnode })()
 
 /**
  * @param {String} nodeName
@@ -1340,9 +1340,9 @@ const styleMap = new Map()
  * @param {String} str
  * @returns {Number}
  */
-const hash = (str) => {
-  var hash = 0, i, chr
-  if (str.length === 0) return hash
+const hash = str => {
+  var hash = 0; var i; var chr
+  if (str.length === 0) { return hash }
   for (i = 0; i < str.length; i++) {
     chr = str.charCodeAt(i)
     hash = ((hash << 5) - hash) + chr
@@ -1357,16 +1357,16 @@ const hash = (str) => {
  * @returns {String}
  */
 const combineCssTemplate = (strings, ...keys) => strings.reduce(
-    /**
+  /**
      * @param {String[]} prev
      * @param {String} curr
      * @returns {String[]}
      */
-    (prev, curr, i) => {
-      prev.push(curr)
-      prev.push(keys?.[i]?.toString() || '')
-      return prev
-    }, []).join('')
+  (prev, curr, i) => {
+    prev.push(curr)
+    prev.push(keys?.[i]?.toString() || '')
+    return prev
+  }, []).join('')
 
 // CSS template literal
 /**
@@ -1379,7 +1379,7 @@ export const css = (strings, ...keys) => {
 
   const unscopedHash = `unscoped${hash(stylesheet)}`
 
-  if (styleMap.has(unscopedHash)) return style({}, styleMap.get(unscopedHash))
+  if (styleMap.has(unscopedHash)) { return style({}, styleMap.get(unscopedHash)) }
   let sheet
 
   if (window?.CSSOM) {
@@ -1393,7 +1393,8 @@ export const css = (strings, ...keys) => {
     sheet = styleElem.sheet
     styleDoc.body.removeChild(styleElem)
   }
-  const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '').join('')
+  const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '')
+    .join('')
   styleMap.set(unscopedHash, upgradedStyles)
   return style({}, upgradedStyles)
 }
@@ -1419,19 +1420,19 @@ export const scopedcss = (strings, ...keys) => {
    * @param {string} prefix prefix to apply
    * @return {?{selector: string, rest: string}}
    */
-  function consumeSelector(raw, prefix) {
+  function consumeSelector (raw, prefix) {
     let i = raw.search(walkSelectorRe)
     if (i === -1) {
       // found literally nothing interesting, success
       return {
         selector: `${prefix} ${raw}`,
-        rest: '',
+        rest: ''
       }
     } else if (raw[i] === ',') {
       // found comma without anything interesting, yield rest
       return {
         selector: `${prefix} ${raw.substring(0, i)}`,
-        rest: raw.substring(i + 1),
+        rest: raw.substring(i + 1)
       }
     }
 
@@ -1499,7 +1500,7 @@ export const scopedcss = (strings, ...keys) => {
   * @param {string} selectorText
   * @param {string} prefix to apply
   */
-  function updateSelectorText(selectorText, prefix) {
+  function updateSelectorText (selectorText, prefix) {
     const found = []
 
     while (selectorText) {
@@ -1520,7 +1521,7 @@ export const scopedcss = (strings, ...keys) => {
   * @param {!CSSRule} rule
   * @param {string} prefix to apply
   */
-  function upgradeRule(rule, prefix) {
+  function upgradeRule (rule, prefix) {
     if (rule instanceof CSSMediaRule) {
       // upgrade children
       const l = rule.cssRules.length
@@ -1539,7 +1540,7 @@ export const scopedcss = (strings, ...keys) => {
   const scope = `scope${hash(stylesheet)}`
   const prefix = `[data-css-scope~=${scope}]`
 
-  if (styleMap.has(scope)) return style({ 'data-css-for-scope': scope }, styleMap.get(scope))
+  if (styleMap.has(scope)) { return style({ 'data-css-for-scope': scope }, styleMap.get(scope)) }
   let sheet
   if (window?.CSSOM) {
     sheet = CSSOM.parse(stylesheet)
@@ -1553,7 +1554,8 @@ export const scopedcss = (strings, ...keys) => {
     styleDoc.body.removeChild(styleElem)
   }
   Array.from(sheet.cssRules).forEach(e => upgradeRule(e, prefix))
-  const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '').join('')
+  const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '')
+    .join('')
   styleMap.set(scope, upgradedStyles)
   return style({ 'data-css-for-scope': scope }, upgradedStyles)
 }

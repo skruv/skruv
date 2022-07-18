@@ -35,7 +35,8 @@ const keyMap = new WeakMap()
 const updateAttributes = (vNode, node, parent, hydrating, root) => {
   node.skruvActiveAttributeGenerators = new Set()
   // @ts-ignore
-  node.getAttributeNames && node.getAttributeNames().filter(name => !Object.keys(vNode.attributes).includes(name) && name !== 'data-css-scope').forEach(key => node.removeAttribute(key))
+  node.getAttributeNames && node.getAttributeNames().filter(name => !Object.keys(vNode.attributes).includes(name) && name !== 'data-css-scope')
+    .forEach(key => { node.removeAttribute(key) })
   for (const [key, value] of Object.entries(vNode.attributes)) {
     // Node keys do not get added to the DOM
     if (key === 'key') {
@@ -45,7 +46,8 @@ const updateAttributes = (vNode, node, parent, hydrating, root) => {
     if (key === 'data-css-for-scope') {
       const old = (parent?.getAttribute?.('data-css-scope') || '').split(' ')
       old.push(value)
-      !hydrating && parent?.setAttribute?.('data-css-scope', Array.from(new Set(old)).join(' ').trim())
+      !hydrating && parent?.setAttribute?.('data-css-scope', Array.from(new Set(old)).join(' ')
+        .trim())
       continue
     }
     // SHAME 🔔 SHAME 🔔 SHAME 🔔
@@ -202,7 +204,7 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, hydrating, root, actualVNodeAr
           }
           renderArray(actualVNodeArray, parent, isSvg, !!vNodeIterator.hydrating, root)
           // @ts-ignore
-          if (vNodeIterator?.result?.attributes?.['data-skruv-finished'] !== false) root?.renderWaiting?.delete(vNodeIterator)
+          if (vNodeIterator?.result?.attributes?.['data-skruv-finished'] !== false) { root?.renderWaiting?.delete(vNodeIterator) }
           root?.checkRender?.()
           return true
         }
@@ -338,12 +340,12 @@ const render = (
       setTimeout(() => node.skruvRenderFinished(), 0)
     }
   }
-  if (!node.renderWaiting) node.renderWaiting = new Set()
+  if (!node.renderWaiting) { node.renderWaiting = new Set() }
   if (!parent) {
     // TODO: create error classes for skruv, inherit from one single error class
     throw new Error('Skruv: No parent to render to')
   }
-  if (!!node?.getAttribute?.('data-ssr-rendered')) {
+  if (node?.getAttribute?.('data-ssr-rendered')) {
     node.skruvRenderFinished = () => {
       renderSingle(vNode, node, parent, isSvg, false, node)
     }
