@@ -1,0 +1,1 @@
+esbuild cssom.js --bundle --sourcemap --minify --outfile=cssom.esm.js --format=esm
