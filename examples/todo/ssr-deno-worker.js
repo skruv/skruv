@@ -1,3 +1,4 @@
+// TODO: host this locally
 import { parseHTML } from "https://esm.sh/linkedom"
 
 self.onmessage = async (e) => {
@@ -18,6 +19,7 @@ self.onmessage = async (e) => {
     self.close()
   }
 
+  // TODO: return the index.html, but with an error message here. JS-able clients should attempt client-side rendering
   setTimeout(() => {
     self.postMessage({
       status: 500,
@@ -27,6 +29,7 @@ self.onmessage = async (e) => {
   }, 3000)
 
   // Polyfill CSSOM support
+  // TODO: Check why we need to build cssom for deno to like it
   const cssom = await import('/skruv-test/examples/todo/cssom.esm.js').then(res => res.default)
   self.CSSOM = cssom
   self.CSSMediaRule = cssom.CSSMediaRule

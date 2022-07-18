@@ -1381,11 +1381,17 @@ export const css = (strings, ...keys) => {
 
   if (styleMap.has(unscopedHash)) return style({}, styleMap.get(unscopedHash))
   let sheet
+
   if (window?.CSSOM) {
     sheet = CSSOM.parse(stylesheet)
   } else {
-    sheet = new CSSStyleSheet()
-    sheet.replaceSync(stylesheet)
+    // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari
+    const styleDoc = document.implementation.createHTMLDocument('')
+    const styleElem = styleDoc.createElement('style')
+    styleElem.innerText = stylesheet
+    styleDoc.body.append(styleElem)
+    sheet = styleElem.sheet
+    styleDoc.body.removeChild(styleElem)
   }
   const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '').join('')
   styleMap.set(unscopedHash, upgradedStyles)
@@ -1538,9 +1544,13 @@ export const scopedcss = (strings, ...keys) => {
   if (window?.CSSOM) {
     sheet = CSSOM.parse(stylesheet)
   } else {
-    // TODO: this will not work in safari. Replace with a oncreate trigger that updates a empty inserted style element, getting the StyleSheet via the oncreate hook
-    sheet = new CSSStyleSheet()
-    sheet.replaceSync(stylesheet)
+    // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari
+    const styleDoc = document.implementation.createHTMLDocument('')
+    const styleElem = styleDoc.createElement('style')
+    styleElem.innerText = stylesheet
+    styleDoc.body.append(styleElem)
+    sheet = styleElem.sheet
+    styleDoc.body.removeChild(styleElem)
   }
   Array.from(sheet.cssRules).forEach(e => upgradeRule(e, prefix))
   const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '').join('')
