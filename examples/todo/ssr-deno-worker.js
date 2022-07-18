@@ -1,7 +1,7 @@
 // TODO: host this locally
-import { parseHTML } from "https://esm.sh/linkedom"
+import { parseHTML } from 'https://esm.sh/linkedom'
 
-self.onmessage = async (e) => {
+self.onmessage = async e => {
   const html = await fetch('/index.html').then(res => res.text())
   const { document } = parseHTML(html)
   self.window = self
