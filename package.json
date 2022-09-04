@@ -1,15 +1,8 @@
 {
   "name": "skruv",
   "version": "0.3.1-alpha.20",
-  "description": "No-dependency, no-build, small JS framework.",
-  "keywords": [
-    "small",
-    "light",
-    "vdom",
-    "framework",
-    "no-dependency",
-    "no-build"
-  ],
+  "description": "No-dependency, no-build, small JS framework",
+  "keywords": [],
   "bugs": {
     "url": "https://github.com/skruv/skruv/issues",
     "email": "skruv@richter.id"
@@ -22,11 +15,10 @@
   "author": "Svante Richter",
   "type": "module",
   "exports": {
-    "require": "./skruv.min.cjs.js",
-    "import": "./skruv.min.js",
-    "default": "./skruv.min.js"
+    "import": "./skruv.js",
+    "default": "./skruv.js"
   },
-  "main": "skruv.min.js",
+  "main": "skruv.js",
   "types": "./types/skruv.js",
   "files": [
     "elements.js",
@@ -35,8 +27,6 @@
     "skruv.js",
     "skruv.min.js",
     "skruv.min.js.map",
-    "skruv.min.cjs.js",
-    "skruv.min.cjs.js.map",
     "types/skruv.d.ts",
     "types/render.d.ts",
     "types/elements.d.ts",
@@ -47,22 +37,14 @@
     "types/createState.d.ts.map"
   ],
   "scripts": {
-    "build": "esbuild skruv.js --bundle --sourcemap --minify --outfile=skruv.min.js --format=esm && esbuild skruv.js --bundle --sourcemap --minify --outfile=skruv.min.cjs.js --format=cjs",
-    "compress": "gzip -fk9 skruv.min.js && brotli -fkZ skruv.min.js",
-    "eslint": "eslint . --ext js,json",
-    "release-prep": "npm update && npm run test && npm run eslint -- --fix && npm run typecheck && npm run build",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest --no-cache --passWithNoTests",
+    "build": "esbuild skruv.js --bundle --sourcemap --minify --outfile=skruv.min.js --format=esm",
+    "lint": "eslint . --ext js,json",
+    "pre-release": "npm update && npm run test && npm run lint -- --fix && npm run typecheck && npm run build",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --env=jsdom --no-cache --passWithNoTests",
     "typecheck": "tsc"
   },
-  "dependencies": {
-    "@hyperapp/dom": "^1.0.0",
-    "@hyperapp/html": "^2.0.0",
-    "@hyperapp/svg": "^2.0.0",
-    "cssom": "^0.5.0",
-    "hyperapp": "^2.0.22",
-    "jsdom": "^20.0.0"
-  },
   "devDependencies": {
+    "cssom": "^0.5.0",
     "esbuild": "^0.14.48",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
@@ -74,6 +56,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-standard": "^4.0.2",
     "jest": "^26.6.3",
+    "jsdom": "^20.0.0",
     "stylelint": "^13.12.0",
     "stylelint-config-recess-order": "^2.3.0",
     "stylelint-config-standard": "^20.0.0",

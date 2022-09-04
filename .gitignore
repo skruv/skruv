@@ -1,4 +1,5 @@
 node_modules/
 .vscode/
-*.br
-*.gz
+*.min.js
+*.min.cjs.js
+*.map
