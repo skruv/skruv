@@ -22,17 +22,17 @@ const state = createState({
 })
 
 render(
-  html({ lang: 'en-US', 'data-ssr': !!window.isSkruvSSR },
+  html({ lang: 'en-US', 'data-ssr': !!root.isSkruvSSR },
     head({},
       title({}, state.todos.getGenerator(0)),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      script({ src: './index.js' })
+      script({ src: './index.js' }),
     ),
     body({},
       main({},
         h1({}, state.todos.getGenerator(0)),
         async function * () {
-          yield div({ 'data-skruv-finished': true }, 'Loading')
+          yield div({'data-skruv-finished': true}, 'Loading')
           for await (const currentState of state) {
             yield form(
               {

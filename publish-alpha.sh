@@ -1,1 +1,0 @@
-npm unpublish skruv@$(node -e "console.log(require('./package.json').version);") && git commit -am 'Fix CSSSTyleSheet creation' && npm version prerelease && npm run release-prep && npm publish --tag="alpha"

@@ -1,7 +1,7 @@
 // @ts-nocheck
 // TODO: This file will be hard to typecheck without generic types, check how to do it with TS later
 
-const resolveTimer = window?.requestAnimationFrame || (cb => setTimeout(cb, 0))
+const resolveTimer = self?.requestAnimationFrame || ((cb) => setTimeout(cb, 0))
 
 const createState = stateObj => {
   const Handler = class Handler {
@@ -36,7 +36,6 @@ const createState = stateObj => {
     }
 
     get (target, key, proxy) {
-      // TODO: add a mode where you always return a generator here, extending String, Number, etc
       if (key === 'getGenerator') {
         return key => ({
           key: [key, target],
@@ -99,10 +98,7 @@ const createState = stateObj => {
     recurse (path, value, target) {
       // check for falsy values
       if (value && value.constructor) {
-        if (
-          (value.constructor === Object && target?.[path]?.constructor === Object) ||
-          (value.constructor === Array && target?.[path]?.constructor === Array)
-        ) {
+        if (value.constructor === Object && target?.[path]?.constructor === Object) {
           for (const key of Object.getOwnPropertyNames(value)) {
             if (target[path][key] !== value[key]) {
               target[path][key] = value[key]

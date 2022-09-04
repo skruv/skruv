@@ -3,11 +3,12 @@
 /** @typedef {typeof import("./elements.js").ChildNodes} ChildNodes */
 /** @typedef {typeof import("./elements.js").ChildNode} ChildNode */
 /** @typedef {typeof import("./elements.js").SkruvIterableType} SkruvIterableType */
+/** @typedef {typeof import("./elements.js").VnodeAtrributeGenerator} VnodeAtrributeGenerator */
 
 /**
  * @typedef {Object} SkruvAdditionalProperties
- * @property {Set<Vnode>} [skruvActiveAttributeGenerators]
- * @property {Set<SkruvIterableType>} [renderWaiting]
+ * @property {Set<VnodeAtrributeGenerator>} [skruvActiveAttributeGenerators]
+ * @property {Set<SkruvIterableType | VnodeAtrributeGenerator>} [renderWaiting]
  * @property {Set<SkruvIterableType>} [skruvActiveGenerators]
  * @property {Object<[String], Function>} [skruvListeners]
  * @property {Object | null} [skruvkey]
@@ -17,7 +18,12 @@
  * @property {Function} [getAttribute]
  * @property {Function} [setAttribute]
  * @property {Function} [skruvRenderFinished]
+ * @property {Boolean} [skruvFinished]
+ * @property {Boolean | String | Number} [checked]
+ * @property {Boolean | String | Number} [value]
+ * @property {Boolean | String | Number} [selected]
  * @property {Function} [checkRender]
+ * @property {Boolean} [isSkruvSSR]
  *
  * @typedef {Node & SkruvAdditionalProperties} SkruvDomType
  */
@@ -35,8 +41,7 @@ const keyMap = new WeakMap()
 const updateAttributes = (vNode, node, parent, hydrating, root) => {
   node.skruvActiveAttributeGenerators = new Set()
   // @ts-ignore
-  node.getAttributeNames && node.getAttributeNames().filter(name => !Object.keys(vNode.attributes).includes(name) && name !== 'data-css-scope')
-    .forEach(key => { node.removeAttribute(key) })
+  node.getAttributeNames && node.getAttributeNames().filter(name => !Object.keys(vNode.attributes).includes(name) && name !== 'data-css-scope').forEach(key => node.removeAttribute(key))
   for (const [key, value] of Object.entries(vNode.attributes)) {
     // Node keys do not get added to the DOM
     if (key === 'key') {
@@ -46,62 +51,49 @@ const updateAttributes = (vNode, node, parent, hydrating, root) => {
     if (key === 'data-css-for-scope') {
       const old = (parent?.getAttribute?.('data-css-scope') || '').split(' ')
       old.push(value)
-      !hydrating && parent?.setAttribute?.('data-css-scope', Array.from(new Set(old)).join(' ')
-        .trim())
+      !hydrating && parent?.setAttribute?.('data-css-scope', Array.from(new Set(old)).join(' ').trim())
       continue
     }
-    // SHAME 🔔 SHAME 🔔 SHAME 🔔
-    // SHAME 🔔 SHAME 🔔 SHAME 🔔
-    // SHAME 🔔 SHAME 🔔 SHAME 🔔
-    // TODO: unshame
     if (
       // @ts-ignore
       value?.[Symbol.asyncIterator] ||
       (value instanceof Function && value?.prototype?.toString?.() === '[object AsyncGenerator]')
     ) {
-      // @ts-ignore
-      node.skruvActiveAttributeGenerators.add(value)
-      // @ts-ignore
-      if (!value.booted) {
-        // @ts-ignore
-        root?.renderWaiting?.add(value)
-        // @ts-ignore
-        value.booted = true
+      const val = (/** @type {VnodeAtrributeGenerator} */ (value))
+      node.skruvActiveAttributeGenerators.add(val)
+      val.hydrating = hydrating
+      if (!val.booted) {
+        root?.renderWaiting?.add(val)
+        val.booted = true
         const rerender = () => {
           // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
-          // @ts-ignore
-          if (!node.skruvActiveAttributeGenerators?.has(value)) { return false }
+          if (!node.skruvActiveAttributeGenerators?.has(val)) { return false }
           if (key === 'key') {
-            !hydrating && (node.skruvkey = value)
+            !val.hydrating && (node.skruvkey = val)
             return true
           }
           if (key === 'data-css-for-scope') {
             const old = (parent?.getAttribute?.('data-css-scope') || '').split(' ')
-            old.push(value)
-            !hydrating && parent?.setAttribute?.('data-css-scope', Array.from(new Set(old)).join(' '))
+            old.push(val)
+            !val.hydrating && parent?.setAttribute?.('data-css-scope', Array.from(new Set(old)).join(' '))
             return true
           }
-          // @ts-ignore
-          if (value.result === false && node.getAttribute?.(key)) {
-            !hydrating && node.removeAttribute && node.removeAttribute(key)
+          if (val.result === false && node.getAttribute?.(key)) {
+            !val.hydrating && node.removeAttribute && node.removeAttribute(key)
           } else {
-            if (key === 'value' || key === 'checked' || key === 'selected') {
-              // @ts-ignore
-              !hydrating && (node[key] = value.result)
+            if ((key === 'value' || key === 'checked' || key === 'selected') && (typeof val.result === 'number' || typeof val.result === 'boolean' || typeof val.result === 'string')) {
+              !val.hydrating && (node[key] = val.result)
             }
-            // @ts-ignore
-            !hydrating && node.setAttribute && node.setAttribute(key, value.result)
-            // @ts-ignore
-            root?.renderWaiting?.delete(value)
+            !val.hydrating && node.setAttribute && node.setAttribute(key, val.result)
+            root?.renderWaiting?.delete(val)
             root?.checkRender?.()
           }
           return true
         }
-        // @ts-ignore
-        updateOnChange(value, rerender)
+        updateOnChange(val, rerender)
       }
-      return vNode.result
-    } else if (key.slice(0, 2) === 'on' && value instanceof Function) {
+      continue
+    } else if (key.slice(0, 2) === 'on' && value instanceof Function && !hydrating) {
       if (!node.skruvListeners) {
         node.skruvListeners = {}
       }
@@ -116,8 +108,7 @@ const updateAttributes = (vNode, node, parent, hydrating, root) => {
     } else {
       if (value !== false && node.getAttribute?.(key) !== value && !hydrating) {
         // These need to be set directly to have the desired effect.
-        if (key === 'value' || key === 'checked' || key === 'selected') {
-          // @ts-ignore
+        if ((key === 'value' || key === 'checked' || key === 'selected') && (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'string')) {
           node[key] = value
         }
         node.setAttribute && node.setAttribute(key, value)
@@ -149,7 +140,7 @@ const createNode = (vNode, isSvg) => {
 }
 
 /**
- * @param {SkruvIterableType} gen
+ * @param {SkruvIterableType | VnodeAtrributeGenerator} gen
  * @param {Function} rerender
  */
 const updateOnChange = async (gen, rerender) => {
@@ -185,9 +176,7 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, hydrating, root, actualVNodeAr
       vNode?.[Symbol.asyncIterator] ||
       (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')
     ) {
-      /** @type {SkruvIterableType} */
-      // @ts-ignore
-      const vNodeIterator = vNode
+      const vNodeIterator = (/** @type {SkruvIterableType} */ (vNode))
       parent.skruvActiveGenerators && parent.skruvActiveGenerators.add(vNodeIterator)
       vNodeIterator.hydrating = hydrating
       if (!vNodeIterator.booted) {
@@ -204,7 +193,7 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, hydrating, root, actualVNodeAr
           }
           renderArray(actualVNodeArray, parent, isSvg, !!vNodeIterator.hydrating, root)
           // @ts-ignore
-          if (vNodeIterator?.result?.attributes?.['data-skruv-finished'] !== false) { root?.renderWaiting?.delete(vNodeIterator) }
+          if (vNodeIterator?.result?.attributes?.['data-skruv-finished'] !== false) root?.renderWaiting?.delete(vNodeIterator)
           root?.checkRender?.()
           return true
         }
@@ -239,15 +228,16 @@ const renderArray = (vNodeArray, parent, isSvg, hydrating, root) => {
   parent.skruvActiveGenerators = new Set()
   const nodes = Array.from(parent.childNodes)
   const newNodes = sanitizeTypes(vNodeArray, parent, isSvg, hydrating, root)
-  nodes.slice(newNodes.length).forEach(elem => {
+  const toRemove = nodes.slice(newNodes.length)
+  for (let i = 0; i < toRemove.length; i++) {
+    const elem = toRemove[i]
     !hydrating && elem.parentNode && elem.parentNode.removeChild && elem.parentNode.removeChild(elem)
     // @ts-ignore
     !root?.isSkruvSSR && elem.dispatchEvent(new CustomEvent('remove'))
-  })
-  newNodes.forEach((vNode, index) => {
-    const node = nodes[index]
-    renderSingle(vNode, node, parent, isSvg, hydrating, root)
-  })
+  }
+  for (let i = 0; i < newNodes.length; i++) {
+    renderSingle(newNodes[i], nodes[i], parent, isSvg, hydrating, root)
+  }
 }
 
 /**
@@ -278,25 +268,24 @@ const renderSingle = (vNode, _node, parent, isSvg, hydrating, root) => {
     updateAttributes(vNode, keyedNode, parent, hydrating, root)
     // Call renderArray with children
     if (!vNode?.attributes?.opaque && (vNode.childNodes.length || keyedNode.childNodes.length)) {
-      renderArray(vNode.childNodes, keyedNode, isSvg, hydrating, root)
+      renderArray(vNode.childNodes, keyedNode, isSvg || vNode.nodeName === 'svg', hydrating, root)
     }
     return
   }
 
   // Create node if it does not exist
   if (!_node) {
-    node = createNode(vNode, isSvg)
+    node = createNode(vNode, isSvg || vNode.nodeName === 'svg')
     !hydrating && parent.append && parent.append(node)
     vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
   } else if (
     _node.nodeName.toLowerCase() !== vNode.nodeName.toLowerCase() ||
     vNode.attributes?.key !== _node.skruvkey
   ) {
-    node = createNode(vNode, isSvg)
+    node = createNode(vNode, isSvg || vNode.nodeName === 'svg')
     !hydrating && parent.replaceChild(node, _node)
     vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
-    // @ts-ignore
-    !root?.isSkruvSSR && _node.dispatchEvent(new CustomEvent('remove', {
+    !self?.isSkruvSSR && _node.dispatchEvent(new CustomEvent('remove', {
       detail: {
         newNode: node
       }
@@ -316,7 +305,7 @@ const renderSingle = (vNode, _node, parent, isSvg, hydrating, root) => {
   updateAttributes(vNode, node, parent, hydrating, root)
   // Call renderArray with children
   if (!vNode?.attributes?.opaque && (vNode.childNodes.length || node.childNodes.length)) {
-    renderArray(vNode.childNodes, node, isSvg, hydrating, root)
+    renderArray(vNode.childNodes, node, isSvg || vNode.nodeName === 'svg', hydrating, root)
   }
 }
 
@@ -331,31 +320,32 @@ const render = (
   node = document.documentElement,
   parent = node.parentNode,
   isSvg = false
-) => {
-  node.checkRender = () => {
-    // @ts-ignore
-    if (node.renderWaiting.size === 0 && typeof node.skruvRenderFinished === 'function') {
-      // Microsleep to enable the rendering to finish
-      // @ts-ignore
-      setTimeout(() => node.skruvRenderFinished(), 0)
+) => new Promise(resolve => {
+  const renderWaiting = new Set()
+  const checkRender = () => {
+    if (renderWaiting?.size === 0) {
+      resolve('finished render')
+      renderSingle(vNode, node, parent, isSvg, false, config)
     }
   }
-  if (!node.renderWaiting) { node.renderWaiting = new Set() }
+  const isSkruvSSR = self?.isSkruvSSR
+  const config = {
+    renderWaiting,
+    checkRender,
+    isSkruvSSR
+  }
   if (!parent) {
     // TODO: create error classes for skruv, inherit from one single error class
     throw new Error('Skruv: No parent to render to')
   }
-  if (node?.getAttribute?.('data-ssr-rendered')) {
-    node.skruvRenderFinished = () => {
-      renderSingle(vNode, node, parent, isSvg, false, node)
-    }
-    renderSingle(vNode, node, parent, isSvg, true, node)
-    node.checkRender()
+  if (!!node?.getAttribute?.('data-ssr-rendered')) {
+    renderSingle(vNode, node, parent, isSvg, true, config)
+    checkRender()
     return
   }
   // render the single first root node
-  renderSingle(vNode, node, parent, isSvg, false, node)
-  node.checkRender()
-}
+  renderSingle(vNode, node, parent, isSvg, false, config)
+  checkRender()
+})
 
 export default render
