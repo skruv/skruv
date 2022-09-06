@@ -32,7 +32,7 @@ No-dependency, no-build, small JS framework.
   style="width:100%"
   frameborder="0"
   onload="this.style.height = `${this.contentWindow.document.documentElement.scrollHeight}px`"
->
+></iframe>
 
 ```js
 import { createState, elements, render } from 'https://skruv.github.io/skruv/skruv.js'
