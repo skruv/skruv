@@ -1,6 +1,6 @@
 /* global test expect */
-import { body, div } from '../elements.js'
-import render from '../render.js'
+import { elements, render } from '../skruv.js'
+const { body, div } = elements
 
 test('render multiple elements', async () => {
   const html = document.createElement('html')

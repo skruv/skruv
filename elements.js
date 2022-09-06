@@ -1,3 +1,4 @@
+/* global CSSMediaRule CSSStyleRule CSSOM */
 /**
  * @typedef {Object} SkruvAdditionalIterableAttributeProperties
  * @property {Boolean} [booted]
@@ -9,7 +10,7 @@
  * @typedef {(AsyncGenerator<string | boolean | number | undefined | null> | AsyncIterable<string | boolean | number | undefined | null>) & Partial<SkruvAdditionalIterableAttributeProperties>} VnodeAtrributeGenerator
  */
 /** @type {VnodeAtrributeGenerator} */
-export const VnodeAtrributeGenerator = (async function* () { yield '' })()
+export const VnodeAtrributeGenerator = (async function * () { yield '' })()
 
 /**
  * @typedef SkruvEvents
@@ -61,7 +62,7 @@ export const ChildNode = Vnode
  */
 
 /** @type {SkruvIterableType} */
-export const SkruvIterableType = (async function* () { yield Vnode })()
+export const SkruvIterableType = (async function * () { yield Vnode })()
 
 /**
  * @param {String} nodeName
@@ -1354,12 +1355,11 @@ const styleMap = new Map()
  * @param {String} str
  * @returns {Number}
  */
-const hash = (str) => {
-  var hash = 0, i, chr
-  if (str.length === 0) return hash
-  for (i = 0; i < str.length; i++) {
-    chr = str.charCodeAt(i)
-    hash = ((hash << 5) - hash) + chr
+const hash = str => {
+  let hash = 0
+  if (str.length === 0) { return hash }
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i)
     hash |= 0 // Convert to 32bit integer
   }
   return hash
@@ -1371,47 +1371,35 @@ const hash = (str) => {
  * @returns {String}
  */
 const combineCssTemplate = (strings, ...keys) => strings.reduce(
-    /**
+  /**
      * @param {String[]} prev
      * @param {String} curr
      * @returns {String[]}
      */
-    (prev, curr, i) => {
-      prev.push(curr)
-      prev.push(keys?.[i]?.toString() || '')
-      return prev
-    }, []).join('')
+  (prev, curr, i) => {
+    prev.push(curr)
+    prev.push(keys?.[i]?.toString() || '')
+    return prev
+  }, []).join('')
 
-// CSS template literal. Does not actually require the use of CSSOM (the output is functionally the same as input) but using it provides us with some basic minification.
-// TODO: Maybe remove the use of CSSOM since having the same text in the source and the output would compress better (?)
+// CSS template literal.
 /**
  * @param {TemplateStringsArray} strings
  * @param {(String | Number | Boolean | undefined)[]} keys
  * @returns {Vnode}
  */
-export const css = (strings, ...keys) => {
-  const stylesheet = combineCssTemplate(strings, ...keys)
-
-  const unscopedHash = `unscoped${hash(stylesheet)}`
-
-  if (styleMap.has(unscopedHash)) return style({}, styleMap.get(unscopedHash))
-  let sheet
-
-  if (self?.CSSOM) {
-    sheet = CSSOM.parse(stylesheet)
-  } else {
-    // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari
-    const styleDoc = document.implementation.createHTMLDocument('')
-    const styleElem = styleDoc.createElement('style')
-    styleElem.innerText = stylesheet
-    styleDoc.body.append(styleElem)
-    sheet = styleElem.sheet
-    styleDoc.body.removeChild(styleElem)
-  }
-  const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '').join('')
-  styleMap.set(unscopedHash, upgradedStyles)
-  return style({}, upgradedStyles)
-}
+export const css = (strings, ...keys) => style({}, ...strings.reduce(
+  /**
+   * @param {String[]} prev
+   * @param {String} curr
+   * @returns {String[]}
+   */
+  (prev, curr, i) => {
+    prev.push(curr)
+    prev.push(keys?.[i]?.toString() || '')
+    return prev
+  }, [])
+)
 
 // Scoped CSS template literal
 /**
@@ -1434,19 +1422,19 @@ export const scopedcss = (strings, ...keys) => {
    * @param {string} prefix prefix to apply
    * @return {?{selector: string, rest: string}}
    */
-  function consumeSelector(raw, prefix) {
+  function consumeSelector (raw, prefix) {
     let i = raw.search(walkSelectorRe)
     if (i === -1) {
       // found literally nothing interesting, success
       return {
         selector: `${prefix} ${raw}`,
-        rest: '',
+        rest: ''
       }
     } else if (raw[i] === ',') {
       // found comma without anything interesting, yield rest
       return {
         selector: `${prefix} ${raw.substring(0, i)}`,
-        rest: raw.substring(i + 1),
+        rest: raw.substring(i + 1)
       }
     }
 
@@ -1455,14 +1443,16 @@ export const scopedcss = (strings, ...keys) => {
     i = raw.search(/\S/) // place i after initial whitespace only
 
     let depth = 0
+    // eslint-disable-next-line no-labels
     outer:
     for (; i < raw.length; ++i) {
       const char = raw[i]
       switch (char) {
-        case '[':
+        case '[': {
           const match = attrRe.exec(raw.substring(i))
           i += (match ? match[0].length : 1) - 1 // we add 1 every loop
           continue
+        }
         case '(':
           ++depth
           continue
@@ -1494,6 +1484,7 @@ export const scopedcss = (strings, ...keys) => {
 
       switch (char) {
         case ',':
+          // eslint-disable-next-line no-labels
           break outer
         case ' ':
         case '>':
@@ -1514,7 +1505,7 @@ export const scopedcss = (strings, ...keys) => {
   * @param {string} selectorText
   * @param {string} prefix to apply
   */
-  function updateSelectorText(selectorText, prefix) {
+  function updateSelectorText (selectorText, prefix) {
     const found = []
 
     while (selectorText) {
@@ -1535,7 +1526,7 @@ export const scopedcss = (strings, ...keys) => {
   * @param {!CSSRule} rule
   * @param {string} prefix to apply
   */
-  function upgradeRule(rule, prefix) {
+  function upgradeRule (rule, prefix) {
     if (rule instanceof CSSMediaRule) {
       // upgrade children
       const l = rule.cssRules.length
@@ -1554,9 +1545,11 @@ export const scopedcss = (strings, ...keys) => {
   const scope = `scope${hash(stylesheet)}`
   const prefix = `[data-css-scope~=${scope}]`
 
-  if (styleMap.has(scope)) return style({ 'data-css-for-scope': scope }, styleMap.get(scope))
+  if (styleMap.has(scope)) { return style({ 'data-css-for-scope': scope }, styleMap.get(scope)) }
   let sheet
+  // @ts-ignore
   if (self?.CSSOM) {
+    // @ts-ignore
     sheet = CSSOM.parse(stylesheet)
   } else {
     // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari
@@ -1568,7 +1561,8 @@ export const scopedcss = (strings, ...keys) => {
     styleDoc.body.removeChild(styleElem)
   }
   Array.from(sheet.cssRules).forEach(e => upgradeRule(e, prefix))
-  const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '').join('')
+  const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '')
+    .join('')
   styleMap.set(scope, upgradedStyles)
   return style({ 'data-css-for-scope': scope }, upgradedStyles)
 }
