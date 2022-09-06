@@ -1,6 +1,6 @@
 /* global test expect */
-import { div, header } from '../elements.js'
-import render from '../render.js'
+import { elements, render } from '../skruv.js'
+const { div, header } = elements
 
 test('change root node type', async () => {
   const html = document.createElement('body')

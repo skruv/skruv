@@ -1,7 +1,6 @@
 /* global test expect */
-import createState from '../createState.js'
-import { body, div } from '../elements.js'
-import render from '../render.js'
+import { createState, elements, render } from '../skruv.js'
+const { body, div } = elements
 
 const wait = time => new Promise(resolve => setTimeout(resolve, time))
 

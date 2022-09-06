@@ -1,3 +1,15 @@
+export type VnodeAtrributeGenerator = (AsyncGenerator<string | boolean | number | undefined | null> | AsyncIterable<string | boolean | number | undefined | null>) & Partial<SkruvAdditionalIterableAttributeProperties>;
+/**
+ * @typedef {Object} SkruvAdditionalIterableAttributeProperties
+ * @property {Boolean} [booted]
+ * @property {Boolean} [hydrating]
+ * @property {Boolean | String | Number | Function} [result]
+ */
+/**
+ * @typedef {(AsyncGenerator<string | boolean | number | undefined | null> | AsyncIterable<string | boolean | number | undefined | null>) & Partial<SkruvAdditionalIterableAttributeProperties>} VnodeAtrributeGenerator
+ */
+/** @type {VnodeAtrributeGenerator} */
+export const VnodeAtrributeGenerator: VnodeAtrributeGenerator;
 export type Vnode = {
     nodeName: string;
     data?: string | undefined;
@@ -37,11 +49,12 @@ export type ChildNode = Vnode | Function | string | boolean | number | SkruvIter
  */
 /** @type {ChildNode} */
 export const ChildNode: ChildNode;
-export type SkruvIterableType = (AsyncGenerator<Vnode | Function | string | boolean | number | ChildNodes> | AsyncIterable<Vnode | Function | string | boolean | number | ChildNodes>) & SkruvAdditionalIterableProperties;
+export type SkruvIterableType = (AsyncGenerator<Vnode | Function | string | boolean | number | (ChildNode | ChildNode[])[]> | AsyncIterable<Vnode | Function | string | boolean | number | (ChildNode | ChildNode[])[]>) & SkruvAdditionalIterableProperties;
 /**
  * @typedef {Object} SkruvAdditionalIterableProperties
  * @property {ChildNodes|ChildNode} [result]
  * @property {Boolean} [booted]
+ * @property {Boolean} [hydrating]
  *
  * @typedef {(AsyncGenerator<Vnode|Function|String|Boolean|Number|ChildNodes> | AsyncIterable<Vnode|Function|String|Boolean|Number|ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
  */
@@ -261,6 +274,12 @@ export function unknown(attributes?: VnodeAtrributes | undefined, ...childNodes:
 export function use(attributes?: VnodeAtrributes | undefined, ...childNodes: ChildNode[]): Vnode;
 export function view(attributes?: VnodeAtrributes | undefined, ...childNodes: ChildNode[]): Vnode;
 export function css(strings: TemplateStringsArray, ...keys: (string | number | boolean | undefined)[]): Vnode;
+export function scopedcss(strings: TemplateStringsArray, ...keys: (string | number | boolean | undefined)[]): Vnode;
+export type SkruvAdditionalIterableAttributeProperties = {
+    booted?: boolean | undefined;
+    hydrating?: boolean | undefined;
+    result?: string | number | boolean | Function | undefined;
+};
 export type SkruvEvents = {
     oncreate: (arg0: HTMLElement | Text | SVGElement | Comment) => void;
     onremove: (arg0: HTMLElement | Text | SVGElement | Comment) => void;
@@ -273,5 +292,6 @@ export type VnodeAtrributes = Partial<GlobalEventHandlers> & Partial<SkruvEvents
 export type SkruvAdditionalIterableProperties = {
     result?: ChildNodes | ChildNode | undefined;
     booted?: boolean | undefined;
+    hydrating?: boolean | undefined;
 };
 //# sourceMappingURL=elements.d.ts.map
