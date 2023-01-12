@@ -2,7 +2,7 @@
 
 # skruv
 
-No-dependency, no-build, small JS framework.
+No-dependency, no-build, small JS framework/view-library.
 
 * [Github](https://github.com/skruv/skruv)
 * [NPM](https://npmjs.com/skruv)
@@ -25,7 +25,7 @@ No-dependency, no-build, small JS framework.
 
 ## Examples
 
-### Basic TODO
+### Basic todo-list
 
 <iframe
   src="./examples/todo/index.html"
@@ -36,57 +36,69 @@ No-dependency, no-build, small JS framework.
 
 ```js
 import { createState, elements, render } from 'https://skruv.github.io/skruv/skruv.js'
-const {
-  html,
-  head,
-  title,
-  meta,
-  script,
-  body,
-  main,
-  h1,
-  div,
-  form,
-  input,
-  ul,
-  li,
-  button
-} = elements
+const { h, css } = elements
 
 const state = createState({
-  todos: ['Write todos'],
-  value: ''
+  todos: ['Write todos']
 })
 
+const styles = css`
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+}
+
+body {
+  max-width: 40ch;
+  margin: 0 auto;
+}
+
+form {
+  display: flex;
+}
+
+input {
+  flex: 1;
+}
+`
+
 render(
-  html({ lang: 'en-US' },
-    head({},
-      title({}, state.todos.getGenerator(0)),
-      meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      script({ src: './index.js' })
+  h('html', { lang: 'en-US' },
+    h('head', {},
+      h('title', {}, state.todos.getGenerator(0)),
+      h('script', { src: './index.js', type: 'module' }),
+      h('meta', { name: 'viewport', content: 'width=device-width, initial-scale=1' }),
+      styles
     ),
-    body({},
-      main({},
-        h1({}, state.todos.getGenerator(0)),
-        async function * () {
-          yield div({ 'data-skruv-finished': true }, 'Loading')
+    h('body', {},
+      h('main', {},
+        h('h1', {}, state.todos.getGenerator(0)),
+        h('form',
+          {
+            onsubmit: e => {
+              e.preventDefault()
+              state.todos.unshift(new FormData(e.target).get('todo'))
+              e.target.reset()
+            }
+          },
+          h('input', {
+            type: 'text',
+            name: 'todo'
+          }),
+          h('button', {}, 'New!')
+        ),
+        async function* () {
           for await (const currentState of state) {
-            yield form(
-              {
-                onsubmit: e => {
-                  e.preventDefault()
-                  currentState.todos.unshift(currentState.value)
-                }
-              },
-              input({
-                type: 'text',
-                value: currentState.value,
-                oninput: e => { currentState.value = e.target.value }
-              }),
-              ul({},
-                currentState.todos.map(todo => li({}, todo))
-              ),
-              button({}, 'New!')
+            yield h('ol', {},
+              currentState.todos.map((todo, i) => h('li', {},
+                todo,
+                ' ',
+                h('a', {
+                  href: '#',
+                  onclick: () => {
+                    currentState.todos.splice(i, 1)
+                  }
+                }, 'x')
+              ))
             )
           }
         }
@@ -94,5 +106,72 @@ render(
     )
   )
 )
+```
 
+There are three main parts of skruv:
+
+* createState
+  * createState takes in a object and returns a [proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) which is also an [async generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).
+  * you modify the state by using normal methods (including things like [`delete`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete), [`splice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice), etc.) or setters on it.
+  * where you want to subscribe to state changes you use [for-await-of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of).
+    * You can subscribe to subobjects with `for await (const bar of state.foo.bar)`.
+  * as a shortcut you can call getGenerator(key) to subscribe to and ouput a single value.
+* render
+  * render takes a structure created by elements and optionally which DOM node to write to.
+    * if no DOM node is given it will render the whole document like above.
+* elements
+  * elements has the function `h` for generating HTML/SVG elements.
+  * an elements children can be functions returning other elements, arrays of elements, generators yielding elements, or just plain elements.
+  * besides the normal [DOM events](https://developer.mozilla.org/en-US/docs/Web/Events) like `onclick` there are `oncreate` and `onremove` which are called when skruv adds/removes the elements.
+  * it also has [tagged template functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) for creating `css` style elements and `scopedcss` for creating scoped css.
+    * scopedcss behaves like the (unfortunatley) removed [HTML feature](https://developer.mozilla.org/en-US/docs/Web/API/HTMLStyleElement/scoped)
+  * it also has helpers for each HTML/SVG element so you can get a h1 element helper by doing `const { h1 } = elements`.
+
+## Example using scopedcss and html helpers
+
+<iframe
+  src="./examples/todo/scopedcss-htmlhelpers.html"
+  style="width:100%"
+  frameborder="0"
+  onload="this.style.height = `${this.contentWindow.document.documentElement.scrollHeight}px`"
+></iframe>
+
+```js
+import { elements, render } from 'https://skruv.github.io/skruv/skruv.js'
+const { scopedcss, html, head, meta, body, div, p } = elements
+
+const rootStyles = css`
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+}
+`
+
+const styles = scopedcss`
+:scope {
+  border: 1px solid;
+}
+
+p {
+  color: blue;
+}
+`
+
+render(
+  html({ lang: 'en-US' },
+    head({},
+      title({}, 'scopedcss, HTML helpers'),
+      meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
+      rootStyles
+    ),
+    body({},
+      div({},
+        styles,
+        p({}, 'blue text')
+      ),
+      div({},
+        p({}, 'default text')
+      )
+    )
+  )
+)
 ```
