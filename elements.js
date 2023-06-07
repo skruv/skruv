@@ -1351,6 +1351,7 @@ export const view = (attributes = {}, ...childNodes) => h('view', attributes, ..
 
 const styleMap = new Map()
 
+// TODO: replace with native hash
 /**
  * @param {String} str
  * @returns {Number}
@@ -1401,6 +1402,7 @@ export const css = (strings, ...keys) => style({}, ...strings.reduce(
   }, [])
 )
 
+// TODO: Break out to separate file since it takes a lot of code and is not always used
 // Scoped CSS template literal
 /**
  * @param {TemplateStringsArray} strings
@@ -1408,12 +1410,11 @@ export const css = (strings, ...keys) => style({}, ...strings.reduce(
  * @returns {Vnode}
  */
 export const scopedcss = (strings, ...keys) => {
+  // The implementation of this is lifted from https://github.com/samthor/scoped with some modifications
   const attrRe = /^\[.*?(?:(["'])(?:.|\\\1)*\1.*)*\]/
   const walkSelectorRe = /([([,]|:scope\b)/ // "interesting" setups
   const scopeRe = /^:scope\b/
   const stylesheet = combineCssTemplate(strings, ...keys)
-
-  // The implementation of this is lifted from https://github.com/samthor/scoped
 
   /**
    * Consumes a single selector from candidate selector text, which may contain many.
@@ -1552,7 +1553,7 @@ export const scopedcss = (strings, ...keys) => {
     // @ts-ignore
     sheet = CSSOM.parse(stylesheet)
   } else {
-    // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari
+    // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari (supported from 16.4 (Released 2023-03-27))
     const styleDoc = document.implementation.createHTMLDocument('')
     const styleElem = styleDoc.createElement('style')
     styleElem.innerText = stylesheet
