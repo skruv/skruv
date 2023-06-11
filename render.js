@@ -138,22 +138,23 @@ const updateAttributes = (vNode, node, parent, hydrating, config) => {
 }
 
 /**
+ * @param {SkruvDomType} parent
  * @param {Vnode} vNode
  * @param {Boolean} isSvg
  * @returns {HTMLElement | SVGElement | Text | Comment}
  */
-const createNode = (vNode, isSvg) => {
+const createNode = (parent, vNode, isSvg) => {
+  const ownerDocument = parent.ownerDocument || self?.document
   if (vNode.nodeName === '#comment') {
-    // TODO: get the current document from the root node, don't rely on the global document
-    return document.createComment(vNode.data || '')
+    return ownerDocument.createComment(vNode.data || '')
   }
   if (vNode.nodeName === '#text') {
-    return document.createTextNode(vNode.data || '')
+    return ownerDocument.createTextNode(vNode.data || '')
   }
   if (isSvg) {
-    return document.createElementNS('http://www.w3.org/2000/svg', vNode.nodeName)
+    return ownerDocument.createElementNS('http://www.w3.org/2000/svg', vNode.nodeName)
   }
-  return document.createElement(vNode.nodeName)
+  return ownerDocument.createElement(vNode.nodeName)
 }
 
 /**
@@ -292,14 +293,14 @@ const renderSingle = (vNode, _node, parent, isSvg, hydrating, config) => {
 
   // Create node if it does not exist
   if (!_node) {
-    node = createNode(vNode, isSvg || vNode.nodeName === 'svg')
+    node = createNode(parent, vNode, isSvg || vNode.nodeName === 'svg')
     !hydrating && parent.append && parent.append(node)
     vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
   } else if (
     _node.nodeName.toLowerCase() !== vNode.nodeName.toLowerCase() ||
     vNode.attributes?.key !== _node.skruvkey
   ) {
-    node = createNode(vNode, isSvg || vNode.nodeName === 'svg')
+    node = createNode(parent, vNode, isSvg || vNode.nodeName === 'svg')
     !hydrating && parent.replaceChild(node, _node)
     vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
     !config.isSkruvSSR && _node.dispatchEvent(new CustomEvent('remove', {
@@ -334,7 +335,7 @@ const renderSingle = (vNode, _node, parent, isSvg, hydrating, config) => {
  */
 const render = (
   vNode,
-  node = document.documentElement,
+  node = self.document.documentElement,
   parent = node.parentNode,
   isSvg = false
 ) => new Promise(resolve => {

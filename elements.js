@@ -1554,7 +1554,7 @@ export const scopedcss = (strings, ...keys) => {
     sheet = CSSOM.parse(stylesheet)
   } else {
     // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari (supported from 16.4 (Released 2023-03-27))
-    const styleDoc = document.implementation.createHTMLDocument('')
+    const styleDoc = self.document.implementation.createHTMLDocument('')
     const styleElem = styleDoc.createElement('style')
     styleElem.innerText = stylesheet
     styleDoc.body.append(styleElem)
