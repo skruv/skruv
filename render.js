@@ -58,7 +58,7 @@ const handleSpecialAttributes = (node, key, result) => {
  */
 const updateAttributes = (vNode, node, parent, hydrating, config) => {
   skruvActiveAttributeGenerators.set(node, new Set())
-  node.getAttributeNames && node.getAttributeNames().filter(name => !Object.keys(vNode.attributes).includes(name) && name !== 'data-css-scope')
+  node.getAttributeNames && node.getAttributeNames().filter(name => !Object.keys(vNode.attributes).includes(name) && name !== 'data-skruv-css-scope')
     .forEach(key => node?.removeAttribute?.(key))
   for (const [key, value] of Object.entries(vNode.attributes)) {
     // Node keys do not get added to the DOM
@@ -66,10 +66,10 @@ const updateAttributes = (vNode, node, parent, hydrating, config) => {
       !hydrating && skruvKeys.set(node, value)
       continue
     }
-    if (key === 'data-css-for-scope' && typeof value === 'string' && (parent instanceof HTMLElement || parent instanceof SVGElement)) {
-      const old = (parent?.getAttribute?.('data-css-scope') || '').split(' ')
+    if (key === 'data-skruv-css-for-scope' && typeof value === 'string' && (parent instanceof HTMLElement || parent instanceof SVGElement)) {
+      const old = (parent?.getAttribute?.('data-skruv-css-scope') || '').split(' ')
       old.push(value)
-      !hydrating && parent?.setAttribute?.('data-css-scope', Array.from(new Set(old)).join(' ')
+      !hydrating && parent?.setAttribute?.('data-skruv-css-scope', Array.from(new Set(old)).join(' ')
         .trim())
       continue
     }
@@ -91,11 +91,11 @@ const updateAttributes = (vNode, node, parent, hydrating, config) => {
             !val.hydrating && skruvKeys.set(node, val)
             return true
           }
-          if (key === 'data-css-for-scope' && (parent instanceof HTMLElement || parent instanceof SVGElement)) {
-            const old = (parent?.getAttribute?.('data-css-scope') || '').split(' ')
+          if (key === 'data-skruv-css-for-scope' && (parent instanceof HTMLElement || parent instanceof SVGElement)) {
+            const old = (parent?.getAttribute?.('data-skruv-css-scope') || '').split(' ')
             // @ts-ignore
             old.push(val)
-            !val.hydrating && parent?.setAttribute?.('data-css-scope', Array.from(new Set(old)).join(' '))
+            !val.hydrating && parent?.setAttribute?.('data-skruv-css-scope', Array.from(new Set(old)).join(' '))
             return true
           }
           if (val.result === false && node.getAttribute?.(key)) {
@@ -211,7 +211,7 @@ const sanitizeTypes = (vNodeParent, vNodeArray, parent, isSvg, hydrating, config
           }
           renderArray(vNodeParent, actualVNodeArray, parent, isSvg, !!vNodeIterator.hydrating, config)
           // @ts-ignore
-          if (vNodeIterator?.result?.attributes?.['data-skruv-finished'] !== false) { config.renderWaiting?.delete(vNodeIterator) }
+          if (vNodeIterator?.result?.attributes?.['data-skruv-skruv-finished'] !== false) { config.renderWaiting?.delete(vNodeIterator) }
           config.checkRender?.()
           return true
         }
@@ -370,7 +370,7 @@ const render = (
     checkRender,
     isSkruvSSR
   }
-  if (node?.getAttribute?.('data-ssr-rendered')) {
+  if (node?.getAttribute?.('data-skruv-ssr-rendered')) {
     renderSingle(vNode, node, parent, isSvg, true, config)
     checkRender()
     return

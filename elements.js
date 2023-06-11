@@ -1559,9 +1559,9 @@ export const scopedcss = (strings, ...keys) => {
     rule.selectorText = updateSelectorText(rule.selectorText, prefix)
   }
   const scope = `scope${hash(stylesheet)}`
-  const prefix = `[data-css-scope~=${scope}]`
+  const prefix = `[data-skruv-css-scope~=${scope}]`
 
-  if (styleMap.has(scope)) { return style({ 'data-css-for-scope': scope }, styleMap.get(scope)) }
+  if (styleMap.has(scope)) { return style({ 'data-skruv-css-for-scope': scope }, styleMap.get(scope)) }
   let sheet
   // @ts-ignore
   if (self?.CSSOM) {
@@ -1580,5 +1580,5 @@ export const scopedcss = (strings, ...keys) => {
   const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '')
     .join('')
   styleMap.set(scope, upgradedStyles)
-  return style({ 'data-css-for-scope': scope }, upgradedStyles)
+  return style({ 'data-skruv-css-for-scope': scope }, upgradedStyles)
 }
