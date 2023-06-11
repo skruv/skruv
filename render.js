@@ -1,33 +1,15 @@
-/* eslint-disable no-unused-expressions */ // eslint does not like conditional chaining calls to functions
-/* global CustomEvent */
+/* eslint-disable no-unused-expressions */
+/* global CustomEvent HTMLInputElement HTMLOptionElement HTMLElement SVGElement Text Document */
 /** @typedef {typeof import("./elements.js").Vnode} Vnode */
 /** @typedef {typeof import("./elements.js").ChildNodes} ChildNodes */
-/** @typedef {typeof import("./elements.js").ChildNode} ChildNode */
 /** @typedef {typeof import("./elements.js").SkruvIterableType} SkruvIterableType */
 /** @typedef {typeof import("./elements.js").VnodeAtrributeGenerator} VnodeAtrributeGenerator */
 
-/**
- * @typedef {Object} SkruvAdditionalProperties
- * @property {Set<VnodeAtrributeGenerator>} [skruvActiveAttributeGenerators]
- * @property {Set<SkruvIterableType | VnodeAtrributeGenerator>} [renderWaiting]
- * @property {Set<SkruvIterableType>} [skruvActiveGenerators]
- * @property {Object<[String], Function>} [skruvListeners]
- * @property {Object | null} [skruvkey]
- * @property {String} [data]
- * @property {Function} [append]
- * @property {Function} [removeAttribute]
- * @property {Function} [getAttribute]
- * @property {Function} [setAttribute]
- * @property {Function} [skruvRenderFinished]
- * @property {Boolean} [skruvFinished]
- * @property {Boolean | String | Number} [checked]
- * @property {Boolean | String | Number} [value]
- * @property {Boolean | String | Number} [selected]
- * @property {Function} [checkRender]
- * @property {Boolean} [isSkruvSSR]
- *
- * @typedef {Node & SkruvAdditionalProperties} SkruvDomType
- */
+const skruvActiveGenerators = new WeakMap()
+const skruvActiveAttributeGenerators = new WeakMap()
+const skruvListeners = new WeakMap()
+const skruvKeys = new WeakMap()
+const keyMap = new WeakMap()
 
 /**
  * @typedef {Object} RenderConfig
@@ -36,18 +18,46 @@
  * @property {Boolean} isSkruvSSR
  */
 
-const keyMap = new WeakMap()
+/**
+ * Update the attributes on a node
+ * @param {HTMLElement | SVGElement} node
+ * @param {String} key
+ * @param {Boolean | String | Number} result
+ */
+const handleSpecialAttributes = (node, key, result) => {
+  if (
+    key === 'value' &&
+    (typeof result === 'number' || typeof result === 'string') &&
+    node instanceof HTMLInputElement
+  ) {
+    node[key] = result.toString()
+  }
+  if (
+    key === 'checked' &&
+    typeof result === 'boolean' &&
+    node instanceof HTMLInputElement
+  ) {
+    node[key] = result
+  }
+  if (
+    key === 'selected' &&
+    typeof result === 'boolean' &&
+    node instanceof HTMLOptionElement
+  ) {
+    node[key] = result
+  }
+}
 
 /**
  * Update the attributes on a node
  * @param {Vnode} vNode
- * @param {SkruvDomType} node
- * @param {SkruvDomType} parent
+ * @param {HTMLElement | SVGElement} node
+ * @param {HTMLElement | SVGElement | Document} parent
  * @param {Boolean} hydrating
  * @param {RenderConfig} config
  */
 const updateAttributes = (vNode, node, parent, hydrating, config) => {
-  node.skruvActiveAttributeGenerators = new Set()
+  skruvActiveAttributeGenerators.set(node, new Set())
   // @ts-ignore
   node.getAttributeNames && node.getAttributeNames().filter(name => !Object.keys(vNode.attributes).includes(name) && name !== 'data-css-scope')
     // @ts-ignore
@@ -55,10 +65,10 @@ const updateAttributes = (vNode, node, parent, hydrating, config) => {
   for (const [key, value] of Object.entries(vNode.attributes)) {
     // Node keys do not get added to the DOM
     if (key === 'key') {
-      !hydrating && (node.skruvkey = value)
+      !hydrating && skruvKeys.set(node, value)
       continue
     }
-    if (key === 'data-css-for-scope') {
+    if (key === 'data-css-for-scope' && typeof value === 'string' && (parent instanceof HTMLElement || parent instanceof SVGElement)) {
       const old = (parent?.getAttribute?.('data-css-scope') || '').split(' ')
       old.push(value)
       !hydrating && parent?.setAttribute?.('data-css-scope', Array.from(new Set(old)).join(' ')
@@ -71,20 +81,21 @@ const updateAttributes = (vNode, node, parent, hydrating, config) => {
       (value instanceof Function && value?.prototype?.toString?.() === '[object AsyncGenerator]')
     ) {
       const val = (/** @type {VnodeAtrributeGenerator} */ (value))
-      node.skruvActiveAttributeGenerators.add(val)
+      skruvActiveAttributeGenerators.get(node).add(val)
       val.hydrating = hydrating
       if (!val.booted) {
         config?.renderWaiting?.add(val)
         val.booted = true
         const rerender = () => {
           // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
-          if (!node.skruvActiveAttributeGenerators?.has(val)) { return false }
+          if (!skruvActiveAttributeGenerators.get(node).has(val)) { return false }
           if (key === 'key') {
-            !val.hydrating && (node.skruvkey = val)
+            !val.hydrating && skruvKeys.set(node, val)
             return true
           }
-          if (key === 'data-css-for-scope') {
+          if (key === 'data-css-for-scope' && (parent instanceof HTMLElement || parent instanceof SVGElement)) {
             const old = (parent?.getAttribute?.('data-css-scope') || '').split(' ')
+            // @ts-ignore
             old.push(val)
             !val.hydrating && parent?.setAttribute?.('data-css-scope', Array.from(new Set(old)).join(' '))
             return true
@@ -92,13 +103,8 @@ const updateAttributes = (vNode, node, parent, hydrating, config) => {
           if (val.result === false && node.getAttribute?.(key)) {
             !val.hydrating && node.removeAttribute && node.removeAttribute(key)
           } else {
-            if (
-              (key === 'value' || key === 'checked' || key === 'selected') &&
-              (typeof val.result === 'number' || typeof val.result === 'boolean' || typeof val.result === 'string')
-            ) {
-              !val.hydrating && (node[key] = val.result)
-            }
-            !val.hydrating && node.setAttribute && node.setAttribute(key, val.result)
+            !val.hydrating && !!val.result && typeof val.result !== 'function' && handleSpecialAttributes(node, key, val.result)
+            !val.hydrating && node.setAttribute && node.setAttribute(key, val.result?.toString() || '')
             config?.renderWaiting?.delete(val)
             config?.checkRender?.()
           }
@@ -108,27 +114,22 @@ const updateAttributes = (vNode, node, parent, hydrating, config) => {
       }
       continue
     } else if (key.slice(0, 2) === 'on' && value instanceof Function && !hydrating) {
-      if (!node.skruvListeners) {
-        node.skruvListeners = {}
+      if (!skruvListeners.has(node)) {
+        skruvListeners.set(node, {})
       }
-      if (node.skruvListeners[key] && node.skruvListeners[key].toString() !== value.toString()) {
-        node.removeEventListener(key.slice(2), node.skruvListeners[key])
-        node.skruvListeners[key] = null
+      if (skruvListeners.get(node)[key] && skruvListeners.get(node)[key].toString() !== value.toString()) {
+        node.removeEventListener(key.slice(2), skruvListeners.get(node)[key])
+        skruvListeners.get(node)[key] = null
       }
-      if (!node.skruvListeners[key]) {
-        node.skruvListeners[key] = value
-        node.addEventListener(key.slice(2), node.skruvListeners[key])
+      if (!skruvListeners.get(node)[key]) {
+        skruvListeners.get(node)[key] = value
+        node.addEventListener(key.slice(2), skruvListeners.get(node)[key])
       }
     } else {
       if (value !== false && node.getAttribute?.(key) !== value && !hydrating) {
         // These need to be set directly to have the desired effect.
-        if (
-          (key === 'value' || key === 'checked' || key === 'selected') &&
-          (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'string')
-        ) {
-          node[key] = value
-        }
-        node.setAttribute && node.setAttribute(key, value)
+        !!value && typeof value !== 'function' && typeof value !== 'object' && handleSpecialAttributes(node, key, value)
+        value && node.setAttribute && node.setAttribute(key, value.toString())
       }
       if (value === false && node.getAttribute?.(key) && !hydrating) {
         node.removeAttribute && node.removeAttribute(key)
@@ -138,7 +139,7 @@ const updateAttributes = (vNode, node, parent, hydrating, config) => {
 }
 
 /**
- * @param {SkruvDomType} parent
+ * @param {HTMLElement | SVGElement | Document} parent
  * @param {Vnode} vNode
  * @param {Boolean} isSvg
  * @returns {HTMLElement | SVGElement | Text | Comment}
@@ -171,7 +172,7 @@ const updateOnChange = async (gen, rerender) => {
 
 /**
  * @param {ChildNodes} vNodeArray
- * @param {SkruvDomType} parent
+ * @param {HTMLElement | SVGElement | Document} parent
  * @param {Boolean} isSvg
  * @param {Boolean} hydrating
  * @param {RenderConfig} config
@@ -195,7 +196,7 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, hydrating, config, actualVNode
       (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')
     ) {
       const vNodeIterator = (/** @type {SkruvIterableType} */ (vNode))
-      parent.skruvActiveGenerators && parent.skruvActiveGenerators.add(vNodeIterator)
+      skruvActiveGenerators.get(parent) && skruvActiveGenerators.get(parent).add(vNodeIterator)
       vNodeIterator.hydrating = hydrating
       if (!vNodeIterator.booted) {
         config.renderWaiting?.add(vNodeIterator)
@@ -203,8 +204,8 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, hydrating, config, actualVNode
         const rerender = () => {
           // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
           if (
-            !parent.skruvActiveGenerators ||
-            (parent.skruvActiveGenerators && !parent.skruvActiveGenerators.has(vNodeIterator))
+            !skruvActiveGenerators.get(parent) ||
+            (skruvActiveGenerators.get(parent) && !skruvActiveGenerators.get(parent).has(vNodeIterator))
           ) {
             config.renderWaiting?.delete(vNodeIterator)
             return false
@@ -236,14 +237,14 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, hydrating, config, actualVNode
 
 /**
  * @param {ChildNodes} vNodeArray
- * @param {SkruvDomType} parent
+ * @param {HTMLElement | SVGElement | Document} parent
  * @param {Boolean} isSvg
  * @param {Boolean} hydrating
  * @param {RenderConfig} config
  */
 const renderArray = (vNodeArray, parent, isSvg, hydrating, config) => {
   if (!Array.isArray(vNodeArray)) { return }
-  parent.skruvActiveGenerators = new Set()
+  skruvActiveGenerators.set(parent, new Set())
   const nodes = Array.from(parent.childNodes)
   const newNodes = sanitizeTypes(vNodeArray, parent, isSvg, hydrating, config)
   const toRemove = nodes.slice(newNodes.length)
@@ -254,14 +255,15 @@ const renderArray = (vNodeArray, parent, isSvg, hydrating, config) => {
     !config.isSkruvSSR && elem.dispatchEvent(new CustomEvent('remove'))
   }
   for (let i = 0; i < newNodes.length; i++) {
+    // @ts-ignore
     renderSingle(newNodes[i], nodes[i], parent, isSvg, hydrating, config)
   }
 }
 
 /**
  * @param {Vnode} vNode
- * @param {SkruvDomType} _node
- * @param {SkruvDomType} parent
+ * @param {HTMLElement | SVGElement | Comment | null} _node
+ * @param {HTMLElement | SVGElement | Document} parent
  * @param {Boolean} isSvg
  * @param {Boolean} hydrating
  * @param {RenderConfig} config
@@ -298,7 +300,7 @@ const renderSingle = (vNode, _node, parent, isSvg, hydrating, config) => {
     vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
   } else if (
     _node.nodeName.toLowerCase() !== vNode.nodeName.toLowerCase() ||
-    vNode.attributes?.key !== _node.skruvkey
+    vNode.attributes?.key !== skruvKeys.get(_node)
   ) {
     node = createNode(parent, vNode, isSvg || vNode.nodeName === 'svg')
     !hydrating && parent.replaceChild(node, _node)
@@ -308,8 +310,8 @@ const renderSingle = (vNode, _node, parent, isSvg, hydrating, config) => {
         newNode: node
       }
     }))
-  } else if (_node.data !== vNode.data) {
-    _node.data = vNode.data
+  } else if (_node instanceof Text && _node.data !== vNode.data) {
+    _node.data = vNode.data || ''
     node = _node
   } else {
     node = _node
@@ -319,18 +321,17 @@ const renderSingle = (vNode, _node, parent, isSvg, hydrating, config) => {
     keyMap.set(vNode.attributes?.key, node)
   }
   // Diff node attributes
-  // TODO: below this should only be done for SVG/HTML, not for Comment/Text
-  updateAttributes(vNode, node, parent, hydrating, config)
+  (node instanceof HTMLElement || node instanceof SVGElement) && updateAttributes(vNode, node, parent, hydrating, config)
   // Call renderArray with children
-  if (!vNode?.attributes?.opaque && (vNode.childNodes.length || node.childNodes.length)) {
+  if ((node instanceof HTMLElement || node instanceof SVGElement) && !vNode?.attributes?.opaque && (vNode.childNodes.length || node.childNodes.length)) {
     renderArray(vNode.childNodes, node, isSvg || vNode.nodeName === 'svg', hydrating, config)
   }
 }
 
 /**
  * @param {Vnode} vNode
- * @param {SkruvDomType} node
- * @param {SkruvDomType|null} parent
+ * @param {HTMLElement | SVGElement} node
+ * @param {ParentNode?} parent
  * @param {Boolean} isSvg
  */
 const render = (
@@ -342,6 +343,11 @@ const render = (
   if (!parent) {
     // TODO: create error classes for skruv, inherit from one single error class
     throw new Error('Skruv: No parent to render to')
+  }
+  if (!(parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof Document)) {
+    // TODO: create error classes for skruv, inherit from one single error class
+    console.log(parent)
+    throw new Error('Skruv: Parent of wrong type')
   }
   const renderWaiting = new Set()
   const checkRender = () => {
