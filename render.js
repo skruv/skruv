@@ -58,9 +58,7 @@ const handleSpecialAttributes = (node, key, result) => {
  */
 const updateAttributes = (vNode, node, parent, hydrating, config) => {
   skruvActiveAttributeGenerators.set(node, new Set())
-  // @ts-ignore
   node.getAttributeNames && node.getAttributeNames().filter(name => !Object.keys(vNode.attributes).includes(name) && name !== 'data-css-scope')
-    // @ts-ignore
     .forEach(key => node?.removeAttribute?.(key))
   for (const [key, value] of Object.entries(vNode.attributes)) {
     // Node keys do not get added to the DOM
@@ -171,6 +169,7 @@ const updateOnChange = async (gen, rerender) => {
 }
 
 /**
+ * @param {Vnode} vNodeParent
  * @param {ChildNodes} vNodeArray
  * @param {HTMLElement | SVGElement | Document} parent
  * @param {Boolean} isSvg
@@ -179,7 +178,7 @@ const updateOnChange = async (gen, rerender) => {
  * @param {ChildNodes} actualVNodeArray
  * @returns {Array<Vnode>}
  */
-const sanitizeTypes = (vNodeArray, parent, isSvg, hydrating, config, actualVNodeArray = vNodeArray) => {
+const sanitizeTypes = (vNodeParent, vNodeArray, parent, isSvg, hydrating, config, actualVNodeArray = vNodeArray) => {
   const retVal = vNodeArray.map(vNode => {
     if (typeof vNode === 'boolean' || typeof vNode === 'undefined') {
       return false
@@ -210,7 +209,7 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, hydrating, config, actualVNode
             config.renderWaiting?.delete(vNodeIterator)
             return false
           }
-          renderArray(actualVNodeArray, parent, isSvg, !!vNodeIterator.hydrating, config)
+          renderArray(vNodeParent, actualVNodeArray, parent, isSvg, !!vNodeIterator.hydrating, config)
           // @ts-ignore
           if (vNodeIterator?.result?.attributes?.['data-skruv-finished'] !== false) { config.renderWaiting?.delete(vNodeIterator) }
           config.checkRender?.()
@@ -222,6 +221,11 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, hydrating, config, actualVNode
     } else if (typeof vNode === 'function') {
       return vNode()
       // @ts-ignore
+    } else if (vNode?.nodeName === '#fragment') {
+      // JSX fragment compat
+      // @ts-ignore
+      return vNode?.childNodes || []
+    // @ts-ignore
     } else if (vNode?.nodeName || Array.isArray(vNode)) {
       return vNode
     }
@@ -232,31 +236,35 @@ const sanitizeTypes = (vNodeArray, parent, isSvg, hydrating, config, actualVNode
     .filter(vNode => !!vNode)
 
   // Handle results from generators returning generators, functions returning functions, etc.
-  return retVal.find(vNode => !vNode?.nodeName) ? sanitizeTypes(retVal, parent, isSvg, hydrating, config, actualVNodeArray) : retVal
+  return retVal.find(vNode => !vNode?.nodeName) ? sanitizeTypes(vNodeParent, retVal, parent, isSvg, hydrating, config, actualVNodeArray) : retVal
 }
 
 /**
+ * @param {Vnode} vNodeParent
  * @param {ChildNodes} vNodeArray
  * @param {HTMLElement | SVGElement | Document} parent
  * @param {Boolean} isSvg
  * @param {Boolean} hydrating
  * @param {RenderConfig} config
  */
-const renderArray = (vNodeArray, parent, isSvg, hydrating, config) => {
+const renderArray = (vNodeParent, vNodeArray, parent, isSvg, hydrating, config) => {
   if (!Array.isArray(vNodeArray)) { return }
   skruvActiveGenerators.set(parent, new Set())
   const nodes = Array.from(parent.childNodes)
-  const newNodes = sanitizeTypes(vNodeArray, parent, isSvg, hydrating, config)
+  const newNodes = sanitizeTypes(vNodeParent, vNodeArray, parent, isSvg, hydrating, config)
   const toRemove = nodes.slice(newNodes.length)
-  for (let i = 0; i < toRemove.length; i++) {
-    const elem = toRemove[i]
-    !hydrating && elem.parentNode && elem.parentNode.removeChild && elem.parentNode.removeChild(elem)
-    // @ts-ignore
-    !config.isSkruvSSR && elem.dispatchEvent(new CustomEvent('remove'))
+  if (newNodes.length || !vNodeParent.attributes['data-skruv-wait-for-not-empty']) {
+    for (let i = 0; i < toRemove.length; i++) {
+      const elem = toRemove[i]
+      !hydrating && elem.parentNode && elem.parentNode.removeChild && elem.parentNode.removeChild(elem)
+      !config.isSkruvSSR && elem.dispatchEvent(new CustomEvent('remove'))
+    }
   }
   for (let i = 0; i < newNodes.length; i++) {
-    // @ts-ignore
-    renderSingle(newNodes[i], nodes[i], parent, isSvg, hydrating, config)
+    const node = nodes[i] || null
+    if (node instanceof HTMLElement || node instanceof SVGElement || node instanceof Comment || node instanceof Text || node === null) {
+      renderSingle(newNodes[i], node, parent, isSvg, hydrating, config)
+    }
   }
 }
 
@@ -288,7 +296,7 @@ const renderSingle = (vNode, _node, parent, isSvg, hydrating, config) => {
     updateAttributes(vNode, keyedNode, parent, hydrating, config)
     // Call renderArray with children
     if (!vNode?.attributes?.opaque && (vNode.childNodes.length || keyedNode.childNodes.length)) {
-      renderArray(vNode.childNodes, keyedNode, isSvg || vNode.nodeName === 'svg', hydrating, config)
+      renderArray(vNode, vNode.childNodes, keyedNode, isSvg || vNode.nodeName === 'svg', hydrating, config)
     }
     return
   }
@@ -310,8 +318,8 @@ const renderSingle = (vNode, _node, parent, isSvg, hydrating, config) => {
         newNode: node
       }
     }))
-  } else if (_node instanceof Text && _node.data !== vNode.data) {
-    _node.data = vNode.data || ''
+  } else if ((_node instanceof Text || _node instanceof Comment) && _node.data !== vNode.data) {
+    !hydrating && (_node.data = vNode.data || '')
     node = _node
   } else {
     node = _node
@@ -324,7 +332,7 @@ const renderSingle = (vNode, _node, parent, isSvg, hydrating, config) => {
   (node instanceof HTMLElement || node instanceof SVGElement) && updateAttributes(vNode, node, parent, hydrating, config)
   // Call renderArray with children
   if ((node instanceof HTMLElement || node instanceof SVGElement) && !vNode?.attributes?.opaque && (vNode.childNodes.length || node.childNodes.length)) {
-    renderArray(vNode.childNodes, node, isSvg || vNode.nodeName === 'svg', hydrating, config)
+    renderArray(vNode, vNode.childNodes, node, isSvg || vNode.nodeName === 'svg', hydrating, config)
   }
 }
 
@@ -346,7 +354,6 @@ const render = (
   }
   if (!(parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof Document)) {
     // TODO: create error classes for skruv, inherit from one single error class
-    console.log(parent)
     throw new Error('Skruv: Parent of wrong type')
   }
   const renderWaiting = new Set()
