@@ -72,6 +72,21 @@ export const SkruvIterableType = (async function * () { yield Vnode })()
  */
 export const h = (nodeName, attributes = {}, ...childNodes) => ({ nodeName, attributes: attributes || {}, childNodes })
 
+
+/**
+ * @param {VnodeAtrributes} [attributes={}]
+ * @param {...ChildNode} childNodes
+ * @returns {Vnode}
+ */
+export const comment = (attributes = {}, ...childNodes) => h('#comment', attributes, ...childNodes)
+
+/**
+ * @param {VnodeAtrributes} [attributes={}]
+ * @param {...ChildNode} childNodes
+ * @returns {Vnode}
+ */
+export const raw = (attributes = {}, ...childNodes) => h('#raw', attributes, ...childNodes)
+
 // HTML
 
 /**
