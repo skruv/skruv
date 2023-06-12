@@ -26,17 +26,10 @@ No-dependency, no-build, small JS framework/view-library.
 ## Examples
 
 ### Basic todo-list
-
-<iframe
-  src="./examples/todo/index.html"
-  style="width:100%"
-  frameborder="0"
-  onload="this.style.height = `${this.contentWindow.document.documentElement.scrollHeight + 100}px`"
-></iframe>
-
+{% include_relative examples/todo/index.md %}
 ```js
 import { createState, elements, render } from 'https://skruv.github.io/skruv/skruv.js'
-const { h, css } = elements
+const { css, html, head, title, script, meta, body, main, h1, form, input, button, ol, li, a } = elements
 
 const state = createState({
   todos: ['Write todos']
@@ -60,39 +53,37 @@ input {
   flex: 1;
 }
 `
-
 render(
-  h('html', { lang: 'en-US' },
-    h('head', {},
-      h('title', {}, state.todos.getGenerator(0)),
-      h('script', { src: './index.js', type: 'module' }),
-      h('meta', { name: 'viewport', content: 'width=device-width, initial-scale=1' }),
+  html({ lang: 'en-US' },
+    head({},
+      title({}, state.todos.getGenerator(0)),
+      script({ src: './index.js', type: 'module' }),
+      meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
       styles
     ),
-    h('body', {},
-      h('main', {},
-        h('h1', {}, state.todos.getGenerator(0)),
-        h('form',
-          {
-            onsubmit: e => {
-              e.preventDefault()
-              state.todos.unshift(new FormData(e.target).get('todo'))
-              e.target.reset()
-            }
-          },
-          h('input', {
-            type: 'text',
-            name: 'todo'
-          }),
-          h('button', {}, 'New!')
+    body({},
+      main({},
+        h1({}, state.todos.getGenerator(0)),
+        form({
+          onsubmit: e => {
+            e.preventDefault()
+            state.todos.unshift(new FormData(e.target).get('todo'))
+            e.target.reset()
+          }
+        },
+        input({
+          type: 'text',
+          name: 'todo'
+        }),
+        button({}, 'New!')
         ),
-        async function* () {
+        async function * () {
           for await (const currentState of state) {
-            yield h('ol', {},
-              currentState.todos.map((todo, i) => h('li', {},
+            yield ol({},
+              currentState.todos.map((todo, i) => li({},
                 todo,
                 ' ',
-                h('a', {
+                a({
                   href: '#',
                   onclick: () => {
                     currentState.todos.splice(i, 1)
@@ -131,14 +122,7 @@ There are three main parts of skruv:
   * There is also a jsx-runtime that works with esbuild if you want to use jsx instead of the element helpers.
 
 ## Example using scopedcss and html helpers
-
-<iframe
-  src="./examples/scopedcss-htmlhelpers/index.html"
-  style="width:100%"
-  frameborder="0"
-  onload="this.style.height = `${this.contentWindow.document.documentElement.scrollHeight + 100}px`"
-></iframe>
-
+{% include_relative examples/scopedcss-htmlhelpers/index.md %}
 ```js
 import { elements, render } from 'https://skruv.github.io/skruv/skruv.js'
 const { scopedcss, html, head, meta, body, div, p } = elements
