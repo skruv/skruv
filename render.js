@@ -103,6 +103,9 @@ const updateAttributes = (vNode, node, parent, hydrating, config) => {
           } else {
             !val.hydrating && !!val.result && typeof val.result !== 'function' && handleSpecialAttributes(node, key, val.result)
             !val.hydrating && node.setAttribute && node.setAttribute(key, val.result?.toString() || '')
+            // Support complex data passing for custom elements
+            // @ts-ignore
+            if (typeof val.result === 'object') { node[key] = val.result }
             config?.renderWaiting?.delete(val)
             config?.checkRender?.()
           }
@@ -129,6 +132,9 @@ const updateAttributes = (vNode, node, parent, hydrating, config) => {
       if (value !== false && node.getAttribute?.(key) !== value && !hydrating) {
         // These need to be set directly to have the desired effect.
         !!value && typeof value !== 'function' && typeof value !== 'object' && handleSpecialAttributes(node, key, value)
+        // Support complex data passing for custom elements
+        // @ts-ignore
+        if (typeof value === 'object') { node[key] = value }
         value && node.setAttribute && node.setAttribute(key, value.toString())
       }
       if (value === false && node.getAttribute?.(key) && !hydrating) {
