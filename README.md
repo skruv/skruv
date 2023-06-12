@@ -31,7 +31,7 @@ No-dependency, no-build, small JS framework/view-library.
   src="./examples/todo/index.html"
   style="width:100%"
   frameborder="0"
-  onload="this.style.height = `${this.contentWindow.document.documentElement.scrollHeight}px`"
+  onload="this.style.height = `${this.contentWindow.document.documentElement.scrollHeight + 100}px`"
 ></iframe>
 
 ```js
@@ -130,10 +130,10 @@ There are three main parts of skruv:
 ## Example using scopedcss and html helpers
 
 <iframe
-  src="./examples/todo/scopedcss-htmlhelpers.html"
+  src="./examples/scopedcss-htmlhelpers/index.html"
   style="width:100%"
   frameborder="0"
-  onload="this.style.height = `${this.contentWindow.document.documentElement.scrollHeight}px`"
+  onload="this.style.height = `${this.contentWindow.document.documentElement.scrollHeight + 100}px`"
 ></iframe>
 
 ```js
