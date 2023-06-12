@@ -23,6 +23,8 @@ export const VnodeAtrributeGenerator = (async function * () { yield '' })()
 /**
  * @typedef {Partial<GlobalEventHandlers> & Partial<SkruvEvents> & Object.<string, (string | boolean | function | number | undefined | null | Object | AsyncGenerator<string | boolean | number | undefined | null> | AsyncIterable<string | boolean | number | undefined | null>)>} VnodeAtrributes
  */
+/** @type {VnodeAtrributes} */
+export const VnodeAtrributes = {}
 
 /**
  * @typedef Vnode

@@ -16,6 +16,7 @@
     "skruv.js",
     "render.js",
     "elements.js",
+    "jsx-runtime.js",
     "createState.js",
   ]
 }
