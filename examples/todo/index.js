@@ -1,5 +1,5 @@
 import { createState, elements, render } from 'https://skruv.github.io/skruv/skruv.js'
-const { h, css } = elements
+const { css, html, head, title, script, meta, body, main, h1, form, input, button, ol, li, a } = elements
 
 const state = createState({
   todos: ['Write todos']
@@ -23,44 +23,43 @@ input {
   flex: 1;
 }
 `
-
 render(
-  h('html', { lang: 'en-US' },
-    h('head', {},
-      h('title', {}, state.todos.getGenerator(0)),
-      h('script', { src: './index.js', type: 'module' }),
-      h('meta', { name: 'viewport', content: 'width=device-width, initial-scale=1' }),
+  html({ lang: 'en-US' },
+    head({},
+      title({}, state.todos.getGenerator(0)),
+      script({ src: './index.js', type: 'module' }),
+      meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
       styles
     ),
-    h('body', {},
-      h('main', {},
-        h('h1', {}, state.todos.getGenerator(0)),
-        h('form', {
+    body({},
+      main({},
+        h1({}, state.todos.getGenerator(0)),
+        form({
           onsubmit: e => {
             e.preventDefault()
             state.todos.unshift(new FormData(e.target).get('todo'))
             e.target.reset()
           }
         },
-        h('input', {
+        input({
           type: 'text',
           name: 'todo'
         }),
-        h('button', {}, 'New!')
+        button({}, 'New!')
         ),
         async function * () {
           for await (const currentState of state) {
-            yield h('ol', {},
-              currentState.todos.map((todo, i) =>
-                h('li', {}, todo, ' ',
-                  h('a', {
-                    href: '#',
-                    onclick: () => {
-                      currentState.todos.splice(i, 1)
-                    }
-                  }, 'x')
-                )
-              )
+            yield ol({},
+              currentState.todos.map((todo, i) => li({},
+                todo,
+                ' ',
+                a({
+                  href: '#',
+                  onclick: () => {
+                    currentState.todos.splice(i, 1)
+                  }
+                }, 'x')
+              ))
             )
           }
         }
