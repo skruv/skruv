@@ -112,20 +112,22 @@ There are three main parts of skruv:
 
 * createState
   * createState takes in a object and returns a [proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) which is also an [async generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).
-  * you modify the state by using normal methods (including things like [`delete`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete), [`splice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice), etc.) or setters on it.
-  * where you want to subscribe to state changes you use [for-await-of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of).
+  * You modify the state by using normal methods (including things like [`delete`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete), [`splice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice), etc.) or setters on it.
+  * Where you want to subscribe to state changes you use [for-await-of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of).
     * You can subscribe to subobjects with `for await (const bar of state.foo.bar)`.
-  * as a shortcut you can call getGenerator(key) to subscribe to and ouput a single value.
+  * As a shortcut you can call getGenerator(key) to subscribe to and ouput a single value.
+    * This also works as a way to output the value in a attribute.
 * render
-  * render takes a structure created by elements and optionally which DOM node to write to.
-    * if no DOM node is given it will render the whole document like above.
+  * Render takes a structure created by elements and optionally which DOM node to write to.
+    * If no DOM node is given it will render the whole document like above.
 * elements
-  * elements has the function `h` for generating HTML/SVG elements.
-  * an elements children can be functions returning other elements, arrays of elements, generators yielding elements, or just plain elements.
-  * besides the normal [DOM events](https://developer.mozilla.org/en-US/docs/Web/Events) like `onclick` there are `oncreate` and `onremove` which are called when skruv adds/removes the elements.
-  * it also has [tagged template functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) for creating `css` style elements and `scopedcss` for creating scoped css.
-    * scopedcss behaves like the (unfortunatley) removed [HTML feature](https://developer.mozilla.org/en-US/docs/Web/API/HTMLStyleElement/scoped)
-  * it also has helpers for each HTML/SVG element so you can get a h1 element helper by doing `const { h1 } = elements`.
+  * Elements has the function `h` for generating HTML/SVG elements.
+  * An elements children can be functions returning other elements, arrays of elements, generators yielding elements, plain elements, strings.
+  * Besides the normal [DOM events](https://developer.mozilla.org/en-US/docs/Web/Events) like `onclick` there are `oncreate` and `onremove` which are called when skruv adds/removes the elements.
+  * It also has [tagged template functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) for creating `css` style elements and `scopedcss` for creating scoped css.
+    * `scopedcss` behaves like the (unfortunately) removed [HTML feature](https://developer.mozilla.org/en-US/docs/Web/API/HTMLStyleElement/scoped)
+  * It also has helpers for each HTML/SVG element so you can get a h1 element helper by doing `const { h1 } = elements`.
+  * There is also a jsx-runtime that works with esbuild if you want to use jsx instead of the element helpers.
 
 ## Example using scopedcss and html helpers
 
