@@ -16,10 +16,6 @@
         "ignoreUrls": true
       }
     ],
-    "function-call-argument-newline": [
-      "error",
-      "consistent"
-    ],
     "array-element-newline": [
       "error",
       "consistent"

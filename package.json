@@ -25,6 +25,7 @@
     "createState.js",
     "render.js",
     "skruv.js",
+    "jsx-runtime.js",
     "skruv.min.js",
     "skruv.min.js.map",
     "types/skruv.d.ts",
