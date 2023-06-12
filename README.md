@@ -21,7 +21,8 @@ No-dependency, no-build, small JS framework/view-library.
 * Fast enough for most normal usecases: [benchmark](https://krausest.github.io/js-framework-benchmark/index.html)
 * Supports async generators as components
 * Built in CSS scoping based on <https://github.com/samthor/scoped>
-<!-- * Works with web components: [tests](https://custom-elements-everywhere.com/libraries/skruv/results/results.html) -->
+* Optionally supports JSX
+<!-- * Works with web components: [tests at custom-elements-everywhere](https://custom-elements-everywhere.com/libraries/skruv/results/results.html) -->
 
 ## Examples
 
