@@ -121,8 +121,8 @@ There are three main parts of skruv:
   * It also has helpers for each HTML/SVG element so you can get a h1 element helper by doing `const { h1 } = elements`.
   * There is also a jsx-runtime that works with esbuild if you want to use jsx instead of the element helpers.
 
-## Example using scopedcss and html helpers
-{% include_relative examples/scopedcss-htmlhelpers/index.md %}
+## Example using scopedcss
+{% include_relative examples/scopedcss/index.md %}
 ```js
 import { elements, render } from 'https://skruv.github.io/skruv/skruv.js'
 const { scopedcss, html, head, meta, body, div, p } = elements
@@ -146,7 +146,7 @@ p {
 render(
   html({ lang: 'en-US' },
     head({},
-      title({}, 'scopedcss, HTML helpers'),
+      title({}, 'scopedcss'),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
       rootStyles
     ),
