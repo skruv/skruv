@@ -38,8 +38,8 @@
     "types/createState.d.ts.map"
   ],
   "scripts": {
-    "build": "esbuild skruv.js --bundle --sourcemap --minify --outfile=skruv.min.js --format=esm",
-    "lint": "eslint . --ext js,json",
+    "build": "esbuild skruv.js --bundle --sourcemap --minify --outfile=skruv.min.js --format=esm && (cd examples/jsx && esbuild  --sourcemap --bundle --minify --format=esm --jsx-import-source=../../ --jsx=automatic index.jsx --outfile=index.js)",
+    "lint": "eslint . --ext js,jsx,json",
     "pre-release": "npm update && npm run test && npm run lint -- --fix && npm run typecheck && npm run build",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --env=jsdom --no-cache --passWithNoTests",
     "typecheck": "tsc"
