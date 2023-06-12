@@ -38,10 +38,11 @@ export const jsxs = (nodeName, attributes = {}) => {
   if (nodeName === Fragment && attributes.children) { return attributes.children }
   if (nodeName === Fragment) { return [] }
   const { children, ...attrs } = attributes
-  Object.keys(attrs).forEach(e => {
-    attrs[kebabize(e)] = attrs[e]
-    delete attrs[e]
-  })
+  Object.keys(attrs).filter(e => e !== kebabize(e))
+    .forEach(e => {
+      attrs[kebabize(e)] = attrs[e]
+      delete attrs[e]
+    })
   if (attrs['class-name']) {
     attrs.class = attrs['class-name']
     delete attrs['class-name']

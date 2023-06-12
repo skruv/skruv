@@ -1,6 +1,6 @@
 {
   "name": "skruv",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "No-dependency, no-build, small JS framework",
   "keywords": [],
   "bugs": {
@@ -41,7 +41,7 @@
     "types/createState.d.ts.map"
   ],
   "scripts": {
-    "build": "esbuild skruv.js --bundle --sourcemap --minify --outfile=skruv.min.js --format=esm && (cd examples/jsx && esbuild  --sourcemap --bundle --minify --format=esm --jsx-import-source=../../ --jsx=automatic index.jsx --outfile=index.js)",
+    "build": "esbuild skruv.js --bundle --sourcemap --minify --outfile=skruv.min.js --format=esm && (cd examples/jsx && esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js)",
     "lint": "eslint . --ext js,jsx,json",
     "pre-release": "npm update && npm run test && npm run lint -- --fix && npm run typecheck && npm run build",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --env=jsdom --no-cache --passWithNoTests",
