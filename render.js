@@ -106,6 +106,8 @@ const updateAttributes = (vNode, node, parent, hydrating, config) => {
             config?.renderWaiting?.delete(val)
             config?.checkRender?.()
           }
+          // In SSR we want to break immediately to prevent memory leaks of running generators
+          if (config.isSkruvSSR) { return false }
           return true
         }
         updateOnChange(val, rerender)
@@ -213,6 +215,12 @@ const sanitizeTypes = (vNodeParent, vNodeArray, parent, isSvg, hydrating, config
           // @ts-ignore
           if (vNodeIterator?.result?.attributes?.['data-skruv-skruv-finished'] !== false) { config.renderWaiting?.delete(vNodeIterator) }
           config.checkRender?.()
+          // In SSR we want to break immediately to prevent memory leaks of running generators
+          if (
+            config.isSkruvSSR &&
+            // @ts-ignore
+            vNodeIterator?.result?.attributes?.['data-skruv-skruv-finished'] !== false
+          ) { return false }
           return true
         }
         updateOnChange(vNodeIterator, rerender)
