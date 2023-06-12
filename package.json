@@ -15,8 +15,11 @@
   "author": "Svante Richter",
   "type": "module",
   "exports": {
-    "import": "./skruv.js",
-    "default": "./skruv.js"
+    ".": {
+      "import": "./skruv.js",
+      "default": "./skruv.js"
+    },
+    "./jsx-runtime": "./jsx-runtime.js"
   },
   "main": "skruv.js",
   "types": "./types/skruv.js",
