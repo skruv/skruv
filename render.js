@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-/* global CustomEvent HTMLInputElement HTMLOptionElement HTMLElement SVGElement Text Document */
+/* global CustomEvent HTMLInputElement HTMLOptionElement HTMLElement SVGElement Text Comment Document */
 /** @typedef {typeof import("./elements.js").Vnode} Vnode */
 /** @typedef {typeof import("./elements.js").ChildNodes} ChildNodes */
 /** @typedef {typeof import("./elements.js").SkruvIterableType} SkruvIterableType */

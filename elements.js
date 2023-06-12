@@ -72,7 +72,6 @@ export const SkruvIterableType = (async function * () { yield Vnode })()
  */
 export const h = (nodeName, attributes = {}, ...childNodes) => ({ nodeName, attributes: attributes || {}, childNodes })
 
-
 /**
  * @param {VnodeAtrributes} [attributes={}]
  * @param {...ChildNode} childNodes

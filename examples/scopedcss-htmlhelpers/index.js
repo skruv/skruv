@@ -1,5 +1,5 @@
 import { elements, render } from 'https://skruv.github.io/skruv/skruv.js'
-const { scopedcss, html, head, meta, body, div, p } = elements
+const { scopedcss, css, title, html, head, meta, body, div, p } = elements
 
 const rootStyles = css`
 :root {
