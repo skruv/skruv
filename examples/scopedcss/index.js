@@ -20,7 +20,7 @@ p {
 render(
   html({ lang: 'en-US' },
     head({},
-      title({}, 'scopedcss, HTML helpers'),
+      title({}, 'scopedcss'),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
       rootStyles
     ),
