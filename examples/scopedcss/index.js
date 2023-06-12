@@ -1,4 +1,4 @@
-import { elements, render } from 'https://skruv.github.io/skruv/skruv.js'
+import { elements, render } from 'https://skruv.io/skruv.js'
 const { scopedcss, css, title, html, head, meta, body, div, p } = elements
 
 const rootStyles = css`

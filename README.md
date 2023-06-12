@@ -29,7 +29,7 @@ No-dependency, no-build, small JS framework/view-library.
 ### Basic todo-list
 {% include_relative examples/todo/index.md %}
 ```js
-import { createState, elements, render } from 'https://skruv.github.io/skruv/skruv.js'
+import { createState, elements, render } from 'https://skruv.io/skruv.js'
 const { css, html, head, title, script, meta, body, main, h1, form, input, button, ol, li, a } = elements
 
 const state = createState({
@@ -125,7 +125,7 @@ There are three main parts of skruv:
 ## Example using scopedcss
 {% include_relative examples/scopedcss/index.md %}
 ```js
-import { elements, render } from 'https://skruv.github.io/skruv/skruv.js'
+import { elements, render } from 'https://skruv.io/skruv.js'
 const { scopedcss, html, head, meta, body, div, p } = elements
 
 const rootStyles = css`

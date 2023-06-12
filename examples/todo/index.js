@@ -1,4 +1,4 @@
-import { createState, elements, render } from 'https://skruv.github.io/skruv/skruv.js'
+import { createState, elements, render } from 'https://skruv.io/skruv.js'
 const { css, html, head, title, script, meta, body, main, h1, form, input, button, ol, li, a } = elements
 
 const state = createState({
