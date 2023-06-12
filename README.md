@@ -119,13 +119,14 @@ There are three main parts of skruv:
     * This also works as a way to output the value in a attribute.
 * render
   * Render takes a structure created by elements and optionally which DOM node to write to.
-    * If no DOM node is given it will render the whole document like above.
+    * If no DOM node is given it will render the whole document, like in the examples.
 * elements
   * Elements has the function `h` for generating HTML/SVG elements.
   * An elements children can be functions returning other elements, arrays of elements, generators yielding elements, plain elements, strings.
   * Besides the normal [DOM events](https://developer.mozilla.org/en-US/docs/Web/Events) like `onclick` there are `oncreate` and `onremove` which are called when skruv adds/removes the elements.
   * It also has [tagged template functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) for creating `css` style elements and `scopedcss` for creating scoped css.
     * `scopedcss` behaves like the (unfortunately) removed [HTML feature](https://developer.mozilla.org/en-US/docs/Web/API/HTMLStyleElement/scoped)
+    * Use [es6-string-css](https://marketplace.visualstudio.com/items?itemName=bashmish.es6-string-css) for syntax highlighting in vscode.
   * It also has helpers for each HTML/SVG element so you can get a h1 element helper by doing `const { h1 } = elements`.
   * There is also a jsx-runtime that works with esbuild if you want to use jsx instead of the element helpers.
 
