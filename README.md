@@ -22,6 +22,7 @@ No-dependency, no-build, small JS framework/view-library.
 * Supports async generators as components
 * Built in CSS scoping based on <https://github.com/samthor/scoped>
 * Optionally supports JSX
+* Works with web components: [PR for tests at custom-elements-everywhere](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
 <!-- * Works with web components: [tests at custom-elements-everywhere](https://custom-elements-everywhere.com/libraries/skruv/results/results.html) -->
 
 ## Examples
@@ -30,7 +31,7 @@ No-dependency, no-build, small JS framework/view-library.
 {% include_relative examples/todo/index.md %}
 ```js
 import { createState, elements, render } from 'https://skruv.io/skruv.js'
-const { css, html, head, title, script, meta, body, main, h1, form, input, button, ol, li, a } = elements
+const { css, html, head, title, script, meta, style, body, main, h1, form, input, button, ol, li, a } = elements
 
 const state = createState({
   todos: ['Write todos']
@@ -60,7 +61,7 @@ render(
       title({}, state.todos.getGenerator(0)),
       script({ src: './index.js', type: 'module' }),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      styles
+      style({}, styles)
     ),
     body({},
       main({},
@@ -116,9 +117,9 @@ There are three main parts of skruv:
   * Elements has the function `h` for generating HTML/SVG elements.
   * An elements children can be functions returning other elements, arrays of elements, generators yielding elements, plain elements, strings.
   * Besides the normal [DOM events](https://developer.mozilla.org/en-US/docs/Web/Events) like `onclick` there are `oncreate` and `onremove` which are called when skruv adds/removes the elements.
-  * It also has [tagged template functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) for creating `css` style elements and `scopedcss` for creating scoped css.
-    * `scopedcss` behaves like the (unfortunately) removed [HTML feature](https://developer.mozilla.org/en-US/docs/Web/API/HTMLStyleElement/scoped)
+  * has [tagged template functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) `css` to make it easier to write & syntax highlight css
     * Use [es6-string-css](https://marketplace.visualstudio.com/items?itemName=bashmish.es6-string-css) for syntax highlighting in vscode.
+  * `style({scoped: true})` and `<style scoped>` behaves like the (unfortunately) removed [HTML feature](https://developer.mozilla.org/en-US/docs/Web/API/HTMLStyleElement/scoped)
   * It also has helpers for each HTML/SVG element so you can get a h1 element helper by doing `const { h1 } = elements`.
   * There is also a jsx-runtime that works with esbuild if you want to use jsx instead of the element helpers.
 
@@ -126,7 +127,7 @@ There are three main parts of skruv:
 {% include_relative examples/scopedcss/index.md %}
 ```js
 import { elements, render } from 'https://skruv.io/skruv.js'
-const { scopedcss, html, head, meta, body, div, p } = elements
+const { css, title, html, head, meta, style, body, div, p } = elements
 
 const rootStyles = css`
 :root {
@@ -134,7 +135,7 @@ const rootStyles = css`
 }
 `
 
-const styles = scopedcss`
+const styles = css`
 :scope {
   border: 1px solid;
 }
@@ -149,11 +150,11 @@ render(
     head({},
       title({}, 'scopedcss'),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      rootStyles
+      style({}, rootStyles)
     ),
     body({},
       div({},
-        styles,
+        style({ scoped: true }, styles),
         p({}, 'blue text')
       ),
       div({},
@@ -169,8 +170,8 @@ render(
 Same as above, but using JSX. Compiled with esbuild:
 `esbuild  --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js` 
 ```jsx
-import { render, elements } from 'skruv'
-const {css, scopedcss} = elements
+import { elements, render } from 'skruv'
+const { css } = elements
 
 const rootStyles = css`
 :root {
@@ -178,7 +179,7 @@ const rootStyles = css`
 }
 `
 
-const styles = scopedcss`
+const styles = css`
 :scope {
   border: 1px solid;
 }
@@ -192,12 +193,12 @@ render(
   <html lang="en-US">
     <head>
       <title>jsx</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1"/>,
-      {rootStyles}
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <style>{rootStyles}</style>
     </head>
     <body>
       <div>
-        {styles}
+        <style scoped>{styles}</style>
         <p>blue text</p>
       </div>
       <div>

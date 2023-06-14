@@ -1,5 +1,5 @@
 import { elements, render } from 'https://skruv.io/skruv.js'
-const { scopedcss, css, title, html, head, meta, body, div, p } = elements
+const { css, title, html, head, meta, style, body, div, p } = elements
 
 const rootStyles = css`
 :root {
@@ -7,7 +7,7 @@ const rootStyles = css`
 }
 `
 
-const scopedStyles = scopedcss`
+const scopedStyles = css`
 :scope {
   border: 1px solid;
 }
@@ -22,11 +22,11 @@ render(
     head({},
       title({}, 'scopedcss'),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      rootStyles
+      style({}, rootStyles)
     ),
     body({},
       div({},
-        scopedStyles,
+        style({ scoped: true }, scopedStyles),
         p({}, 'blue text')
       ),
       div({},

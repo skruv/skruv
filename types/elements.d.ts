@@ -280,8 +280,7 @@ export function tspan(attributes?: VnodeAtrributes | undefined, ...childNodes: C
 export function unknown(attributes?: VnodeAtrributes | undefined, ...childNodes: ChildNode[]): Vnode;
 export function use(attributes?: VnodeAtrributes | undefined, ...childNodes: ChildNode[]): Vnode;
 export function view(attributes?: VnodeAtrributes | undefined, ...childNodes: ChildNode[]): Vnode;
-export function css(strings: TemplateStringsArray, ...keys: (string | number | boolean | undefined)[]): Vnode;
-export function scopedcss(strings: TemplateStringsArray, ...keys: (string | number | boolean | undefined)[]): Vnode;
+export function css(strings: TemplateStringsArray, ...keys: (string | number | boolean | undefined)[]): string;
 export type SkruvAdditionalIterableAttributeProperties = {
     booted?: boolean | undefined;
     hydrating?: boolean | undefined;

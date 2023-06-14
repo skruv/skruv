@@ -1,5 +1,5 @@
 import { createState, elements, render } from 'https://skruv.io/skruv.js'
-const { css, html, head, title, script, meta, body, main, h1, form, input, button, ol, li, a } = elements
+const { css, html, head, title, script, meta, style, body, main, h1, form, input, button, ol, li, a } = elements
 
 const state = createState({
   todos: ['Write todos']
@@ -29,7 +29,7 @@ render(
       title({}, state.todos.getGenerator(0)),
       script({ src: './index.js', type: 'module' }),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      styles
+      style({}, styles)
     ),
     body({},
       main({},
