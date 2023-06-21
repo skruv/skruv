@@ -60,10 +60,14 @@ export const ChildNode = Vnode
  * @property {Boolean} [hydrating]
  *
  * @typedef {(AsyncGenerator<Vnode|Function|String|Boolean|Number|ChildNodes> | AsyncIterable<Vnode|Function|String|Boolean|Number|ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
+ * @typedef {(Promise<Vnode|Function|String|Boolean|Number|ChildNodes> | function(): Promise<Vnode|Function|String|Boolean|Number|ChildNodes>) & SkruvAdditionalIterableProperties} SkruvPromiseOrAsyncFunction
  */
 
 /** @type {SkruvIterableType} */
 export const SkruvIterableType = (async function * () { yield Vnode })()
+
+/** @type {SkruvPromiseOrAsyncFunction} */
+export const SkruvPromiseOrAsyncFunctionType = new Promise(resolve => resolve(Vnode))
 
 /**
  * @param {String} nodeName

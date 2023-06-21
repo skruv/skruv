@@ -2,9 +2,10 @@ export default render;
 export type Vnode = typeof import("./elements.js").Vnode;
 export type ChildNodes = typeof import("./elements.js").ChildNodes;
 export type SkruvIterableType = typeof import("./elements.js").SkruvIterableType;
+export type SkruvPromiseOrAsyncFunctionType = typeof import("./elements.js").SkruvPromiseOrAsyncFunctionType;
 export type VnodeAtrributeGenerator = typeof import("./elements.js").VnodeAtrributeGenerator;
 export type RenderConfig = {
-    renderWaiting: Set<VnodeAtrributeGenerator | SkruvIterableType>;
+    renderWaiting: Set<VnodeAtrributeGenerator | SkruvIterableType | SkruvPromiseOrAsyncFunctionType>;
     checkRender: Function;
     isSkruvSSR: boolean;
 };

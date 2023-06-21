@@ -62,9 +62,12 @@ export type SkruvIterableType = (AsyncGenerator<Vnode | Function | string | bool
  * @property {Boolean} [hydrating]
  *
  * @typedef {(AsyncGenerator<Vnode|Function|String|Boolean|Number|ChildNodes> | AsyncIterable<Vnode|Function|String|Boolean|Number|ChildNodes>) & SkruvAdditionalIterableProperties} SkruvIterableType
+ * @typedef {(Promise<Vnode|Function|String|Boolean|Number|ChildNodes> | function(): Promise<Vnode|Function|String|Boolean|Number|ChildNodes>) & SkruvAdditionalIterableProperties} SkruvPromiseOrAsyncFunction
  */
 /** @type {SkruvIterableType} */
 export const SkruvIterableType: SkruvIterableType;
+/** @type {SkruvPromiseOrAsyncFunction} */
+export const SkruvPromiseOrAsyncFunctionType: SkruvPromiseOrAsyncFunction;
 export function h(nodeName: string, attributes?: VnodeAtrributes | undefined, ...childNodes: ChildNode[]): Vnode;
 export function comment(attributes?: VnodeAtrributes | undefined, ...childNodes: ChildNode[]): Vnode;
 export function raw(attributes?: VnodeAtrributes | undefined, ...childNodes: ChildNode[]): Vnode;
@@ -297,4 +300,5 @@ export type SkruvAdditionalIterableProperties = {
     booted?: boolean | undefined;
     hydrating?: boolean | undefined;
 };
+export type SkruvPromiseOrAsyncFunction = (Promise<Vnode | Function | string | boolean | number | (ChildNode | ChildNode[])[]> | (() => Promise<Vnode | Function | string | boolean | number | (ChildNode | ChildNode[])[]>)) & SkruvAdditionalIterableProperties;
 //# sourceMappingURL=elements.d.ts.map

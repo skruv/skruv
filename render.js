@@ -3,6 +3,7 @@
 /** @typedef {typeof import("./elements.js").Vnode} Vnode */
 /** @typedef {typeof import("./elements.js").ChildNodes} ChildNodes */
 /** @typedef {typeof import("./elements.js").SkruvIterableType} SkruvIterableType */
+/** @typedef {typeof import("./elements.js").SkruvPromiseOrAsyncFunctionType} SkruvPromiseOrAsyncFunctionType */
 /** @typedef {typeof import("./elements.js").VnodeAtrributeGenerator} VnodeAtrributeGenerator */
 
 const styleMap = new Map()
@@ -203,7 +204,7 @@ const keyMap = new WeakMap()
 
 /**
  * @typedef {Object} RenderConfig
- * @property {Set<VnodeAtrributeGenerator | SkruvIterableType>} renderWaiting
+ * @property {Set<VnodeAtrributeGenerator | SkruvIterableType | SkruvPromiseOrAsyncFunctionType>} renderWaiting
  * @property {Function} checkRender
  * @property {Boolean} isSkruvSSR
  */
@@ -388,40 +389,72 @@ const sanitizeTypes = (vNodeParent, vNodeArray, parent, isSvg, hydrating, config
         data: vNode.toString()
       }
     } else if (
-      // @ts-ignore
-      vNode?.[Symbol.asyncIterator] ||
-      (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')
+        // @ts-ignore
+        vNode?.[Symbol.asyncIterator] ||
+        (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')
     ) {
       const vNodeIterator = (/** @type {SkruvIterableType} */ (vNode))
       skruvActiveGenerators.get(parent) && skruvActiveGenerators.get(parent).add(vNodeIterator)
       vNodeIterator.hydrating = hydrating
       if (!vNodeIterator.booted) {
-        config.renderWaiting?.add(vNodeIterator)
-        vNodeIterator.booted = true
-        const rerender = () => {
-          // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
-          if (
-            !skruvActiveGenerators.get(parent) ||
-            (skruvActiveGenerators.get(parent) && !skruvActiveGenerators.get(parent).has(vNodeIterator))
-          ) {
-            config.renderWaiting?.delete(vNodeIterator)
-            return false
-          }
-          renderArray(vNodeParent, actualVNodeArray, parent, isSvg, !!vNodeIterator.hydrating, config)
-          // @ts-ignore
-          if (vNodeIterator?.result?.attributes?.['data-skruv-skruv-finished'] !== false) { config.renderWaiting?.delete(vNodeIterator) }
-          config.checkRender?.()
-          // In SSR we want to break immediately to prevent memory leaks of running generators
-          if (
-            config.isSkruvSSR &&
+          config.renderWaiting?.add(vNodeIterator)
+          vNodeIterator.booted = true
+          const rerender = () => {
+            // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
+            if (
+              !skruvActiveGenerators.get(parent) ||
+              (skruvActiveGenerators.get(parent) && !skruvActiveGenerators.get(parent).has(vNodeIterator))
+            ) {
+              config.renderWaiting?.delete(vNodeIterator)
+              return false
+            }
+            renderArray(vNodeParent, actualVNodeArray, parent, isSvg, !!vNodeIterator.hydrating, config)
             // @ts-ignore
-            vNodeIterator?.result?.attributes?.['data-skruv-skruv-finished'] !== false
-          ) { return false }
-          return true
-        }
-        updateOnChange(vNodeIterator, rerender)
+            if (vNodeIterator?.result?.attributes?.['data-skruv-skruv-finished'] !== false) { config.renderWaiting?.delete(vNodeIterator) }
+            config.checkRender?.()
+            // In SSR we want to break immediately to prevent memory leaks of running generators
+            if (
+              config.isSkruvSSR &&
+              // @ts-ignore
+              vNodeIterator?.result?.attributes?.['data-skruv-skruv-finished'] !== false
+            ) { return false }
+            return true
+          }
+          updateOnChange(vNodeIterator, rerender)
       }
       return vNodeIterator.result
+    } else if (
+      // @ts-ignore
+      (typeof vNode === 'object' && vNode.then instanceof Function) ||
+      (typeof vNode === 'function' && vNode.constructor.name === 'AsyncFunction')
+    ) {
+      const vNodePromiseAsyncFunction = (/** @type {SkruvPromiseOrAsyncFunctionType} */ (vNode))
+      skruvActiveGenerators.get(parent) && skruvActiveGenerators.get(parent).add(vNodePromiseAsyncFunction)
+      vNodePromiseAsyncFunction.hydrating = hydrating
+      if (!vNodePromiseAsyncFunction.booted) {
+          config.renderWaiting?.add(vNodePromiseAsyncFunction)
+          vNodePromiseAsyncFunction.booted = true
+          const rerender = () => {
+            // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
+            if (
+              !skruvActiveGenerators.get(parent) ||
+              (skruvActiveGenerators.get(parent) && !skruvActiveGenerators.get(parent).has(vNodePromiseAsyncFunction))
+            ) {
+              config.renderWaiting?.delete(vNodePromiseAsyncFunction)
+              return false
+            }
+            renderArray(vNodeParent, actualVNodeArray, parent, isSvg, !!vNodePromiseAsyncFunction.hydrating, config)
+            // @ts-ignore
+            if (vNode?.result?.attributes?.['data-skruv-skruv-finished'] !== false) { config.renderWaiting?.delete(vNode) }
+            config.checkRender?.()
+          }
+          (
+            (typeof vNodePromiseAsyncFunction === 'function')
+              ? vNodePromiseAsyncFunction()
+              : vNodePromiseAsyncFunction
+          ).then(res => { vNodePromiseAsyncFunction.result = res; rerender() })
+      }
+      return vNodePromiseAsyncFunction.result
     } else if (typeof vNode === 'function') {
       return vNode()
       // @ts-ignore
