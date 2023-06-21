@@ -264,6 +264,7 @@ const updateAttributes = (vNode, node, parent, hydrating, config) => {
         .trim())
       continue
     }
+    // TODO: Add promise support
     if (
       // @ts-ignore
       value?.[Symbol.asyncIterator] ||
@@ -393,6 +394,7 @@ const sanitizeTypes = (vNodeParent, vNodeArray, parent, isSvg, hydrating, config
         vNode?.[Symbol.asyncIterator] ||
         (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')
     ) {
+      // TODO: Add error checking and onerror handler support
       const vNodeIterator = (/** @type {SkruvIterableType} */ (vNode))
       skruvActiveGenerators.get(parent) && skruvActiveGenerators.get(parent).add(vNodeIterator)
       vNodeIterator.hydrating = hydrating

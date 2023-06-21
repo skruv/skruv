@@ -1,3 +1,7 @@
+// TODO: Typings for better autocomplete and typechecking:
+// TODO: use GlobalEventHandlersEventMap for event handler typing
+// TODO: Type up attributes with for example HTMLInputElement from lib.dom.d.ts
+
 /**
  * @typedef {Object} SkruvAdditionalIterableAttributeProperties
  * @property {Boolean} [booted]
