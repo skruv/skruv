@@ -58,7 +58,7 @@ const createState = stateObj => {
       if (key === 'skruv_resolve') {
         return () => this._resolve()
       }
-      if (key === 'skruv_unwrap_proxy') {
+      if (key === 'skruv_unwrap_proxy' || key === 'toJSON') {
         if (target.constructor === Object) {
           return Object.getOwnPropertyNames(target).reduce((acc, curr) => {
             acc[curr] = target[curr]?.skruv_unwrap_proxy || target[curr]

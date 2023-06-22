@@ -408,6 +408,7 @@ const sanitizeTypes = (vNodeParent, vNodeArray, parent, isSvg, hydrating, config
               (skruvActiveGenerators.get(parent) && !skruvActiveGenerators.get(parent).has(vNodeIterator))
             ) {
               config.renderWaiting?.delete(vNodeIterator)
+              config.checkRender?.()
               return false
             }
             renderArray(vNodeParent, actualVNodeArray, parent, isSvg, !!vNodeIterator.hydrating, config)
@@ -550,19 +551,19 @@ const renderSingle = (vNode, _node, parent, isSvg, hydrating, config) => {
   if (!_node) {
     node = createNode(parent, vNode, isSvg || vNode.nodeName === 'svg')
     !hydrating && parent.append && parent.append(node)
-    vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
+    !hydrating && vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
   } else if (
     _node.nodeName.toLowerCase() !== vNode.nodeName.toLowerCase() ||
     vNode.attributes?.key !== skruvKeys.get(_node)
   ) {
     node = createNode(parent, vNode, isSvg || vNode.nodeName === 'svg')
-    !hydrating && parent.replaceChild(node, _node)
-    vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
-    !config.isSkruvSSR && _node.dispatchEvent(new CustomEvent('remove', {
+    !hydrating && !config.isSkruvSSR && _node.dispatchEvent(new CustomEvent('remove', {
       detail: {
         newNode: node
       }
     }))
+    !hydrating && parent.replaceChild(node, _node)
+    !hydrating && vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
   } else if ((_node instanceof Text || _node instanceof Comment) && _node.data !== vNode.data) {
     !hydrating && (_node.data = vNode.data || '')
     node = _node
@@ -608,8 +609,9 @@ const render = (
       renderSingle(vNode, node, parent, isSvg, false, config)
     }
   }
-  // @ts-ignore
-  const isSkruvSSR = self?.isSkruvSSR
+
+  // Check for nodejs, deno and cf workers
+  const isSkruvSSR = typeof process !== 'undefined' || typeof Deno !== 'undefined' || typeof WebSocketPair !== 'undefined'
   const config = {
     renderWaiting,
     checkRender,

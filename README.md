@@ -117,6 +117,7 @@ There are three main parts of skruv:
   * Elements has the function `h` for generating HTML/SVG elements.
   * An elements children can be functions returning other elements, arrays of elements, generators yielding elements, plain elements, strings.
   * Besides the normal [DOM events](https://developer.mozilla.org/en-US/docs/Web/Events) like `onclick` there are `oncreate` and `onremove` which are called when skruv adds/removes the elements.
+  * Besides the normal html attributes there is an additonal one called `opaque` which makes skruv ignore all children. This is useful for when you want to instansiate a third party library that does its own DOM handling. In that case you would use a element with `opaque` and then `oncreate` to instansiate the library on that DOM node. 
   * has [tagged template functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) `css` to make it easier to write & syntax highlight css
     * Use [es6-string-css](https://marketplace.visualstudio.com/items?itemName=bashmish.es6-string-css) for syntax highlighting in vscode.
   * `style({scoped: true})` and `<style scoped>` behaves like the (unfortunately) removed [HTML feature](https://developer.mozilla.org/en-US/docs/Web/API/HTMLStyleElement/scoped)
