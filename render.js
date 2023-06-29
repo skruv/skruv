@@ -611,7 +611,8 @@ const render = (
   }
 
   // Check for nodejs, deno and cf workers
-  const isSkruvSSR = typeof process !== 'undefined' || typeof Deno !== 'undefined' || typeof WebSocketPair !== 'undefined'
+  // @ts-ignore
+  const isSkruvSSR = self?.isSkruvSSR
   const config = {
     renderWaiting,
     checkRender,
