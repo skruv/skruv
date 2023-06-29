@@ -590,8 +590,8 @@ const renderSingle = (vNode, _node, parent, isSvg, hydrating, config) => {
  */
 const render = (
   vNode,
-  node = self.document.documentElement,
-  parent = node.parentNode,
+  node = self?.document?.documentElement,
+  parent = node?.parentNode,
   isSvg = false
 ) => new Promise(resolve => {
   if (!parent) {
