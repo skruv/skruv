@@ -190,7 +190,7 @@ const scoped = styleElement => {
   Array.from(sheet?.cssRules || []).forEach(e =>
     // @ts-ignore: TODO: Type confusion between polyfill and native.
     upgradeRule(e, prefix)
-    )
+  )
   const upgradedStyles = Array.from(sheet?.cssRules || []).map(e => e.cssText || '')
     .join('')
   styleMap.set(scope, upgradedStyles)
