@@ -187,8 +187,11 @@ const scoped = styleElement => {
     sheet = styleElem.sheet
     styleDoc.body.removeChild(styleElem)
   }
-  Array.from(sheet.cssRules).forEach(e => upgradeRule(e, prefix))
-  const upgradedStyles = Array.from(sheet.cssRules).map(e => e.cssText || '')
+  Array.from(sheet?.cssRules || []).forEach(e =>
+    // @ts-ignore: TODO: Type confusion between polyfill and native.
+    upgradeRule(e, prefix)
+    )
+  const upgradedStyles = Array.from(sheet?.cssRules || []).map(e => e.cssText || '')
     .join('')
   styleMap.set(scope, upgradedStyles)
   styleElement.attributes['data-skruv-css-for-scope'] = scope
