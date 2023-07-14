@@ -3,7 +3,7 @@
 
 const resolveTimer = self?.requestAnimationFrame || (cb => setTimeout(cb, 0))
 
-const createState = stateObj => {
+export const createState = stateObj => {
   const Handler = class Handler {
     constructor (name) {
       this.name = name
@@ -148,5 +148,3 @@ const createState = stateObj => {
   Object.assign(rootProxy, stateObj)
   return rootProxy
 }
-
-export default createState

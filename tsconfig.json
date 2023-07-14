@@ -7,15 +7,17 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "types",
-    "declarationMap": true
+    "target": "es2018",
+    "declarationMap": true,
+    "moduleResolution": "node"
   },
   "exclude": [
     "node_modules"
   ],
   "files": [
-    "skruv.js",
+    "index.js",
     "render.js",
-    "elements.js",
+    "css.js",
     "jsx-runtime.js",
     "createState.js",
   ]

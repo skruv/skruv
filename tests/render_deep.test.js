@@ -1,6 +1,7 @@
 /* global test expect */
-import { elements, render } from '../skruv.js'
-const { body, div } = elements
+import { htmlFactory, render } from '../index.js'
+const { body, div } = htmlFactory
+self.SkruvWaitForAsync = true
 
 test('render deep elements', async () => {
   const html = document.createElement('html')

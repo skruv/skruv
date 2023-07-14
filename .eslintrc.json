@@ -52,10 +52,7 @@
       "error"
     ],
     "no-unused-vars": [
-      "error",
-      {
-        "varsIgnorePattern": "state|_"
-      }
+      "error"
     ],
     "import/no-unused-modules": [1, {"unusedExports": true}],
     "arrow-parens": ["error", "as-needed"]
@@ -64,8 +61,7 @@
     "**/node_modules/**/*.js",
     "**/node_modules/**/*.json",
     "**/package-lock.json",
-    "**/skruv.min.js",
-    "**/skruv.min.cjs.js",
+    "**/index.min.js",
     "**/tsconfig.json",
     ".vscode/**",
     "comparisons/**",

@@ -1,6 +1,7 @@
 /* global test expect */
-import { elements, render } from '../skruv.js'
-const { body, div } = elements
+import { htmlFactory, render } from '../index.js'
+const { body, div } = htmlFactory
+self.SkruvWaitForAsync = true
 
 test('render multiple elements', async () => {
   const html = document.createElement('html')
@@ -9,24 +10,24 @@ test('render multiple elements', async () => {
   render(
     body({},
       div({},
-        div({}, 'deep')
+        div({}, 'wide')
       ),
       div({},
-        div({}, 'deep2')
+        div({}, 'wide2')
       ),
       div({},
-        div({}, 'deep3')
+        div({}, 'wide3')
       ),
       div({},
-        div({}, 'deep4')
+        div({}, 'wide4')
       ),
       div({},
-        div({}, 'deep5')
+        div({}, 'wide5')
       ),
       div({},
-        div({}, 'deep6')
+        div({}, 'wide6')
       )
     ), root
   )
-  expect(html.childNodes[0].childNodes[5].childNodes[0].textContent).toBe('deep6')
+  expect(html.childNodes[0].childNodes[5].childNodes[0].textContent).toBe('wide6')
 })

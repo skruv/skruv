@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`update on array push 1`] = `"<body></body>"`;
+
+exports[`update on array push 2`] = `"<body><div>test</div><div>test2</div><div>test3</div></body>"`;
