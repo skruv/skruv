@@ -1,5 +1,6 @@
-import { elements, render } from 'https://skruv.io/skruv.js'
-const { css, title, html, head, meta, style, body, div, p } = elements
+import { css, cssElement, htmlFactory, render } from 'https://skruv.io/index.js'
+
+const { title, html, head, meta, body, div, p } = htmlFactory
 
 const rootStyles = css`
 :root {
@@ -18,19 +19,18 @@ p {
 `
 
 render(
-  html({ lang: 'en-US' },
-    head({},
-      title({}, 'scopedcss'),
+  html({ lang: 'en-US', class: rootStyles },
+    head(
+      title('scopedcss'),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      style({}, rootStyles)
+      cssElement
     ),
-    body({},
-      div({},
-        style({ scoped: true }, scopedStyles),
-        p({}, 'blue text')
+    body(
+      div({ class: scopedStyles },
+        p('blue text')
       ),
-      div({},
-        p({}, 'default text')
+      div(
+        p('default text')
       )
     )
   )

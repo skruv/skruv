@@ -1,6 +1,7 @@
 /* global test expect */
-import { createState, elements, render } from '../skruv.js'
-const { body, div } = elements
+import { createState, htmlFactory, render } from '../index.js'
+const { body, div } = htmlFactory
+self.SkruvWaitForAsync = true
 
 const wait = time => new Promise(resolve => setTimeout(resolve, time))
 

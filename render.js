@@ -1,634 +1,441 @@
-/* eslint-disable no-unused-expressions */
-/* global CustomEvent HTMLInputElement HTMLOptionElement HTMLElement SVGElement Text Comment Document CSSMediaRule CSSStyleRule CSSOM */
-/** @typedef {typeof import("./elements.js").Vnode} Vnode */
-/** @typedef {typeof import("./elements.js").ChildNodes} ChildNodes */
-/** @typedef {typeof import("./elements.js").SkruvIterableType} SkruvIterableType */
-/** @typedef {typeof import("./elements.js").SkruvPromiseOrAsyncFunctionType} SkruvPromiseOrAsyncFunctionType */
-/** @typedef {typeof import("./elements.js").VnodeAtrributeGenerator} VnodeAtrributeGenerator */
+// @ts-check
+/* global HTMLInputElement HTMLOptionElement Text Comment HTMLElement SVGElement Document Window */
+// TODO: Build
+// Error boundaries (custom events that bubble)
+// single level state
 
-const styleMap = new Map()
+// TODO: Document
+// data-skruv-key
+// data-skruv-opaque
+// data-skruv-finished
+// data-skruv-wait-for-not-empty
+// data-skruv-ssr-rendered
+// oncreate & onremove
+// hydration workflow
+// css scoping
+// state mgmt
 
-// TODO: replace with native hash
+// Globals used:
+// document.querySelector
+// elem.ownerDocument.documentElement
+// elem.contains
+// elem.replaceChild
+// elem.prepend
+// elem.after
+// elem.parentNode
+// elem.removeChild
+// elem.dispatchEvent
+// elem.getAttributeNames
+// elem.setAttribute
+// elem.getAttribute
+// elem.removeAttribute
+// elem.setAttribute
+// elem.removeEventListener
+// elem.addEventListener
+// documentElement.createComment
+// documentElement.createTextNode
+// documentElement.createElementNS
+// documentElement.createElement
+
 /**
- * @param {String} str
- * @returns {Number}
+ * @typedef {(AsyncGenerator<Function|String|Boolean|Number>|AsyncIterable<Function|String|Boolean|Number>)} SkruvAttributesIterable
  */
-const hash = str => {
-  let hash = 0
-  if (str.length === 0) { return hash }
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(i)
-    hash |= 0 // Convert to 32bit integer
-  }
-  return hash
-}
-
-// Scoped CSS helper
 /**
- * @param {Vnode} styleElement
+ * @typedef {(Promise<Function|String|Boolean|Number>|function(): Promise<Function|String|Boolean|Number>)} SkruvAttributesPromiseOrAsyncFunction
+ */
+/**
+ * @typedef SkruvEvents
+ * @prop {function(HTMLElement | Text | SVGElement | Comment): void} oncreate
+ * @prop {function(HTMLElement | Text | SVGElement | Comment): void} onremove
+ */
+/**
+ * @typedef {Partial<GlobalEventHandlers> & Partial<SkruvEvents> & Record<string,(string|boolean|Function|number|Object)>} PreparedVnodeAtrributes
+ */
+/**
+ * @typedef {PreparedVnodeAtrributes & Record<string,(string|boolean|Function|number|Object|SkruvAttributesPromiseOrAsyncFunction|SkruvAttributesIterable)>} VnodeAtrributes
+ */
+/**
+ * @typedef {object} Vnode
+ * @prop {Symbol} s
+ * @prop {String} t
+ * @prop {SkruvChildNodes} _c
+ * @prop {VnodeAtrributes} _a
+ * @prop {{r:() => boolean}} r
+ */
+/**
+ * @typedef {object} PreparedVnode
+ * @prop {Symbol} p
+ * @prop {Symbol} s
+ * @prop {String} t
+ * @prop {SkruvChildNodes} _c
+ * @prop {VnodeAtrributes} _a
+ * @prop {{r:() => boolean}} r
+ * @prop {Array<PreparedVnode>} c
+ * @prop {PreparedVnodeAtrributes} a
+ */
+/**
+ * @typedef {AsyncGenerator<SkruvValue>} SkruvAsyncGenerator
+ * @typedef {AsyncIterable<SkruvValue>} SkruvAsyncIterable
+ * @typedef {Promise<SkruvValue>} SkruvPromise
+ * @typedef {function(): Promise<SkruvValue>} SkruvAsyncFunction
+ * @typedef {Vnode|Function|String|Number|Boolean|SkruvAsyncGenerator|SkruvAsyncIterable|SkruvPromise|SkruvAsyncFunction} SkruvValue
+ */
+/**
+ * @typedef {Vnode|SkruvValue} SkruvChildNode
+ */
+/**
+ * @typedef {Array<SkruvChildNode>} SkruvChildNodes
+ */
+const s = Symbol.for('skruvDom')
+const p = Symbol.for('skruvDomPrepared')
+/** @type {WeakMap<SkruvAsyncGenerator|SkruvAsyncIterable|SkruvPromise|SkruvAsyncFunction|Function|Vnode, SkruvValue?>} */
+const generatorResults = new WeakMap()
+/** @type {WeakMap<Node, Record<string,EventListener?>>} */
+const skruvListeners = new WeakMap()
+/** @type {WeakMap<Object, Node>} */
+const keyedNodes = new WeakMap()
+let hydrationResolve = () => { }
+/** @type {Promise<void>} */
+const hydrationPromise = (new Promise(resolve => { hydrationResolve = () => resolve() }))
+const waitingGens = new Set()
+// @ts-ignore This is a global set by SSR/Tests
+let hydrating = self?.SkruvWaitForAsync || !!document.querySelector('data-skruv-ssr-rendered')
+
+/** @type {Vnode} */
+export const Vnode = { s, t: '', _c: [], _a: {}, r: { r: () => false } }
+
+/** @type {VnodeAtrributes} */
+export const VnodeAtrributes = {}
+
+/**
+ * @param {string} t
+ * @param  {Array<SkruvChildNode|VnodeAtrributes>} c
  * @returns {Vnode}
  */
-const scoped = styleElement => {
-  if (styleElement.attributes['data-skruv-css-for-scope']) {
-    return styleElement
+// @ts-ignore TODO: TS seems to be confused about the spreading of attributes and children. Try separating them
+export const h = (t, ...c) => ({
+  s,
+  t,
+  ...(
+    typeof c[0] === 'object' &&
+    !Array.isArray(c[0]) &&
+    !(c[0] instanceof Function) && !(c[0] instanceof Function && c[0]?.prototype?.toString?.() === '[object AsyncGenerator]') &&
+    // @ts-ignore How to check for booted generators?
+    !(c[0]?.[Symbol.asyncIterator]) &&
+    // @ts-ignore TODO: check why this still thinks a function can fall though
+    c[0]?.s !== s
+      ? {
+        _a: c[0],
+        _c: c.slice(1)
+      }
+      : {
+        _a: {},
+        _c: c
+      }),
+  r: {
+    r: () => {
+      if (hydrating && !waitingGens.size) {
+        hydrating = false
+        hydrationResolve()
+      }
+      return true
+    }
   }
-  // The implementation of this is lifted from https://github.com/samthor/scoped with some modifications
-  const attrRe = /^\[.*?(?:(["'])(?:.|\\\1)*\1.*)*\]/
-  const walkSelectorRe = /([([,]|:scope\b)/ // "interesting" setups
-  const scopeRe = /^:scope\b/
-  const stylesheet = styleElement.childNodes.join('')
+})
 
+// This functions takes in a potentially async value and makes it sync
+/**
+ * @param {SkruvValue} value
+ * @param  {PreparedVnode} parent
+ * @param  {boolean} toVnodes
+ * @returns {SkruvValue}
+ */
+const syncify = (value, parent, toVnodes) => {
   /**
-   * Consumes a single selector from candidate selector text, which may contain many.
    *
-   * @param {string} raw selector text
-   * @param {string} prefix prefix to apply
-   * @return {?{selector: string, rest: string}}
+   * @param {Function | SkruvAsyncIterable | SkruvPromise | Vnode} value
+   * @param {string | number | boolean | Function | Vnode | SkruvAsyncIterable | SkruvPromise | null} result
+   * @returns
    */
-  function consumeSelector (raw, prefix) {
-    let i = raw.search(walkSelectorRe)
-    if (i === -1) {
-      // found literally nothing interesting, success
-      return {
-        selector: `${prefix} ${raw}`,
-        rest: ''
-      }
-    } else if (raw[i] === ',') {
-      // found comma without anything interesting, yield rest
-      return {
-        selector: `${prefix} ${raw.substring(0, i)}`,
-        rest: raw.substring(i + 1)
+  const process = (value, result) => {
+    // @ts-ignore optional chaining
+    if (hydrating && result?._a?.['data-skruv-finished'] !== false) {
+      waitingGens.delete(value)
+      // Make sure any async calls that returned other async nodes get added to the hydration queue
+      if (result) {
+        // @ts-ignore vdom typeguard
+        if (result?.s === s) { flatten(result) } else { syncify(result, parent, toVnodes) }
       }
     }
-
-    let leftmost = true // whether we're past a descendant or similar selector
-    let scope = false // whether :scope has been found + replaced
-    i = raw.search(/\S/) // place i after initial whitespace only
-
-    let depth = 0
-    // eslint-disable-next-line no-labels
-    outer:
-    for (; i < raw.length; ++i) {
-      const char = raw[i]
-      switch (char) {
-        case '[': {
-          const match = attrRe.exec(raw.substring(i))
-          i += (match ? match[0].length : 1) - 1 // we add 1 every loop
-          continue
-        }
-        case '(':
-          ++depth
-          continue
-        case ':':
-          if (!leftmost) {
-            continue // doesn't matter if :scope is here, it'll always be ignored
-          } else if (!scopeRe.test(raw.substring(i))) {
-            continue // not ':scope', ignore
-          } else if (depth) {
-            return null
-          }
-          // Replace ':scope' with our prefix. This can happen many times; ':scope:scope' is valid.
-          // It will never apply to a descendant selector (e.g., ".foo :scope") as this is ignored
-          // by browsers anyway (invalid).
-          raw = raw.substring(0, i) + prefix + raw.substring(i + 6)
-          i += prefix.length
-          scope = true
-          --i // we'd skip over next character otherwise
-          continue // run loop again
-        case ')':
-          if (depth) {
-            --depth
-          }
-          continue
-      }
-      if (depth) {
-        continue
-      }
-
-      switch (char) {
-        case ',':
-          // eslint-disable-next-line no-labels
-          break outer
-        case ' ':
-        case '>':
-        case '~':
-        case '+':
-          if (!leftmost) {
-            continue
-          }
-          leftmost = false
-      }
-    }
-
-    const selector = (scope ? '' : `${prefix} `) + raw.substring(0, i)
-    return { selector, rest: raw.substring(i + 1) }
+    generatorResults.set(value, result)
+    return parent.r.r()
   }
-
-  /**
-   * @param {string} selectorText
-   * @param {string} prefix to apply
-   */
-  function updateSelectorText (selectorText, prefix) {
-    const found = []
-
-    while (selectorText) {
-      const consumed = consumeSelector(selectorText, prefix)
-      if (consumed === null) {
-        return ':not(*)'
-      }
-      found.push(consumed.selector)
-      selectorText = consumed.rest
-    }
-
-    return found.join(', ')
-  }
-
-  /**
-   * Upgrades a specific CSSRule.
-   *
-   * @param {!CSSRule} rule
-   * @param {string} prefix to apply
-   */
-  function upgradeRule (rule, prefix) {
-    if (rule instanceof CSSMediaRule) {
-      // upgrade children
-      const l = rule.cssRules.length
-      for (let j = 0; j < l; ++j) {
-        upgradeRule(rule.cssRules[j], prefix)
-      }
-      return
-    }
-
-    if (!(rule instanceof CSSStyleRule)) {
-      return // unknown rule type, ignore
-    }
-
-    rule.selectorText = updateSelectorText(rule.selectorText, prefix)
-  }
-  const scope = `scope${hash(stylesheet)}`
-  const prefix = `[data-skruv-css-scope~=${scope}]`
-
-  if (styleMap.has(scope)) {
-    styleElement.attributes['data-skruv-css-for-scope'] = scope
-    styleElement.childNodes = [styleMap.get(scope)]
-    return styleElement
-  }
-  let sheet
-  // @ts-ignore
-  if (self?.CSSOM) {
-    // @ts-ignore
-    sheet = CSSOM.parse(stylesheet)
-  } else {
-    // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari (supported from 16.4 (Released 2023-03-27))
-    const styleDoc = self.document.implementation.createHTMLDocument('')
-    const styleElem = styleDoc.createElement('style')
-    styleElem.innerText = stylesheet
-    styleDoc.body.append(styleElem)
-    sheet = styleElem.sheet
-    styleDoc.body.removeChild(styleElem)
-  }
-  Array.from(sheet?.cssRules || []).forEach(e =>
-    // @ts-ignore: TODO: Type confusion between polyfill and native.
-    upgradeRule(e, prefix)
-  )
-  const upgradedStyles = Array.from(sheet?.cssRules || []).map(e => e.cssText || '')
-    .join('')
-  styleMap.set(scope, upgradedStyles)
-  styleElement.attributes['data-skruv-css-for-scope'] = scope
-  styleElement.childNodes = [upgradedStyles]
-  return styleElement
-}
-
-const skruvActiveGenerators = new WeakMap()
-const skruvActiveAttributeGenerators = new WeakMap()
-const skruvListeners = new WeakMap()
-const skruvKeys = new WeakMap()
-const keyMap = new WeakMap()
-
-/**
- * @typedef {Object} RenderConfig
- * @property {Set<VnodeAtrributeGenerator | SkruvIterableType | SkruvPromiseOrAsyncFunctionType>} renderWaiting
- * @property {Function} checkRender
- * @property {Boolean} isSkruvSSR
- */
-
-/**
- * Update the attributes on a node
- * @param {HTMLElement | SVGElement} node
- * @param {String} key
- * @param {Boolean | String | Number} result
- */
-const handleSpecialAttributes = (node, key, result) => {
-  if (
-    key === 'value' &&
-    (typeof result === 'number' || typeof result === 'string') &&
-    node instanceof HTMLInputElement
-  ) {
-    node[key] = result.toString()
-  }
-  if (
-    key === 'checked' &&
-    typeof result === 'boolean' &&
-    node instanceof HTMLInputElement
-  ) {
-    node[key] = result
-  }
-  if (
-    key === 'selected' &&
-    typeof result === 'boolean' &&
-    node instanceof HTMLOptionElement
-  ) {
-    node[key] = result
-  }
-}
-
-/**
- * Update the attributes on a node
- * @param {Vnode} vNode
- * @param {HTMLElement | SVGElement} node
- * @param {HTMLElement | SVGElement | Document} parent
- * @param {Boolean} hydrating
- * @param {RenderConfig} config
- */
-const updateAttributes = (vNode, node, parent, hydrating, config) => {
-  skruvActiveAttributeGenerators.set(node, new Set())
-  node.getAttributeNames && node.getAttributeNames().filter(name => !Object.keys(vNode.attributes).includes(name) && name !== 'data-skruv-css-scope')
-    .forEach(key => node?.removeAttribute?.(key))
-  for (const [key, value] of Object.entries(vNode.attributes)) {
-    // Node keys do not get added to the DOM
-    if (key === 'key') {
-      !hydrating && skruvKeys.set(node, value)
-      continue
-    }
-    if (key === 'data-skruv-css-for-scope' && typeof value === 'string' && (parent instanceof HTMLElement || parent instanceof SVGElement)) {
-      const old = (parent?.getAttribute?.('data-skruv-css-scope') || '').split(' ')
-      old.push(value)
-      !hydrating && parent?.setAttribute?.('data-skruv-css-scope', Array.from(new Set(old)).join(' ')
-        .trim())
-      continue
-    }
-    // TODO: Add promise support
-    if (
-      // @ts-ignore
-      value?.[Symbol.asyncIterator] ||
-      (value instanceof Function && value?.prototype?.toString?.() === '[object AsyncGenerator]')
-    ) {
-      const val = (/** @type {VnodeAtrributeGenerator} */ (value))
-      skruvActiveAttributeGenerators.get(node).add(val)
-      val.hydrating = hydrating
-      if (!val.booted) {
-        config?.renderWaiting?.add(val)
-        val.booted = true
-        const rerender = () => {
-          // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
-          if (!skruvActiveAttributeGenerators.get(node).has(val)) { return false }
-          if (key === 'key') {
-            !val.hydrating && skruvKeys.set(node, val)
-            return true
-          }
-          if (key === 'data-skruv-css-for-scope' && (parent instanceof HTMLElement || parent instanceof SVGElement)) {
-            const old = (parent?.getAttribute?.('data-skruv-css-scope') || '').split(' ')
-            // @ts-ignore
-            old.push(val)
-            !val.hydrating && parent?.setAttribute?.('data-skruv-css-scope', Array.from(new Set(old)).join(' '))
-            return true
-          }
-          if (val.result === false && node.getAttribute?.(key)) {
-            !val.hydrating && node.removeAttribute && node.removeAttribute(key)
-          } else {
-            !val.hydrating && !!val.result && typeof val.result !== 'function' && handleSpecialAttributes(node, key, val.result)
-            !val.hydrating && node.setAttribute && node.setAttribute(key, val.result?.toString() || '')
-            // Support complex data passing for custom elements
-            // @ts-ignore
-            if (typeof val.result === 'object') { node[key] = val.result }
-            config?.renderWaiting?.delete(val)
-            config?.checkRender?.()
-          }
-          // In SSR we want to break immediately to prevent memory leaks of running generators
-          if (config.isSkruvSSR) { return false }
-          return true
-        }
-        updateOnChange(val, rerender)
-      }
-      continue
-    } else if (key.slice(0, 2) === 'on' && value instanceof Function && !hydrating) {
-      if (!skruvListeners.has(node)) {
-        skruvListeners.set(node, {})
-      }
-      if (skruvListeners.get(node)[key] && skruvListeners.get(node)[key].toString() !== value.toString()) {
-        node.removeEventListener(key.slice(2), skruvListeners.get(node)[key])
-        skruvListeners.get(node)[key] = null
-      }
-      if (!skruvListeners.get(node)[key]) {
-        skruvListeners.get(node)[key] = value
-        node.addEventListener(key.slice(2), skruvListeners.get(node)[key])
-      }
-    } else {
-      if (value !== false && node.getAttribute?.(key) !== value && !hydrating) {
-        // These need to be set directly to have the desired effect.
-        !!value && typeof value !== 'function' && typeof value !== 'object' && handleSpecialAttributes(node, key, value)
-        // Support complex data passing for custom elements
-        // @ts-ignore
-        if (typeof value === 'object') { node[key] = value }
-        value && node.setAttribute && node.setAttribute(key, value.toString())
-      }
-      if (value === false && node.getAttribute?.(key) && !hydrating) {
-        node.removeAttribute && node.removeAttribute(key)
-      }
-    }
-  }
-}
-
-/**
- * @param {HTMLElement | SVGElement | Document} parent
- * @param {Vnode} vNode
- * @param {Boolean} isSvg
- * @returns {HTMLElement | SVGElement | Text | Comment}
- */
-const createNode = (parent, vNode, isSvg) => {
-  const ownerDocument = parent.ownerDocument || self?.document
-  if (vNode.nodeName === '#comment') {
-    return ownerDocument.createComment(vNode.data || '')
-  }
-  if (vNode.nodeName === '#text') {
-    return ownerDocument.createTextNode(vNode.data || '')
-  }
-  if (isSvg) {
-    return ownerDocument.createElementNS('http://www.w3.org/2000/svg', vNode.nodeName)
-  }
-  return ownerDocument.createElement(vNode.nodeName)
-}
-
-/**
- * @param {SkruvIterableType | VnodeAtrributeGenerator} gen
- * @param {Function} rerender
- */
-const updateOnChange = async (gen, rerender) => {
-  // @ts-ignore
-  for await (const result of (gen?.[Symbol.asyncIterator] ? gen : gen())) {
-    gen.result = result
-    if (!rerender()) { break }
-  }
-}
-
-/**
- * @param {Vnode} vNodeParent
- * @param {ChildNodes} vNodeArray
- * @param {HTMLElement | SVGElement | Document} parent
- * @param {Boolean} isSvg
- * @param {Boolean} hydrating
- * @param {RenderConfig} config
- * @param {ChildNodes} actualVNodeArray
- * @returns {Array<Vnode>}
- */
-const sanitizeTypes = (vNodeParent, vNodeArray, parent, isSvg, hydrating, config, actualVNodeArray = vNodeArray) => {
-  const retVal = vNodeArray.map(vNode => {
-    if (typeof vNode === 'boolean' || typeof vNode === 'undefined') {
-      return false
-    } else if (typeof vNode === 'string' || typeof vNode === 'number') {
-      return {
-        nodeName: '#text',
-        attributes: {},
-        childNodes: [],
-        data: vNode.toString()
-      }
-    } else if (
-        // @ts-ignore
-        vNode?.[Symbol.asyncIterator] ||
-        (vNode instanceof Function && vNode?.prototype?.toString?.() === '[object AsyncGenerator]')
-    ) {
-      // TODO: Add error checking and onerror handler support
-      const vNodeIterator = (/** @type {SkruvIterableType} */ (vNode))
-      skruvActiveGenerators.get(parent) && skruvActiveGenerators.get(parent).add(vNodeIterator)
-      vNodeIterator.hydrating = hydrating
-      if (!vNodeIterator.booted) {
-          config.renderWaiting?.add(vNodeIterator)
-          vNodeIterator.booted = true
-          const rerender = () => {
-            // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
-            if (
-              !skruvActiveGenerators.get(parent) ||
-              (skruvActiveGenerators.get(parent) && !skruvActiveGenerators.get(parent).has(vNodeIterator))
-            ) {
-              config.renderWaiting?.delete(vNodeIterator)
-              config.checkRender?.()
-              return false
-            }
-            renderArray(vNodeParent, actualVNodeArray, parent, isSvg, !!vNodeIterator.hydrating, config)
-            // @ts-ignore
-            if (vNodeIterator?.result?.attributes?.['data-skruv-skruv-finished'] !== false) { config.renderWaiting?.delete(vNodeIterator) }
-            config.checkRender?.()
-            // In SSR we want to break immediately to prevent memory leaks of running generators
-            if (
-              config.isSkruvSSR &&
-              // @ts-ignore
-              vNodeIterator?.result?.attributes?.['data-skruv-skruv-finished'] !== false
-            ) { return false }
-            return true
-          }
-          updateOnChange(vNodeIterator, rerender)
-      }
-      return vNodeIterator.result
-    } else if (
-      // @ts-ignore
-      (typeof vNode === 'object' && vNode.then instanceof Function) ||
-      (typeof vNode === 'function' && vNode.constructor.name === 'AsyncFunction')
-    ) {
-      const vNodePromiseAsyncFunction = (/** @type {SkruvPromiseOrAsyncFunctionType} */ (vNode))
-      skruvActiveGenerators.get(parent) && skruvActiveGenerators.get(parent).add(vNodePromiseAsyncFunction)
-      vNodePromiseAsyncFunction.hydrating = hydrating
-      if (!vNodePromiseAsyncFunction.booted) {
-          config.renderWaiting?.add(vNodePromiseAsyncFunction)
-          vNodePromiseAsyncFunction.booted = true
-          const rerender = () => {
-            // If this generator did not participate in the last renderloop cancel it. It means that it should no longer be allowed to update the parent
-            if (
-              !skruvActiveGenerators.get(parent) ||
-              (skruvActiveGenerators.get(parent) && !skruvActiveGenerators.get(parent).has(vNodePromiseAsyncFunction))
-            ) {
-              config.renderWaiting?.delete(vNodePromiseAsyncFunction)
-              return false
-            }
-            renderArray(vNodeParent, actualVNodeArray, parent, isSvg, !!vNodePromiseAsyncFunction.hydrating, config)
-            // @ts-ignore
-            if (vNode?.result?.attributes?.['data-skruv-skruv-finished'] !== false) { config.renderWaiting?.delete(vNode) }
-            config.checkRender?.()
-          }
-          (
-            (typeof vNodePromiseAsyncFunction === 'function')
-              ? vNodePromiseAsyncFunction()
-              : vNodePromiseAsyncFunction
-          ).then(res => { vNodePromiseAsyncFunction.result = res; rerender() })
-      }
-      return vNodePromiseAsyncFunction.result
-    } else if (typeof vNode === 'function') {
-      return vNode()
-      // @ts-ignore
-    } else if (vNode?.nodeName === '#fragment') {
-      // JSX fragment compat
-      // @ts-ignore
-      return vNode?.childNodes || []
-      // @ts-ignore
-    } else if (vNode?.nodeName || Array.isArray(vNode)) {
-      return vNode
-    }
-    // Unkown type passed
-    console.log('unkown type in render: ', vNode)
+  // @ts-ignore maybe stricten up checks here
+  if (generatorResults.has(value)) { return generatorResults.get(value) }
+  // @ts-ignore TODO: Check what is the right way to detect started asynciterators
+  if (typeof value === 'object' && value?.[Symbol.asyncIterator]) {
+    const val = (/** @type {SkruvAsyncIterable} */ (value))
+    if (hydrating) { waitingGens.add(val) }
+    generatorResults.set(val, null);
+    (async () => { for await (const result of val) { if (!process(value, result)) { break } } })()
     return false
-  }).flat(Infinity)
-    .filter(vNode => !!vNode)
-    .map(vNode => {
-      if (vNode?.nodeName === 'style' && vNode?.attributes?.scoped) {
-        return scoped(vNode)
+  } else if (value instanceof Function && value?.prototype?.toString?.() === '[object AsyncGenerator]') {
+    if (hydrating) { waitingGens.add(value) }
+    generatorResults.set(value, null);
+    (async () => { for await (const result of value()) { if (!process(value, result)) { break } } })()
+    return false
+    // @ts-ignore TODO: .then might not exist, but thats why I'm checking it!
+  } else if (typeof value === 'object' && value !== null && value?.then instanceof Function) {
+    const val = (/** @type {SkruvPromise} */ (value))
+    if (hydrating) { waitingGens.add(value) }
+    generatorResults.set(val, null);
+    (async () => { process(val, await val) })()
+    return false
+  } else if (typeof value === 'function' && value.constructor.name === 'AsyncFunction') {
+    if (hydrating) { waitingGens.add(value) }
+    generatorResults.set(value, null);
+    (async () => { process(value, await value()) })()
+    return false
+  } else if (typeof value === 'function') {
+    if (toVnodes) {
+      return value()
+    }
+    return value
+  } else if (typeof value === 'string' || typeof value === 'number') {
+    if (toVnodes) {
+      return h('#text', { data: value.toString() })
+    }
+    return value.toString()
+  } else if (typeof value === 'boolean') {
+    return value
+  }
+  throw new Error('Unkown type in syncify: ' + JSON.stringify(value))
+}
+
+/**
+ *
+ * @param {SkruvChildNodes} c
+ * @param {Vnode} skruvDom
+ * @returns {PreparedVnode[]}
+ */
+const recurseVnodes = (c, skruvDom) => {
+  const newVnodes = c.flat(Infinity)
+    // @ts-ignore TS does not understand that .s is a typeguard for vnodes
+    .map(value => value?.s === s ? flatten(value) : syncify(value, skruvDom, true))
+    .flat(Infinity)
+    .filter(value => value !== null && typeof value !== 'boolean')
+  // @ts-ignore Optional chaining
+  if (newVnodes.find(value => value?.p !== p)) {
+    return recurseVnodes(newVnodes, skruvDom)
+  }
+  // @ts-ignore We already guard against this with the .p check above
+  return newVnodes
+}
+
+// This needs all sorts of cleanup
+// TODO: Instead of modifying the object have the r function be an object ({r:()=>}) so you can replace the inner function without having to modify the original
+/**
+ * @param {Vnode} skruvDom
+ * @returns {PreparedVnode}
+ */
+const flatten = skruvDom => {
+  const a = Object.fromEntries(
+    Object.entries(skruvDom._a)
+      .filter(entry => entry[1] !== null)
+      // @ts-ignore We already check null above
+      .map(([key, value]) => key === 'data-skruv-key' ? [key, value] : [key, syncify(value, skruvDom, false)])
+      .filter(entry => entry[1] !== null)
+  )
+  return {
+    p,
+    ...skruvDom,
+    a,
+    c: recurseVnodes(skruvDom._c, skruvDom)
+  }
+}
+
+/**
+ * @param {PreparedVnode} current
+ * @param {HTMLElement | SVGElement} currentNode
+ * @param {ParentNode?} parentNode
+ * @param {boolean} isSvg
+ */
+const renderRecursive = (current, currentNode, parentNode, isSvg) => {
+  if (current.p !== p) {
+    throw new Error('unkown type in render: ' + JSON.stringify(current))
+  }
+  if (!parentNode || (currentNode && !parentNode.contains(currentNode))) { return false }
+  const ownerDocument = currentNode.ownerDocument
+  const documentElement = ownerDocument.documentElement
+
+  for (const key of currentNode.getAttributeNames().filter(k => !Object.keys(current.a).includes(k))) {
+    currentNode.removeAttribute(key)
+  }
+
+  for (const [key, value] of Object.entries(current.a)) {
+    if (key === 'data-skruv-key') { continue }
+    if (value === null || value === false) {
+      if (currentNode.getAttribute(key)) {
+        currentNode.removeAttribute(key)
       }
-      return vNode
-    })
-
-  // Handle results from generators returning generators, functions returning functions, etc.
-  return retVal.find(vNode => !vNode?.nodeName) ? sanitizeTypes(vNodeParent, retVal, parent, isSvg, hydrating, config, actualVNodeArray) : retVal
-}
-
-/**
- * @param {Vnode} vNodeParent
- * @param {ChildNodes} vNodeArray
- * @param {HTMLElement | SVGElement | Document} parent
- * @param {Boolean} isSvg
- * @param {Boolean} hydrating
- * @param {RenderConfig} config
- */
-const renderArray = (vNodeParent, vNodeArray, parent, isSvg, hydrating, config) => {
-  if (!Array.isArray(vNodeArray)) { return }
-  skruvActiveGenerators.set(parent, new Set())
-  const nodes = Array.from(parent.childNodes)
-  const newNodes = sanitizeTypes(vNodeParent, vNodeArray, parent, isSvg, hydrating, config)
-  const toRemove = nodes.slice(newNodes.length)
-  if (newNodes.length || !vNodeParent.attributes['data-skruv-wait-for-not-empty']) {
-    for (let i = 0; i < toRemove.length; i++) {
-      const elem = toRemove[i]
-      !hydrating && elem.parentNode && elem.parentNode.removeChild && elem.parentNode.removeChild(elem)
-      !config.isSkruvSSR && elem.dispatchEvent(new CustomEvent('remove'))
+      continue
     }
-  }
-  for (let i = 0; i < newNodes.length; i++) {
-    const node = nodes[i] || null
-    if (node instanceof HTMLElement || node instanceof SVGElement || node instanceof Comment || node instanceof Text || node === null) {
-      renderSingle(newNodes[i], node, parent, isSvg, hydrating, config)
-    }
-  }
-}
-
-/**
- * @param {Vnode} vNode
- * @param {HTMLElement | SVGElement | Comment | null} _node
- * @param {HTMLElement | SVGElement | Document} parent
- * @param {Boolean} isSvg
- * @param {Boolean} hydrating
- * @param {RenderConfig} config
- */
-const renderSingle = (vNode, _node, parent, isSvg, hydrating, config) => {
-  if (!vNode.nodeName) {
-    return
-  }
-
-  let node
-  // Check for keyed nodes
-  if (vNode.attributes?.key && keyMap.has(vNode.attributes?.key)) {
-    const keyedNode = keyMap.get(vNode.attributes?.key)
-    if (_node && keyedNode !== _node) {
-      !hydrating && parent.replaceChild && parent.replaceChild(keyedNode, _node)
-    }
-    if (!_node) {
-      !hydrating && parent.append && parent.append(keyedNode)
-    }
-    // Diff node attributes
-    // TODO: below this should only be done for SVG/HTML, not for Comment/Text
-    updateAttributes(vNode, keyedNode, parent, hydrating, config)
-    // Call renderArray with children
-    if (!vNode?.attributes?.opaque && (vNode.childNodes.length || keyedNode.childNodes.length)) {
-      renderArray(vNode, vNode.childNodes, keyedNode, isSvg || vNode.nodeName === 'svg', hydrating, config)
-    }
-    return
-  }
-
-  // Create node if it does not exist
-  if (!_node) {
-    node = createNode(parent, vNode, isSvg || vNode.nodeName === 'svg')
-    !hydrating && parent.append && parent.append(node)
-    !hydrating && vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
-  } else if (
-    _node.nodeName.toLowerCase() !== vNode.nodeName.toLowerCase() ||
-    vNode.attributes?.key !== skruvKeys.get(_node)
-  ) {
-    node = createNode(parent, vNode, isSvg || vNode.nodeName === 'svg')
-    !hydrating && !config.isSkruvSSR && _node.dispatchEvent(new CustomEvent('remove', {
-      detail: {
-        newNode: node
+    /** @type {EventListenerOrEventListenerObject} */
+    if (key.slice(0, 2) === 'on' && value instanceof Function) {
+      let listeners = skruvListeners.get(currentNode)
+      const curr = listeners?.[key]
+      if (!listeners) {
+        listeners = {}
+        skruvListeners.set(currentNode, listeners)
       }
-    }))
-    !hydrating && parent.replaceChild(node, _node)
-    !hydrating && vNode.attributes?.oncreate && vNode.attributes.oncreate(node)
-  } else if ((_node instanceof Text || _node instanceof Comment) && _node.data !== vNode.data) {
-    !hydrating && (_node.data = vNode.data || '')
-    node = _node
-  } else {
-    node = _node
+      if (curr && curr.toString() !== value.toString()) {
+        currentNode.removeEventListener(key.slice(2), curr)
+        listeners[key] = null
+      }
+      if (!curr) {
+        // @ts-ignore EventListener and Function are incompatible according to TS
+        listeners[key] = value
+        // @ts-ignore EventListener and Function are incompatible according to TS
+        currentNode.addEventListener(key.slice(2), value)
+      }
+      continue
+    }
+    currentNode.setAttribute(key, value.toString())
+    if (key === 'value' && (typeof value === 'number' || typeof value === 'string') && currentNode instanceof HTMLInputElement) {
+      currentNode[key] = value.toString()
+    }
+    if (
+      (
+        typeof value === 'boolean' &&
+        (
+          (currentNode instanceof HTMLInputElement && key === 'checked') ||
+          (currentNode instanceof HTMLOptionElement && key === 'selected')
+        )
+      ) || typeof value === 'object' // Support complex data passing for custom elements
+    ) {
+      // @ts-ignore TS does not think properties are accessible directly?
+      currentNode[key] = value
+    }
   }
 
-  if (vNode.attributes?.key) {
-    keyMap.set(vNode.attributes?.key, node)
+  current.r.r = () => renderRecursive(flatten(current), currentNode, parentNode, isSvg)
+
+  if (current.a['data-skruv-opaque']) {
+    return true
   }
-  // Diff node attributes
-  (node instanceof HTMLElement || node instanceof SVGElement) && updateAttributes(vNode, node, parent, hydrating, config)
-  // Call renderArray with children
-  if ((node instanceof HTMLElement || node instanceof SVGElement) && !vNode?.attributes?.opaque && (vNode.childNodes.length || node.childNodes.length)) {
-    renderArray(vNode, vNode.childNodes, node, isSvg || vNode.nodeName === 'svg', hydrating, config)
+
+  // Reuse of old nodes and handle keying
+  const prev = Array.from(currentNode.childNodes)
+  const curr = current.c
+  /** @type {Array<Node?>} */
+  const newOrder = []
+  /**
+   * @param {ChildNode} p
+   * @param {Vnode} c
+   * @returns {boolean}
+   */
+  const comp = (p, c) => p.nodeName.toLowerCase() === c.t && !newOrder.includes(p)
+  for (let ci = 0; ci < curr.length; ci++) {
+    const c = curr[ci]
+    const inPrev = c.a['data-skruv-key'] ? keyedNodes.get(c.a['data-skruv-key']) : prev.find(p => comp(p, c))
+    if (inPrev) {
+      newOrder[ci] = inPrev
+    } else {
+      newOrder[ci] = null
+    }
   }
+  const toRemove = prev.filter(p => !newOrder.includes(p))
+
+  if (current.c.length || !current.a['data-skruv-wait-for-not-empty']) {
+    for (const elem of toRemove.filter(e => !!e)) {
+      currentNode.removeChild(elem)
+      // We have to do a microsleep before check since keyed nodes could have been moved to another location
+      setTimeout(() => {
+        if (!documentElement?.contains(elem) && skruvListeners.get(elem)?.onremove) { elem.dispatchEvent(new CustomEvent('remove')) }
+      }, 1)
+    }
+  }
+
+  for (let i = 0; i < newOrder.length; i++) {
+    const child = current.c[i]
+    let created = false
+    if (!newOrder[i]) {
+      let newChild
+      if (current.t === '#comment') {
+        newChild = ownerDocument.createComment('')
+      } else if (child.t === '#text') {
+        newChild = ownerDocument.createTextNode('')
+      } else if (child.p === p && (isSvg || child.t === 'svg')) {
+        newChild = ownerDocument.createElementNS('http://www.w3.org/2000/svg', child.t)
+      } else {
+        newChild = ownerDocument.createElement(child.t)
+      }
+      created = true
+      if (currentNode.childNodes[i]) {
+        currentNode.replaceChild(newChild, currentNode.childNodes[i])
+      } else if (i === 0) {
+        currentNode.prepend(newChild)
+      } else {
+        currentNode.childNodes[i - 1].after(newChild)
+      }
+    } else if (newOrder[i] !== currentNode.childNodes[i]) {
+      // Make ts happy
+      const nodeToMove = newOrder[i]
+      if (nodeToMove) {
+        if (i === 0) {
+          currentNode.prepend(nodeToMove)
+        } else {
+          currentNode.childNodes[i - 1].after(nodeToMove)
+        }
+      }
+    }
+    const childNode = currentNode.childNodes[i]
+    if ((childNode instanceof Text || childNode instanceof Comment)) {
+      if (childNode.data !== child.a.data) { childNode.data = child.a.data.toString() }
+      // Comment and text nodes have no attributes or children so bail here
+      continue
+    }
+    if (!(childNode instanceof HTMLElement || childNode instanceof SVGElement)) {
+      throw new Error('Child node of unkown type: ' + JSON.stringify({ childNode, child }))
+    }
+    if (child.a['data-skruv-key'] && !keyedNodes.has(child.a['data-skruv-key'])) { keyedNodes.set(child.a['data-skruv-key'], childNode) }
+    renderRecursive(child, childNode, currentNode, isSvg || current.t === 'svg')
+    if (created && skruvListeners.get(childNode)?.oncreate) { childNode.dispatchEvent(new CustomEvent('create')) }
+  }
+  return true
 }
 
 /**
- * @param {Vnode} vNode
- * @param {HTMLElement | SVGElement} node
- * @param {ParentNode?} parent
- * @param {Boolean} isSvg
+ * @param {Vnode} current
+ * @param {HTMLElement | SVGElement} [currentNode]
+ * @param {ParentNode?} parentNode
+ * @param {boolean} [isSvg]
  */
-const render = (
-  vNode,
-  node = self?.document?.documentElement,
-  parent = node?.parentNode,
+export const render = async (
+  current,
+  currentNode = self.document.documentElement,
+  parentNode = currentNode?.parentNode,
   isSvg = false
-) => new Promise(resolve => {
-  if (!parent) {
+) => {
+  if (!parentNode) {
     // TODO: create error classes for skruv, inherit from one single error class
     throw new Error('Skruv: No parent to render to')
   }
-  if (!(parent instanceof HTMLElement || parent instanceof SVGElement || parent instanceof Document)) {
+  if (!(parentNode instanceof HTMLElement || parentNode instanceof SVGElement || parentNode instanceof Document || parentNode instanceof Window)) {
     // TODO: create error classes for skruv, inherit from one single error class
     throw new Error('Skruv: Parent of wrong type')
   }
-  const renderWaiting = new Set()
-  const checkRender = () => {
-    if (renderWaiting?.size === 0) {
-      resolve('finished render')
-      renderSingle(vNode, node, parent, isSvg, false, config)
-    }
+  if (hydrating) {
+    // If we are hydrating we first do a pass to find all async nodes, resolve those and then do a full render
+    flatten(current).r.r()
+    await hydrationPromise
   }
+  renderRecursive(flatten(current), currentNode, parentNode, isSvg)
+}
 
-  // Check for nodejs, deno and cf workers
-  // @ts-ignore
-  const isSkruvSSR = self?.isSkruvSSR
-  const config = {
-    renderWaiting,
-    checkRender,
-    isSkruvSSR
-  }
-  if (node?.getAttribute?.('data-skruv-ssr-rendered')) {
-    renderSingle(vNode, node, parent, isSvg, true, config)
-    checkRender()
-    return
-  }
-  // render the single first root node
-  renderSingle(vNode, node, parent, isSvg, false, config)
-  checkRender()
-})
-
-export default render
+/** @type {Record<string, ((...c: Array<SkruvChildNode|VnodeAtrributes>) => Vnode)>} */
+const proxyBase = {}
+export const htmlFactory = new Proxy(
+  proxyBase,
+  { get: (_target, /** @type {string} */name) => /** @param {Array<SkruvChildNode|VnodeAtrributes>} c */(...c) => h(name, ...c) }
+)

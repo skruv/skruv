@@ -1,6 +1,4 @@
-import { elements, render } from 'skruv'
-const { css } = elements
-
+import { css, cssElement, render } from 'skruv'
 const rootStyles = css`
 :root {
   font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
@@ -18,15 +16,14 @@ p {
 `
 
 render(
-  <html lang="en-US">
+  <html lang="en-US" class={rootStyles}>
     <head>
       <title>jsx</title>
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
-      <style>{rootStyles}</style>
+      {cssElement}
     </head>
     <body>
-      <div>
-        <style scoped>{scopedStyles}</style>
+      <div class={scopedStyles}>
         <p>blue text</p>
       </div>
       <div>

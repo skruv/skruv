@@ -1,5 +1,7 @@
-/** @typedef {typeof import("./elements.js").Vnode} Vnode */
-/** @typedef {typeof import("./elements.js").VnodeAtrributes} VnodeAtrributes */
+/** @typedef {typeof import("./render.js").Vnode} Vnode */
+/** @typedef {typeof import("./render.js").VnodeAtrributes} VnodeAtrributes */
+
+import { h } from './render'
 
 /**
  * @typedef {Object} JSXAdditionalProperties
@@ -23,10 +25,7 @@ export const Fragment = '#fragment'
  * @returns {Vnode | [Vnode?]}
  */
 // eslint-disable-next-line import/no-unused-modules
-export const jsx = (nodeName, attributes = {}) => {
-  if (attributes.children) { return jsxs(nodeName, { ...attributes, children: attributes.children }) }
-  return jsxs(nodeName, attributes)
-}
+export const jsx = (nodeName, attributes = {}) => jsxs(nodeName, attributes)
 
 /**
  * @param {String} nodeName
@@ -51,6 +50,6 @@ export const jsxs = (nodeName, attributes = {}) => {
     attrs.for = attrs['html-for']
     delete attrs['html-for']
   }
-  if (children) { return ({ nodeName, attributes: attrs || {}, childNodes: [children] }) }
-  return ({ nodeName, attributes: attrs || {}, childNodes: [] })
+  if (children) { return h(nodeName, attrs || {}, ...children) }
+  return h(nodeName, attrs || {})
 }
