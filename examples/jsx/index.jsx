@@ -1,4 +1,4 @@
-import { css, cssElement, render } from 'skruv'
+import { css, cssTextGenerator, render } from 'skruv'
 const rootStyles = css`
 :root {
   font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
@@ -20,7 +20,7 @@ render(
     <head>
       <title>jsx</title>
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
-      {cssElement}
+      <style>{cssTextGenerator}</style>
     </head>
     <body>
       <div class={scopedStyles}>
