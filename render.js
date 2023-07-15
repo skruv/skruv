@@ -48,7 +48,7 @@
  * @typedef {AsyncIterable<SkruvValue>} SkruvAsyncIterable
  * @typedef {Promise<SkruvValue>} SkruvPromise
  * @typedef {function(): Promise<SkruvValue>} SkruvAsyncFunction
- * @typedef {Vnode|SkruvValue} SkruvChildNode
+ * @typedef {Vnode|Vnode[]|SkruvValue} SkruvChildNode
  * @typedef {Array<SkruvChildNode>} SkruvChildNodes
  */
 /**

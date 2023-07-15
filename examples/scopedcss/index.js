@@ -1,4 +1,4 @@
-import { css, cssTextGenerator, htmlFactory, render } from '../../index.js'
+import { css, cssTextGenerator, htmlFactory, render } from 'https://skruv.io/index.js'
 
 const { title, html, head, meta, body, div, p, style } = htmlFactory
 

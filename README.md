@@ -11,12 +11,11 @@ No-dependency, no-build, small JS framework/view-library.
 
 * No buildtime or runtime dependencies, no parsers
 * Pretty small:
-  * ~400 LOC HTML renderer
+  * ~400 LOC HTML/SVG renderer
   * ~150 LOC State management
-  * ~400 LOC HTML/SVG helpers (without comments)
 * When minified:
-  * 20kb
-  * 5kb compressed
+  * ~9kb
+  * ~3kb compressed
 * Useable without bundling/compilation/transpilation
 * Fast enough for most normal usecases: [benchmark](https://krausest.github.io/js-framework-benchmark/index.html)
 * Supports async generators as components
@@ -30,8 +29,9 @@ No-dependency, no-build, small JS framework/view-library.
 ### Basic todo-list
 {% include_relative examples/todo/index.md %}
 ```js
-import { createState, elements, render } from 'https://skruv.io/index.js'
-const { css, html, head, title, script, meta, style, body, main, h1, form, input, button, ol, li, a } = elements
+import { createState, css, cssTextGenerator, htmlFactory, render } from 'https://skruv.io/index.js'
+
+const { html, head, title, script, meta, body, main, h1, form, input, button, ol, li, a, style } = htmlFactory
 
 const state = createState({
   todos: ['Write todos']
@@ -55,17 +55,18 @@ input {
   flex: 1;
 }
 `
+
 render(
-  html({ lang: 'en-US' },
-    head({},
-      title({}, state.todos.getGenerator(0)),
+  html({ lang: 'en-US', class: styles },
+    head(
+      title(state.todos.getGenerator(0)),
       script({ src: './index.js', type: 'module' }),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      style({}, styles)
+      style(cssTextGenerator)
     ),
-    body({},
-      main({},
-        h1({}, state.todos.getGenerator(0)),
+    body(
+      main(
+        h1(state.todos.getGenerator(0)),
         form({
           onsubmit: e => {
             e.preventDefault()
@@ -77,17 +78,17 @@ render(
           type: 'text',
           name: 'todo'
         }),
-        button({}, 'New!')
+        button('New!')
         ),
         async function * () {
           for await (const currentState of state) {
-            yield ol({},
-              currentState.todos.map((todo, i) => li({},
-                todo,
-                ' ',
+            yield ol(
+              currentState.todos.map((todo, i) => li(
+                `${todo} `,
                 a({
                   href: '#',
-                  onclick: () => {
+                  onclick: e => {
+                    e.preventDefault()
                     currentState.todos.splice(i, 1)
                   }
                 }, 'x')
@@ -127,8 +128,9 @@ There are three main parts of skruv:
 ## Example using scopedcss
 {% include_relative examples/scopedcss/index.md %}
 ```js
-import { elements, render } from 'https://skruv.io/index.js'
-const { css, title, html, head, meta, style, body, div, p } = elements
+import { css, cssTextGenerator, htmlFactory, render } from 'https://skruv.io/index.js'
+
+const { title, html, head, meta, body, div, p, style } = htmlFactory
 
 const rootStyles = css`
 :root {
@@ -136,7 +138,7 @@ const rootStyles = css`
 }
 `
 
-const styles = css`
+const scopedStyles = css`
 :scope {
   border: 1px solid;
 }
@@ -147,19 +149,18 @@ p {
 `
 
 render(
-  html({ lang: 'en-US' },
-    head({},
-      title({}, 'scopedcss'),
+  html({ lang: 'en-US', class: rootStyles },
+    head(
+      title('scopedcss'),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      style({}, rootStyles)
+      style(cssTextGenerator)
     ),
-    body({},
-      div({},
-        style({ scoped: true }, styles),
-        p({}, 'blue text')
+    body(
+      div({ class: scopedStyles },
+        p('blue text')
       ),
-      div({},
-        p({}, 'default text')
+      div(
+        p('default text')
       )
     )
   )
@@ -169,18 +170,16 @@ render(
 ## Example using JSX
 {% include_relative examples/jsx/index.md %}
 Same as above, but using JSX. Compiled with esbuild:
-`esbuild  --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js` 
+`esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js` 
 ```jsx
-import { elements, render } from 'skruv'
-const { css } = elements
-
+import { css, cssTextGenerator, render } from 'skruv'
 const rootStyles = css`
 :root {
   font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
 }
 `
 
-const styles = css`
+const scopedStyles = css`
 :scope {
   border: 1px solid;
 }
@@ -191,15 +190,14 @@ p {
 `
 
 render(
-  <html lang="en-US">
+  <html lang="en-US" class={rootStyles}>
     <head>
       <title>jsx</title>
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
-      <style>{rootStyles}</style>
+      <style>{cssTextGenerator}</style>
     </head>
     <body>
-      <div>
-        <style scoped>{styles}</style>
+      <div class={scopedStyles}>
         <p>blue text</p>
       </div>
       <div>

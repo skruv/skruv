@@ -23,7 +23,7 @@ export type SkruvAsyncGenerator = AsyncGenerator<SkruvValue>;
 export type SkruvAsyncIterable = AsyncIterable<SkruvValue>;
 export type SkruvPromise = Promise<SkruvValue>;
 export type SkruvAsyncFunction = () => Promise<SkruvValue>;
-export type SkruvChildNode = Vnode | SkruvValue;
+export type SkruvChildNode = Vnode | Vnode[] | SkruvValue;
 export type SkruvChildNodes = Array<SkruvChildNode>;
 export type SkruvEvents = {
     oncreate: (arg0: HTMLElement | Text | SVGElement | Comment) => void;
