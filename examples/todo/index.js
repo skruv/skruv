@@ -24,6 +24,7 @@ input {
   flex: 1;
 }
 `
+
 render(
   html({ lang: 'en-US', class: styles },
     head(
@@ -52,11 +53,11 @@ render(
           for await (const currentState of state) {
             yield ol(
               currentState.todos.map((todo, i) => li(
-                todo,
-                ' ',
+                `${todo} `,
                 a({
                   href: '#',
-                  onclick: () => {
+                  onclick: e => {
+                    e.preventDefault()
                     currentState.todos.splice(i, 1)
                   }
                 }, 'x')

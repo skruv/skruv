@@ -1,5 +1,6 @@
 /* global CSSMediaRule CSSStyleRule CSSOM */
 
+// TODO: package
 /** @type {function} */
 let resolveStyles = () => {}
 let promiseStyles = new Promise(resolve => { resolveStyles = resolve })
@@ -31,9 +32,9 @@ const hash = str => {
  * Scoped CSS helper
  * @param {TemplateStringsArray} strings
  * @param {(String | Number | Boolean | undefined)[]} keys
- * @returns {Promise<string>}
+ * @returns {string}
  */
-export const css = async (strings, ...keys) => {
+export const css = (strings, ...keys) => {
   const stylesheet = strings.reduce(
     /**
      * @param {String[]} prev
@@ -180,7 +181,7 @@ export const css = async (strings, ...keys) => {
 
     rule.selectorText = updateSelectorText(rule.selectorText, prefix)
   }
-  const scope = await hash(stylesheet)
+  const scope = hash(stylesheet)
   const retval = `skruv-css-scope-${scope}`
   const prefix = `.${retval}`
 
@@ -198,6 +199,7 @@ export const css = async (strings, ...keys) => {
     sheet = CSSOM.parse(stylesheet)
   } else {
     // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari (supported from 16.4 (Released 2023-03-27))
+    // TODO: don't recreate each run
     const styleDoc = self.document.implementation.createHTMLDocument('')
     const styleElem = styleDoc.createElement('style')
     styleElem.innerText = stylesheet
@@ -218,6 +220,9 @@ export const css = async (strings, ...keys) => {
   return retval
 }
 
+/**
+ * @returns {AsyncGenerator<string>}
+ */
 export async function * cssTextGenerator () {
   yield Array.from(styleMap.values()).join('')
   while (true) {

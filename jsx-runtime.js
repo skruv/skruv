@@ -50,6 +50,6 @@ export const jsxs = (nodeName, attributes = {}) => {
     attrs.for = attrs['html-for']
     delete attrs['html-for']
   }
-  if (children) { return h(nodeName, attrs || {}, ...children) }
+  if (children) { return h(nodeName, attrs || {}, children) }
   return h(nodeName, attrs || {})
 }
