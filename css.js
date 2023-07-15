@@ -1,28 +1,31 @@
-/* global crypto CSSMediaRule CSSStyleRule CSSOM */
-import { htmlFactory } from './render.js'
-const { style } = htmlFactory
-const encoder = new TextEncoder()
+/* global CSSMediaRule CSSStyleRule CSSOM */
 
 /** @type {function} */
 let resolveStyles = () => {}
 let promiseStyles = new Promise(resolve => { resolveStyles = resolve })
 const styleMap = new Map()
 
-/**
- * @param {ArrayBuffer} buffer
- * @returns {string}
- */
-const buf2hex = buffer =>
-  [...new Uint8Array(buffer)].map(x => x.toString(16).padStart(2, '0')).join(
-    ''
-  )
+// // Example of using webcrypto for hashing. Only works if loaded over https
+// const encoder = new TextEncoder()
+// /**
+//  * @param {string} str
+//  * @returns {Promise<string>}
+//  */
+// const hash = async str => [...new Uint8Array(await crypto.subtle.digest('SHA-1', encoder.encode(str)))].map(x => x.toString(16).padStart(2, '0')).join('')
 
 /**
  * @param {string} str
- * @returns {Promise<string>}
+ * @returns {string}
  */
-const hash = async str =>
-  buf2hex(await crypto.subtle.digest('SHA-1', encoder.encode(str)))
+const hash = str => {
+  let hash = 0
+  if (str.length === 0) { return hash.toString() }
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i)
+    hash |= 0 // Convert to 32bit integer
+  }
+  return hash.toString()
+}
 
 /**
  * Scoped CSS helper
@@ -215,11 +218,11 @@ export const css = async (strings, ...keys) => {
   return retval
 }
 
-export async function * cssElement () {
-  promiseStyles = new Promise(resolve => { resolveStyles = resolve })
-  yield style(Array.from(styleMap.values()).join(''))
+export async function * cssTextGenerator () {
+  yield Array.from(styleMap.values()).join('')
   while (true) {
     await promiseStyles
-    yield style(Array.from(styleMap.values()).join(''))
+    yield Array.from(styleMap.values()).join('')
+    promiseStyles = new Promise(resolve => { resolveStyles = resolve })
   }
 }

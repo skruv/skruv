@@ -1,6 +1,6 @@
-import { css, cssElement, htmlFactory, render } from 'https://skruv.io/index.js'
+import { css, cssTextGenerator, htmlFactory, render } from '../../index.js'
 
-const { title, html, head, meta, body, div, p } = htmlFactory
+const { title, html, head, meta, body, div, p, style } = htmlFactory
 
 const rootStyles = css`
 :root {
@@ -23,7 +23,7 @@ render(
     head(
       title('scopedcss'),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      cssElement
+      style(cssTextGenerator)
     ),
     body(
       div({ class: scopedStyles },

@@ -1,6 +1,6 @@
-import { createState, css, cssElement, htmlFactory, render } from 'https://skruv.io/index.js'
+import { createState, css, cssTextGenerator, htmlFactory, render } from 'https://skruv.io/index.js'
 
-const { html, head, title, script, meta, body, main, h1, form, input, button, ol, li, a } = htmlFactory
+const { html, head, title, script, meta, body, main, h1, form, input, button, ol, li, a, style } = htmlFactory
 
 const state = createState({
   todos: ['Write todos']
@@ -30,7 +30,7 @@ render(
       title(state.todos.getGenerator(0)),
       script({ src: './index.js', type: 'module' }),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      cssElement
+      style(cssTextGenerator)
     ),
     body(
       main(

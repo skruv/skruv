@@ -1,7 +1,8 @@
 // @ts-check
 /* global HTMLInputElement HTMLOptionElement Text Comment HTMLElement SVGElement Document Window */
+
 // TODO: Build
-// Error boundaries (custom events that bubble)
+// Error boundaries (custom events that bubble on error)
 // single level state
 
 // TODO: Document
@@ -38,21 +39,22 @@
 // documentElement.createElement
 
 /**
+ * @typedef {Vnode|Function|String|Number|Boolean|SkruvAsyncGenerator|SkruvAsyncIterable|SkruvPromise|SkruvAsyncFunction} SkruvValue
  * @typedef {(AsyncGenerator<Function|String|Boolean|Number>|AsyncIterable<Function|String|Boolean|Number>)} SkruvAttributesIterable
- */
-/**
  * @typedef {(Promise<Function|String|Boolean|Number>|function(): Promise<Function|String|Boolean|Number>)} SkruvAttributesPromiseOrAsyncFunction
+ * @typedef {Partial<GlobalEventHandlers> & Partial<SkruvEvents> & Record<string,(string|boolean|Function|number|Object)>} PreparedVnodeAtrributes
+ * @typedef {PreparedVnodeAtrributes & Record<string,(string|boolean|Function|number|Object|SkruvAttributesPromiseOrAsyncFunction|SkruvAttributesIterable)>} VnodeAtrributes
+ * @typedef {AsyncGenerator<SkruvValue>} SkruvAsyncGenerator
+ * @typedef {AsyncIterable<SkruvValue>} SkruvAsyncIterable
+ * @typedef {Promise<SkruvValue>} SkruvPromise
+ * @typedef {function(): Promise<SkruvValue>} SkruvAsyncFunction
+ * @typedef {Vnode|SkruvValue} SkruvChildNode
+ * @typedef {Array<SkruvChildNode>} SkruvChildNodes
  */
 /**
  * @typedef SkruvEvents
  * @prop {function(HTMLElement | Text | SVGElement | Comment): void} oncreate
  * @prop {function(HTMLElement | Text | SVGElement | Comment): void} onremove
- */
-/**
- * @typedef {Partial<GlobalEventHandlers> & Partial<SkruvEvents> & Record<string,(string|boolean|Function|number|Object)>} PreparedVnodeAtrributes
- */
-/**
- * @typedef {PreparedVnodeAtrributes & Record<string,(string|boolean|Function|number|Object|SkruvAttributesPromiseOrAsyncFunction|SkruvAttributesIterable)>} VnodeAtrributes
  */
 /**
  * @typedef {object} Vnode
@@ -73,31 +75,24 @@
  * @prop {Array<PreparedVnode>} c
  * @prop {PreparedVnodeAtrributes} a
  */
-/**
- * @typedef {AsyncGenerator<SkruvValue>} SkruvAsyncGenerator
- * @typedef {AsyncIterable<SkruvValue>} SkruvAsyncIterable
- * @typedef {Promise<SkruvValue>} SkruvPromise
- * @typedef {function(): Promise<SkruvValue>} SkruvAsyncFunction
- * @typedef {Vnode|Function|String|Number|Boolean|SkruvAsyncGenerator|SkruvAsyncIterable|SkruvPromise|SkruvAsyncFunction} SkruvValue
- */
-/**
- * @typedef {Vnode|SkruvValue} SkruvChildNode
- */
-/**
- * @typedef {Array<SkruvChildNode>} SkruvChildNodes
- */
 const s = Symbol.for('skruvDom')
 const p = Symbol.for('skruvDomPrepared')
 /** @type {WeakMap<SkruvAsyncGenerator|SkruvAsyncIterable|SkruvPromise|SkruvAsyncFunction|Function|Vnode, SkruvValue?>} */
 const generatorResults = new WeakMap()
+
 /** @type {WeakMap<Node, Record<string,EventListener?>>} */
 const skruvListeners = new WeakMap()
+
 /** @type {WeakMap<Object, Node>} */
 const keyedNodes = new WeakMap()
-let hydrationResolve = () => { }
+
+let hydrationResolve = () => {}
 /** @type {Promise<void>} */
 const hydrationPromise = (new Promise(resolve => { hydrationResolve = () => resolve() }))
+
+/** @type {Set<SkruvAsyncGenerator|SkruvAsyncIterable|SkruvPromise|SkruvAsyncFunction|Function|Vnode?>} */
 const waitingGens = new Set()
+
 // @ts-ignore This is a global set by SSR/Tests
 let hydrating = self?.SkruvWaitForAsync || !!document.querySelector('data-skruv-ssr-rendered')
 
@@ -223,9 +218,9 @@ const recurseVnodes = (c, skruvDom) => {
     // @ts-ignore TS does not understand that .s is a typeguard for vnodes
     .map(value => value?.s === s ? flatten(value) : syncify(value, skruvDom, true))
     .flat(Infinity)
-    .filter(value => value !== null && typeof value !== 'boolean')
+    .filter(value => value !== null && typeof value !== 'boolean' && typeof value !== 'undefined')
   // @ts-ignore Optional chaining
-  if (newVnodes.find(value => value?.p !== p)) {
+  if (newVnodes.find(value => value?.p !== p) !== undefined) {
     return recurseVnodes(newVnodes, skruvDom)
   }
   // @ts-ignore We already guard against this with the .p check above
@@ -241,10 +236,10 @@ const recurseVnodes = (c, skruvDom) => {
 const flatten = skruvDom => {
   const a = Object.fromEntries(
     Object.entries(skruvDom._a)
-      .filter(entry => entry[1] !== null)
+      .filter(entry => entry[1] !== null && typeof entry[1] !== 'undefined')
       // @ts-ignore We already check null above
       .map(([key, value]) => key === 'data-skruv-key' ? [key, value] : [key, syncify(value, skruvDom, false)])
-      .filter(entry => entry[1] !== null)
+      .filter(entry => entry[1] !== null && typeof entry[1] !== 'undefined')
   )
   return {
     p,
@@ -264,6 +259,11 @@ const renderRecursive = (current, currentNode, parentNode, isSvg) => {
   if (current.p !== p) {
     throw new Error('unkown type in render: ' + JSON.stringify(current))
   }
+  for (const c of current.c) {
+    if (c.p !== p) {
+      throw new Error('unkown type in render: ' + JSON.stringify(c))
+    }
+  }
   if (!parentNode || (currentNode && !parentNode.contains(currentNode))) { return false }
   const ownerDocument = currentNode.ownerDocument
   const documentElement = ownerDocument.documentElement
@@ -274,29 +274,36 @@ const renderRecursive = (current, currentNode, parentNode, isSvg) => {
 
   for (const [key, value] of Object.entries(current.a)) {
     if (key === 'data-skruv-key') { continue }
-    if (value === null || value === false) {
-      if (currentNode.getAttribute(key)) {
-        currentNode.removeAttribute(key)
-      }
-      continue
-    }
     /** @type {EventListenerOrEventListenerObject} */
-    if (key.slice(0, 2) === 'on' && value instanceof Function) {
+    if (key.slice(0, 2) === 'on') {
       let listeners = skruvListeners.get(currentNode)
       const curr = listeners?.[key]
+      const event = key.slice(2)
       if (!listeners) {
         listeners = {}
         skruvListeners.set(currentNode, listeners)
       }
-      if (curr && curr.toString() !== value.toString()) {
-        currentNode.removeEventListener(key.slice(2), curr)
+      if (value instanceof Function) {
+        if (curr && curr.toString() !== value.toString()) {
+          currentNode.removeEventListener(event, curr)
+          listeners[key] = null
+        }
+        if (!curr) {
+          // @ts-ignore EventListener and Function are incompatible according to TS
+          listeners[key] = value
+          // @ts-ignore EventListener and Function are incompatible according to TS
+          currentNode.addEventListener(event, value)
+        }
+        continue
+      }
+      if (curr && !value) {
+        currentNode.removeEventListener(event, curr)
         listeners[key] = null
       }
-      if (!curr) {
-        // @ts-ignore EventListener and Function are incompatible according to TS
-        listeners[key] = value
-        // @ts-ignore EventListener and Function are incompatible according to TS
-        currentNode.addEventListener(key.slice(2), value)
+    }
+    if (value === null || value === false) {
+      if (currentNode.getAttribute(key)) {
+        currentNode.removeAttribute(key)
       }
       continue
     }
@@ -313,7 +320,7 @@ const renderRecursive = (current, currentNode, parentNode, isSvg) => {
         )
       ) || typeof value === 'object' // Support complex data passing for custom elements
     ) {
-      // @ts-ignore TS does not think properties are accessible directly?
+      // @ts-ignore TS does not think HTML properties are accessible directly?
       currentNode[key] = value
     }
   }
