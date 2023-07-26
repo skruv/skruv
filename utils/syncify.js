@@ -30,10 +30,7 @@ const process = (value, key, parent, cbparent, result) => {
  * @returns {any?}
  */
 const syncify = (value, key, parent, cbparent, root = true) => {
-  if (typeof value === 'string' || typeof value === 'number') {
-    return value.toString()
-  }
-  if (typeof value === 'boolean' || value === null) {
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === null) {
     return value
   }
   if (generatorResults.has(value)) {
