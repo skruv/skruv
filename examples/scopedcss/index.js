@@ -1,4 +1,5 @@
-import { css, cssTextGenerator, htmlFactory, render } from 'https://skruv.io/index.js'
+import { htmlFactory, render } from '../../index.js'
+import { css, cssTextGenerator } from '../../utils/css.js'
 
 const { title, html, head, meta, body, div, p, style } = htmlFactory
 
@@ -18,7 +19,7 @@ p {
 }
 `
 
-render(
+export const doRender = () => render(
   html({ lang: 'en-US', class: rootStyles },
     head(
       title('scopedcss'),
@@ -35,3 +36,5 @@ render(
     )
   )
 )
+
+doRender()

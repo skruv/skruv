@@ -1,7 +1,6 @@
 // @ts-nocheck
 // TODO: This file will be hard to typecheck without generic types, check how to do it with TS later
-
-const resolveTimer = self?.requestAnimationFrame || (cb => setTimeout(cb, 0))
+const resolveTimer = globalThis?.requestAnimationFrame || (cb => setTimeout(cb, 0))
 
 export const createState = stateObj => {
   const Handler = class Handler {

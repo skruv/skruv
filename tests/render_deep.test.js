@@ -1,18 +1,21 @@
-/* global test expect */
+import '../utils/minidom.js'
+
+import assert from 'node:assert'
+import test from 'node:test'
+
 import { htmlFactory, render } from '../index.js'
-const { body, div } = htmlFactory
-self.SkruvWaitForAsync = true
+globalThis.SkruvWaitForAsync = true
+const { html, body, div } = htmlFactory
 
 test('render deep elements', async () => {
-  const html = document.createElement('html')
-  const root = document.createElement('body')
-  html.appendChild(root)
   render(
-    body({},
-      div({},
-        div({}, 'deep')
+    html(
+      body({},
+        div({},
+          div({}, 'deep')
+        )
       )
-    ), root
+    )
   )
-  expect(html.childNodes[0].childNodes[0].childNodes[0].textContent).toBe('deep')
+  assert.strictEqual(document.documentElement.childNodes[0].childNodes[0].childNodes[0].childNodes[0].textContent, 'deep')
 })

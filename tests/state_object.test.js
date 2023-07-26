@@ -1,7 +1,12 @@
-/* global test expect */
-import { createState, htmlFactory, render } from '../index.js'
+import '../utils/minidom.js'
+
+import assert from 'node:assert'
+import test from 'node:test'
+
+import { htmlFactory, render } from '../index.js'
+import { createState } from '../utils/state.js'
+globalThis.SkruvWaitForAsync = true
 const { body, div, html } = htmlFactory
-self.SkruvWaitForAsync = true
 
 const wait = time => new Promise(resolve => setTimeout(resolve, time))
 
@@ -17,5 +22,8 @@ test('update on array push', async () => {
   sub.obj.test = 'testvalue'
   sub.obj.test2 = 'testvalue2'
   await wait(20)
-  expect(document.documentElement.innerHTML).toMatchSnapshot()
+  assert.strictEqual(
+    document.documentElement.innerHTML,
+    '<!DOCTYPE html><html><body><div data-key="test">testvalue</div><div data-key="test2">testvalue2</div></body></html>'
+  )
 })

@@ -9,16 +9,19 @@
     "outDir": "types",
     "target": "es2018",
     "declarationMap": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "module": "es2020"
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "types"
   ],
   "files": [
     "index.js",
-    "render.js",
-    "css.js",
-    "jsx-runtime.js",
-    "createState.js",
+    "utils/css.js",
+    "utils/state.js",
+    "utils/ssr.js",
+    "utils/minidom.js",
+    "utils/jsx-runtime.js"
   ]
 }

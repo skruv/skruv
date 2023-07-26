@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`update on array push 1`] = `"<body><div data-key=\\"test\\">testvalue</div><div data-key=\\"test2\\">testvalue2</div></body>"`;

@@ -1,7 +1,12 @@
-/* global test expect */
-import { createState, htmlFactory, render } from '../index.js'
-const { body, div } = htmlFactory
-self.SkruvWaitForAsync = true
+import '../utils/minidom.js'
+
+import assert from 'node:assert'
+import test from 'node:test'
+
+import { htmlFactory, render } from '../index.js'
+import { createState } from '../utils/state.js'
+globalThis.SkruvWaitForAsync = true
+const { html, body, div } = htmlFactory
 
 const wait = time => new Promise(resolve => setTimeout(resolve, time))
 
@@ -14,11 +19,8 @@ async function * generator () {
 }
 
 test('update on state update: Array', async () => {
-  const html = document.createElement('html')
-  const root = document.createElement('body')
-  html.appendChild(root)
-  render(body({}, generator), root)
+  render(html(body(generator)))
   state.arr.push('test')
   await wait(20)
-  return expect(html.childNodes[0].childNodes[0].textContent).toBe('test')
+  assert.strictEqual(document.documentElement.childNodes[0].childNodes[0].childNodes[0].textContent, 'test')
 })

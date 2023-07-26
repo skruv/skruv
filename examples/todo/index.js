@@ -1,4 +1,6 @@
-import { createState, css, cssTextGenerator, htmlFactory, render } from 'https://skruv.io/index.js'
+import { htmlFactory, render } from '../../index.js'
+import { css, cssTextGenerator } from '../../utils/css.js'
+import { createState } from '../../utils/state.js'
 
 const { html, head, title, script, meta, body, main, h1, form, input, button, ol, li, a, style } = htmlFactory
 
@@ -25,7 +27,7 @@ input {
 }
 `
 
-render(
+export const doRender = () => render(
   html({ lang: 'en-US', class: styles },
     head(
       title(state.todos.getGenerator(0)),
@@ -69,3 +71,5 @@ render(
     )
   )
 )
+
+doRender()

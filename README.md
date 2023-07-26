@@ -24,6 +24,15 @@ No-dependency, no-build, small JS framework/view-library.
 * Works with web components: [PR for tests at custom-elements-everywhere](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
 <!-- * Works with web components: [tests at custom-elements-everywhere](https://custom-elements-everywhere.com/libraries/skruv/results/results.html) -->
 
+## TODO:
+
+* [ ] Handle flatifying in render
+* [ ] Build a separate SSG example
+* [ ] Build example with SSR bundling the request cache
+* [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc.
+* [ ] In tests run all the examples and validate their output against snapshots
+* Bundle in the CSS template tag minifier
+
 ## Examples
 
 ### Basic todo-list
