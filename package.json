@@ -22,6 +22,8 @@
     "./utils/css.js": "./utils/css.js",
     "./utils/state.js": "./utils/state.js",
     "./utils/syncify.js": "./utils/syncify.js",
+    "./utils/ssr.js": "./utils/ssr.js",
+    "./utils/minidom.js": "./utils/minidom.js",
     "./jsx-runtime": "./utils/jsx-runtime.js"
   },
   "main": "index.js",
@@ -31,6 +33,8 @@
     "utils/css.js",
     "utils/state.js",
     "utils/syncify.js",
+    "utils/ssr.js",
+    "utils/minidom.js",
     "utils/jsx-runtime.js",
     "types/index.d.ts"
   ],
