@@ -131,27 +131,3 @@ const syncify = (value, key, parent, cbparent, root = true) => {
 }
 
 export { hydrationPromise, syncify }
-
-// const a = {
-//   a: new Promise(res => res('a')),
-//   b: async function* () {
-//     while (true) {
-//       yield 'b'
-//       await new Promise(res => setTimeout(() => res(''), 100))
-//       yield 'bb'
-//     }
-//   },
-//   d: [() => [async () => [async function* () {
-//     while (true) {
-//       await new Promise(res => setTimeout(() => res(''), 10))
-//       yield Math.random()
-//     }
-//   }
-//   ]]],
-//   c: 'c',
-//   1: 1,
-//   arr: ['arr'],
-// }
-// console.log(JSON.stringify(syncify(a)), syncify(a), JSON.stringify(a), a)
-// await hydrationPromise
-// console.log(JSON.stringify(syncify(a)), syncify(a), JSON.stringify(a), a)
