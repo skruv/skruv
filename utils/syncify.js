@@ -115,7 +115,7 @@ const syncify = (value, key, parent, cbparent, root = true) => {
     for (const key in value) {
       // @ts-ignore: TODO: Have a stricter check than typeof value === 'object' above
       const partialNewVal = syncify(value[key], key, newVal, cb, false)
-      if (partialNewVal !== null) {
+      if (partialNewVal !== null || value[key] === null) {
         // @ts-ignore: This complains, but we will always get either array and number key or object and string key
         newVal[key] = partialNewVal
       }
@@ -127,7 +127,7 @@ const syncify = (value, key, parent, cbparent, root = true) => {
     }
     return newVal
   }
-  throw new Error('Unkown type in syncify: ' + JSON.stringify(value))
+  throw new Error('Unkown type in syncify: ' + JSON.stringify({ key, value }))
 }
 
 export { hydrationPromise, syncify }
