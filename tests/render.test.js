@@ -1,12 +1,13 @@
-/* global test expect */
+import '../utils/minidom.js'
+
+import assert from 'node:assert'
+import test from 'node:test'
+
 import { htmlFactory, render } from '../index.js'
-const { body } = htmlFactory
-self.SkruvWaitForAsync = true
+globalThis.SkruvWaitForAsync = true
+const { html, body } = htmlFactory
 
 test('simple render', async () => {
-  const html = document.createElement('html')
-  const root = document.createElement('body')
-  html.appendChild(root)
-  render(body({}, 'test'), root)
-  expect(html.childNodes[0].textContent).toBe('test')
+  render(html(body('test')))
+  assert.strictEqual(document.documentElement.childNodes[0].childNodes[0].textContent, 'test')
 })

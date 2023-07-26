@@ -19,37 +19,32 @@
       "import": "./index.js",
       "default": "./index.js"
     },
-    "./jsx-runtime": "./jsx-runtime.js"
+    "./utils/css.js": "./utils/css.js",
+    "./utils/state.js": "./utils/state.js",
+    "./utils/syncify.js": "./utils/syncify.js",
+    "./jsx-runtime": "./utils/jsx-runtime.js"
   },
   "main": "index.js",
   "types": "./types/index.js",
   "files": [
-    "elements.js",
-    "createState.js",
-    "render.js",
     "index.js",
-    "css.js",
-    "jsx-runtime.js",
-    "index.min.js",
-    "index.min.js.map",
-    "types/index.d.ts",
-    "types/render.d.ts",
-    "types/createState.d.ts",
-    "types/index.d.ts.map",
-    "types/render.d.ts.map",
-    "types/createState.d.ts.map"
+    "utils/css.js",
+    "utils/state.js",
+    "utils/syncify.js",
+    "utils/jsx-runtime.js",
+    "types/index.d.ts"
   ],
   "scripts": {
-    "build": "esbuild index.js --bundle --sourcemap --minify --outfile=index.min.js --format=esm && (cd examples/jsx && esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js)",
+    "build": "(cd examples/jsx && esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js)",
     "lint": "eslint . --ext js,jsx,json",
-    "pre-release": "npm run test && npm run lint -- --fix && npm run typecheck && npm run build",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest --env=jsdom --no-cache --passWithNoTests",
-    "typecheck": "tsc"
+    "pre-release": "npm run build && npm run test && npm run lint -- --fix && npm run typecheck",
+    "test": "node --test",
+    "typecheck": "rm -rf types && tsc"
   },
   "devDependencies": {
     "cssom": "^0.5.0",
     "esbuild": "^0.14.48",
-    "eslint": "^6.8.0",
+    "eslint": "^8.45.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-json": "^3.0.0",
@@ -58,8 +53,6 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-standard": "^4.0.2",
-    "jest": "^26.6.3",
-    "jsdom": "^22.0.0",
     "stylelint": "^13.12.0",
     "stylelint-config-recess-order": "^2.3.0",
     "stylelint-config-standard": "^20.0.0",

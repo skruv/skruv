@@ -6,7 +6,7 @@ let resolveStyles = () => {}
 let promiseStyles = new Promise(resolve => { resolveStyles = resolve })
 const styleMap = new Map()
 
-// // Example of using webcrypto for hashing. Only works if loaded over https
+// // Example of using webcrypto for hashing. Only works if loaded over https, so not used. Also requires async
 // const encoder = new TextEncoder()
 // /**
 //  * @param {string} str
@@ -190,17 +190,17 @@ export const css = (strings, ...keys) => {
   }
   let sheet
   // @ts-ignore TODO: If we don't have any way to parse the css bail out
-  if (!self?.CSSOM && !self.document?.implementation) {
+  if (!globalThis?.CSSOM && !globalThis.document?.implementation) {
     return ''
   }
   // @ts-ignore: TODO: Type confusion between polyfill and native.
-  if (self?.CSSOM) {
+  if (globalThis?.CSSOM) {
     // @ts-ignore: TODO: Type confusion between polyfill and native.
     sheet = CSSOM.parse(stylesheet)
   } else {
     // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari (supported from 16.4 (Released 2023-03-27))
     // TODO: don't recreate each run
-    const styleDoc = self.document.implementation.createHTMLDocument('')
+    const styleDoc = globalThis.document.implementation.createHTMLDocument('')
     const styleElem = styleDoc.createElement('style')
     styleElem.innerText = stylesheet
     styleDoc.body.append(styleElem)

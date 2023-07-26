@@ -1,7 +1,7 @@
-/** @typedef {typeof import("./render.js").Vnode} Vnode */
-/** @typedef {typeof import("./render.js").VnodeAtrributes} VnodeAtrributes */
+/** @typedef {typeof import("../index.js").Vnode} Vnode */
+/** @typedef {typeof import("../index.js").VnodeAtrributes} VnodeAtrributes */
 
-import { h } from './render'
+import { h } from '..'
 
 /**
  * @typedef {Object} JSXAdditionalProperties

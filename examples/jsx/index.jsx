@@ -1,4 +1,6 @@
-import { css, cssTextGenerator, render } from 'skruv'
+import { render } from 'skruv'
+import { css, cssTextGenerator } from 'skruv/utils/css.js'
+
 const rootStyles = css`
 :root {
   font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
