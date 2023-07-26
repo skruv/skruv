@@ -42,7 +42,7 @@
     "build": "(cd examples/jsx && esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js)",
     "lint": "eslint . --ext js,jsx,json",
     "pre-release": "npm run build && npm run test && npm run lint -- --fix && npm run typecheck",
-    "test": "node --test",
+    "test": "node --test --experimental-test-coverage",
     "typecheck": "rm -rf types && tsc"
   },
   "devDependencies": {
