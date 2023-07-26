@@ -69,10 +69,8 @@
     "**/node_modules/**/*.js",
     "**/node_modules/**/*.json",
     "**/package-lock.json",
-    "**/index.min.js",
     "**/tsconfig.json",
     ".vscode/**",
-    "comparisons/**",
     "examples/jsx/*.js"
   ],
   "globals": {
