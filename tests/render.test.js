@@ -8,6 +8,10 @@ globalThis.SkruvWaitForAsync = true
 const { html, body } = htmlFactory
 
 test('simple render', async () => {
-  render(html(body('test')))
+  render(
+    html(
+      body('test')
+    )
+  )
   assert.strictEqual(document.documentElement.childNodes[0].childNodes[0].textContent, 'test')
 })

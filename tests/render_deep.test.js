@@ -10,9 +10,9 @@ const { html, body, div } = htmlFactory
 test('render deep elements', async () => {
   render(
     html(
-      body({},
-        div({},
-          div({}, 'deep')
+      body(
+        div(
+          div('deep')
         )
       )
     )

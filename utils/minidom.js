@@ -29,21 +29,21 @@ const document = {
   querySelector: () => null,
   querySelectorAll: () => []
 }
+
 class HTMLElement {
   /** @param {string} nodeName */
-  constructor (nodeName, data = '') {
-    this.skruvMock = true
+  constructor (nodeName) {
     /** @type {HTMLElement[]} */
     this.childNodes = []
     /** @type {{ [key: string]: string; }} */
     this.attributes = {}
     /** @type {HTMLElement?} */
     this.parentNode = null
+    // TODO: make private
     /** @type {{ [key: string]: function; }} */
     this.eventListeners = {}
     this.ownerDocument = document
     this.nodeName = nodeName || this.nodeName
-    this.data = data
   }
 
   /**
@@ -136,16 +136,21 @@ class HTMLElement {
     return toText(this)
   }
 }
+
 class SVGElement extends HTMLElement {}
+
 class Text extends HTMLElement {
   constructor (data = '') {
-    super('#text', '')
+    super('#text')
+    /** @type {string} */
     this.data = data
   }
 }
+
 class Comment extends HTMLElement {
   constructor (data = '') {
-    super('#text', '')
+    super('#comment')
+    /** @type {string} */
     this.data = data
   }
 }
@@ -197,7 +202,7 @@ reset()
 // From https://github.com/lechidung/escape/blob/1.4.2/mod.ts
 const matchEscHtmlRx = /["'&<>]/
 /** @param {string} str */
-function escapeHtml (str) {
+const escapeHtml = str => {
   const matchEscHtml = matchEscHtmlRx.exec(str)
   if (!matchEscHtml) {
     return str
@@ -243,7 +248,7 @@ function escapeHtml (str) {
  * @param {string} s
  * @param {string | undefined} [preserveCR]
  */
-function quoteattr (s, preserveCR) {
+const quoteattr = (s, preserveCR) => {
   preserveCR = preserveCR ? '&#13;' : '\n'
   return ('' + s) /* Forces the conversion to string. */
     .replace(/&/g, '&amp;') /* This MUST be the 1st replacement. */
