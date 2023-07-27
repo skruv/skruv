@@ -4,20 +4,20 @@ import { css, cssTextGenerator } from '../../utils/css.js'
 const { title, html, head, meta, body, div, p, style } = htmlFactory
 
 const rootStyles = css`
-:scope {
-  color: #f1f1f1;
-  background: #0f0f0f;
-}
+  :scope {
+    color: #f1f1f1;
+    background: #0f0f0f;
+  }
 `
 
 const scopedStyles = css`
-:scope {
-  border: 1px solid #aaa;
-}
+  :scope {
+    border: 1px solid #aaa;
+  }
 
-p {
-  color: #aaa;
-}
+  p {
+    color: #aaa;
+  }
 `
 
 render(
