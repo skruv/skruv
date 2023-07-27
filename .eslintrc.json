@@ -71,7 +71,7 @@
     "**/package-lock.json",
     "**/tsconfig.json",
     ".vscode/**",
-    "examples/jsx/*.js"
+    "*.min.js"
   ],
   "globals": {
     "fetch": "readonly",

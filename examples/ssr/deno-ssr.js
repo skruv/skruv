@@ -1,31 +1,25 @@
-import { serve } from 'https://deno.land/std@0.131.0/http/server.ts'
-
-import { reset, toHTML } from './minidom.js'
-
-// TODO: Break out into a separate file to make it easier to use with both deno and node
+/* global Deno */
+import { reset, toHTML } from '../../utils/minidom.js'
 
 /**
  * @param {Request} req
  * @returns {Promise<Response>}
  */
-const handler = async req => {
-  const reqUrl = req.headers.get('x-url')
-  if (!reqUrl) {
-    return new Response('No url in request', { status: 400 })
-  }
+Deno.serve(async req => {
   // @ts-ignore: TODO: How to construct a location?
-  globalThis.location = new URL(reqUrl)
+  globalThis.location = new URL(req.url)
   // @ts-ignore: Internal flag to wait for all generators before returning
   globalThis.SkruvWaitForAsync = true
+  globalThis.skruvSSRScript = await Deno.readTextFile('./index.min.js')
 
-  const frontend = await import('../examples/todo/index.js')
+  const frontend = await import('./index.min.js')
   await frontend.doRender()
 
   // TODO: Check why we need a microsleep here
   await new Promise(resolve => setTimeout(resolve, 0))
   /** @type {{ [key: string]: string; }} */
   const headers = {}
-  const responseBody = toHTML(globalThis.document.documentElement, '', headers)
+  const responseBody = toHTML(document.documentElement, '', headers)
   reset()
 
   if (!headers['content-type']) { headers['content-type'] = 'text/html' }
@@ -37,6 +31,4 @@ const handler = async req => {
       headers
     }
   )
-}
-
-serve(handler)
+})
