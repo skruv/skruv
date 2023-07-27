@@ -5,8 +5,7 @@ export function toHTML(vDom: HTMLElement, context: string, headers: {
 export function toText(vDom: HTMLElement): string;
 declare class HTMLElement {
     /** @param {string} nodeName */
-    constructor(nodeName: string, data?: string);
-    skruvMock: boolean;
+    constructor(nodeName: string);
     /** @type {HTMLElement[]} */
     childNodes: HTMLElement[];
     /** @type {{ [key: string]: string; }} */
@@ -47,7 +46,6 @@ declare class HTMLElement {
         querySelectorAll: () => never[];
     };
     nodeName: string | undefined;
-    data: string;
     /**
      * @param {HTMLElement} newNode
      * @param {HTMLElement} oldNode
@@ -87,6 +85,8 @@ declare class HTMLElement {
 }
 declare class Text extends HTMLElement {
     constructor(data?: string);
+    /** @type {string} */
+    data: string;
 }
 export {};
 //# sourceMappingURL=minidom.d.ts.map

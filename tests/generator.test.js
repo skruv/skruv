@@ -19,7 +19,13 @@ async function * generator () {
 }
 
 test('update on state update: Array', async () => {
-  render(html(body(generator)))
+  render(
+    html(
+      body(
+        generator
+      )
+    )
+  )
   state.arr.push('test')
   await wait(20)
   assert.strictEqual(document.documentElement.childNodes[0].childNodes[0].childNodes[0].textContent, 'test')

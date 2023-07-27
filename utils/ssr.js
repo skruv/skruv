@@ -2,6 +2,8 @@ import { serve } from 'https://deno.land/std@0.131.0/http/server.ts'
 
 import { reset, toHTML } from './minidom.js'
 
+// TODO: Break out into a separate file to make it easier to use with both deno and node
+
 /**
  * @param {Request} req
  * @returns {Promise<Response>}
