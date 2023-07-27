@@ -4,18 +4,19 @@ import { css, cssTextGenerator } from '../../utils/css.js'
 const { title, html, head, meta, body, div, p, style } = htmlFactory
 
 const rootStyles = css`
-:root {
-  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+:scope {
+  color: #f1f1f1;
+  background: #0f0f0f;
 }
 `
 
 const scopedStyles = css`
 :scope {
-  border: 1px solid;
+  border: 1px solid #aaa;
 }
 
 p {
-  color: blue;
+  color: #aaa;
 }
 `
 

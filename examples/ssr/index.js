@@ -9,8 +9,9 @@ const state = createState({
 })
 
 const styles = css`
-:root {
-  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+:scope {
+  color: #f1f1f1;
+  background: #0f0f0f;
 }
 
 body {

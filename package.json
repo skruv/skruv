@@ -49,7 +49,7 @@
     "lint": "eslint . --ext js,jsx,json",
     "node-ssr": "npm run build-ssr && (cd ./examples/ssr && node ./node-ssr.js)",
     "pre-release": "npm run build && npm run test && npm run lint -- --fix && npm run typecheck",
-    "test": "node --test --experimental-test-coverage",
+    "test": "node --test --experimental-test-coverage --test-reporter=spec",
     "typecheck": "rm -rf types && tsc"
   },
   "dependencies": {
