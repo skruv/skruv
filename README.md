@@ -64,36 +64,32 @@ render(
     <body>
       <main>
         <h1>{state.todos.getGenerator(0)}</h1>
-        <form onsubmit={
-          e => {
+        <form
+          onsubmit={e => {
             e.preventDefault()
             state.todos.unshift(new FormData(e.target).get('todo'))
             e.target.reset()
-          }
-        }>
+          }}
+        >
           <input name="todo"></input>
           <button>New!</button>
         </form>
-        {async function * () {
-          for await (const currentState of state) {
-            yield (
-              <ol>
-                {currentState.todos.map((todo, i) => (
-                  <li>{todo} <a
-                    href="#"
-                    onclick={
-                      e => {
-                        e.preventDefault()
-                        currentState.todos.splice(i, 1)
-                      }
-                    }
-                  >x</a>
-                  </li>
-                ))}
-              </ol>
-            )
-          }
-        }}
+        <ol>
+          {async function * () {
+            for await (const todos of state.todos) {
+              yield todos.map((todo, i) => (
+                <li>{todo} <a
+                  href="#"
+                  onclick={e => {
+                    e.preventDefault()
+                    todos.splice(i, 1)
+                  }}
+                >x</a>
+                </li>
+              ))
+            }
+          }}
+        </ol>
       </main>
     </body>
   </html>
@@ -137,19 +133,18 @@ const doRender = () => render(
     body(
       main(
         h1(state.todos[0]),
-        form(
-          {
-            onsubmit: e => {
-              e.preventDefault()
-              state.todos.unshift(new FormData(e.target).get('todo'))
-              e.target.reset()
-              doRender()
-            }
-          },
-          input({
-            name: 'todo'
-          }),
-          button('New!')
+        form({
+          onsubmit: e => {
+            e.preventDefault()
+            state.todos.unshift(new FormData(e.target).get('todo'))
+            e.target.reset()
+            doRender()
+          }
+        },
+        input({
+          name: 'todo'
+        }),
+        button('New!')
         ),
         ol(
           state.todos.map((todo, i) => li(
@@ -282,7 +277,7 @@ render(
 * [ ] Add template repo
   * [ ] One basic and one with postgrest backend, nginx frontend and SSR
 * [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc. Show on separate page.
-* [ ] Add proxyfying strings/numbers, add X instanceof String and so on to all string handling. In syncify call toString on it before setting the result
+* [ ] Allow passing raw DOM nodes as children? Return DOM node from render so you can have sub-renders
 * [ ] Error boundaries (custom events that bubble on error so they can be caught in the DOM instead of in the js call stack)
 * [ ] Document
   * [ ] data-skruv-key

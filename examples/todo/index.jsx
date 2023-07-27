@@ -30,36 +30,32 @@ render(
     <body>
       <main>
         <h1>{state.todos.getGenerator(0)}</h1>
-        <form onsubmit={
-          e => {
+        <form
+          onsubmit={e => {
             e.preventDefault()
             state.todos.unshift(new FormData(e.target).get('todo'))
             e.target.reset()
-          }
-        }>
+          }}
+        >
           <input name="todo"></input>
           <button>New!</button>
         </form>
-        {async function * () {
-          for await (const currentState of state) {
-            yield (
-              <ol>
-                {currentState.todos.map((todo, i) => (
-                  <li>{todo} <a
-                    href="#"
-                    onclick={
-                      e => {
-                        e.preventDefault()
-                        currentState.todos.splice(i, 1)
-                      }
-                    }
-                  >x</a>
-                  </li>
-                ))}
-              </ol>
-            )
-          }
-        }}
+        <ol>
+          {async function * () {
+            for await (const todos of state.todos) {
+              yield todos.map((todo, i) => (
+                <li>{todo} <a
+                  href="#"
+                  onclick={e => {
+                    e.preventDefault()
+                    todos.splice(i, 1)
+                  }}
+                >x</a>
+                </li>
+              ))
+            }
+          }}
+        </ol>
       </main>
     </body>
   </html>
