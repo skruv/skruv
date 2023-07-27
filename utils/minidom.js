@@ -9,7 +9,7 @@ const document = {
    * @param {string} data
    * @returns {HTMLElement}
    */
-  createComment: data => new HTMLElement('#comment', data),
+  createComment: data => new Comment(data),
   /**
    * @param {string} data
    * @returns {Text}
@@ -32,7 +32,7 @@ const document = {
 
 class HTMLElement {
   /** @param {string} nodeName */
-  constructor (nodeName) {
+  constructor (nodeName = '') {
     /** @type {HTMLElement[]} */
     this.childNodes = []
     /** @type {{ [key: string]: string; }} */
@@ -43,7 +43,8 @@ class HTMLElement {
     /** @type {{ [key: string]: function; }} */
     this.eventListeners = {}
     this.ownerDocument = document
-    this.nodeName = nodeName || this.nodeName
+    this.nodeName = nodeName
+    this.data = ''
   }
 
   /**
@@ -156,14 +157,21 @@ class Comment extends HTMLElement {
 }
 
 // Global MiniDOM classes for use in instanceof
+// @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.SVGElement = SVGElement
+// @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.HTMLElement = HTMLElement
+// @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.Text = Text
+// @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.Comment = Comment
 
 // CSSOM polyfill
+// @ts-ignore: TODO: instead polyfill CSSStyleSheet when safari adoption catches up
 globalThis.CSSOM = cssom
+// @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.CSSMediaRule = cssom.CSSMediaRule
+// @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.CSSStyleRule = cssom.CSSStyleRule
 
 // Fake eventsource
@@ -181,6 +189,7 @@ class FakeEventSource {
   addEventListener () {}
   close () {}
 }
+// @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.EventSource = FakeEventSource
 
 globalThis.addEventListener = () => {}
@@ -192,6 +201,7 @@ export const reset = () => {
   documentElement.parentNode = rootElement
   rootElement.childNodes = [documentElement]
   document.documentElement = documentElement
+  // @ts-ignore: Type confusion between polyfilled and real elements
   globalThis.document = document
 }
 reset()

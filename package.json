@@ -52,8 +52,11 @@
     "test": "node --test --experimental-test-coverage",
     "typecheck": "rm -rf types && tsc"
   },
+  "dependencies": {
+    "cssom": "^0.5.0"
+  },
   "devDependencies": {
-    "cssom": "^0.5.0",
+    "@types/cssom": "^0.4.1",
     "esbuild": "^0.14.48",
     "eslint": "^8.45.0",
     "eslint-config-standard": "^14.1.1",

@@ -42,7 +42,7 @@
  * @typedef {Vnode|Function|String|Number|Boolean|SkruvAsyncGenerator|SkruvAsyncIterable|SkruvPromise|SkruvAsyncFunction} SkruvValue
  * @typedef {(AsyncGenerator<Function|String|Boolean|Number>|AsyncIterable<Function|String|Boolean|Number>)} SkruvAttributesIterable
  * @typedef {(Promise<Function|String|Boolean|Number>|function(): Promise<Function|String|Boolean|Number>)} SkruvAttributesPromiseOrAsyncFunction
- * @typedef {Partial<GlobalEventHandlers> & Partial<SkruvEvents> & Record<string,(string|boolean|Function|number|Object)>} PreparedVnodeAtrributes
+ * @typedef {Partial<GlobalEventHandlers> & Record<string,(string|boolean|Function|number|Object)>} PreparedVnodeAtrributes
  * @typedef {PreparedVnodeAtrributes & Record<string,(string|boolean|Function|number|Object|SkruvAttributesPromiseOrAsyncFunction|SkruvAttributesIterable)>} VnodeAtrributes
  * @typedef {AsyncGenerator<SkruvValue>} SkruvAsyncGenerator
  * @typedef {AsyncIterable<SkruvValue>} SkruvAsyncIterable
@@ -50,11 +50,6 @@
  * @typedef {function(): Promise<SkruvValue>} SkruvAsyncFunction
  * @typedef {Vnode|Vnode[]|SkruvValue} SkruvChildNode
  * @typedef {Array<SkruvChildNode>} SkruvChildNodes
- */
-/**
- * @typedef SkruvEvents
- * @prop {function(HTMLElement | Text | SVGElement | Comment): void} oncreate
- * @prop {function(HTMLElement | Text | SVGElement | Comment): void} onremove
  */
 /**
  * @typedef {object} Vnode
@@ -251,7 +246,7 @@ const flatten = skruvDom => {
 
 /**
  * @param {PreparedVnode} current
- * @param {HTMLElement | SVGElement} currentNode
+ * @param {Element} currentNode
  * @param {ParentNode?} parentNode
  * @param {boolean} isSvg
  */
@@ -403,7 +398,7 @@ const renderRecursive = (current, currentNode, parentNode, isSvg) => {
       continue
     }
     if (!(childNode instanceof HTMLElement || childNode instanceof SVGElement)) {
-      throw new Error('Child node of unknown type: ' + JSON.stringify({ childNode, child, skruMock: childNode.skruvMock }))
+      throw new Error('Child node of unknown type: ' + JSON.stringify({ childNode, child }))
     }
     if (child.a['data-skruv-key'] && !keyedNodes.has(child.a['data-skruv-key'])) { keyedNodes.set(child.a['data-skruv-key'], childNode) }
     renderRecursive(child, childNode, currentNode, isSvg || current.t === 'svg')
@@ -414,7 +409,7 @@ const renderRecursive = (current, currentNode, parentNode, isSvg) => {
 
 /**
  * @param {Vnode} current
- * @param {HTMLElement | SVGElement} [currentNode]
+ * @param {Element} [currentNode]
  * @param {ParentNode?} parentNode
  * @param {boolean} [isSvg]
  */
