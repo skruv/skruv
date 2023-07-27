@@ -10,7 +10,7 @@ const { body, div, html } = htmlFactory
 
 const wait = time => new Promise(resolve => setTimeout(resolve, time))
 
-test('update on array push', async () => {
+test('update on object modify', async () => {
   const sub = createState({ obj: {} })
   await render(
     html(

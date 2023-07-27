@@ -9,7 +9,7 @@ const styles = /* css */`
 
 render(
   <html lang="en-US">
-    {/* Fragments work too, but are usually not needed */}
+    {/* Fragments work too, but are usually not needed. */}
     <>
       <head>
         <title>jsx</title>
