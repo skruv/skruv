@@ -1,10 +1,10 @@
 import { render } from 'skruv'
 
 const styles = /* css */`
-:root {
-  color: white;
-  background: #0f0f0f;
-}
+  :root {
+    color: white;
+    background: #0f0f0f;
+  }
 `
 
 render(

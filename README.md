@@ -109,7 +109,6 @@ render(
     )
   )
 )
-
 ```
 
 ## Docs
@@ -146,20 +145,20 @@ import { css, cssTextGenerator } from '../../utils/css.js'
 const { title, html, head, meta, body, div, p, style } = htmlFactory
 
 const rootStyles = css`
-:scope {
-  color: #f1f1f1;
-  background: #0f0f0f;
-}
+  :scope {
+    color: #f1f1f1;
+    background: #0f0f0f;
+  }
 `
 
 const scopedStyles = css`
-:scope {
-  border: 1px solid #aaa;
-}
+  :scope {
+    border: 1px solid #aaa;
+  }
 
-p {
-  color: #aaa;
-}
+  p {
+    color: #aaa;
+  }
 `
 
 render(
@@ -179,7 +178,6 @@ render(
     )
   )
 )
-
 ```
 
 ## JSX
@@ -190,10 +188,10 @@ Same as above, but using JSX. Compiled with esbuild:
 import { render } from 'skruv'
 
 const styles = /* css */`
-:root {
-  color: white;
-  background: #0f0f0f;
-}
+  :root {
+    color: white;
+    background: #0f0f0f;
+  }
 `
 
 render(
