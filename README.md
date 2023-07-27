@@ -29,18 +29,14 @@ No-dependency, no-build, small JS view-library/framework-ish.
 
 ## Examples
 
-### Basic todo-list
+### Basic todo-list (with state, css scoping and jsx)
 {% include_relative examples/todo/index.md %}
-```js
-import { htmlFactory, render } from '../../index.js'
-import { css, cssTextGenerator } from '../../utils/css.js'
-import { createState } from '../../utils/state.js'
+```jsx
+import { render } from 'skruv'
+import { css, cssTextGenerator } from 'skruv/utils/css.js'
+import { createState } from 'skruv/utils/state.js'
 
-const { html, head, title, meta, body, main, h1, form, input, button, ol, li, a, style } = htmlFactory
-
-const state = createState({
-  todos: ['Write todos']
-})
+const state = createState({ todos: ['Write todos'] })
 
 const styles = css`
   :scope {
@@ -53,63 +49,128 @@ const styles = css`
     margin: 0 auto;
   }
 
-  form {
-    display: flex;
-  }
-
-  input {
-    flex: 1;
-  }
-
-  a {
-    color: #9b9b9b;
-  }
+  form { display: flex; }
+  input { flex: 1; }
+  a { color: #9b9b9b; }
 `
 
 render(
-  html({ lang: 'en-US', class: styles },
-    head(
-      title(state.todos.getGenerator(0)),
-      meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      style(cssTextGenerator)
-    ),
-    body(
-      main(
-        h1(state.todos.getGenerator(0)),
-        form({
-          onsubmit: e => {
+  <html lang="en-US" class={styles}>
+    <head>
+      <title>{state.todos.getGenerator(0)}</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <style>{cssTextGenerator}</style>
+    </head>
+    <body>
+      <main>
+        <h1>{state.todos.getGenerator(0)}</h1>
+        <form onsubmit={
+          e => {
             e.preventDefault()
             state.todos.unshift(new FormData(e.target).get('todo'))
             e.target.reset()
           }
-        },
-        input({
-          type: 'text',
-          name: 'todo'
-        }),
-        button('New!')
-        ),
-        async function * () {
+        }>
+          <input name="todo"></input>
+          <button>New!</button>
+        </form>
+        {async function * () {
           for await (const currentState of state) {
-            yield ol(
-              currentState.todos.map((todo, i) => li(
-                `${todo} `,
-                a({
-                  href: '#',
-                  onclick: e => {
-                    e.preventDefault()
-                    currentState.todos.splice(i, 1)
-                  }
-                }, 'x')
-              ))
+            yield (
+              <ol>
+                {currentState.todos.map((todo, i) => (
+                  <li>{todo} <a
+                    href="#"
+                    onclick={
+                      e => {
+                        e.preventDefault()
+                        currentState.todos.splice(i, 1)
+                      }
+                    }
+                  >x</a>
+                  </li>
+                ))}
+              </ol>
             )
           }
-        }
+        }}
+      </main>
+    </body>
+  </html>
+)
+```
+
+Same example without jsx, scoped styles, state mgmt or build steps:
+{% include_relative examples/todo-no-state-jsx/index.md %}
+```js
+import { htmlFactory, render } from '../../index.js'
+
+const { html, head, title, meta, body, main, h1, form, input, button, ol, li, a, style } = htmlFactory
+
+const state = {
+  todos: ['Write todos']
+}
+
+const styles = /* css */`
+  :scope {
+    color: #f1f1f1;
+    background: #0f0f0f;
+  }
+
+  body {
+    max-width: 40ch;
+    margin: 0 auto;
+  }
+
+  form { display: flex; }
+  input { flex: 1; }
+  a { color: #9b9b9b; }
+`
+
+const doRender = () => render(
+  html({ lang: 'en-US' },
+    head(
+      title(state.todos[0]),
+      meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
+      style(styles)
+    ),
+    body(
+      main(
+        h1(state.todos[0]),
+        form(
+          {
+            onsubmit: e => {
+              e.preventDefault()
+              state.todos.unshift(new FormData(e.target).get('todo'))
+              e.target.reset()
+              doRender()
+            }
+          },
+          input({
+            name: 'todo'
+          }),
+          button('New!')
+        ),
+        ol(
+          state.todos.map((todo, i) => li(
+            `${todo} `,
+            a({
+              href: '#',
+              onclick: e => {
+                e.preventDefault()
+                state.todos.splice(i, 1)
+                doRender()
+              }
+            }, 'x')
+          ))
+        )
       )
     )
   )
 )
+doRender()
 ```
+
 
 ## Docs
 
@@ -183,7 +244,7 @@ render(
 ## JSX
 {% include_relative examples/jsx/index.md %}
 Same as above, but using JSX. Compiled with esbuild:
-`esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js` 
+`esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js` or with the included bundler to allow for http imports and css template minification.
 ```jsx
 import { render } from 'skruv'
 
