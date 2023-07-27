@@ -26,6 +26,10 @@ form {
 input {
   flex: 1;
 }
+
+a {
+  color: #9b9b9b;
+}
 `
 
 export const doRender = () => render(
