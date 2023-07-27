@@ -32,38 +32,44 @@ No-dependency, no-build, small JS view-library/framework-ish.
 ### Basic todo-list
 {% include_relative examples/todo/index.md %}
 ```js
-import { createState, css, cssTextGenerator, htmlFactory, render } from 'https://skruv.io/index.js'
+import { htmlFactory, render } from '../../index.js'
+import { css, cssTextGenerator } from '../../utils/css.js'
+import { createState } from '../../utils/state.js'
 
-const { html, head, title, script, meta, body, main, h1, form, input, button, ol, li, a, style } = htmlFactory
+const { html, head, title, meta, body, main, h1, form, input, button, ol, li, a, style } = htmlFactory
 
 const state = createState({
   todos: ['Write todos']
 })
 
 const styles = css`
-:root {
-  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
-}
+  :scope {
+    color: #f1f1f1;
+    background: #0f0f0f;
+  }
 
-body {
-  max-width: 40ch;
-  margin: 0 auto;
-}
+  body {
+    max-width: 40ch;
+    margin: 0 auto;
+  }
 
-form {
-  display: flex;
-}
+  form {
+    display: flex;
+  }
 
-input {
-  flex: 1;
-}
+  input {
+    flex: 1;
+  }
+
+  a {
+    color: #9b9b9b;
+  }
 `
 
 render(
   html({ lang: 'en-US', class: styles },
     head(
       title(state.todos.getGenerator(0)),
-      script({ src: './index.js', type: 'module' }),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
       style(cssTextGenerator)
     ),
@@ -103,6 +109,7 @@ render(
     )
   )
 )
+
 ```
 
 ## Docs
@@ -133,23 +140,25 @@ There are three main parts of skruv:
 ## Scoped CSS
 {% include_relative examples/scopedcss/index.md %}
 ```js
-import { css, cssTextGenerator, htmlFactory, render } from 'https://skruv.io/index.js'
+import { htmlFactory, render } from '../../index.js'
+import { css, cssTextGenerator } from '../../utils/css.js'
 
 const { title, html, head, meta, body, div, p, style } = htmlFactory
 
 const rootStyles = css`
-:root {
-  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+:scope {
+  color: #f1f1f1;
+  background: #0f0f0f;
 }
 `
 
 const scopedStyles = css`
 :scope {
-  border: 1px solid;
+  border: 1px solid #aaa;
 }
 
 p {
-  color: blue;
+  color: #aaa;
 }
 `
 
@@ -162,14 +171,15 @@ render(
     ),
     body(
       div({ class: scopedStyles },
-        p('blue text')
+        p('Hello')
       ),
       div(
-        p('default text')
+        p('World!')
       )
     )
   )
 )
+
 ```
 
 ## JSX
@@ -177,36 +187,28 @@ render(
 Same as above, but using JSX. Compiled with esbuild:
 `esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js` 
 ```jsx
-import { css, cssTextGenerator, render } from 'skruv'
-const rootStyles = css`
+import { render } from 'skruv'
+
+const styles = /* css */`
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
-}
-`
-
-const scopedStyles = css`
-:scope {
-  border: 1px solid;
-}
-
-p {
-  color: blue;
+  color: white;
+  background: #0f0f0f;
 }
 `
 
 render(
-  <html lang="en-US" class={rootStyles}>
-    <head>
-      <title>jsx</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1"/>
-      <style>{cssTextGenerator}</style>
-    </head>
+  <html lang="en-US">
+    {/* Fragments work too, but are usually not needed. */}
+    <>
+      <head>
+        <title>jsx</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>{styles}</style>
+      </head>
+    </>
     <body>
-      <div class={scopedStyles}>
-        <p>blue text</p>
-      </div>
       <div>
-        <p>default text</p>
+        <p>Hello world</p>
       </div>
     </body>
   </html>
@@ -222,3 +224,33 @@ render(
   * [ ] One basic and one with postgrest backend, nginx frontend and SSR
 * [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc. Show on separate page.
 * [ ] Add proxyfying strings/numbers, add X instanceof String and so on to all string handling. In syncify call toString on it before setting the result
+* [ ] Error boundaries (custom events that bubble on error so they can be caught in the DOM instead of in the js call stack)
+* [ ] Document
+  * [ ] data-skruv-key
+  * [ ] data-skruv-opaque
+  * [ ] data-skruv-finished
+  * [ ] data-skruv-wait-for-not-empty
+  * [ ] data-skruv-ssr-rendered
+  * [ ] oncreate & onremove
+* [ ] Document and prune globals/DOM-apis used:
+  * [ ] document.querySelector
+  * [ ] document.implementation.createHTMLDocument (CSS)
+  * [ ] elem.ownerDocument.documentElement
+  * [ ] elem.contains
+  * [ ] elem.replaceChild
+  * [ ] elem.prepend
+  * [ ] elem.after
+  * [ ] elem.parentNode
+  * [ ] elem.removeChild
+  * [ ] elem.dispatchEvent
+  * [ ] elem.getAttributeNames
+  * [ ] elem.setAttribute
+  * [ ] elem.getAttribute
+  * [ ] elem.removeAttribute
+  * [ ] elem.setAttribute
+  * [ ] elem.removeEventListener
+  * [ ] elem.addEventListener
+  * [ ] documentElement.createComment
+  * [ ] documentElement.createTextNode
+  * [ ] documentElement.createElementNS
+  * [ ] documentElement.createElement

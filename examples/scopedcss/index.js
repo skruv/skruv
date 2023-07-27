@@ -20,7 +20,7 @@ p {
 }
 `
 
-export const doRender = () => render(
+render(
   html({ lang: 'en-US', class: rootStyles },
     head(
       title('scopedcss'),
@@ -37,5 +37,3 @@ export const doRender = () => render(
     )
   )
 )
-
-doRender()

@@ -13,8 +13,7 @@ server.on('request', async (req, res) => {
   globalThis.SkruvWaitForAsync = true
   globalThis.skruvSSRScript = await readFile('./index.min.js', 'utf8')
 
-  const frontend = await import('./index.min.js')
-  await frontend.doRender()
+  await import('./index.min.js')
 
   // TODO: Check why we need a microsleep here
   await new Promise(resolve => setTimeout(resolve, 0))

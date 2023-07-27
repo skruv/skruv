@@ -6,8 +6,7 @@ import { toHTML } from '../utils/minidom.js'
 test('minidom', async () => {
   globalThis.location = new URL('http://127.0.0.1:8000/')
   globalThis.SkruvWaitForAsync = true
-  const frontend = await import('../examples/ssr/index.min.js')
-  await frontend.doRender()
+  await import('../examples/ssr/index.min.js')
 
   // TODO: Check why we need a microsleep here
   await new Promise(resolve => setTimeout(resolve, 0))
