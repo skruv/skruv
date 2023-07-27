@@ -14,9 +14,9 @@ declare class HTMLElement {
     };
     /** @type {HTMLElement?} */
     parentNode: HTMLElement | null;
-    /** @type {{ [key: string]: function; }} */
+    /** @type {{ [key: string]: function[]; }} */
     eventListeners: {
-        [key: string]: Function;
+        [key: string]: Function[];
     };
     ownerDocument: {
         /** @type {HTMLElement?} */
@@ -59,6 +59,8 @@ declare class HTMLElement {
     /** @param {HTMLElement} node */
     after(node: HTMLElement): void;
     /** @param {HTMLElement} node */
+    before(node: HTMLElement): void;
+    /** @param {HTMLElement} node */
     removeChild(node: HTMLElement): void;
     getAttributeNames(): string[];
     /** @param {string | number} name */
@@ -74,11 +76,11 @@ declare class HTMLElement {
     removeEventListener(name: string | number): void;
     /**
      * @param {string | number} name
-     * @param {any} value
+     * @param {function} value
      */
-    addEventListener(name: string | number, value: any): void;
-    /** @param {any} event */
-    dispatchEvent(event: any): void;
+    addEventListener(name: string | number, value: Function): void;
+    /** @param {Event} event */
+    dispatchEvent(event: Event): void;
     /** @param {HTMLElement} node */
     contains(node: HTMLElement): boolean;
     get innerHTML(): string;
