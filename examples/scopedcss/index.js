@@ -29,10 +29,10 @@ export const doRender = () => render(
     ),
     body(
       div({ class: scopedStyles },
-        p('blue text')
+        p('Hello')
       ),
       div(
-        p('default text')
+        p('World!')
       )
     )
   )
