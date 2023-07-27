@@ -17,23 +17,21 @@ No-dependency, no-build, small JS framework/view-library.
   * ~9kb
   * ~3kb compressed
 * Useable without bundling/compilation/transpilation
-* Fast enough for most normal usecases: [benchmark](https://krausest.github.io/js-framework-benchmark/index.html)
+* Very fast: [benchmark](https://krausest.github.io/js-framework-benchmark/index.html)
 * Supports async generators as components
+* Works well with SSR/SSG without pulling in jsdom or things like puppeteer
 * Built in CSS scoping adapted from <https://github.com/samthor/scoped>
   * If used in SSR requires a CSS Object Model polyfill (cssom)
-* Optionally supports JSX
-  * Requires a build step
+* Optionally supports JSX or [HTM](https://github.com/developit/htm)
+  * JSX requires a build step
 * Works with web components: [PR for tests at custom-elements-everywhere](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
 <!-- * Works with web components: [tests at custom-elements-everywhere](https://custom-elements-everywhere.com/libraries/skruv/results/results.html) -->
 
 ## TODO:
 
-* [ ] Handle flatifying in render
-* [ ] Build a separate SSG example
+* [ ] Handle flatifying and number/string in render
 * [ ] Build example with SSR bundling the request cache
 * [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc.
-* [ ] In tests run all the examples and validate their output against snapshots
-* Bundle in the CSS template tag minifier
 
 ## Examples
 
