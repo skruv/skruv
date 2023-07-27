@@ -32,19 +32,18 @@ const doRender = () => render(
     body(
       main(
         h1(state.todos[0]),
-        form(
-          {
-            onsubmit: e => {
-              e.preventDefault()
-              state.todos.unshift(new FormData(e.target).get('todo'))
-              e.target.reset()
-              doRender()
-            }
-          },
-          input({
-            name: 'todo'
-          }),
-          button('New!')
+        form({
+          onsubmit: e => {
+            e.preventDefault()
+            state.todos.unshift(new FormData(e.target).get('todo'))
+            e.target.reset()
+            doRender()
+          }
+        },
+        input({
+          name: 'todo'
+        }),
+        button('New!')
         ),
         ol(
           state.todos.map((todo, i) => li(
