@@ -1,4 +1,3 @@
-// @ts-check
 /* global HTMLInputElement HTMLOptionElement Text Comment HTMLElement SVGElement Document Window */
 
 // TODO: Build

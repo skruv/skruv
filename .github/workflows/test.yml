@@ -23,10 +23,7 @@ jobs:
         NODE_ENV: development
       run: |
         npm ci --silent
-    - run: npm run pre-release
-    - name: Check if there are changes
-      id: changes
-      uses: UnicornGlobal/has-changes-action@v1.0.11
-    - name: Process changes
-      if: steps.changes.outputs.changed == 1
-      run: echo "Changes exist" && exit 1
+    - name: Run all pre-release checks and validate no changed files
+      run: |
+        npm run pre-release
+        [[ -z $(git status -s) ]] || (git status -s; echo "changes to files in CI"; exit 1);
