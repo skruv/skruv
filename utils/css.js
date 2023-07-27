@@ -191,7 +191,7 @@ export const css = (strings, ...keys) => {
   let sheet
   // @ts-ignore TODO: If we don't have any way to parse the css bail out
   if (!globalThis?.CSSOM && !globalThis.document?.implementation) {
-    throw new Error('No css parser available')
+    throw new Error('No css parser available. Either add CSSOM to globalThis or run in browser.')
   }
   // @ts-ignore: TODO: Type confusion between polyfill and native.
   if (globalThis?.CSSOM) {
