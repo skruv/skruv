@@ -42,7 +42,8 @@
     "types/index.d.ts"
   ],
   "scripts": {
-    "build": "npm run build-ssr && npm run build-jsx && node ./utils/bundle.js index.js index.min.js",
+    "build": "npm run build-ssr && npm run build-jsx && npm run build-index",
+    "build-index": "node ./utils/bundle.js index.js index.min.js",
     "build-jsx": "(cd examples/jsx && node ../../utils/bundle.js index.jsx index.min.js)",
     "build-ssr": "(cd examples/ssr && node ../../utils/bundle.js index.js index.min.js && node ssg)",
     "deno-ssr": "npm run build-ssr && (cd ./examples/ssr && deno run --allow-net --allow-read ./deno-ssr.js)",
