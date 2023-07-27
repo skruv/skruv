@@ -10,23 +10,24 @@ const { html, body, div } = htmlFactory
 
 const wait = time => new Promise(resolve => setTimeout(resolve, time))
 
-const state = createState({ arr: [] })
-
-async function * generator () {
-  for await (const str of state.arr) {
-    yield div({}, str)
-  }
-}
+const state = createState({ str: '' })
 
 test('update on state update: Array', async () => {
   render(
     html(
       body(
-        generator
+        async function * () {
+          for await (const currentState of state) {
+            yield div(currentState.str)
+          }
+        }
       )
     )
   )
-  state.arr.push('test')
-  await wait(20)
+  state.str = 'test'
+  await wait(1)
   assert.strictEqual(document.documentElement.childNodes[0].childNodes[0].childNodes[0].textContent, 'test')
+  state.str = 'test2'
+  await wait(1)
+  assert.strictEqual(document.documentElement.childNodes[0].childNodes[0].childNodes[0].textContent, 'test2')
 })
