@@ -25,7 +25,7 @@ test('update on array push', async () => {
   )
   sub.obj.test = 'testvalue'
   sub.obj.test2 = 'testvalue2'
-  await wait(20)
+  await wait(1)
   assert.strictEqual(
     document.documentElement.innerHTML,
     '<!DOCTYPE html><html><body><div data-key="test">testvalue</div><div data-key="test2">testvalue2</div></body></html>'

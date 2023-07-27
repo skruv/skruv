@@ -11,24 +11,12 @@ test('render multiple elements', async () => {
   render(
     html(
       body(
-        div(
-          div('wide')
-        ),
-        div(
-          div('wide2')
-        ),
-        div(
-          div('wide3')
-        ),
-        div(
-          div('wide4')
-        ),
-        div(
-          div('wide5')
-        ),
-        div(
-          div('wide6')
-        )
+        div(div('wide1')),
+        div(div('wide2')),
+        div(div('wide3')),
+        div(div('wide4')),
+        div(div('wide5')),
+        div(div('wide6'))
       )
     )
   )
