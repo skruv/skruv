@@ -1,42 +1,5 @@
 /* global HTMLInputElement HTMLOptionElement Text Comment HTMLElement SVGElement Document Window */
 
-// TODO: Build
-// Error boundaries (custom events that bubble on error)
-// single level state
-
-// TODO: Document
-// data-skruv-key
-// data-skruv-opaque
-// data-skruv-finished
-// data-skruv-wait-for-not-empty
-// data-skruv-ssr-rendered
-// oncreate & onremove
-// hydration workflow
-// css scoping
-// state mgmt
-
-// Globals used:
-// document.querySelector
-// elem.ownerDocument.documentElement
-// elem.contains
-// elem.replaceChild
-// elem.prepend
-// elem.after
-// elem.parentNode
-// elem.removeChild
-// elem.dispatchEvent
-// elem.getAttributeNames
-// elem.setAttribute
-// elem.getAttribute
-// elem.removeAttribute
-// elem.setAttribute
-// elem.removeEventListener
-// elem.addEventListener
-// documentElement.createComment
-// documentElement.createTextNode
-// documentElement.createElementNS
-// documentElement.createElement
-
 /**
  * @typedef {Vnode|Function|String|Number|Boolean|SkruvAsyncGenerator|SkruvAsyncIterable|SkruvPromise|SkruvAsyncFunction} SkruvValue
  * @typedef {(AsyncGenerator<Function|String|Boolean|Number>|AsyncIterable<Function|String|Boolean|Number>)} SkruvAttributesIterable

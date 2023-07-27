@@ -2,41 +2,40 @@ import { htmlFactory, render } from '../../index.js'
 import { css, cssTextGenerator } from '../../utils/css.js'
 import { createState } from '../../utils/state.js'
 
-const { html, head, title, script, meta, body, main, h1, form, input, button, ol, li, a, style } = htmlFactory
+const { html, head, title, meta, body, main, h1, form, input, button, ol, li, a, style } = htmlFactory
 
 const state = createState({
   todos: ['Write todos']
 })
 
 const styles = css`
-:scope {
-  color: #f1f1f1;
-  background: #0f0f0f;
-}
+  :scope {
+    color: #f1f1f1;
+    background: #0f0f0f;
+  }
 
-body {
-  max-width: 40ch;
-  margin: 0 auto;
-}
+  body {
+    max-width: 40ch;
+    margin: 0 auto;
+  }
 
-form {
-  display: flex;
-}
+  form {
+    display: flex;
+  }
 
-input {
-  flex: 1;
-}
+  input {
+    flex: 1;
+  }
 
-a {
-  color: #9b9b9b;
-}
+  a {
+    color: #9b9b9b;
+  }
 `
 
-export const doRender = () => render(
+render(
   html({ lang: 'en-US', class: styles },
     head(
       title(state.todos.getGenerator(0)),
-      script({ src: './index.js', type: 'module' }),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
       style(cssTextGenerator)
     ),
@@ -76,5 +75,3 @@ export const doRender = () => render(
     )
   )
 )
-
-doRender()
