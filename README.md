@@ -2,36 +2,30 @@
 
 # skruv
 
-No-dependency, no-build, small JS framework/view-library.
+No-dependency, no-build, small JS view-library/framework-ish.
 
-* [Github](https://github.com/skruv/skruv)
-* [NPM](https://npmjs.com/skruv)
+[Features](#features) • [Examples](#examples) • [Docs](#docs)
+
+[Github](https://github.com/skruv/skruv) • [NPM](https://npmjs.com/skruv)
 
 ## Features
 
 * No buildtime or runtime dependencies, no parsers
-* Pretty small:
-  * ~400 LOC HTML/SVG renderer
-  * ~150 LOC State management
-* When minified:
-  * ~9kb
-  * ~3kb compressed
+* Very small:
+  * [Smallest in benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
+  * ~X00 LOC
+  * ~XXkb minified and compressed
+  * ~XXkb unminified and uncompressed
 * Useable without bundling/compilation/transpilation
-* Very fast: [benchmark](https://krausest.github.io/js-framework-benchmark/index.html)
-* Supports async generators as components
-* Works well with SSR/SSG without pulling in jsdom or things like puppeteer
-* Built in CSS scoping adapted from <https://github.com/samthor/scoped>
-  * If used in SSR requires a CSS Object Model polyfill (cssom)
-* Optionally supports JSX or [HTM](https://github.com/developit/htm)
-  * JSX requires a build step
-* Works with web components: [PR for tests at custom-elements-everywhere](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
-<!-- * Works with web components: [tests at custom-elements-everywhere](https://custom-elements-everywhere.com/libraries/skruv/results/results.html) -->
-
-## TODO:
-
-* [ ] Handle flatifying and number/string in render
-* [ ] Build example with SSR bundling the request cache
-* [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc.
+* [One of the fastest in benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
+* [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
+* Helper utils for
+  * State management (state.js)
+  * Async generators or promises as components (syncify.js)
+  * SSR/SSG without jsdom/puppeteer (minidom.js)
+  * CSS scoping adapted from [scoped](https://github.com/samthor/scoped) (css.js)
+  * Optionally supports JSX or [HTM](https://github.com/developit/htm) (jsx-runtime.js)
+  * Bundling/minification (bundle.js)
 
 ## Examples
 
@@ -111,6 +105,8 @@ render(
 )
 ```
 
+## Docs
+
 There are three main parts of skruv:
 
 * createState
@@ -134,7 +130,7 @@ There are three main parts of skruv:
   * It also has helpers for each HTML/SVG element so you can get a h1 element helper by doing `const { h1 } = elements`.
   * There is also a jsx-runtime that works with esbuild if you want to use jsx instead of the element helpers.
 
-## Example using scopedcss
+## Scoped CSS
 {% include_relative examples/scopedcss/index.md %}
 ```js
 import { css, cssTextGenerator, htmlFactory, render } from 'https://skruv.io/index.js'
@@ -176,7 +172,7 @@ render(
 )
 ```
 
-## Example using JSX
+## JSX
 {% include_relative examples/jsx/index.md %}
 Same as above, but using JSX. Compiled with esbuild:
 `esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js` 
@@ -216,3 +212,13 @@ render(
   </html>
 )
 ```
+
+## TODO:
+
+* [ ] Handle flatifying and number/string in render
+* [ ] Build example with SSR bundling the request cache
+* [ ] Add router, generatorUtils, loader, etc.
+* [ ] Add template repo
+  * [ ] One basic and one with postgrest backend, nginx frontend and SSR
+* [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc. Show on separate page.
+* [ ] Add proxyfying strings/numbers, add X instanceof String and so on to all string handling. In syncify call toString on it before setting the result
