@@ -15,7 +15,6 @@ No-dependency, no-build, small JS view-library/framework-ish.
   * [Smallest in benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
   * ~X00 LOC
   * ~XXkb minified and compressed
-  * ~XXkb unminified and uncompressed
 * Useable without bundling/compilation/transpilation
 * [One of the fastest in benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
 * [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
@@ -280,7 +279,7 @@ render(
 * [ ] Allow passing raw DOM nodes as children? Return DOM node from render so you can have sub-renders
 * [ ] Error boundaries (custom events that bubble on error so they can be caught in the DOM instead of in the js call stack)
 * [ ] Document
-  * [ ] data-skruv-key
+  * [ ] data-skruv-key?
   * [ ] data-skruv-opaque
   * [ ] data-skruv-finished
   * [ ] data-skruv-wait-for-not-empty

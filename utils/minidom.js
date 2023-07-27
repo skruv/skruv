@@ -1,6 +1,14 @@
 // TODO: CSSOM is deprecated/abandoned. Its dependency free, but look for replacements or vendor it into this repo.
 import cssom from 'cssom'
 
+// CSSOM polyfill
+// @ts-ignore: TODO: instead polyfill CSSStyleSheet when safari adoption catches up
+globalThis.CSSOM = cssom
+// @ts-ignore: Type confusion between polyfilled and real elements
+globalThis.CSSMediaRule = cssom.CSSMediaRule
+// @ts-ignore: Type confusion between polyfilled and real elements
+globalThis.CSSStyleRule = cssom.CSSStyleRule
+
 // Minimal, naive DOM implementation. Enough for skruv
 const document = {
   /** @type {HTMLElement?} */
@@ -40,7 +48,7 @@ class HTMLElement {
     /** @type {HTMLElement?} */
     this.parentNode = null
     // TODO: make private
-    /** @type {{ [key: string]: function; }} */
+    /** @type {{ [key: string]: function[]; }} */
     this.eventListeners = {}
     this.ownerDocument = document
     this.nodeName = nodeName
@@ -79,6 +87,15 @@ class HTMLElement {
   }
 
   /** @param {HTMLElement} node */
+  before (node) {
+    if (!this.parentNode) {
+      throw new Error('No parent to add node to in before')
+    }
+    this.parentNode.childNodes.splice(this.parentNode.childNodes.indexOf(this), 0, node)
+    node.parentNode = this.parentNode
+  }
+
+  /** @param {HTMLElement} node */
   removeChild (node) {
     this.childNodes.splice(this.childNodes.indexOf(node), 1)
     node.parentNode = null
@@ -113,15 +130,27 @@ class HTMLElement {
 
   /**
    * @param {string | number} name
-   * @param {any} value
+   * @param {function} value
    */
   addEventListener (name, value) {
-    this.eventListeners[name] = value
+    if (!this.eventListeners[name]) {
+      this.eventListeners[name] = []
+    }
+    this.eventListeners[name].push(value)
   }
 
-  /** @param {any} event */
+  /** @param {Event} event */
   dispatchEvent (event) {
-    this.parentNode && this.parentNode?.dispatchEvent?.(event)
+    // @ts-ignore: This event is assumed to be synthetic
+    if (!event.target) { event.target = this }
+    if (this.eventListeners[event.type]) {
+      this.eventListeners[event.type].forEach(listener => listener({
+        ...event,
+        currentTarget: this,
+        preventDefault: () => {}
+      }))
+    }
+    if (this.parentNode) { this.parentNode.dispatchEvent(event) }
   }
 
   /** @param {HTMLElement} node */
@@ -165,14 +194,6 @@ globalThis.HTMLElement = HTMLElement
 globalThis.Text = Text
 // @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.Comment = Comment
-
-// CSSOM polyfill
-// @ts-ignore: TODO: instead polyfill CSSStyleSheet when safari adoption catches up
-globalThis.CSSOM = cssom
-// @ts-ignore: Type confusion between polyfilled and real elements
-globalThis.CSSMediaRule = cssom.CSSMediaRule
-// @ts-ignore: Type confusion between polyfilled and real elements
-globalThis.CSSStyleRule = cssom.CSSStyleRule
 
 // Fake eventsource
 class FakeEventSource {
