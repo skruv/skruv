@@ -43,8 +43,8 @@
   ],
   "scripts": {
     "build": "npm run build-ssr && npm run build-jsx",
-    "build-jsx": "(cd examples/jsx && npm exec skruv-bundle index.jsx index.min.js)",
-    "build-ssr": "(cd examples/ssr && npm exec skruv-bundle index.js index.min.js)",
+    "build-jsx": "(cd examples/jsx && node ../../utils/bundle.js index.jsx index.min.js)",
+    "build-ssr": "(cd examples/ssr && node ../../utils/bundle.js index.js index.min.js)",
     "deno-ssr": "npm run build-ssr && (cd ./examples/ssr && deno run --allow-net --allow-read ./deno-ssr.js)",
     "lint": "eslint . --ext js,jsx,json",
     "node-ssr": "npm run build-ssr && (cd ./examples/ssr && node ./node-ssr.js)",

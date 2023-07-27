@@ -4,7 +4,7 @@ export function jsxs(nodeName: string, attributes?: JSXAttributes | undefined): 
 export type Vnode = typeof import("../index.js").Vnode;
 export type VnodeAtrributes = typeof import("../index.js").VnodeAtrributes;
 export type JSXAdditionalProperties = {
-    children?: [import("..").Vnode] | undefined;
+    children?: [import("../index.js").Vnode] | undefined;
 };
 export type JSXAttributes = VnodeAtrributes & JSXAdditionalProperties;
 //# sourceMappingURL=jsx-runtime.d.ts.map

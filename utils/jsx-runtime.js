@@ -1,7 +1,7 @@
 /** @typedef {typeof import("../index.js").Vnode} Vnode */
 /** @typedef {typeof import("../index.js").VnodeAtrributes} VnodeAtrributes */
 
-import { h } from '..'
+import { h } from '../index.js'
 
 /**
  * @typedef {Object} JSXAdditionalProperties
@@ -16,7 +16,6 @@ import { h } from '..'
  */
 const kebabize = str => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? '-' : '') + $.toLowerCase())
 
-// eslint-disable-next-line import/no-unused-modules
 export const Fragment = '#fragment'
 
 /**
@@ -24,7 +23,6 @@ export const Fragment = '#fragment'
  * @param {JSXAttributes} [attributes={}]
  * @returns {Vnode | [Vnode?]}
  */
-// eslint-disable-next-line import/no-unused-modules
 export const jsx = (nodeName, attributes = {}) => jsxs(nodeName, attributes)
 
 /**
@@ -32,7 +30,6 @@ export const jsx = (nodeName, attributes = {}) => jsxs(nodeName, attributes)
  * @param {JSXAttributes} [attributes={}]
  * @returns {Vnode | [Vnode?]}
  */
-// eslint-disable-next-line import/no-unused-modules
 export const jsxs = (nodeName, attributes = {}) => {
   if (nodeName === Fragment && attributes.children) { return attributes.children }
   if (nodeName === Fragment) { return [] }
