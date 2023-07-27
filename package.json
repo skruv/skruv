@@ -22,25 +22,32 @@
     "./utils/css.js": "./utils/css.js",
     "./utils/state.js": "./utils/state.js",
     "./utils/syncify.js": "./utils/syncify.js",
-    "./utils/ssr.js": "./utils/ssr.js",
     "./utils/minidom.js": "./utils/minidom.js",
+    "./utils/bundle.js": "./utils/bundle.js",
     "./jsx-runtime": "./utils/jsx-runtime.js"
   },
   "main": "index.js",
   "types": "./types/index.js",
+  "bin": {
+    "skruv-bundle": "./utils/bundle.js"
+  },
   "files": [
     "index.js",
     "utils/css.js",
     "utils/state.js",
     "utils/syncify.js",
-    "utils/ssr.js",
     "utils/minidom.js",
+    "utils/bundle.js",
     "utils/jsx-runtime.js",
     "types/index.d.ts"
   ],
   "scripts": {
-    "build": "(cd examples/jsx && esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js)",
+    "build": "npm run build-ssr && npm run build-jsx",
+    "build-jsx": "(cd examples/jsx && npm exec skruv-bundle index.jsx index.min.js)",
+    "build-ssr": "(cd examples/ssr && npm exec skruv-bundle index.js index.min.js)",
+    "deno-ssr": "npm run build-ssr && (cd ./examples/ssr && deno run --allow-net --allow-read ./deno-ssr.js)",
     "lint": "eslint . --ext js,jsx,json",
+    "node-ssr": "npm run build-ssr && (cd ./examples/ssr && node ./node-ssr.js)",
     "pre-release": "npm run build && npm run test && npm run lint -- --fix && npm run typecheck",
     "test": "node --test --experimental-test-coverage",
     "typecheck": "rm -rf types && tsc"

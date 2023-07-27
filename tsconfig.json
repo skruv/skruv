@@ -20,8 +20,8 @@
     "index.js",
     "utils/css.js",
     "utils/state.js",
-    "utils/ssr.js",
     "utils/minidom.js",
+    "utils/bundle.js",
     "utils/jsx-runtime.js"
   ]
 }

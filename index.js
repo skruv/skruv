@@ -420,7 +420,7 @@ const renderRecursive = (current, currentNode, parentNode, isSvg) => {
  */
 export const render = async (
   current,
-  currentNode = globalThis.document.documentElement,
+  currentNode = document.documentElement,
   parentNode = currentNode?.parentNode,
   isSvg = false
 ) => {

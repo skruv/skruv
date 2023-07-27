@@ -183,7 +183,6 @@ class FakeEventSource {
 }
 globalThis.EventSource = FakeEventSource
 
-globalThis.window = globalThis
 globalThis.addEventListener = () => {}
 
 // Reset function to get a new global document
