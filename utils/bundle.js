@@ -69,7 +69,7 @@ const input = globalThis?.process?.argv?.[2] || globalThis?.Deno?.args?.[0]
 const output = globalThis?.process?.argv?.[3] || globalThis?.Deno?.args?.[1]
 
 if (!input || !output) {
-  console.log('please supply one input file and one output path')
+  console.error('please supply one input file and one output path')
   // @ts-ignore: Deno and node compat
   globalThis?.process?.exit(1) || globalThis?.Deno?.exit(1)
 }
