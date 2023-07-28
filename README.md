@@ -2,7 +2,7 @@
 
 # skruv
 
-No-dependency, no-build, small JS view-library/framework-ish.
+No-dependency, no-build, small JS view-library/framework-ish-thing.
 
 [Features](#features) • [Examples](#examples) • [Docs](#docs)
 
@@ -14,7 +14,7 @@ No-dependency, no-build, small JS view-library/framework-ish.
 * Very small:
   * [Smallest in benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
   * ~150 LOC
-  * 1kb minified and compressed (1016b with brotli, 1150b with gzip)
+  * 1kb minified and compressed (934b with brotli, 1064b with gzip, 2173b uncompressed)
 * Useable without bundling/compilation/transpilation
 * [One of the fastest in benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
 * [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
@@ -34,6 +34,7 @@ No-dependency, no-build, small JS view-library/framework-ish.
 import { render } from 'skruv'
 import { css, cssTextGenerator } from 'skruv/utils/css.js'
 import { createState } from 'skruv/utils/state.js'
+import { syncify } from 'skruv/utils/syncify.js'
 
 const state = createState({ todos: ['Write todos'] })
 
@@ -54,48 +55,50 @@ const styles = css`
 `
 
 render(
-  <html lang="en-US" class={styles}>
-    <head>
-      <title>{state.todos.getGenerator(0)}</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <style>{cssTextGenerator}</style>
-    </head>
-    <body>
-      <main>
-        <h1>{state.todos.getGenerator(0)}</h1>
-        <form
-          onsubmit={e => {
-            e.preventDefault()
-            state.todos.unshift(new FormData(e.target).get('todo'))
-            e.target.reset()
-          }}
-        >
-          <input name="todo"></input>
-          <button>New!</button>
-        </form>
-        <ol>
-          {async function * () {
-            for await (const todos of state.todos) {
-              yield todos.map((todo, i) => (
-                <li>{todo} <a
-                  href="#"
-                  onclick={e => {
-                    e.preventDefault()
-                    todos.splice(i, 1)
-                  }}
-                >x</a>
-                </li>
-              ))
-            }
-          }}
-        </ol>
-      </main>
-    </body>
-  </html>
+  syncify(
+    <html lang="en-US" class={styles}>
+      <head>
+        <title>{state.todos.getGenerator(0)}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>{cssTextGenerator}</style>
+      </head>
+      <body>
+        <main>
+          <h1>{state.todos.getGenerator(0)}</h1>
+          <form
+            onsubmit={e => {
+              e.preventDefault()
+              state.todos.unshift(new FormData(e.target).get('todo'))
+              e.target.reset()
+            }}
+          >
+            <input name="todo"></input>
+            <button>New!</button>
+          </form>
+          <ol>
+            {async function * () {
+              for await (const todos of state.todos) {
+                yield todos.map((todo, i) => (
+                  <li>{todo} <a
+                    href="#"
+                    onclick={e => {
+                      e.preventDefault()
+                      todos.splice(i, 1)
+                    }}
+                  >x</a>
+                  </li>
+                ))
+              }
+            }}
+          </ol>
+        </main>
+      </body>
+    </html>
+  )
 )
 ```
 
-Same example without jsx, scoped styles, state mgmt or build steps:
+Same example using just the core library:
 {% include_relative examples/todo-no-state-jsx/index.md %}
 ```js
 import { elementFactory, render } from '../../index.js'
@@ -196,6 +199,7 @@ There are three main parts of skruv:
 ```js
 import { elementFactory, render } from '../../index.js'
 import { css, cssTextGenerator } from '../../utils/css.js'
+import { syncify } from '../../utils/syncify.js'
 
 const { title, html, head, meta, body, div, p, style } = elementFactory
 
@@ -207,38 +211,36 @@ const rootStyles = css`
 `
 
 const scopedStyles = css`
-  :scope {
-    border: 1px solid #aaa;
-  }
-
-  p {
-    color: #aaa;
-  }
+  :scope { border: 1px solid #aaa; }
+  p { color: #aaa; }
 `
 
 render(
-  html({ lang: 'en-US', class: rootStyles },
-    head(
-      title('scopedcss'),
-      meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      style(cssTextGenerator)
-    ),
-    body(
-      div({ class: scopedStyles },
-        p('Hello')
+  syncify(
+    html({ lang: 'en-US', class: rootStyles },
+      head(
+        title('scopedcss'),
+        meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
+        style(cssTextGenerator)
       ),
-      div(
-        p('World!')
+      body(
+        div({ class: scopedStyles },
+          p('Hello')
+        ),
+        div(
+          p('World!')
+        )
       )
     )
   )
 )
+
 ```
 
 ## JSX
 {% include_relative examples/jsx/index.md %}
-Same as above, but using JSX. Compiled with esbuild:
-`esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js` or with the included bundler to allow for http imports and css template minification.
+Compiled with esbuild:
+`esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js` or with the included bundler script to allow for http imports and css template minification.
 ```jsx
 import { render } from 'skruv'
 

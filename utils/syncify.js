@@ -113,6 +113,9 @@ const syncify = (value, key, parent, cbparent, root = true) => {
       newVal = []
       cb = cbparent
     }
+    if (key === 'a') {
+      cb = cbparent
+    }
     // Object with dummy default rerender callback
     for (const key in value) {
       // @ts-ignore: TODO: Have a stricter check than typeof value === 'object' above

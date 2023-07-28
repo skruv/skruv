@@ -26,7 +26,7 @@ export type Vnode = {
 /** @type {Vnode} */
 export const Vnode: Vnode;
 export function h(t: string, ...c: (Record<string, any> | Vnode)[]): Vnode;
-export function render(current: Vnode, _currentNode?: Node, parentNode?: ParentNode | null, isSvg?: any): boolean;
+export function render(current: Vnode, _currentNode?: Node, parentNode?: ParentNode | null, isSvg?: any, doc?: Document | null): boolean;
 export const elementFactory: any;
 export type SkruvChildNode = Vnode | Vnode[] | string | boolean | number;
 export type SkruvChildNodes = SkruvChildNode[];

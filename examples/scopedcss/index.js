@@ -1,5 +1,6 @@
 import { elementFactory, render } from '../../index.js'
 import { css, cssTextGenerator } from '../../utils/css.js'
+import { syncify } from '../../utils/syncify.js'
 
 const { title, html, head, meta, body, div, p, style } = elementFactory
 
@@ -11,28 +12,25 @@ const rootStyles = css`
 `
 
 const scopedStyles = css`
-  :scope {
-    border: 1px solid #aaa;
-  }
-
-  p {
-    color: #aaa;
-  }
+  :scope { border: 1px solid #aaa; }
+  p { color: #aaa; }
 `
 
 render(
-  html({ lang: 'en-US', class: rootStyles },
-    head(
-      title('scopedcss'),
-      meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
-      style(cssTextGenerator)
-    ),
-    body(
-      div({ class: scopedStyles },
-        p('Hello')
+  syncify(
+    html({ lang: 'en-US', class: rootStyles },
+      head(
+        title('scopedcss'),
+        meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
+        style(cssTextGenerator)
       ),
-      div(
-        p('World!')
+      body(
+        div({ class: scopedStyles },
+          p('Hello')
+        ),
+        div(
+          p('World!')
+        )
       )
     )
   )
