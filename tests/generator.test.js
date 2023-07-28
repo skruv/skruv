@@ -5,7 +5,7 @@ import test from 'node:test'
 
 import { elementFactory, render } from '../index.js'
 import { createState } from '../utils/state.js'
-import { syncify } from '../utils/syncify.js'
+import { hydrationPromise, syncify } from '../utils/syncify.js'
 globalThis.SkruvWaitForAsync = true
 const { html, body, div } = elementFactory
 
@@ -18,7 +18,7 @@ test('update on state update: Array', async () => {
     syncify(
       html(
         body(
-          async function* () {
+          async function * () {
             for await (const currentState of state) {
               yield div(currentState.str)
             }
@@ -27,6 +27,7 @@ test('update on state update: Array', async () => {
       )
     )
   )
+  await hydrationPromise
   state.str = 'test'
   await wait(1)
   assert.strictEqual(document.documentElement.childNodes[0].childNodes[0].childNodes[0].textContent, 'test')

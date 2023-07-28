@@ -161,10 +161,10 @@ class HTMLElement {
   contains (node) {
     return true
   }
-  
+
   cloneNode () {
-    if (this.nodeName === '#comment') return new Comment(this.data)
-    if (this.nodeName === '#text') return new Text(this.data)
+    if (this.nodeName === '#comment') { return new Comment(this.data) }
+    if (this.nodeName === '#text') { return new Text(this.data) }
     return new HTMLElement(this.nodeName)
   }
 
