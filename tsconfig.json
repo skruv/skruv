@@ -19,6 +19,7 @@
   "files": [
     "index.js",
     "utils/css.js",
+    "utils/cssom.js",
     "utils/state.js",
     "utils/minidom.js",
     "utils/bundle.js",

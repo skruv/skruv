@@ -1,6 +1,6 @@
 {
   "name": "skruv",
-  "version": "0.6.1-next.1",
+  "version": "0.6.0",
   "description": "No-dependency, no-build, small JS framework",
   "keywords": [],
   "bugs": {
@@ -20,6 +20,7 @@
       "default": "./index.js"
     },
     "./utils/css.js": "./utils/css.js",
+    "./utils/cssom.js": "./utils/cssom.js",
     "./utils/state.js": "./utils/state.js",
     "./utils/syncify.js": "./utils/syncify.js",
     "./utils/minidom.js": "./utils/minidom.js",
@@ -34,6 +35,7 @@
   "files": [
     "index.js",
     "utils/css.js",
+    "utils/cssom.js",
     "utils/state.js",
     "utils/syncify.js",
     "utils/minidom.js",
