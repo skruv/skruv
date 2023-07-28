@@ -69,7 +69,9 @@ export const render = (
     !currentNode ||
     (
       ((typeof current === 'string' || typeof current === 'number') && currentNode?.nodeName !== '#text') ||
-      (current?.t && currentNode?.nodeName !== current?.t)
+      (current?.t && currentNode?.nodeName !== current?.t) ||
+      // @ts-ignore: TODO: Handle key storage better
+      (currentNode?._skruvKey !== current?.a?._key)
     )
   ) {
     if (typeof current === 'string' || typeof current === 'number') {
@@ -84,6 +86,10 @@ export const render = (
     } else {
       parentNode.appendChild(currentNode)
     }
+    // @ts-ignore: see above
+    if (current?.a?._key) { currentNode._skruvKey = current?.a?._key }
+    // @ts-ignore: oncreate should always be callable. TODO: add strict typing
+    if (current?.a?.oncreate) { current?.a?.oncreate(currentNode) }
   } else {
     childNodes = currentNode.childNodes
   }
@@ -133,6 +139,9 @@ export const render = (
   }
   const children = current.c.flat(Infinity)
   if (!children.length && childNodes.length) {
+    if (current.a['data-skruv-wait-for-not-empty']) {
+      return true
+    }
     // @ts-ignore: If this was a text or comment element we would have returned above
     currentNode.replaceChildren()
     return true

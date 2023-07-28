@@ -114,6 +114,7 @@ const syncify = (value, key, parent, cbparent, root = true) => {
       cb = cbparent
     }
     if (key === 'a') {
+      newVal = {}
       cb = cbparent
     }
     // Object with dummy default rerender callback
