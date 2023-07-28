@@ -10,13 +10,13 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
 
 ## Features
 
-* No buildtime or runtime dependencies, no parsers
-* Very small:
+* No dependencies
+* Small:
   * [Smallest in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
   * ~150 LOC
   * 1kb minified and compressed (1035b with brotli, 1167b with gzip, 2355b uncompressed)
 * Useable without bundling/compilation/transpilation
-* [Among the faster in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
+* [Plenty fast enough](https://krausest.github.io/js-framework-benchmark/index.html)
 * [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
 * Optional helper utils for
   * State management (state.js)
@@ -98,8 +98,8 @@ render(
 )
 ```
 
-Same example using just the core library:
-{% include_relative examples/todo-no-state-jsx/index.md %}
+Same example using just the core library, without bundling:
+{% include_relative examples/todo-core/index.md %}
 ```js
 import { elementFactory, render } from '../../index.js'
 
@@ -171,28 +171,20 @@ doRender()
 
 ## Docs
 
-There are three main parts of skruv:
+The core of skruv is the render function. It takes a structure created by elementFactory and optionally which DOM node to write to.
 
-* createState
-  * createState takes in a object and returns a [proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) which is also an [async generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).
-  * You modify the state by using normal methods (including things like [`delete`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete), [`splice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice), etc.) or setters on it.
-  * Where you want to subscribe to state changes you use [for-await-of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of).
-    * You can subscribe to subobjects with `for await (const bar of state.foo.bar)`.
-  * As a shortcut you can call getGenerator(key) to subscribe to and ouput a single value.
-    * This also works as a way to output the value in a attribute.
-* render
-  * Render takes a structure created by elements and optionally which DOM node to write to.
-    * If no DOM node is given it will render the whole document, like in the examples.
-* elements
-  * Elements has the function `h` for generating HTML/SVG elements.
-  * An elements children can be functions returning other elements, arrays of elements, generators yielding elements, plain elements, strings.
-  * Besides the normal [DOM events](https://developer.mozilla.org/en-US/docs/Web/Events) like `onclick` there are `oncreate` and `onremove` which are called when skruv adds/removes the elements.
-  * Besides the normal html attributes there is an additonal one called `opaque` which makes skruv ignore all children. This is useful for when you want to instansiate a third party library that does its own DOM handling. In that case you would use a element with `opaque` and then `oncreate` to instansiate the library on that DOM node. 
-  * has [tagged template functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) `css` to make it easier to write & syntax highlight css
-    * Use [es6-string-css](https://marketplace.visualstudio.com/items?itemName=bashmish.es6-string-css) for syntax highlighting in vscode.
-  * `style({scoped: true})` and `<style scoped>` behaves like the (unfortunately) removed [HTML feature](https://developer.mozilla.org/en-US/docs/Web/API/HTMLStyleElement/scoped)
-  * It also has helpers for each HTML/SVG element so you can get a h1 element helper by doing `const { h1 } = elements`.
-  * There is also a jsx-runtime that works with esbuild if you want to use jsx instead of the element helpers.
+Utilities:
+ * If you want to use scoped css you can import the css tagged template function and it's corresponding cssTextGenerator. The result of the `css`\`` call is a classname and cssTextGenerator will resolve with the full css for the application, prefixed with each classname.
+ * If you want to use async components you pull in the syncify function that takes care of scheduling render updates.
+ * If you want an easy to use state management you pull in the createState function which takes in an object and gives you a recursive generator that will listen to any changes to the state object.
+   * createState takes in a object and returns a [proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) which is also an [async generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).
+   * You modify the state by using normal methods (including things like [`delete`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete), [`splice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice), etc.).
+   * Where you want to subscribe to state changes you use [for-await-of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of).
+   * You can subscribe to subobjects with `for await (const bar of state.foo.bar)`.
+   * As a shortcut you can call getGenerator(key) to subscribe to and ouput a single value.
+     * This is useful to output primitive values (like strings/numbers etc.) in for example text or attributes without requiring a whole generator function
+ * SSR/SSG examples are bundled in this repo, they use the minidom utility to polyfill what is needed to use skruv in node/deno and serialize the DOM to HTML.
+ * jsx-runtime provides the neccessary parts to allow for JSX usage via a bundler like esbuild. See example below for details.
 
 ## Scoped CSS
 {% include_relative examples/scopedcss/index.md %}
