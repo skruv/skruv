@@ -1,6 +1,6 @@
-import { htmlFactory, render } from '../../index.js'
+import { elementFactory, render } from '../../index.js'
 
-const { html, head, title, meta, body, main, h1, form, input, button, ol, li, a, style } = htmlFactory
+const { html, head, title, meta, body, main, h1, form, input, button, ol, li, a, style } = elementFactory
 
 const state = {
   todos: ['Write todos']

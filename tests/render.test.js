@@ -3,9 +3,9 @@ import '../utils/minidom.js'
 import assert from 'node:assert'
 import test from 'node:test'
 
-import { htmlFactory, render } from '../index.js'
+import { elementFactory, render } from '../index.js'
 globalThis.SkruvWaitForAsync = true
-const { html, body } = htmlFactory
+const { html, body } = elementFactory
 
 test('simple render', async () => {
   render(

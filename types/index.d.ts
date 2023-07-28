@@ -14,7 +14,7 @@ export type VnodeAtrributes = PreparedVnodeAtrributes & Record<string, (string |
 export const VnodeAtrributes: VnodeAtrributes;
 export function h(t: string, ...c: Array<SkruvChildNode | VnodeAtrributes>): Vnode;
 export function render(current: Vnode, currentNode?: Element | undefined, parentNode?: ParentNode | null, isSvg?: boolean | undefined): Promise<void>;
-export const htmlFactory: Record<string, (...c: Array<SkruvChildNode | VnodeAtrributes>) => Vnode>;
+export const elementFactory: Record<string, (...c: Array<SkruvChildNode | VnodeAtrributes>) => Vnode>;
 export type SkruvValue = Vnode | Function | string | number | boolean | SkruvAsyncGenerator | AsyncIterable<SkruvValue> | Promise<SkruvValue> | SkruvAsyncFunction;
 export type SkruvAttributesIterable = (AsyncGenerator<Function | string | boolean | number> | AsyncIterable<Function | string | boolean | number>);
 export type SkruvAttributesPromiseOrAsyncFunction = (Promise<Function | string | boolean | number> | (() => Promise<Function | string | boolean | number>));

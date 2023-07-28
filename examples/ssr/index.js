@@ -1,8 +1,9 @@
-import { htmlFactory, render } from '../../index.js'
+import { elementFactory, render } from '../../index.js'
 import { css, cssTextGenerator } from '../../utils/css.js'
 import { createState } from '../../utils/state.js'
+import { syncify } from '../../utils/syncify.js'
 
-const { html, head, title, meta, body, main, h1, form, input, button, ol, li, a, style, script } = htmlFactory
+const { html, head, title, meta, body, main, h1, form, input, button, ol, li, a, style, script } = elementFactory
 
 const state = createState({
   todos: ['Write todos']
@@ -33,7 +34,8 @@ const styles = css`
 `
 
 render(
-  html({ lang: 'en-US', class: styles },
+  syncify(
+    html({ lang: 'en-US', class: styles },
     head(
       title(state.todos.getGenerator(0)),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
@@ -75,4 +77,5 @@ render(
       !!globalThis.skruvSSRScript && script({ type: 'module' }, globalThis.skruvSSRScript)
     )
   )
+)
 )

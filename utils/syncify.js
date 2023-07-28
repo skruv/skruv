@@ -15,6 +15,11 @@ const waitingGens = new Set()
 const process = (value, key, parent, cbparent, result) => {
   if (hydrating && !(typeof result === 'object' && 'a' in result && result?.a?.['data-skruv-finished'] === false)) {
     waitingGens.delete(value)
+    if (!waitingGens.size) {
+      // TODO: Check if needed
+      hydrating = false
+      hydrationResolve()
+    }
   }
   generatorResults.set(value, result)
   // @ts-ignore: This complains, but we will always get either array and number key or object and string key
@@ -124,7 +129,7 @@ const syncify = (value, key, parent, cbparent, root = true) => {
     }
     return newVal
   }
-  throw new Error('Unkown type in syncify: ' + JSON.stringify({ key, value }))
+  return value
 }
 
 export { hydrationPromise, syncify }
