@@ -15,6 +15,6 @@ test('jsx', async () => {
   assert.strictEqual(
     responseBody,
     // eslint-disable-next-line max-len
-    '<!DOCTYPE html><html lang="en-US"><head><title>jsx</title><meta name="viewport" content="width=device-width, initial-scale=1"></meta><style>:root{color:#fff;background:#0f0f0f}</style></head><body><div><p>Hello world</p></div></body></html>'
+    '<!DOCTYPE html><html lang="en-US"><head><title>jsx</title><meta name="viewport" content="width=device-width, initial-scale=1"/><style>:root{color:#fff;background:#0f0f0f}</style></head><body><div><p>Hello world</p></div></body></html>'
   )
 })

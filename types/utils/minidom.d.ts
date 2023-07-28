@@ -57,15 +57,8 @@ declare class Element {
     /** @param {Element} node */
     appendChild(node: Element): void;
     /** @param {Element} node */
-    prependChild(node: Element): void;
-    /** @param {Element} node */
-    after(node: Element): void;
-    /** @param {Element} node */
-    before(node: Element): void;
-    /** @param {Element} node */
     removeChild(node: Element): void;
     replaceChildren(): void;
-    getAttributeNames(): string[];
     /** @param {string | number} name */
     getAttribute(name: string | number): string;
     /** @param {string | number} name */

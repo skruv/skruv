@@ -2,7 +2,11 @@ export type Vnode = {
     s: Symbol;
     t: string;
     c: SkruvChildNodes;
-    a: Record<string, (string | boolean | Function | number | Object)>;
+    a: Record<string, (string | boolean | Function | number | Object)> & {
+        _r: {
+            _r: () => boolean;
+        } | null;
+    };
     _r?: {
         _r: () => boolean;
     } | undefined;
@@ -16,7 +20,7 @@ export type Vnode = {
  * @prop {Symbol} s
  * @prop {String} t
  * @prop {SkruvChildNodes} c
- * @prop {Record<string,(string|boolean|Function|number|Object)>} a
+ * @prop {Record<string,(string|boolean|Function|number|Object)> & {_r:{_r:() => boolean}?}} a
  * @prop {{_r:() => boolean}} [_r]
  */
 /** @type {Vnode} */
