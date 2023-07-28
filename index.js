@@ -56,7 +56,8 @@ export const render = (
   isSvg = false
 ) => {
   let currentNode = _currentNode
-  if (!parentNode || !parentNode.ownerDocument || (currentNode && !parentNode.contains(currentNode))) { return false }
+  const doc = parentNode?.ownerDocument || currentNode.ownerDocument
+  if (!parentNode || !doc || (currentNode && !parentNode.contains(currentNode))) { return false }
   if (typeof current === 'boolean' || current === null || current === undefined) {
     if (currentNode) { parentNode.removeChild(currentNode) }
     return true
@@ -68,11 +69,11 @@ export const render = (
     (currentNode?._skruvKey !== current?.a?._key)
   ) {
     if (typeof current === 'string' || typeof current === 'number') {
-      currentNode = (domCache.text || (domCache.text = parentNode.ownerDocument.createTextNode(''))).cloneNode()
+      currentNode = (domCache.text || (domCache.text = doc.createTextNode(''))).cloneNode()
     } else if (isSvg || current.t === 'svg') {
-      currentNode = (domCache[current.t] || (domCache[current.t] = parentNode.ownerDocument.createElementNS('http://www.w3.org/2000/svg', current.t))).cloneNode()
+      currentNode = (domCache[current.t] || (domCache[current.t] = doc.createElementNS('http://www.w3.org/2000/svg', current.t))).cloneNode()
     } else {
-      currentNode = (domCache[current.t] || (domCache[current.t] = parentNode.ownerDocument.createElement(current.t))).cloneNode()
+      currentNode = (domCache[current.t] || (domCache[current.t] = doc.createElement(current.t))).cloneNode()
     }
     if (_currentNode) {
       parentNode.replaceChild(currentNode, _currentNode)
