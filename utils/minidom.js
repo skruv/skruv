@@ -38,14 +38,14 @@ const document = {
   querySelectorAll: () => []
 }
 
-class HTMLElement {
+class Element {
   /** @param {string} nodeName */
   constructor (nodeName = '') {
-    /** @type {HTMLElement[]} */
+    /** @type {Element[]} */
     this.childNodes = []
     /** @type {{ [key: string]: string; }} */
     this.attributes = {}
-    /** @type {HTMLElement?} */
+    /** @type {Element?} */
     this.parentNode = null
     // TODO: make private
     /** @type {{ [key: string]: function[]; }} */
@@ -56,8 +56,8 @@ class HTMLElement {
   }
 
   /**
-   * @param {HTMLElement} newNode
-   * @param {HTMLElement} oldNode
+   * @param {Element} newNode
+   * @param {Element} oldNode
    */
   replaceChild (newNode, oldNode) {
     this.childNodes[this.childNodes.indexOf(oldNode)] = newNode
@@ -65,19 +65,19 @@ class HTMLElement {
     oldNode.parentNode = null
   }
 
-  /** @param {HTMLElement} node */
+  /** @param {Element} node */
   appendChild (node) {
     this.childNodes.push(node)
     node.parentNode = this
   }
 
-  /** @param {HTMLElement} node */
+  /** @param {Element} node */
   prependChild (node) {
     this.childNodes.unshift(node)
     node.parentNode = this
   }
 
-  /** @param {HTMLElement} node */
+  /** @param {Element} node */
   after (node) {
     if (!this.parentNode) {
       throw new Error('No parent to add node to in after')
@@ -86,7 +86,7 @@ class HTMLElement {
     node.parentNode = this.parentNode
   }
 
-  /** @param {HTMLElement} node */
+  /** @param {Element} node */
   before (node) {
     if (!this.parentNode) {
       throw new Error('No parent to add node to in before')
@@ -95,7 +95,7 @@ class HTMLElement {
     node.parentNode = this.parentNode
   }
 
-  /** @param {HTMLElement} node */
+  /** @param {Element} node */
   removeChild (node) {
     this.childNodes.splice(this.childNodes.indexOf(node), 1)
     node.parentNode = null
@@ -157,15 +157,16 @@ class HTMLElement {
     if (this.parentNode) { this.parentNode.dispatchEvent(event) }
   }
 
-  /** @param {HTMLElement} node */
+  /** @param {Element} node */
   contains (node) {
     return true
   }
 
+  /** @returns {Element} */
   cloneNode () {
     if (this.nodeName === '#comment') { return new Comment(this.data) }
     if (this.nodeName === '#text') { return new Text(this.data) }
-    return new HTMLElement(this.nodeName)
+    return new Element(this.nodeName)
   }
 
   get innerHTML () {
@@ -177,7 +178,8 @@ class HTMLElement {
   }
 }
 
-class SVGElement extends HTMLElement {}
+class SVGElement extends Element {}
+class HTMLElement extends Element {}
 
 class Text extends HTMLElement {
   constructor (data = '') {
@@ -196,6 +198,8 @@ class Comment extends HTMLElement {
 }
 
 // Global MiniDOM classes for use in instanceof
+// @ts-ignore: Type confusion between polyfilled and real elements
+globalThis.Element = Element
 // @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.SVGElement = SVGElement
 // @ts-ignore: Type confusion between polyfilled and real elements

@@ -2,15 +2,13 @@ import assert from 'node:assert'
 import test from 'node:test'
 
 import { toHTML } from '../utils/minidom.js'
+const wait = time => new Promise(resolve => setTimeout(resolve, time))
 
 test('minidom', async () => {
   globalThis.location = new URL('http://127.0.0.1:8000/')
   globalThis.SkruvWaitForAsync = true
   await import('../examples/ssr/index.min.js')
-
-  // TODO: Check why we need a microsleep here
-  await new Promise(resolve => setTimeout(resolve, 0))
-
+  await wait(1)
   const headers = {}
   const responseBody = toHTML(document.documentElement, '', headers)
   assert.strictEqual(
