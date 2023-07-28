@@ -1,5 +1,5 @@
 // TODO: CSSOM is deprecated/abandoned. Its dependency free, but look for replacements or vendor it into this repo.
-import cssom from 'cssom'
+import cssom from './cssom.js'
 
 // CSSOM polyfill
 // @ts-ignore: TODO: instead polyfill CSSStyleSheet when safari adoption catches up
