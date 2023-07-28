@@ -72,30 +72,6 @@ class Element {
   }
 
   /** @param {Element} node */
-  prependChild (node) {
-    this.childNodes.unshift(node)
-    node.parentNode = this
-  }
-
-  /** @param {Element} node */
-  after (node) {
-    if (!this.parentNode) {
-      throw new Error('No parent to add node to in after')
-    }
-    this.parentNode.childNodes.splice(this.parentNode.childNodes.indexOf(this) + 1, 0, node)
-    node.parentNode = this.parentNode
-  }
-
-  /** @param {Element} node */
-  before (node) {
-    if (!this.parentNode) {
-      throw new Error('No parent to add node to in before')
-    }
-    this.parentNode.childNodes.splice(this.parentNode.childNodes.indexOf(this), 0, node)
-    node.parentNode = this.parentNode
-  }
-
-  /** @param {Element} node */
   removeChild (node) {
     this.childNodes.splice(this.childNodes.indexOf(node), 1)
     node.parentNode = null
@@ -103,10 +79,6 @@ class Element {
 
   replaceChildren () {
     this.childNodes = []
-  }
-
-  getAttributeNames () {
-    return Object.keys(this.attributes)
   }
 
   /** @param {string | number} name */
@@ -181,6 +153,9 @@ class Element {
 class SVGElement extends Element {}
 class HTMLElement extends Element {}
 
+class HTMLOptionElement extends Element {}
+class HTMLInputElement extends Element {}
+
 class Text extends HTMLElement {
   constructor (data = '') {
     super('#text')
@@ -200,6 +175,10 @@ class Comment extends HTMLElement {
 // Global MiniDOM classes for use in instanceof
 // @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.Element = Element
+// @ts-ignore: Type confusion between polyfilled and real elements
+globalThis.HTMLOptionElement = HTMLOptionElement
+// @ts-ignore: Type confusion between polyfilled and real elements
+globalThis.HTMLInputElement = HTMLInputElement
 // @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.SVGElement = SVGElement
 // @ts-ignore: Type confusion between polyfilled and real elements
@@ -231,8 +210,8 @@ globalThis.addEventListener = () => {}
 
 // Reset function to get a new global document
 export const reset = () => {
-  const rootElement = new HTMLElement('document')
-  const documentElement = new HTMLElement('html')
+  const rootElement = new HTMLElement('DOCUMENT')
+  const documentElement = new HTMLElement('HTML')
   documentElement.parentNode = rootElement
   rootElement.childNodes = [documentElement]
   document.documentElement = documentElement
@@ -312,8 +291,16 @@ const htmlAttr = (/** @type {[string, string]} */ [name, value]) =>
  * @param {{ [key: string]: string; }} headers
  * @returns {string}
  */
-const htmlTag = (vDom, headers) =>
-  `<${quoteattr(vDom.nodeName.toLowerCase())}${
+const htmlTag = (vDom, headers) => {
+  if (['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'].includes(vDom.nodeName.toLowerCase())) {
+    return `<${quoteattr(vDom.nodeName.toLowerCase())}${
+      !Object.entries(vDom.attributes).length
+        ? ''
+        : (' ' + Object.entries(vDom.attributes).map(htmlAttr)
+  .join(' '))
+    }/>`
+  }
+  return `<${quoteattr(vDom.nodeName.toLowerCase())}${
     !Object.entries(vDom.attributes).length
       ? ''
       : (' ' + Object.entries(vDom.attributes).map(htmlAttr)
@@ -323,6 +310,7 @@ const htmlTag = (vDom, headers) =>
       toHTML(e, vDom.nodeName, headers)
     ).join('')
   }</${quoteattr(vDom.nodeName.toLowerCase())}>`
+}
 
 /**
  * @param {HTMLElement} vDom

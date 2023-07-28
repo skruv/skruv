@@ -9,17 +9,17 @@ const s = Symbol.for('skruvDom')
  * @prop {Symbol} s
  * @prop {String} t
  * @prop {SkruvChildNodes} c
- * @prop {Record<string,(string|boolean|Function|number|Object)>} a
+ * @prop {Record<string,(string|boolean|Function|number|Object)> & {_r:{_r:() => boolean}?}} a
  * @prop {{_r:() => boolean}} [_r]
  */
 /** @type {Vnode} */
-export const Vnode = { s, t: '', c: [], a: {} }
+export const Vnode = { s, t: '', c: [], a: { _r: { _r: () => false } } }
 /**
  * @param {string} t
  * @param  {(Record<string, any>|Vnode)[]} c
  * @returns {Vnode}
  */
-// @ts-ignore
+// @ts-ignore: TODO: The check for non-attribute objects does not satisfy TS
 export const h = (t, ...c) => ({
   s,
   t: t.toUpperCase(),
@@ -65,7 +65,7 @@ export const render = (
   /** @type {ChildNode[]} */
   let childNodes = []
   const nodeName = currentNode?.nodeName
-  if (!currentNode || (nodeName !== current.t && ((typeof current === 'string' || typeof current === 'number') && nodeName !== '#text'))) {
+  if (!currentNode || (nodeName !== current?.t || ((typeof current === 'string' || typeof current === 'number') && nodeName !== '#text'))) {
     if (typeof current === 'string' || typeof current === 'number') {
       currentNode = (domCache.text || (domCache.text = parentNode.ownerDocument.createTextNode(''))).cloneNode()
     } else if (isSvg || current.t === 'svg') {
@@ -90,16 +90,17 @@ export const render = (
   }
   if (!(currentNode instanceof Element) || typeof current !== 'object') { return true }
   if (current._r) { current._r._r = () => render(current, currentNode, parentNode, isSvg) }
+  if (current.a._r) { current.a._r._r = () => render(current, currentNode, parentNode, isSvg) }
   for (const key in current.a) {
     if (key[0] === '_') { continue }
     if (key[0] === 'o' && key[1] === 'n') {
       // @ts-ignore: TODO: this is a hacky way to store what the last eventlistener was
       if (!currentNode['data-event-' + key] || currentNode['data-event-' + key]?.toString() !== current.a[key]?.toString()) {
-        // @ts-ignore
+        // @ts-ignore: See above
         if (currentNode['data-event-' + key]) { currentNode.removeEventListener(key.slice(2), currentNode['data-event-' + key]) }
-        // @ts-ignore
+        // @ts-ignore: See above
         currentNode.addEventListener(key.slice(2), current.a[key])
-        // @ts-ignore
+        // @ts-ignore: See above
         currentNode['data-event-' + key] = current.a[key]
       } else if (!current.a[key]) {
         // @ts-ignore: data-event-* is the old function
@@ -138,12 +139,12 @@ export const render = (
   for (let i = 0; i < children.length; i++) {
     // @ts-ignore: TODO: the flattening seems to confuse TS
     if (keyed.has(children[i])) {
-      // @ts-ignore
+      // @ts-ignore: See above
       const keyedNode = keyed.get(children[i])
       if (keyedNode && keyedNode !== currentNode.childNodes[i]) {
         if (keyedNode === currentNode.childNodes[i + 1]) {
           currentNode.removeChild(currentNode.childNodes[i])
-        // @ts-ignore
+        // @ts-ignore: See above
         } else if (keyed.has(children[i + 1]) && keyed.get(children[i + 1]) === currentNode.childNodes[i]) {
           currentNode.insertBefore(keyedNode, currentNode.childNodes[i])
         } else if (currentNode.childNodes[i]) {
@@ -151,11 +152,12 @@ export const render = (
         } else {
           currentNode.appendChild(keyedNode)
         }
-        keyed.set(current, currentNode)
+        // @ts-ignore: See above
+        keyed.set(children[i], currentNode.childNodes[i])
       }
       continue
     }
-    // @ts-ignore: TODO: the flattening seems to confuse TS
+    // @ts-ignore: See above
     render(children[i], childNodes[i] || false, currentNode, isSvg)
   }
   keyed.set(current, currentNode)
