@@ -14,11 +14,11 @@ No-dependency, no-build, small JS view-library/framework-ish.
 * Very small:
   * [Smallest in benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
   * ~150 LOC
-  * less than 1kb minified and compressed
+  * 1kb minified and compressed (1016b with brotli, 1150b with gzip)
 * Useable without bundling/compilation/transpilation
 * [One of the fastest in benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
 * [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
-* Helper utils for
+* Optional helper utils for
   * State management (state.js)
   * Async generators or promises as components (syncify.js)
   * SSR/SSG without jsdom/puppeteer (minidom.js)
