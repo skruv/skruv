@@ -5,6 +5,7 @@ import test from 'node:test'
 
 import { elementFactory, render } from '../index.js'
 import { createState } from '../utils/state.js'
+import { syncify } from '../utils/syncify.js'
 globalThis.SkruvWaitForAsync = true
 const { body, div, html } = elementFactory
 
@@ -13,6 +14,7 @@ const wait = time => new Promise(resolve => setTimeout(resolve, time))
 test('update on array push', async () => {
   const sub = createState({ arr: ['test', 'test2'] })
   await render(
+    syncify(
     html(
       body(
         async function * () {
@@ -20,6 +22,7 @@ test('update on array push', async () => {
             yield state.arr.map(a => div(a))
           }
         }
+      )
       )
     )
   )

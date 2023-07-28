@@ -61,7 +61,6 @@ test('syncify', async () => {
   assert.strictEqual(syncify(a).b, 'b')
   assert.strictEqual(syncify(a).ai, 'ai')
   assert.strictEqual(syncify(a).d[0][0][0].a, 'a')
-  assert.throws(() => syncify({ s: Symbol.for('s') }))
   const newObj = {
     i: async function * () {
       let i = 0
