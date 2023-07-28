@@ -1,4 +1,4 @@
-/* global Deno */
+/* global Deno Response */
 import { reset, toHTML } from '../../utils/minidom.js'
 
 /**

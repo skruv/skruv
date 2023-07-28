@@ -1,6 +1,16 @@
-/** @typedef {typeof import("../index.js").Vnode} Vnode */
-/** @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAtrributes */
-
+/**
+ * @typedef {Vnode|Vnode[]|String|Boolean|Number} SkruvChildNode
+ * @typedef {SkruvChildNode[]} SkruvChildNodes
+ * @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAtrributes
+ */
+/**
+ * @typedef {object} Vnode
+ * @prop {Symbol} s
+ * @prop {String} t
+ * @prop {SkruvChildNodes} c
+ * @prop {Record<string,(string|boolean|Function|number|Object)> & {_r:{_r:() => boolean}?}} a
+ * @prop {{_r:() => boolean}} [_r]
+ */
 import { h } from '../index.js'
 
 /**
