@@ -264,16 +264,14 @@ render(
 
 ## TODO:
 
-* [ ] Handle flatifying and number/string in render
-* [ ] Build example with SSR bundling the request cache
-* [ ] Add router, generatorUtils, loader, etc.
-* [ ] Add template repo
-  * [ ] One basic and one with postgrest backend, nginx frontend and SSR
-* [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc. Show on separate page.
-* [ ] Allow passing raw DOM nodes as children? Return DOM node from render so you can have sub-renders
-* [ ] Error boundaries (custom events that bubble on error so they can be caught in the DOM instead of in the js call stack)
 * [ ] Document
   * [ ] data-skruv-key?
   * [ ] data-skruv-finished
   * [ ] data-skruv-wait-for-not-empty
   * [ ] oncreate
+* [ ] Build example with SSR bundling the request cache
+* [ ] Add router, generatorUtils, loader, etc.
+* [ ] Add template repo
+  * [ ] One basic and one with postgrest backend, nginx frontend and SSR
+* [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc. Show on separate page.
+* [ ] Error boundaries (custom events that bubble on error so they can be caught in the DOM instead of in the js call stack)
