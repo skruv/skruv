@@ -1,6 +1,6 @@
 {
   "name": "skruv",
-  "version": "0.6.1-next.1",
+  "version": "0.6.0",
   "description": "No-dependency, no-build, small JS framework",
   "keywords": [],
   "bugs": {
