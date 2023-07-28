@@ -12,11 +12,11 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
 
 * No buildtime or runtime dependencies, no parsers
 * Very small:
-  * [Smallest in benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
+  * [Smallest in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
   * ~150 LOC
   * 1kb minified and compressed (934b with brotli, 1064b with gzip, 2173b uncompressed)
 * Useable without bundling/compilation/transpilation
-* [One of the fastest in benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
+* [Among the faster in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
 * [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
 * Optional helper utils for
   * State management (state.js)
