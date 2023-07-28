@@ -66,13 +66,13 @@ class HTMLElement {
   }
 
   /** @param {HTMLElement} node */
-  append (node) {
+  appendChild (node) {
     this.childNodes.push(node)
     node.parentNode = this
   }
 
   /** @param {HTMLElement} node */
-  prepend (node) {
+  prependChild (node) {
     this.childNodes.unshift(node)
     node.parentNode = this
   }
@@ -99,6 +99,10 @@ class HTMLElement {
   removeChild (node) {
     this.childNodes.splice(this.childNodes.indexOf(node), 1)
     node.parentNode = null
+  }
+
+  replaceChildren () {
+    this.childNodes = []
   }
 
   getAttributeNames () {
@@ -156,6 +160,12 @@ class HTMLElement {
   /** @param {HTMLElement} node */
   contains (node) {
     return true
+  }
+  
+  cloneNode () {
+    if (this.nodeName === '#comment') return new Comment(this.data)
+    if (this.nodeName === '#text') return new Text(this.data)
+    return new HTMLElement(this.nodeName)
   }
 
   get innerHTML () {
@@ -299,7 +309,7 @@ const htmlAttr = (/** @type {[string, string]} */ [name, value]) =>
  * @returns {string}
  */
 const htmlTag = (vDom, headers) =>
-  `<${quoteattr(vDom.nodeName)}${
+  `<${quoteattr(vDom.nodeName.toLowerCase())}${
     !Object.entries(vDom.attributes).length
       ? ''
       : (' ' + Object.entries(vDom.attributes).map(htmlAttr)
@@ -308,7 +318,7 @@ const htmlTag = (vDom, headers) =>
     vDom.childNodes.map(e =>
       toHTML(e, vDom.nodeName, headers)
     ).join('')
-  }</${quoteattr(vDom.nodeName)}>`
+  }</${quoteattr(vDom.nodeName.toLowerCase())}>`
 
 /**
  * @param {HTMLElement} vDom
@@ -318,28 +328,28 @@ const htmlTag = (vDom, headers) =>
  */
 export const toHTML = (vDom, context, headers) => {
   if (
-    vDom.nodeName === '#text' &&
+    vDom.nodeName.toLowerCase() === '#text' &&
     (context === 'raw' || context === 'script' || context === 'style')
   ) {
     return vDom.data // TODO: SECURITY: check escaping on CSS/JS. Or rely on CSP to make it safe
-  } else if (vDom.nodeName === '#text') {
+  } else if (vDom.nodeName.toLowerCase() === '#text') {
     return escapeHtml(vDom.data)
-  } else if (vDom.nodeName === '#comment') {
+  } else if (vDom.nodeName.toLowerCase() === '#comment') {
     return `<!--${
       escapeHtml(
-        vDom.childNodes.map(e => toHTML(e, vDom.nodeName, headers)).join('')
+        vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join('')
       )
     }-->`
-  } else if (vDom.nodeName === 'html') {
+  } else if (vDom.nodeName.toLowerCase() === 'html') {
     // Hacky way to make sure we have a doctype
     return `<!DOCTYPE html>${htmlTag(vDom, headers)}`
-  } else if (vDom.nodeName === '#raw') {
-    return vDom.childNodes.map(e => toHTML(e, vDom.nodeName, headers)).join(
+  } else if (vDom.nodeName.toLowerCase() === '#raw') {
+    return vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join(
       ''
     )
-  } else if (vDom.nodeName === '#meta') {
+  } else if (vDom.nodeName.toLowerCase() === '#meta') {
     headers[vDom.attributes['http-equiv']] = vDom.attributes?.content
-    return vDom.childNodes.map(e => toHTML(e, vDom.nodeName, headers)).join(
+    return vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join(
       ''
     )
   } else {
@@ -352,7 +362,7 @@ export const toHTML = (vDom, context, headers) => {
  * @returns {string}
  */
 export const toText = vDom => {
-  if (vDom.nodeName === '#text') {
+  if (vDom.nodeName.toLowerCase() === '#text') {
     return vDom.data
   } else {
     return vDom.childNodes.map(e => toText(e)).join('')

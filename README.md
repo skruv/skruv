@@ -98,9 +98,9 @@ render(
 Same example without jsx, scoped styles, state mgmt or build steps:
 {% include_relative examples/todo-no-state-jsx/index.md %}
 ```js
-import { htmlFactory, render } from '../../index.js'
+import { elementFactory, render } from '../../index.js'
 
-const { html, head, title, meta, body, main, h1, form, input, button, ol, li, a, style } = htmlFactory
+const { html, head, title, meta, body, main, h1, form, input, button, ol, li, a, style } = elementFactory
 
 const state = {
   todos: ['Write todos']
@@ -194,10 +194,10 @@ There are three main parts of skruv:
 ## Scoped CSS
 {% include_relative examples/scopedcss/index.md %}
 ```js
-import { htmlFactory, render } from '../../index.js'
+import { elementFactory, render } from '../../index.js'
 import { css, cssTextGenerator } from '../../utils/css.js'
 
-const { title, html, head, meta, body, div, p, style } = htmlFactory
+const { title, html, head, meta, body, div, p, style } = elementFactory
 
 const rootStyles = css`
   :scope {

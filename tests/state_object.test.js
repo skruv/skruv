@@ -3,10 +3,10 @@ import '../utils/minidom.js'
 import assert from 'node:assert'
 import test from 'node:test'
 
-import { htmlFactory, render } from '../index.js'
+import { elementFactory, render } from '../index.js'
 import { createState } from '../utils/state.js'
 globalThis.SkruvWaitForAsync = true
-const { body, div, html } = htmlFactory
+const { body, div, html } = elementFactory
 
 const wait = time => new Promise(resolve => setTimeout(resolve, time))
 

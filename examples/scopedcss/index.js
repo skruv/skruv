@@ -1,7 +1,7 @@
-import { htmlFactory, render } from '../../index.js'
+import { elementFactory, render } from '../../index.js'
 import { css, cssTextGenerator } from '../../utils/css.js'
 
-const { title, html, head, meta, body, div, p, style } = htmlFactory
+const { title, html, head, meta, body, div, p, style } = elementFactory
 
 const rootStyles = css`
   :scope {
