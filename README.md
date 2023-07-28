@@ -14,7 +14,7 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
 * Very small:
   * [Smallest in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
   * ~150 LOC
-  * 1kb minified and compressed (934b with brotli, 1064b with gzip, 2173b uncompressed)
+  * 1kb minified and compressed (1035b with brotli, 1167b with gzip, 2355b uncompressed)
 * Useable without bundling/compilation/transpilation
 * [Among the faster in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
 * [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
@@ -282,30 +282,6 @@ render(
 * [ ] Error boundaries (custom events that bubble on error so they can be caught in the DOM instead of in the js call stack)
 * [ ] Document
   * [ ] data-skruv-key?
-  * [ ] data-skruv-opaque
   * [ ] data-skruv-finished
   * [ ] data-skruv-wait-for-not-empty
-  * [ ] data-skruv-ssr-rendered
-  * [ ] oncreate & onremove
-* [ ] Document and prune globals/DOM-apis used:
-  * [ ] document.querySelector
-  * [ ] document.implementation.createHTMLDocument (CSS)
-  * [ ] elem.ownerDocument.documentElement
-  * [ ] elem.contains
-  * [ ] elem.replaceChild
-  * [ ] elem.prepend
-  * [ ] elem.after
-  * [ ] elem.parentNode
-  * [ ] elem.removeChild
-  * [ ] elem.dispatchEvent
-  * [ ] elem.getAttributeNames
-  * [ ] elem.setAttribute
-  * [ ] elem.getAttribute
-  * [ ] elem.removeAttribute
-  * [ ] elem.setAttribute
-  * [ ] elem.removeEventListener
-  * [ ] elem.addEventListener
-  * [ ] documentElement.createComment
-  * [ ] documentElement.createTextNode
-  * [ ] documentElement.createElementNS
-  * [ ] documentElement.createElement
+  * [ ] oncreate

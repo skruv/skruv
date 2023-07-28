@@ -13,6 +13,8 @@ const wait = time => new Promise(resolve => setTimeout(resolve, time))
 
 const state = createState({ str: '' })
 
+let elem = false
+
 test('update on state update: Array', async () => {
   render(
     syncify(
@@ -20,7 +22,9 @@ test('update on state update: Array', async () => {
         body(
           async function * () {
             for await (const currentState of state) {
-              yield div(currentState.str)
+              yield div({
+                oncreate: e => { elem = e }
+              }, currentState.str)
             }
           }
         )
@@ -34,4 +38,5 @@ test('update on state update: Array', async () => {
   state.str = 'test2'
   await wait(1)
   assert.strictEqual(document.documentElement.childNodes[0].childNodes[0].childNodes[0].textContent, 'test2')
+  assert.strictEqual(elem.nodeName, 'DIV')
 })
