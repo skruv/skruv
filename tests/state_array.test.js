@@ -5,7 +5,7 @@ import test from 'node:test'
 
 import { elementFactory, render } from '../index.js'
 import { createState } from '../utils/state.js'
-import { syncify } from '../utils/syncify.js'
+import { hydrationPromise, syncify } from '../utils/syncify.js'
 globalThis.SkruvWaitForAsync = true
 const { body, div, html } = elementFactory
 
@@ -26,10 +26,10 @@ test('update on array push', async () => {
       )
     )
   )
-  await wait(1)
   // First render should not wait for async stuff
   assert.strictEqual(document.documentElement.innerHTML, '<!DOCTYPE html><html><body></body></html>')
-  await wait(1)
+  // Wait for async stuff
+  await hydrationPromise
   assert.strictEqual(document.documentElement.innerHTML, '<!DOCTYPE html><html><body><div>test</div><div>test2</div></body></html>')
   sub.arr.push('test3')
   await wait(1)

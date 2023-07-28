@@ -1,5 +1,5 @@
 /** @typedef {typeof import("../index.js").Vnode} Vnode */
-/** @typedef {typeof import("../index.js").VnodeAtrributes} VnodeAtrributes */
+/** @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAtrributes */
 
 import { h } from '../index.js'
 

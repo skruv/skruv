@@ -1,5 +1,25 @@
+/* global HTMLInputElement HTMLOptionElement Text Element */
 const s = Symbol.for('skruvDom')
-
+/**
+ * @typedef {Vnode|Vnode[]|String|Boolean|Number} SkruvChildNode
+ * @typedef {SkruvChildNode[]} SkruvChildNodes
+ */
+/**
+ * @typedef {object} Vnode
+ * @prop {Symbol} s
+ * @prop {String} t
+ * @prop {SkruvChildNodes} c
+ * @prop {Record<string,(string|boolean|Function|number|Object)>} a
+ * @prop {{_r:() => boolean}} [_r]
+ */
+/** @type {Vnode} */
+export const Vnode = { s, t: '', c: [], a: {} }
+/**
+ * @param {string} t
+ * @param  {(Record<string, any>|Vnode)[]} c
+ * @returns {Vnode}
+ */
+// @ts-ignore
 export const h = (t, ...c) => ({
   s,
   t: t.toUpperCase(),
@@ -7,6 +27,7 @@ export const h = (t, ...c) => ({
     typeof c[0] === 'object' &&
       !Array.isArray(c[0]) &&
       !(c[0] instanceof Function) &&
+      // @ts-ignore: its exactly because we don't know if its there that we check it
       !(c[0]?.[Symbol.asyncIterator]) &&
       c[0]?.s !== s
       ? {
@@ -20,17 +41,28 @@ export const h = (t, ...c) => ({
   )
 })
 
+/** @type {WeakMap<Vnode, Node>} */
 const keyed = new WeakMap()
-
+/** @type {Record<string, Node>} */
 const domCache = {}
-
+/**
+ * @param {Vnode} current
+ * @param {Node} _currentNode
+ * @param {ParentNode?} parentNode
+ * @param {*} isSvg
+ * @returns {boolean}
+ */
 export const render = (
   current,
   _currentNode = globalThis.document.documentElement,
   parentNode = _currentNode?.parentNode,
   isSvg = false
 ) => {
+  if (typeof current === 'boolean' || current === null) { return true }
+  if (!parentNode || !parentNode.ownerDocument) { throw new Error('no parentNode!') }
+  if (!globalThis.document.documentElement.contains(parentNode)) { return false }
   let currentNode = _currentNode
+  /** @type {ChildNode[]} */
   let childNodes = []
   const nodeName = currentNode?.nodeName
   if (!currentNode || (nodeName !== current.t && ((typeof current === 'string' || typeof current === 'number') && nodeName !== '#text'))) {
@@ -49,53 +81,70 @@ export const render = (
   } else {
     childNodes = Array.from(currentNode.childNodes)
   }
-  if (typeof current === 'string' || typeof current === 'number') {
-    if (current.toString() !== currentNode.data.toString()) {
+  if (currentNode instanceof Text && (typeof current === 'string' || typeof current === 'number')) {
+    // @ts-ignore: We already checked this above. It's not 'never'
+    if (currentNode.data.toString() !== current.toString()) {
       currentNode.data = current
     }
-    return
-  }
-  if (current.s !== s) { return }
-  if (!current._r) { current._r = {} }
-  current._r._r = () => {
-    render(current, currentNode, parentNode, isSvg)
-    // TODO: Return false if element is not in DOM
     return true
   }
+  if (!(currentNode instanceof Element) || typeof current !== 'object') { return true }
+  if (current._r) { current._r._r = () => render(current, currentNode, parentNode, isSvg) }
   for (const key in current.a) {
     if (key[0] === '_') { continue }
     if (key[0] === 'o' && key[1] === 'n') {
+      // @ts-ignore: TODO: this is a hacky way to store what the last eventlistener was
       if (!currentNode['data-event-' + key] || currentNode['data-event-' + key]?.toString() !== current.a[key]?.toString()) {
+        // @ts-ignore
         if (currentNode['data-event-' + key]) { currentNode.removeEventListener(key.slice(2), currentNode['data-event-' + key]) }
+        // @ts-ignore
         currentNode.addEventListener(key.slice(2), current.a[key])
+        // @ts-ignore
         currentNode['data-event-' + key] = current.a[key]
       } else if (!current.a[key]) {
+        // @ts-ignore: data-event-* is the old function
         currentNode.removeEventListener(key.slice(2), currentNode['data-event-' + key])
       }
     } else if (current.a[key] !== currentNode.getAttribute(key)) {
+      if (
+        (
+          typeof current.a[key] === 'boolean' &&
+          (
+            (currentNode instanceof HTMLInputElement && key === 'checked') ||
+            (currentNode instanceof HTMLOptionElement && key === 'selected')
+          )
+        ) || typeof current.a[key] === 'object' // Support complex data passing for custom elements
+      ) {
+        // @ts-ignore TS does not think HTML properties are accessible directly?
+        currentNode[key] = current.a[key]
+      }
       if (current.a[key]) {
-        currentNode.setAttribute(key, current.a[key])
+        currentNode.setAttribute(key, current.a[key].toString())
       } else {
         currentNode.removeAttribute(key)
       }
     }
   }
-  if (!current.c.length && childNodes.length) {
+  const children = current.c.flat(Infinity)
+  if (!children.length && childNodes.length) {
     currentNode.replaceChildren()
-    return
+    return true
   }
-  if (childNodes.length > current.c.length) {
-    for (let i = current.c.length; i < childNodes.length; i++) {
+  if (childNodes.length > children.length) {
+    for (let i = children.length; i < childNodes.length; i++) {
       currentNode.removeChild(childNodes[i])
     }
   }
-  for (let i = 0; i < current.c.length; i++) {
-    if (keyed.has(current.c[i])) {
-      const keyedNode = keyed.get(current.c[i])
-      if (keyedNode !== currentNode.childNodes[i]) {
+  for (let i = 0; i < children.length; i++) {
+    // @ts-ignore: TODO: the flattening seems to confuse TS
+    if (keyed.has(children[i])) {
+      // @ts-ignore
+      const keyedNode = keyed.get(children[i])
+      if (keyedNode && keyedNode !== currentNode.childNodes[i]) {
         if (keyedNode === currentNode.childNodes[i + 1]) {
           currentNode.removeChild(currentNode.childNodes[i])
-        } else if (keyed.has(current.c[i + 1]) && keyed.get(current.c[i + 1]) === currentNode.childNodes[i]) {
+        // @ts-ignore
+        } else if (keyed.has(children[i + 1]) && keyed.get(children[i + 1]) === currentNode.childNodes[i]) {
           currentNode.insertBefore(keyedNode, currentNode.childNodes[i])
         } else if (currentNode.childNodes[i]) {
           currentNode.replaceChild(keyedNode, currentNode.childNodes[i])
@@ -106,9 +155,14 @@ export const render = (
       }
       continue
     }
-    render(current.c[i], childNodes[i] || false, currentNode, isSvg)
+    // @ts-ignore: TODO: the flattening seems to confuse TS
+    render(children[i], childNodes[i] || false, currentNode, isSvg)
   }
   keyed.set(current, currentNode)
+  return true
 }
 
-export const elementFactory = new Proxy({}, { get: (_, name) => (...c) => h(name, ...c) })
+export const elementFactory = new Proxy({}, {
+  /** @type {(_: any, name: string) => (arg0: (Record<string, any>|Vnode)[]) => Vnode} */
+  get: (_, name) => (...c) => h(name, ...c)
+})

@@ -3,17 +3,19 @@ export function toHTML(vDom: HTMLElement, context: string, headers: {
     [key: string]: string;
 }): string;
 export function toText(vDom: HTMLElement): string;
-declare class HTMLElement {
+declare class HTMLElement extends Element {
+}
+declare class Element {
     /** @param {string} nodeName */
     constructor(nodeName?: string);
-    /** @type {HTMLElement[]} */
-    childNodes: HTMLElement[];
+    /** @type {Element[]} */
+    childNodes: Element[];
     /** @type {{ [key: string]: string; }} */
     attributes: {
         [key: string]: string;
     };
-    /** @type {HTMLElement?} */
-    parentNode: HTMLElement | null;
+    /** @type {Element?} */
+    parentNode: Element | null;
     /** @type {{ [key: string]: function[]; }} */
     eventListeners: {
         [key: string]: Function[];
@@ -48,20 +50,20 @@ declare class HTMLElement {
     nodeName: string;
     data: string;
     /**
-     * @param {HTMLElement} newNode
-     * @param {HTMLElement} oldNode
+     * @param {Element} newNode
+     * @param {Element} oldNode
      */
-    replaceChild(newNode: HTMLElement, oldNode: HTMLElement): void;
-    /** @param {HTMLElement} node */
-    appendChild(node: HTMLElement): void;
-    /** @param {HTMLElement} node */
-    prependChild(node: HTMLElement): void;
-    /** @param {HTMLElement} node */
-    after(node: HTMLElement): void;
-    /** @param {HTMLElement} node */
-    before(node: HTMLElement): void;
-    /** @param {HTMLElement} node */
-    removeChild(node: HTMLElement): void;
+    replaceChild(newNode: Element, oldNode: Element): void;
+    /** @param {Element} node */
+    appendChild(node: Element): void;
+    /** @param {Element} node */
+    prependChild(node: Element): void;
+    /** @param {Element} node */
+    after(node: Element): void;
+    /** @param {Element} node */
+    before(node: Element): void;
+    /** @param {Element} node */
+    removeChild(node: Element): void;
     replaceChildren(): void;
     getAttributeNames(): string[];
     /** @param {string | number} name */
@@ -82,9 +84,10 @@ declare class HTMLElement {
     addEventListener(name: string | number, value: Function): void;
     /** @param {Event} event */
     dispatchEvent(event: Event): void;
-    /** @param {HTMLElement} node */
-    contains(node: HTMLElement): boolean;
-    cloneNode(): any;
+    /** @param {Element} node */
+    contains(node: Element): boolean;
+    /** @returns {Element} */
+    cloneNode(): Element;
     get innerHTML(): string;
     get textContent(): string;
 }
