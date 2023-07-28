@@ -3,9 +3,12 @@ import test from 'node:test'
 
 import { toHTML } from '../utils/minidom.js'
 
+const wait = time => new Promise(resolve => setTimeout(resolve, time))
+
 test('jsx', async () => {
   globalThis.location = new URL('http://127.0.0.1:8000/')
   await import('../examples/jsx/index.min.js')
+  await wait(1)
 
   const headers = {}
   const responseBody = toHTML(document.documentElement, '', headers)

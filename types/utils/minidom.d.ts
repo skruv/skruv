@@ -53,15 +53,16 @@ declare class HTMLElement {
      */
     replaceChild(newNode: HTMLElement, oldNode: HTMLElement): void;
     /** @param {HTMLElement} node */
-    append(node: HTMLElement): void;
+    appendChild(node: HTMLElement): void;
     /** @param {HTMLElement} node */
-    prepend(node: HTMLElement): void;
+    prependChild(node: HTMLElement): void;
     /** @param {HTMLElement} node */
     after(node: HTMLElement): void;
     /** @param {HTMLElement} node */
     before(node: HTMLElement): void;
     /** @param {HTMLElement} node */
     removeChild(node: HTMLElement): void;
+    replaceChildren(): void;
     getAttributeNames(): string[];
     /** @param {string | number} name */
     getAttribute(name: string | number): string;
@@ -83,6 +84,7 @@ declare class HTMLElement {
     dispatchEvent(event: Event): void;
     /** @param {HTMLElement} node */
     contains(node: HTMLElement): boolean;
+    cloneNode(): any;
     get innerHTML(): string;
     get textContent(): string;
 }

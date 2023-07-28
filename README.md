@@ -14,7 +14,7 @@ No-dependency, no-build, small JS view-library/framework-ish.
 * Very small:
   * [Smallest in benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
   * ~100 LOC
-  * ~XXkb minified and compressed
+  * less than 1kb minified and compressed
 * Useable without bundling/compilation/transpilation
 * [One of the fastest in benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
 * [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)

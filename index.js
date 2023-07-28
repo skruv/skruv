@@ -32,7 +32,7 @@ export const render = (
 ) => {
   let currentNode = _currentNode
   let childNodes = []
-  let nodeName = currentNode?.nodeName
+  const nodeName = currentNode?.nodeName
   if (!currentNode || (nodeName !== current.t && ((typeof current === 'string' || typeof current === 'number') && nodeName !== '#text'))) {
     if (typeof current === 'string' || typeof current === 'number') {
       currentNode = (domCache.text || (domCache.text = parentNode.ownerDocument.createTextNode(''))).cloneNode()
@@ -55,12 +55,18 @@ export const render = (
     }
     return
   }
-  if (current.s !== s) return
+  if (current.s !== s) { return }
+  if (!current._r) { current._r = {} }
+  current._r._r = () => {
+    render(current, currentNode, parentNode, isSvg)
+    // TODO: Return false if element is not in DOM
+    return true
+  }
   for (const key in current.a) {
-    if (key[0] === "_") continue
-    if (key[0] === "o" && key[1] === "n") {
+    if (key[0] === '_') { continue }
+    if (key[0] === 'o' && key[1] === 'n') {
       if (!currentNode['data-event-' + key] || currentNode['data-event-' + key]?.toString() !== current.a[key]?.toString()) {
-        if (currentNode['data-event-' + key]) currentNode.removeEventListener(key.slice(2), currentNode['data-event-' + key])
+        if (currentNode['data-event-' + key]) { currentNode.removeEventListener(key.slice(2), currentNode['data-event-' + key]) }
         currentNode.addEventListener(key.slice(2), current.a[key])
         currentNode['data-event-' + key] = current.a[key]
       } else if (!current.a[key]) {
@@ -103,7 +109,6 @@ export const render = (
     render(current.c[i], childNodes[i] || false, currentNode, isSvg)
   }
   keyed.set(current, currentNode)
-  return
 }
 
 export const elementFactory = new Proxy({}, { get: (_, name) => (...c) => h(name, ...c) })

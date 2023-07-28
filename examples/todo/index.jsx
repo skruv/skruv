@@ -43,7 +43,7 @@ render(
             <button>New!</button>
           </form>
           <ol>
-            {async function* () {
+            {async function * () {
               for await (const todos of state.todos) {
                 yield todos.map((todo, i) => (
                   <li>{todo} <a

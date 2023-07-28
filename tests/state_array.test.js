@@ -13,19 +13,20 @@ const wait = time => new Promise(resolve => setTimeout(resolve, time))
 
 test('update on array push', async () => {
   const sub = createState({ arr: ['test', 'test2'] })
-  await render(
+  render(
     syncify(
-    html(
-      body(
-        async function * () {
-          for await (const state of sub) {
-            yield state.arr.map(a => div(a))
+      html(
+        body(
+          async function * () {
+            for await (const state of sub) {
+              yield state.arr.map(a => div(a))
+            }
           }
-        }
-      )
+        )
       )
     )
   )
+  await wait(1)
   // First render should not wait for async stuff
   assert.strictEqual(document.documentElement.innerHTML, '<!DOCTYPE html><html><body></body></html>')
   await wait(1)
