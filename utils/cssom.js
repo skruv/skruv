@@ -245,8 +245,15 @@ class CSSConditionRule extends CSSGroupingRule {
   constructor () {
     super()
     this.conditionText = ''
-    this.cssText = ''
     this.cssRules = []
+  }
+
+  set cssText (cssText) {
+    this.cssText = cssText
+  }
+
+  get cssText () {
+    return this.cssText
   }
 }
 
@@ -275,7 +282,8 @@ class CSSStyleRule extends CSSRule {
   }
 
   set cssText (cssText) {
-    var rule = CSSStyleRule.parse(cssText)
+    var _rule = new CSSStyleRule()
+    var rule = _rule.parse(cssText)
     this.style = rule.style
     this.selectorText = rule.selectorText
   }
@@ -485,6 +493,7 @@ class CSSMediaRule extends CSSConditionRule {
   }
 
   set conditionText (value) {
+    if (!this.media) { this.media = new MediaList() }
     this.media.mediaText = value
   }
 

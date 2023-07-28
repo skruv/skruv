@@ -1,9 +1,1642 @@
 import assert from 'node:assert'
-import test from 'node:test'
+import { describe, it } from 'node:test'
 
-import cssom from '../utils/cssom.js'
+import CSSOM from '../utils/cssom.js'
 
-test('cssom', async () => {
-  // TODO: Port all the tests from https://github.com/NV/CSSOM/tree/master/spec
-  assert.strictEqual(cssom, cssom)
+function given (str, fn) {
+  var args = [].slice.call(arguments, 0, -1)
+  return it(str.toString(), function () {
+    fn.apply(this, args)
+  })
+}
+
+const matchesProps = (a, b) => {
+  for (const key in b) {
+    if (typeof b[key] === 'object') {
+      matchesProps(a[key], b[key])
+      continue
+    }
+    assert.equal(a[key], b[key])
+  }
+  return true
+}
+
+/**
+ * @param {Object} object
+ * @return {Object}
+ */
+function uncircularOwnProperties (object) {
+  function _uncircular (object, depth, stack) {
+    var stackLength = stack.push(object)
+    depth++
+    var keys = Object.keys(object)
+    for (var i = 0, length = keys.length; i < length; i++) {
+      var key = keys[i]
+      var value = object[key]
+      if (value && typeof value === 'object') {
+        var level = stack.indexOf(value)
+        if (level !== -1) {
+          object[key] = buildPath(depth - level - 1)
+        } else {
+          _uncircular(value, depth, stack)
+          stack.length = stackLength
+        }
+      }
+    }
+  }
+  _uncircular(object, 0, [])
+  return object
+}
+
+/**
+ * buildPath(2) -> '../..'
+ * @param {number} level
+ * @return {string}
+ */
+function buildPath (level) {
+  if (level === 0) {
+    return '.'
+  } else {
+    var result = '..'
+    for (var i = 1; i < level; i++) {
+      result += '/..'
+    }
+    return result
+  }
+}
+
+describe('CSSOM', function () {
+  describe('CSSImportRule', function () {
+    given('@import url(button.css);', function (cssText) {
+      var rule = new CSSOM.CSSImportRule()
+      rule.cssText = cssText
+      assert.strictEqual(rule.href, 'button.css')
+      assert.strictEqual([].join.call(rule.media, ', '), '')
+    })
+
+    given('@import url("button.css");', function (cssText) {
+      var rule = new CSSOM.CSSImportRule()
+      rule.cssText = cssText
+      assert.strictEqual(rule.href, 'button.css')
+      assert.strictEqual([].join.call(rule.media, ', '), '')
+    })
+
+    given("@import url('button.css');", function (cssText) {
+      var rule = new CSSOM.CSSImportRule()
+      rule.cssText = cssText
+      assert.strictEqual(rule.href, 'button.css')
+      assert.strictEqual([].join.call(rule.media, ', '), '')
+    })
+
+    given('@import "button.css";', function (cssText) {
+      var rule = new CSSOM.CSSImportRule()
+      rule.cssText = cssText
+      assert.strictEqual(rule.href, 'button.css')
+      assert.strictEqual([].join.call(rule.media, ', '), '')
+    })
+
+    given("@import 'button.css';", function (cssText) {
+      var rule = new CSSOM.CSSImportRule()
+      rule.cssText = cssText
+      assert.strictEqual(rule.href, 'button.css')
+      assert.strictEqual([].join.call(rule.media, ', '), '')
+    })
+
+    given('@import url(size/medium.css) all;', function (cssText) {
+      var rule = new CSSOM.CSSImportRule()
+      rule.cssText = '@import url(size/medium.css) all;'
+      assert.strictEqual(rule.href, 'size/medium.css')
+      assert.strictEqual([].join.call(rule.media, ', '), 'all')
+      assert.strictEqual(rule.media.mediaText, 'all')
+    })
+
+    given('@import url(old.css) screen and (color), projection and (min-color: 256);', function (cssText) {
+      var rule = new CSSOM.CSSImportRule()
+      rule.cssText = '@import url(old.css) screen and (color), projection and (min-color: 256);'
+      assert.strictEqual(rule.href, 'old.css')
+      assert.strictEqual([].join.call(rule.media, ', '), 'screen and (color), projection and (min-color: 256)')
+      assert.strictEqual(rule.media.mediaText, 'screen and (color), projection and (min-color: 256)')
+    })
+  })
+
+  // describe('CSSProperty', function () {
+  //   given('letter-spacing: -0.1em !important', function (cssText) {
+  //     var property = new CSSOM.CSSProperty;
+  //     property.name = 'letter-spacing';
+  //     property.value = '-0.1em';
+  //     property.important = true;
+  //     assert.strictEqual(property.toString(), 'letter-spacing: -0.1em !important');
+  //     expect(property).toEqualOwnProperties({
+  //       name: 'letter-spacing',
+  //       value: '-0.1em',
+  //       important: true,
+  //       __original: ''
+  //     });
+  //   });
+  // });
+
+  describe('CSSStyleDeclaration', function () {
+    it('setProperty, removeProperty, cssText, getPropertyValue, getPropertyPriority', function () {
+      var d = new CSSOM.CSSStyleDeclaration()
+
+      d.setProperty('color', 'purple')
+
+      assert(matchesProps(d, {
+        0: 'color',
+        length: 1,
+        parentRule: null,
+        color: 'purple',
+        _importants: {
+          color: undefined
+        }
+      }))
+
+      d.setProperty('width', '128px', 'important')
+      assert(matchesProps(d, {
+        0: 'color',
+        1: 'width',
+        length: 2,
+        parentRule: null,
+        color: 'purple',
+        width: '128px',
+        _importants: {
+          color: undefined,
+          width: 'important'
+        }
+      }))
+
+      d.setProperty('opacity', 0)
+
+      assert.strictEqual(d.cssText, 'color: purple; width: 128px !important; opacity: 0;')
+
+      assert.strictEqual(d.getPropertyValue('color'), 'purple')
+      assert.strictEqual(d.getPropertyValue('width'), '128px')
+      assert.strictEqual(d.getPropertyValue('opacity'), '0')
+      assert.strictEqual(d.getPropertyValue('position'), '')
+
+      assert.strictEqual(d.getPropertyPriority('color'), '')
+      assert.strictEqual(d.getPropertyPriority('width'), 'important')
+      assert.strictEqual(d.getPropertyPriority('position'), '')
+
+      d.setProperty('color', 'green')
+      d.removeProperty('width')
+      d.removeProperty('opacity')
+
+      assert.strictEqual(d.cssText, 'color: green;')
+    })
+
+    given('color: pink; outline: 2px solid red;', function (cssText) {
+      var d = new CSSOM.CSSStyleDeclaration()
+      d.cssText = cssText
+      assert.strictEqual(d.cssText, cssText)
+    })
+  })
+
+  describe('CSSStyleRule', function () {
+    given('h1:first-of-type {\n\tfont-size: 3em\n}', function (cssText) {
+      var rule = new CSSOM.CSSStyleRule()
+      rule.cssText = cssText
+
+      assert.strictEqual(rule.cssText, 'h1:first-of-type {font-size: 3em;}')
+      assert.strictEqual(rule.selectorText, 'h1:first-of-type')
+
+      rule.selectorText = 'h1.title'
+      assert.strictEqual(rule.selectorText, 'h1.title')
+      assert.strictEqual(rule.cssText, 'h1.title {font-size: 3em;}')
+    })
+  })
+
+  describe('CSSStyleSheet', function () {
+    it('insertRule, deleteRule', function () {
+      var s = new CSSOM.CSSStyleSheet()
+      assert.deepEqual(s.cssRules, [])
+
+      s.insertRule('a {color: blue}', 0)
+      assert.strictEqual(s.cssRules.length, 1)
+
+      s.insertRule('a *:first-child, a img {border: none}', 1)
+      assert.strictEqual(s.cssRules.length, 2)
+
+      s.deleteRule(1)
+      assert.strictEqual(s.cssRules.length, 1)
+
+      s.deleteRule(0)
+      assert.deepEqual(s.cssRules, [])
+    })
+
+    describe('insertRule', function () {
+      it('should correctly set the parent stylesheet', function () {
+        var s = new CSSOM.CSSStyleSheet()
+        s.insertRule('a {color: blue}', 0)
+        assert.strictEqual(s.cssRules[0].parentStyleSheet, s)
+      })
+    })
+  })
+
+  describe('CSSValueExpression', function () {
+    var END = '__EOL__'
+
+    var cssExpressionValue = [
+      '(function(hash){',
+      '  if (!hash.match(/#[0-9a-f]{3,6}/g)) {',
+      '    hash = hash.substr(1);',
+      '    if (!hash) {',
+      "      hash = '#ccc';",
+      '    }',
+      '  }',
+
+      '  var n1 = 4/5;',
+
+      '  // hello line comment',
+
+      '  var n2 = 5/6;',
+
+      '  var r1 = /hello ( /img;',
+
+      '  // hello line comment',
+
+      '  /* hello block comment */',
+
+      '  return hash;',
+      '}(location.hash))',
+
+      END
+
+    ].join('\n')
+
+    given(cssExpressionValue, function (token) {
+      var i = 0
+
+      var info = (new CSSOM.CSSValueExpression(token, i)).parse()
+
+      assert(info.idx !== undefined)
+
+      var end = token.substr(info.idx + 1)
+      end = end.trim()
+      assert.strictEqual(end, END)
+    })
+  })
+
+  describe('MediaList', function () {
+    it('appendMedium, deleteMedium, mediaText', function () {
+      var m = new CSSOM.MediaList()
+      assert.strictEqual(m.length, 0)
+
+      m.appendMedium('handheld')
+      m.appendMedium('screen')
+      m.appendMedium('only screen and (max-device-width: 480px)')
+
+      m.deleteMedium('screen')
+
+      assert.deepEqual(m[2], undefined)
+
+      var expected = {
+        0: 'handheld',
+        1: 'only screen and (max-device-width: 480px)',
+        length: 2
+      }
+
+      assert(matchesProps(m, expected))
+      assert.strictEqual(m.mediaText, [].join.call(expected, ', '))
+    })
+  })
+
+  var TESTS = [
+    {
+      input: '/* fuuuu */',
+      result: {
+        cssRules: [],
+        parentStyleSheet: null
+      }
+    },
+    {
+      input: '/**/',
+      result: {
+        cssRules: [],
+        parentStyleSheet: null
+      }
+    },
+    {
+      input: "/*a {content: '* {color:#000}'}*/",
+      result: {
+        cssRules: [],
+        parentStyleSheet: null
+      }
+    },
+    {
+      input: 'a {color: red}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: 'a',
+              style: {
+                0: 'color',
+                color: 'red',
+                __starts: 2,
+                length: 1
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 14
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '.left {float: left;}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: '.left',
+              style: {
+                0: 'float',
+                float: 'left',
+                __starts: 6,
+                length: 1
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 20
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: "h1 {font-family: 'Times New Roman', Helvetica Neue, sans-serif }",
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: 'h1',
+              style: {
+                0: 'font-family',
+                'font-family': "'Times New Roman', Helvetica Neue, sans-serif",
+                __starts: 3,
+                length: 1
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 64
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: 'h2 {font: normal\n1.6em\r\nTimes New Roman,\tserif  ;}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: 'h2',
+              style: {
+                0: 'font',
+                font: 'normal\n1.6em\r\nTimes New Roman,\tserif',
+                __starts: 3,
+                length: 1
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 50
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: "h3 {font-family: 'times new roman'} ",
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: 'h3',
+              style: {
+                0: 'font-family',
+                'font-family': "'times new roman'",
+                __starts: 3,
+                length: 1
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 35
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '.icon>*{background-image: url(../images/ramona_strong.gif);}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: '.icon>*',
+              style: {
+                0: 'background-image',
+                'background-image': 'url(../images/ramona_strong.gif)',
+                __starts: 7,
+                length: 1
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 60
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '*/**/{}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: '*',
+              style: {
+                __starts: 5,
+                length: 0
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 7
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '/**/*{}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: '*',
+              style: {
+                __starts: 5,
+                length: 0
+              },
+              parentRule: null,
+              __starts: 4,
+              __ends: 7
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '* /**/*{}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: '* *',
+              style: {
+                __starts: 7,
+                length: 0
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 9
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '*/*/*/ *{}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: '* *',
+              style: {
+                __starts: 8,
+                length: 0
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 10
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '#a {b:c;}\n#d {e:f}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: '#a',
+              style: {
+                0: 'b',
+                b: 'c',
+                __starts: 3,
+                length: 1
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 9
+            }, {
+              selectorText: '#d',
+              style: {
+                0: 'e',
+                e: 'f',
+                __starts: 13,
+                length: 1
+              },
+              parentRule: null,
+              __starts: 10,
+              __ends: 18
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[1].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        result.cssRules[1].style.parentRule = result.cssRules[1]
+        return result
+      })()
+    },
+    {
+      input: '* {  border:  none  } \n#foo {font-size: 12px; background:#fff;}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: '*',
+              style: {
+                0: 'border',
+                border: 'none',
+                __starts: 2,
+                length: 1
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 18
+            },
+            {
+              selectorText: '#foo',
+              style: {
+                0: 'font-size',
+                'font-size': '12px',
+                1: 'background',
+                background: '#fff',
+                __starts: 25,
+                length: 2
+              },
+              parentRule: null,
+              __starts: 20,
+              __ends: 60
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[1].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        result.cssRules[1].style.parentRule = result.cssRules[1]
+        return result
+      })()
+    },
+    {
+      input: 'span {display: inline-block !important; vertical-align: middle !important} .error{color:red!important;}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: 'span',
+              style: {
+                0: 'display',
+                1: 'vertical-align',
+                display: 'inline-block',
+                'vertical-align': 'middle',
+                __starts: 5,
+                length: 2
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 74
+            },
+            {
+              selectorText: '.error',
+              style: {
+                0: 'color',
+                color: 'red',
+                __starts: 81,
+                length: 1
+              },
+              parentRule: null,
+              __starts: 75,
+              __ends: 103
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[1].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        result.cssRules[1].style.parentRule = result.cssRules[1]
+        return result
+      })()
+    },
+    {
+      input: 'img:not(/*)*/[src]){background:url(data:image/png;base64,FooBar)}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: 'img:not([src])',
+              parentRule: null,
+              style: {
+                0: 'background',
+                background: 'url(data:image/png;base64,FooBar)',
+                length: 1
+              }
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: "body{background-image: url(')');}",
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: 'body',
+              parentRule: null,
+              style: {
+                0: 'background-image',
+                'background-image': "url(')')",
+                length: 1
+              }
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '.gradient{background: -moz-linear-gradient(/*);*/top, #1E5799 0%, #7db9e8 100%)}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: '.gradient',
+              parentRule: null,
+              style: {
+                0: 'background',
+                background: '-moz-linear-gradient(top, #1E5799 0%, #7db9e8 100%)',
+                length: 1
+              }
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '.calc{width: calc(100% - 15px);}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: '.calc',
+              parentRule: null,
+              style: {
+                0: 'width',
+                width: 'calc(100% - 15px)',
+                length: 1
+              }
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '.gradient{background-image: linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: '.gradient',
+              parentRule: null,
+              style: {
+                0: 'background-image',
+                'background-image': 'linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%)',
+                length: 1
+              }
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '@media handheld, only screen and (max-device-width: 480px) {body{max-width:480px}}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              media: {
+                0: 'handheld',
+                1: 'only screen and (max-device-width: 480px)',
+                length: 2
+              },
+              cssRules: [
+                {
+                  selectorText: 'body',
+                  style: {
+                    0: 'max-width',
+                    'max-width': '480px',
+                    __starts: 64,
+                    length: 1
+                  },
+                  __starts: 60,
+                  __ends: 81
+                }
+              ],
+              parentRule: null,
+              __starts: 0,
+              __ends: 82
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[0].parentStyleSheet = result
+        result.cssRules[0].cssRules[0].style.parentRule = result.cssRules[0].cssRules[0]
+        result.cssRules[0].cssRules[0].parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: "@media screen, screen, screen {/* Match Firefox and Opera behavior here rather than WebKit. \nSane person shouldn't write like this anyway. */}",
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              media: {
+                0: 'screen',
+                1: 'screen',
+                2: 'screen',
+                length: 3
+              },
+              cssRules: [],
+              parentRule: null,
+              __starts: 0,
+              __ends: 142
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        return result
+      })()
+    },
+    {
+      input: '@media/**/print {*{background:#fff}}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              media: {
+                0: 'print',
+                length: 1
+              },
+              cssRules: [
+                {
+                  selectorText: '*',
+                  style: {
+                    0: 'background',
+                    background: '#fff',
+                    __starts: 18,
+                    length: 1
+                  },
+                  __starts: 17,
+                  __ends: 35
+                }
+              ],
+              parentRule: null,
+              __starts: 0,
+              __ends: 36
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[0].parentStyleSheet = result
+        result.cssRules[0].cssRules[0].parentRule = result.cssRules[0]
+        result.cssRules[0].cssRules[0].style.parentRule = result.cssRules[0].cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: 'a{}@media all{b{color:#000}}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: 'a',
+              style: {
+                __starts: 1,
+                length: 0
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 3
+            },
+            {
+              media: {
+                0: 'all',
+                length: 1
+              },
+              cssRules: [
+                {
+                  selectorText: 'b',
+                  style: {
+                    0: 'color',
+                    color: '#000',
+                    __starts: 15,
+                    length: 1
+                  },
+                  __starts: 14,
+                  __ends: 27
+                }
+              ],
+              parentRule: null,
+              __starts: 3,
+              __ends: 28
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[1].parentStyleSheet = result.cssRules[1].cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        result.cssRules[1].cssRules[0].parentRule = result.cssRules[1]
+        result.cssRules[1].cssRules[0].style.parentRule = result.cssRules[1].cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '@mediaall {}',
+      result: {
+        cssRules: [],
+        parentStyleSheet: null
+      }
+    },
+    {
+      input: 'some invalid junk @media projection {body{background:black}}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              media: {
+                0: 'projection',
+                length: 1
+              },
+              cssRules: [
+                {
+                  selectorText: 'body',
+                  style: {
+                    0: 'background',
+                    background: 'black',
+                    __starts: 41,
+                    length: 1
+                  },
+                  __starts: 37,
+                  __ends: 59
+                }
+              ],
+              parentRule: null,
+              __starts: 18,
+              __ends: 60
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[0].parentStyleSheet = result
+        result.cssRules[0].cssRules[0].parentRule = result.cssRules[0]
+        result.cssRules[0].cssRules[0].style.parentRule = result.cssRules[0].cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: "@media screen{a{color:blue !important;background:red;} @font-face { font-family: 'Arial2'; } }",
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              media: {
+                0: 'screen',
+                length: 1
+              },
+              cssRules: [
+                {
+                  selectorText: 'a',
+                  style: {
+                    0: 'color',
+                    1: 'background',
+                    color: 'blue',
+                    background: 'red',
+                    length: 2
+                  }
+                },
+                {
+                  style: {
+                    0: 'font-family',
+                    'font-family': "'Arial2'",
+                    length: 1
+                  }
+                }
+              ],
+              parentRule: null
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[1].parentStyleSheet = result
+        result.cssRules[0].cssRules[0].parentRule = result.cssRules[0].cssRules[1].parentRule = result.cssRules[0]
+        result.cssRules[0].cssRules[0].style.parentRule = result.cssRules[0].cssRules[0]
+        result.cssRules[0].cssRules[1].style.parentRule = result.cssRules[0].cssRules[1]
+        return result
+      })()
+    },
+    {
+      input: '@media (min-width: 768px){@media (min-resolution: 0.001dpcm) {a{color: green}}}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              parentRule: null,
+              media: {
+                0: '(min-width: 768px)',
+                length: 1
+              },
+              // This is currently incorrect.
+              // conditionText: "(min-width: 768px)",
+              cssRules: [
+                {
+                  media: {
+                    0: '(min-resolution: 0.001dpcm)',
+                    length: 1
+                  },
+                  cssRules: [
+                    {
+                      selectorText: 'a',
+                      style: {
+                        0: 'color',
+                        length: 1,
+                        parentRule: '..',
+                        _importants: {
+                          color: ''
+                        },
+                        color: 'green'
+                      }
+                    }
+                  ],
+                  parentRule: null // This is currently incorrect.
+                }
+              ]
+            }
+          ],
+          parentStyleSheet: null
+        }
+
+        result.cssRules[0].parentStyleSheet =
+        result.cssRules[0].cssRules[0].parentStyleSheet =
+        result.cssRules[0].cssRules[0].cssRules[0].parentStyleSheet =
+        result
+        result.cssRules[0].cssRules[0].cssRules[0].parentRule = result.cssRules[0].cssRules[0]
+
+        // This is currently incorrect.
+        // result.cssRules[0].cssRules[0].parentRule = result.cssRules[0];
+
+        return result
+      })()
+    },
+    {
+      input: '@supports (display: grid) { html { display: grid; } }',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              conditionText: '(display: grid)',
+              cssRules: [
+                {
+                  selectorText: 'html',
+                  style: {
+                    0: 'display',
+                    display: 'grid',
+                    length: 1
+                  }
+                }
+              ],
+              parentRule: null
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[0].parentStyleSheet = result
+        result.cssRules[0].cssRules[0].parentRule = result.cssRules[0]
+        result.cssRules[0].cssRules[0].style.parentRule = result.cssRules[0].cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '@supports not (display: grid) { html { display: flex; } }',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              conditionText: 'not (display: grid)',
+              cssRules: [
+                {
+                  selectorText: 'html',
+                  style: {
+                    0: 'display',
+                    display: 'flex',
+                    length: 1
+                  }
+                }
+              ],
+              parentRule: null
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[0].parentStyleSheet = result
+        result.cssRules[0].cssRules[0].parentRule = result.cssRules[0]
+        result.cssRules[0].cssRules[0].style.parentRule = result.cssRules[0].cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '@import url(partial.css);\ni {font-style: italic}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              href: 'partial.css',
+              media: {
+                length: 0
+              },
+              parentRule: null,
+              styleSheet: {
+                cssRules: []
+              }
+            },
+            {
+              selectorText: 'i',
+              parentRule: null,
+              style: {
+                0: 'font-style',
+                'font-style': 'italic',
+                length: 1
+              }
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].styleSheet.parentStyleSheet = result.cssRules[1].parentStyleSheet = result
+        result.cssRules[1].style.parentRule = result.cssRules[1]
+        return result
+      })()
+    },
+    {
+      input: '@import "partial.css";\ni {font-style: italic}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              href: 'partial.css',
+              media: {
+                length: 0
+              },
+              parentRule: null,
+              styleSheet: {
+                cssRules: []
+              }
+            },
+            {
+              selectorText: 'i',
+              parentRule: null,
+              style: {
+                0: 'font-style',
+                'font-style': 'italic',
+                length: 1
+              }
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].styleSheet.parentStyleSheet = result.cssRules[1].parentStyleSheet = result
+        result.cssRules[1].style.parentRule = result.cssRules[1]
+        result.cssRules[0].styleSheet.parentStyleSheet = result
+        return result
+      })()
+    },
+    {
+      input: "@import 'partial.css';\ni {font-style: italic}",
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              href: 'partial.css',
+              media: {
+                length: 0
+              },
+              parentRule: null,
+              styleSheet: {
+                cssRules: []
+              }
+            },
+            {
+              selectorText: 'i',
+              parentRule: null,
+              style: {
+                0: 'font-style',
+                'font-style': 'italic',
+                length: 1
+              }
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].styleSheet.parentStyleSheet = result.cssRules[1].parentStyleSheet = result
+        result.cssRules[1].style.parentRule = result.cssRules[1]
+        return result
+      })()
+    },
+    {
+      input: "@font-face { font-family: Delicious; font-weight: bold; src: url('Delicious-Bold.otf'); }",
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              parentRule: null,
+              style: {
+                0: 'font-family',
+                1: 'font-weight',
+                2: 'src',
+                'font-family': 'Delicious',
+                'font-weight': 'bold',
+                src: 'url(\'Delicious-Bold.otf\')',
+                length: 3
+              }
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      input: '@host { body { background: red; } }',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              cssRules: {
+                0: {
+                  selectorText: 'body',
+                  style: {
+                    0: 'background',
+                    length: 1,
+                    parentRule: '..',
+                    background: 'red'
+                  }
+                }
+              },
+              parentRule: null
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[0].parentStyleSheet = result
+        result.cssRules[0].cssRules[0].parentRule = result.cssRules[0]
+        return result
+      })()
+    },
+    {
+      // Non-vendor prefixed @keyframes rule, from Twitter Bootstrap (progress-bars):
+      input: '@keyframes progress-bar-stripes {\n  from  { background-position: 0 0; }\n  to    { background-position: 40px 0; }\n}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              name: 'progress-bar-stripes',
+              _vendorPrefix: undefined,
+              cssRules: [
+                {
+                  keyText: 'from',
+                  style: {
+                    0: 'background-position',
+                    'background-position': '0 0',
+                    length: 1
+                  }
+                },
+                {
+                  keyText: 'to',
+                  style: {
+                    0: 'background-position',
+                    'background-position': '40px 0',
+                    length: 1
+                  }
+                }
+              ],
+              parentRule: null
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet =
+        result.cssRules[0].cssRules[0].parentStyleSheet =
+        result.cssRules[0].cssRules[1].parentStyleSheet = result
+        result.cssRules[0].cssRules[0].parentRule = result.cssRules[0].cssRules[1].parentRule = result.cssRules[0]
+        result.cssRules[0].cssRules[0].style.parentRule = result.cssRules[0].cssRules[0]
+        result.cssRules[0].cssRules[1].style.parentRule = result.cssRules[0].cssRules[1]
+        return result
+      })()
+    },
+    {
+      // @keyframes with invalid vendor prefix followed by a valid one (make sure that the RegExp.lastIndex trick works as expected):
+      input: '@-moz-keyframes foo {} @--keyframes bar {} @-webkit-keyframes quux {}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              name: 'foo',
+              _vendorPrefix: '-moz-',
+              cssRules: [],
+              parentRule: null
+            },
+            {
+              selectorText: '@--keyframes bar',
+              style: {
+                length: 0
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 14
+            },
+            {
+              name: 'quux',
+              _vendorPrefix: '-webkit-',
+              cssRules: [],
+              parentRule: null
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[1].parentStyleSheet = result.cssRules[2].parentStyleSheet = result
+        result.cssRules[1].style.parentRule = result.cssRules[1]
+        return result
+      })()
+    },
+    {
+      input: `@-some-ridiculously-long-vendor-prefix-that-must-be-supported-keyframes
+      therulename /*comment*/{0%{top:0px; left:0px; background:red;}100% {top:4em; left:40px; background:maroon;}}`,
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              name: 'therulename',
+              _vendorPrefix: '-some-ridiculously-long-vendor-prefix-that-must-be-supported-',
+              cssRules: [
+                {
+                  keyText: '0%',
+                  style: {
+                    0: 'top',
+                    1: 'left',
+                    2: 'background',
+                    top: '0px',
+                    left: '0px',
+                    background: 'red',
+                    length: 3
+                  }
+                },
+                {
+                  keyText: '100%',
+                  style: {
+                    0: 'top',
+                    1: 'left',
+                    2: 'background',
+                    top: '4em',
+                    left: '40px',
+                    background: 'maroon',
+                    length: 3
+                  }
+                }
+              ],
+              parentRule: null
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[1].parentStyleSheet = result
+        result.cssRules[0].cssRules[0].parentRule = result.cssRules[0].cssRules[1].parentRule = result.cssRules[0]
+        result.cssRules[0].cssRules[0].style.parentRule = result.cssRules[0].cssRules[0]
+        result.cssRules[0].cssRules[1].style.parentRule = result.cssRules[0].cssRules[1]
+        return result
+      })()
+    },
+    {
+      input: '@-webkit-keyframes mymove {\nfrom {top:0px}\nto {top:200px}\n}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              name: 'mymove',
+              _vendorPrefix: '-webkit-',
+              cssRules: [
+                {
+                  keyText: 'from',
+                  style: {
+                    0: 'top',
+                    top: '0px',
+                    length: 1
+                  }
+                },
+                {
+                  keyText: 'to',
+                  style: {
+                    0: 'top',
+                    top: '200px',
+                    length: 1
+                  }
+                }
+              ],
+              parentRule: null
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[1].parentStyleSheet = result
+        result.cssRules[0].cssRules[0].parentRule = result.cssRules[0].cssRules[1].parentRule = result.cssRules[0]
+        result.cssRules[0].cssRules[0].style.parentRule = result.cssRules[0].cssRules[0]
+        result.cssRules[0].cssRules[1].style.parentRule = result.cssRules[0].cssRules[1]
+        return result
+      })()
+    },
+    {
+      input: '@-webkit-keyframes mymovepercent {\n0% {top:0px;}\n50% {top:200px;}\n100% {top:300px;}}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              name: 'mymovepercent',
+              _vendorPrefix: '-webkit-',
+              cssRules: [
+                {
+                  keyText: '0%',
+                  style: {
+                    0: 'top',
+                    top: '0px',
+                    length: 1
+                  }
+                },
+                {
+                  keyText: '50%',
+                  style: {
+                    0: 'top',
+                    top: '200px',
+                    length: 1
+                  }
+                },
+                {
+                  keyText: '100%',
+                  style: {
+                    0: 'top',
+                    top: '300px',
+                    length: 1
+                  }
+                }
+              ],
+              parentRule: null
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet =
+        result.cssRules[0].cssRules[0].parentStyleSheet =
+        result.cssRules[0].cssRules[1].parentStyleSheet =
+        result.cssRules[0].cssRules[2].parentStyleSheet = result
+        result.cssRules[0].cssRules[0].parentRule = result.cssRules[0].cssRules[1].parentRule = result.cssRules[0].cssRules[2].parentRule = result.cssRules[0]
+        result.cssRules[0].cssRules[0].style.parentRule = result.cssRules[0].cssRules[0]
+        result.cssRules[0].cssRules[1].style.parentRule = result.cssRules[0].cssRules[1]
+        result.cssRules[0].cssRules[2].style.parentRule = result.cssRules[0].cssRules[2]
+        return result
+      })()
+    },
+    {
+      input: '@-moz-document url(http://www.w3.org/), url-prefix(http://www.w3.org/Style/), domain(mozilla.org), regexp("https:.*")\n{\n/*comments*/\nbody { color: purple; background: yellow; }\n}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              matcher: {
+                0: 'url(http://www.w3.org/)',
+                1: 'url-prefix(http://www.w3.org/Style/)',
+                2: 'domain(mozilla.org)',
+                3: 'regexp("https:.*")',
+                length: 4
+              },
+              cssRules: [
+                {
+                  selectorText: 'body',
+                  style: {
+                    0: 'color',
+                    1: 'background',
+                    length: 2,
+                    __starts: 138,
+                    color: 'purple',
+                    background: 'yellow'
+                  },
+                  __starts: 133,
+                  __ends: 176
+                }
+              ],
+              parentRule: null,
+              __starts: 0,
+              __ends: 178
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[0].cssRules[0].parentStyleSheet = result
+        result.cssRules[0].cssRules[0].parentRule = result.cssRules[0]
+        result.cssRules[0].cssRules[0].style.parentRule = result.cssRules[0].cssRules[0]
+
+        return result
+      })()
+    },
+    {
+      input: 'a{}@-moz-document/**/url-prefix(http://www.w3.org/Style/){body { color: purple; background: yellow; }}',
+      result: (function () {
+        var result = {
+          cssRules: [
+            {
+              selectorText: 'a',
+              style: {
+                length: 0,
+                __starts: 1
+              },
+              parentRule: null,
+              __starts: 0,
+              __ends: 3
+            },
+            {
+              matcher: {
+                0: 'url-prefix(http://www.w3.org/Style/)',
+                length: 1
+              },
+              cssRules: [
+                {
+                  selectorText: 'body',
+                  style: {
+                    0: 'color',
+                    1: 'background',
+                    length: 2,
+                    __starts: 64,
+                    color: 'purple',
+                    background: 'yellow'
+                  },
+                  __starts: 59,
+                  __ends: 102
+                }
+              ],
+              parentRule: null,
+              __starts: 3,
+              __ends: 103
+            }
+          ],
+          parentStyleSheet: null
+        }
+        result.cssRules[0].parentStyleSheet = result.cssRules[1].parentStyleSheet = result.cssRules[1].cssRules[0].parentStyleSheet = result
+        result.cssRules[1].cssRules[0].parentRule = result.cssRules[1]
+        result.cssRules[1].cssRules[0].style.parentRule = result.cssRules[1].cssRules[0]
+        result.cssRules[0].style.parentRule = result.cssRules[0]
+
+        return result
+      })()
+    }
+  ]
+
+  describe('parse', function () {
+    TESTS.forEach(function (test) {
+      given(test.input, function (input) {
+        var parsed = CSSOM.parse(input)
+
+        // Performance could optimized in order of magnitude but it’s alreaddy good enough
+        uncircularOwnProperties(parsed)
+        uncircularOwnProperties(test.result)
+        removeUnderscored(parsed)
+        removeUnderscored(test.result)
+        assert(matchesProps(parsed, test.result))
+      })
+    })
+
+    given('a{content:"\\""}', function (input) {
+      var parsed = CSSOM.parse(input)
+      assert.strictEqual(parsed.cssRules[0].style.content, '"\\""')
+    })
+
+    given("a{content:'\\''}", function (input) {
+      var parsed = CSSOM.parse(input)
+      assert.strictEqual(parsed.cssRules[0].style.content, "'\\''")
+    })
+
+    given('a{content:"abc\\"\\"d\\"ef"}', function (input) {
+      var parsed = CSSOM.parse(input)
+      assert.strictEqual(parsed.cssRules[0].style.content, '"abc\\"\\"d\\"ef"')
+    })
+
+    given("a{content:'abc\\'\\'d\\'ef'}", function (input) {
+      var parsed = CSSOM.parse(input)
+      assert.strictEqual(parsed.cssRules[0].style.content, "'abc\\'\\'d\\'ef'")
+    })
+  })
 })
+
+/**
+ * Recursively remove all keys which start with '_', except "_vendorPrefix", which needs to be tested against.
+ * @param {Object} object
+ */
+function removeUnderscored (object) {
+  if (!object) {
+    return
+  }
+  var keys = Object.keys(object)
+  for (var i = 0, length = keys.length; i < length; i++) {
+    var key = keys[i]
+    if (key[0] === '_' && key !== '_vendorPrefix') {
+      delete object[key]
+    } else {
+      var value = object[key]
+      if (typeof value === 'object') {
+        removeUnderscored(value)
+      }
+    }
+  }
+}

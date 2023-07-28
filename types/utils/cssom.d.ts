@@ -135,7 +135,8 @@ declare class CSSGroupingRule extends CSSRule {
  */
 declare class CSSConditionRule extends CSSGroupingRule {
     conditionText: string;
-    cssText: string;
+    set cssText(arg: any);
+    get cssText(): any;
 }
 /**
  * @constructor
