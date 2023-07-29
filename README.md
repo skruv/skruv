@@ -181,17 +181,18 @@ Besides the normal attributes there are the following
  * oncreate: Called with the element after it is created. Useful for attaching other libraries to the dom node.
 
 Utilities:
- * If you want to use scoped css you can import the css tagged template function and it's corresponding cssTextGenerator. The result of the `css`\`` call is a classname and cssTextGenerator will resolve with the full css for the application, prefixed with each classname.
- * If you want to use async components you pull in the syncify function that takes care of scheduling render updates.
- * If you want an easy to use state management you pull in the createState function which takes in an object and gives you a recursive generator that will listen to any changes to the state object.
+ * css.js: If you want to use scoped css you can import the css tagged template function and it's corresponding cssTextGenerator. The result of the `css`\`` call is a classname and cssTextGenerator will resolve with the full css for the application, prefixed with each classname.
+ * syncify.js: If you want to use async components you pull in the syncify function that takes care of scheduling render updates.
+ * state.js: If you want an easy to use state management you pull in the createState function which takes in an object and gives you a recursive generator that will listen to any changes to the state object.
    * createState takes in a object and returns a [proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) which is also an [async generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).
    * You modify the state by using normal methods (including things like [`delete`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete), [`splice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice), etc.).
    * Where you want to subscribe to state changes you use [for-await-of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of).
    * You can subscribe to subobjects with `for await (const bar of state.foo.bar)`.
    * As a shortcut you can call getGenerator(key) to subscribe to and output a single value.
      * This is useful to output primitive values (like strings/numbers etc.) in for example text or attributes without requiring a whole generator function
- * SSR/SSG examples are bundled in this repo, they use the minidom utility to polyfill what is needed to use skruv in node/deno and serialize the DOM to HTML.
- * jsx-runtime provides the necessary parts to allow for JSX usage via a bundler like esbuild. See example below for details.
+ * minidom.js: SSR/SSG examples are bundled in this repo, they use the minidom utility to polyfill what is needed to use skruv in node/deno and serialize the DOM to HTML.
+  * uses cssom.js to polyfill the CSS object model to work with css.js
+ * jsx-runtime.js: jsx-runtime provides the necessary parts to allow for JSX usage via a bundler like esbuild. See example below for details.
 
 ## Scoped CSS
 {% include_relative examples/scopedcss/index.md %}
