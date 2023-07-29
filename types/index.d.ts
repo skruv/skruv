@@ -3,7 +3,7 @@ export function render(current: Vnode, _currentNode?: Node, parentNode?: ParentN
 export const elementFactory: any;
 export type SkruvChildNode = Vnode | Vnode[] | string | boolean | number;
 export type SkruvChildNodes = SkruvChildNode[];
-export type VnodeAtrributes = Record<string, (string | boolean | Function | number | Object)>;
+export type VnodeAttributes = Record<string, (string | boolean | Function | number | Object)>;
 export type Vnode = {
     s: Symbol;
     t: string;

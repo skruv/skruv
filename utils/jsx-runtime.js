@@ -1,7 +1,7 @@
 /**
  * @typedef {Vnode|Vnode[]|String|Boolean|Number} SkruvChildNode
  * @typedef {SkruvChildNode[]} SkruvChildNodes
- * @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAtrributes
+ * @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAttributes
  */
 /**
  * @typedef {object} Vnode
@@ -17,7 +17,7 @@ import { h } from '../index.js'
  * @typedef {Object} JSXAdditionalProperties
  * @property {[Vnode]} [children]
  *
- * @typedef {VnodeAtrributes & JSXAdditionalProperties} JSXAttributes
+ * @typedef {VnodeAttributes & JSXAdditionalProperties} JSXAttributes
  */
 
 /**

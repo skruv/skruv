@@ -3,7 +3,7 @@ export function jsx(nodeName: string, attributes?: JSXAttributes | undefined): V
 export function jsxs(nodeName: string, attributes?: JSXAttributes | undefined): Vnode | [Vnode?];
 export type SkruvChildNode = Vnode | Vnode[] | string | boolean | number;
 export type SkruvChildNodes = SkruvChildNode[];
-export type VnodeAtrributes = Record<string, (string | boolean | Function | number | Object)>;
+export type VnodeAttributes = Record<string, (string | boolean | Function | number | Object)>;
 export type Vnode = {
     s: Symbol;
     t: string;
@@ -20,5 +20,5 @@ export type Vnode = {
 export type JSXAdditionalProperties = {
     children?: [Vnode] | undefined;
 };
-export type JSXAttributes = VnodeAtrributes & JSXAdditionalProperties;
+export type JSXAttributes = VnodeAttributes & JSXAdditionalProperties;
 //# sourceMappingURL=jsx-runtime.d.ts.map

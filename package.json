@@ -52,7 +52,7 @@
     "deno-ssr": "npm run build-ssr && (cd ./examples/ssr && deno run --allow-net --allow-read ./deno-ssr.js)",
     "lint": "eslint . --ext js,jsx,json",
     "node-ssr": "npm run build-ssr && (cd ./examples/ssr && node ./node-ssr.js)",
-    "pre-release": "npm run build && npm run test && npm run lint -- --fix && npm run typecheck && gzip -9kf index.min.js && brotli -Zkf index.min.js && du --apparent-size --bytes index.min.j* && rm -f index.min.js.{gz,br}",
+    "pre-release": "npm run build && npm run test && npm run lint -- --fix && npm run typecheck && gzip -9kf index.min.js && brotli -Zkf index.min.js && du --apparent-size --bytes index.min.j* index.js && rm -f index.min.js.{gz,br}",
     "test": "node --test --experimental-test-coverage --test-reporter=spec",
     "typecheck": "rm -rf types && tsc"
   },

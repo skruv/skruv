@@ -3,7 +3,7 @@ const eventPrefix = 'data-event-'
 /**
  * @typedef {Vnode|Vnode[]|String|Boolean|Number} SkruvChildNode
  * @typedef {SkruvChildNode[]} SkruvChildNodes
- * @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAtrributes
+ * @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAttributes
  */
 /**
  * @typedef {object} Vnode
@@ -65,8 +65,8 @@ export const render = (
   if (
     ((typeof current === 'string' || typeof current === 'number') && currentNode?.nodeName !== '#text') ||
     (current?.t && currentNode?.nodeName !== current?.t) ||
-    // @ts-ignore: TODO: Handle key storage better
-    (currentNode?._skruvKey !== current?.a?._key)
+    // @ts-ignore: Check for keying
+    (currentNode?.getAttribute?.('data-skruv-key') && currentNode?.getAttribute?.('data-skruv-key') !== current?.a?.['data-skruv-key'])
   ) {
     if (typeof current === 'string' || typeof current === 'number') {
       currentNode = (domCache.text || (domCache.text = doc.createTextNode(''))).cloneNode()
@@ -80,8 +80,6 @@ export const render = (
     } else {
       parentNode.appendChild(currentNode)
     }
-    // @ts-ignore: see above
-    currentNode._skruvKey = current?.a?._key
     // @ts-ignore: oncreate should always be callable. TODO: add strict typing
     if (current?.a?.oncreate) { current.a.oncreate(currentNode) }
   }

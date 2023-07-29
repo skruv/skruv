@@ -12,19 +12,20 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
 
 * No dependencies
 * Small:
-  * [Smallest js framework in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
+  <!-- * [Smallest js framework in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html) -->
   * ~150 LOC
-  * 1kb minified and compressed (981b with brotli, 1110b with gzip, 2454b uncompressed, 6909b unminified and uncompressed)
-* Useable without bundling/compilation/transpilation
-* [Plenty fast enough](https://krausest.github.io/js-framework-benchmark/index.html)
+  * 1kb minified and compressed (996b with brotli, 1129b with gzip, 6891b uncompressed, 6909b unminified and uncompressed)
+* Usable without bundling/compilation/transpilation
+<!-- * [Plenty fast enough](https://krausest.github.io/js-framework-benchmark/index.html) -->
 * [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
-* Optional helper utils for
+* Optional helper utilities for
   * State management (state.js)
   * Async generators or promises as components (syncify.js)
   * SSR/SSG without jsdom/puppeteer (minidom.js)
   * CSS scoping adapted from [scoped](https://github.com/samthor/scoped) (css.js)
-  * Optionally supports JSX or [HTM](https://github.com/developit/htm) (jsx-runtime.js)
-  * Bundling/minification (bundle.js)
+  * Optionally supports JSX (jsx-runtime.js)
+  * or [HTM](https://github.com/developit/htm) as in [htm example](./examples/htm)
+  * Bundling/minification (bundle.js, requires esbuild)
 
 ## Examples
 
@@ -172,6 +173,12 @@ doRender()
 ## Docs
 
 The core of skruv is the render function. It takes a structure created by elementFactory and optionally which DOM node to write to.
+If the same object is passed to a render it will be moved or not modified, allowing for caching/memoization optimizations.
+Besides the normal attributes there are the following
+ * data-skruv-key: This marks a node as non-reusable, so that if any element without the same key tries to render to it it will be replaced instead of reused.
+ * data-skruv-finished: If you want to mark the result of a async task as incomplete (like for example a loader icon) you can give it the attribute `data-skruv-finished: false` and it will not be considered complete until we get a new element without that attribute.
+ * data-skruv-wait-for-not-empty: If you swap one generator for another or similar async work you might want to keep the old children to prevent flicker. Tag the parent element with `data-skruv-wait-for-not-empty: true` and skruv will not clear the dom children until there are new children to render.
+ * oncreate: Called with the element after it is created. Useful for attaching other libraries to the dom node.
 
 Utilities:
  * If you want to use scoped css you can import the css tagged template function and it's corresponding cssTextGenerator. The result of the `css`\`` call is a classname and cssTextGenerator will resolve with the full css for the application, prefixed with each classname.
@@ -181,10 +188,10 @@ Utilities:
    * You modify the state by using normal methods (including things like [`delete`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete), [`splice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice), etc.).
    * Where you want to subscribe to state changes you use [for-await-of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of).
    * You can subscribe to subobjects with `for await (const bar of state.foo.bar)`.
-   * As a shortcut you can call getGenerator(key) to subscribe to and ouput a single value.
+   * As a shortcut you can call getGenerator(key) to subscribe to and output a single value.
      * This is useful to output primitive values (like strings/numbers etc.) in for example text or attributes without requiring a whole generator function
  * SSR/SSG examples are bundled in this repo, they use the minidom utility to polyfill what is needed to use skruv in node/deno and serialize the DOM to HTML.
- * jsx-runtime provides the neccessary parts to allow for JSX usage via a bundler like esbuild. See example below for details.
+ * jsx-runtime provides the necessary parts to allow for JSX usage via a bundler like esbuild. See example below for details.
 
 ## Scoped CSS
 {% include_relative examples/scopedcss/index.md %}
@@ -403,18 +410,13 @@ export const doRender = async () => {
 doRender()
 ```
 The important parts are
- * the ssrRender function which waits for the hydrationPromise from syncify. This makes sure that all async work has finished before rendering.
+ * the doRender function which waits for the hydrationPromise from syncify. This makes sure that all async work has finished before rendering, so that we both get a complete document on the server, but also that we don't overwrite any existing parts of the document with incomplete parts on the client.
  * the script which contains globalThis.skruvSSRScript, which injects the js for the application
 
 The result can be seen [here](./examples/ssr/) and a non-built version is [here](./examples/ssr/index-nobuild.html) for comparison. In mobile lighthouse testing the SSR:ed version gets a 100 and the nobuild version gets a 90.
 
 ## TODO:
 
-* [ ] Document
-  * [ ] data-skruv-key?
-  * [ ] data-skruv-finished
-  * [ ] data-skruv-wait-for-not-empty
-  * [ ] oncreate
 * [ ] Add router, generatorUtils, loader, etc.
 * [ ] Add template repo
   * [ ] One basic and one with postgrest backend, nginx frontend and SSR
