@@ -264,7 +264,7 @@ render(
 ## SSG/SSR
 The example folder ssr contains SSR examples for both node and deno. They both use the minidom util to polyfill a "browser-ish" environment. Primarily it mimics the DOM, the CSS object model, the Location interface, EventSource. It also has utils to stringify the html and reset the DOM.
 
-Since most resulting apps will be very small (this one is under 4kb after compression) we inline it into the html here, but there would be no problem to link the script normally.
+Since most resulting apps will be very small (this one is under 4kb after compression) we inline it into the html here, but there would be no problem to link the script normally. Weigh the pros and cons for your use-case.
 
 This is the node example (should be easily adaptable to any nodejs server):
 ```js
@@ -277,8 +277,7 @@ import { reset, toHTML } from '../../utils/minidom.js'
 const server = createServer()
 server.on('request', async (req, res) => {
   globalThis.location = new Location(new URL(req.url, `http://${req.headers.host}`))
-  globalThis.SkruvWaitForAsync = true
-  globalThis.skruvSSRScript = await readFile('./index.min.js', 'utf8')
+    globalThis.skruvSSRScript = await readFile('./index.min.js', 'utf8')
   const frontend = await import('./index.min.js')
   await frontend.doRender()
   const headers = {}
@@ -304,8 +303,7 @@ import { readFile, writeFile } from 'node:fs/promises'
 
 (async () => {
   globalThis.location = new Location('http://127.0.0.1:8000')
-  globalThis.SkruvWaitForAsync = true
-  globalThis.skruvSSRScript = await readFile('./index.min.js', 'utf8')
+    globalThis.skruvSSRScript = await readFile('./index.min.js', 'utf8')
   const frontend = await import('./index.min.js')
   await frontend.doRender()
   await writeFile('./index.html', document.documentElement.innerHTML)
@@ -408,7 +406,7 @@ The important parts are
  * the ssrRender function which waits for the hydrationPromise from syncify. This makes sure that all async work has finished before rendering.
  * the script which contains globalThis.skruvSSRScript, which injects the js for the application
 
-The result can be seen [here](./examples/ssr/) and a non-built version is [here](./examples/ssr/index-nobuild.html) for comparison.
+The result can be seen [here](./examples/ssr/) and a non-built version is [here](./examples/ssr/index-nobuild.html) for comparison. In mobile lighthouse testing the SSR:ed version gets a 100 and the nobuild version gets a 90.
 
 ## TODO:
 

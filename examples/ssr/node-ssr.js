@@ -7,7 +7,6 @@ import { reset, toHTML } from '../../utils/minidom.js'
 const server = createServer()
 server.on('request', async (req, res) => {
   globalThis.location = new Location(new URL(req.url, `http://${req.headers.host}`))
-  globalThis.SkruvWaitForAsync = true
   globalThis.skruvSSRScript = await readFile('./index.min.js', 'utf8')
   const frontend = await import('./index.min.js')
   await frontend.doRender()

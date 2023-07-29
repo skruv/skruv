@@ -3,7 +3,6 @@ import { reset, toHTML } from '../../utils/minidom.js'
 
 Deno.serve(async req => {
   globalThis.location = new Location(req.url)
-  globalThis.SkruvWaitForAsync = true
   globalThis.skruvSSRScript = await Deno.readTextFile('./index.min.js')
   const frontend = await import('./index.min.js')
   await frontend.doRender()

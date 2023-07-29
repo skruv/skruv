@@ -6,7 +6,6 @@ import test from 'node:test'
 import { elementFactory, render } from '../index.js'
 import { createState } from '../utils/state.js'
 import { hydrationPromise, syncify } from '../utils/syncify.js'
-globalThis.SkruvWaitForAsync = true
 const { body, div, html } = elementFactory
 
 const wait = time => new Promise(resolve => setTimeout(resolve, time))

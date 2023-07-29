@@ -6,7 +6,6 @@ const wait = time => new Promise(resolve => setTimeout(resolve, time))
 
 test('minidom', async () => {
   globalThis.location = new URL('http://127.0.0.1:8000/')
-  globalThis.SkruvWaitForAsync = true
   const frontend = await import('../examples/ssr/index.min.js')
   await frontend.doRender()
   await wait(1)
