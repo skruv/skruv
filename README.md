@@ -22,7 +22,7 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
   * State management (state.js)
   * Async generators or promises as components (syncify.js)
   * SSR/SSG without jsdom/puppeteer (minidom.js)
-  * CSS scoping adapted from [scoped](https://github.com/samthor/scoped) (css.js)
+  * CSS scoping (css.js)
   * Optionally supports JSX (jsx-runtime.js)
   * or [HTM](https://github.com/developit/htm) as in [htm example](./examples/htm)
   * Bundling/minification (bundle.js, requires esbuild)
@@ -173,25 +173,27 @@ doRender()
 ## Docs
 
 The core of skruv is the render function. It takes a structure created by elementFactory and optionally which DOM node to write to.
-If the same object is passed to a render it will be moved or not modified, allowing for caching/memoization optimizations.
-Besides the normal attributes there are the following
+If the same object is passed to a render it will be moved (if it is not currently at the right place) or not modified, allowing for caching/memoization optimizations.
+
+Besides the normal attributes there are the following:
  * data-skruv-key: This marks a node as non-reusable, so that if any element without the same key tries to render to it it will be replaced instead of reused.
  * data-skruv-finished: If you want to mark the result of a async task as incomplete (like for example a loader icon) you can give it the attribute `data-skruv-finished: false` and it will not be considered complete until we get a new element without that attribute.
- * data-skruv-wait-for-not-empty: If you swap one generator for another or similar async work you might want to keep the old children to prevent flicker. Tag the parent element with `data-skruv-wait-for-not-empty: true` and skruv will not clear the dom children until there are new children to render.
+ * data-skruv-wait-for-not-empty: If you swap one generator for another or similar async work you might want to keep the old children until new ones are ready to prevent flicker. Tag the parent element with `data-skruv-wait-for-not-empty: true` and skruv will not clear the dom children until there are new children to render.
  * oncreate: Called with the element after it is created. Useful for attaching other libraries to the dom node.
 
 Utilities:
- * css.js: If you want to use scoped css you can import the css tagged template function and it's corresponding cssTextGenerator. The result of the `css`\`` call is a classname and cssTextGenerator will resolve with the full css for the application, prefixed with each classname.
- * syncify.js: If you want to use async components you pull in the syncify function that takes care of scheduling render updates.
+ * css.js: If you want to use scoped css you can import the css [tagged template function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) and it's corresponding cssTextGenerator. The result of the `css`\`` call is a classname and cssTextGenerator will resolve with the full css for the application, prefixed with the classname for each scope. The styles are deduplicated so you can use it in components that you might use in multiple places.
+    * implementation is adapted from https://github.com/samthor/scoped
+ * syncify.js: If you want to use async components you pull in the syncify function that takes care of scheduling render updates. It will only schedule a render on the specific part of the DOM that was affected by the async component, making it quite efficient.
  * state.js: If you want an easy to use state management you pull in the createState function which takes in an object and gives you a recursive generator that will listen to any changes to the state object.
-   * createState takes in a object and returns a [proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) which is also an [async generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).
-   * You modify the state by using normal methods (including things like [`delete`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete), [`splice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice), etc.).
-   * Where you want to subscribe to state changes you use [for-await-of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of).
-   * You can subscribe to subobjects with `for await (const bar of state.foo.bar)`.
-   * As a shortcut you can call getGenerator(key) to subscribe to and output a single value.
-     * This is useful to output primitive values (like strings/numbers etc.) in for example text or attributes without requiring a whole generator function
+    * createState takes in a object and returns a [proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) which is also an [async generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).
+    * You modify the state by using normal methods (including things like [`delete`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete), [`splice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice), etc.).
+    * Where you want to subscribe to state changes you use [for-await-of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of).
+    * You can subscribe to subobjects with `for await (const bar of state.foo.bar)`.
+    * As a shortcut you can call state.getGenerator(key) to subscribe to and output a single value.
+      * This is useful to output primitive values (like strings/numbers etc.) in for example text or attributes without requiring a whole generator function
  * minidom.js: SSR/SSG examples are bundled in this repo, they use the minidom utility to polyfill what is needed to use skruv in node/deno and serialize the DOM to HTML.
-  * uses cssom.js to polyfill the CSS object model to work with css.js
+    * uses cssom.js (ported from https://github.com/NV/CSSOM) to polyfill the CSS object model to work with css.js
  * jsx-runtime.js: jsx-runtime provides the necessary parts to allow for JSX usage via a bundler like esbuild. See example below for details.
 
 ## Scoped CSS
