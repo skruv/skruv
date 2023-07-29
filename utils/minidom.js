@@ -1,4 +1,3 @@
-// TODO: CSSOM is deprecated/abandoned. Its dependency free, but look for replacements or vendor it into this repo.
 import cssom from './cssom.js'
 
 // CSSOM polyfill
@@ -171,6 +170,31 @@ class Comment extends HTMLElement {
     this.data = data
   }
 }
+
+class Location extends URL {
+  get ancestorOrigins () {
+    return {
+      length: 0,
+      item: () => null,
+      contains: () => false,
+      [Symbol.iterator]: function * () {}
+    }
+  }
+
+  /** @param {string|URL} url */
+  assign (url) {
+    this.constructor(url)
+  }
+
+  reload () {}
+  /** @param {string|URL} url */
+  replace (url) {
+    this.constructor(url)
+  }
+}
+
+// @ts-ignore: Type confusion between polyfilled and real elements
+globalThis.Location = Location
 
 // Global MiniDOM classes for use in instanceof
 // @ts-ignore: Type confusion between polyfilled and real elements

@@ -228,7 +228,6 @@ render(
 )
 
 ```
-
 ## JSX
 {% include_relative examples/jsx/index.md %}
 Compiled with esbuild:
@@ -262,6 +261,155 @@ render(
 )
 ```
 
+## SSG/SSR
+The example folder ssr contains SSR examples for both node and deno. They both use the minidom util to polyfill a "browser-ish" environment. Primarily it mimics the DOM, the CSS object model, the Location interface, EventSource. It also has utils to stringify the html and reset the DOM.
+
+Since most resulting apps will be very small (this one is under 4kb after compression) we inline it into the html here, but there would be no problem to link the script normally.
+
+This is the node example (should be easily adaptable to any nodejs server):
+```js
+/* global Location */
+import { readFile } from 'node:fs/promises'
+import { createServer } from 'node:http'
+
+import { reset, toHTML } from '../../utils/minidom.js'
+
+const server = createServer()
+server.on('request', async (req, res) => {
+  globalThis.location = new Location(new URL(req.url, `http://${req.headers.host}`))
+  globalThis.SkruvWaitForAsync = true
+  globalThis.skruvSSRScript = await readFile('./index.min.js', 'utf8')
+  const frontend = await import('./index.min.js')
+  await frontend.doRender()
+  const headers = {}
+  const responseBody = toHTML(document.documentElement, '', headers)
+  reset()
+  if (!headers['content-type']) { headers['content-type'] = 'text/html' }
+  res.statusCode = headers.status || 200
+  for (const key in headers) {
+    res.setHeader(key, headers[key])
+  }
+  res.end(responseBody)
+})
+
+server.listen(8000)
+```
+
+Or to just render it to a file:
+```js
+/* global Location */
+import '../../utils/minidom.js'
+
+import { readFile, writeFile } from 'node:fs/promises'
+
+(async () => {
+  globalThis.location = new Location('http://127.0.0.1:8000')
+  globalThis.SkruvWaitForAsync = true
+  globalThis.skruvSSRScript = await readFile('./index.min.js', 'utf8')
+  const frontend = await import('./index.min.js')
+  await frontend.doRender()
+  await writeFile('./index.html', document.documentElement.innerHTML)
+})()
+```
+
+The index.js used here looks like this:
+```js
+import { elementFactory, render } from '../../index.js'
+import { css, cssTextGenerator } from '../../utils/css.js'
+import { createState } from '../../utils/state.js'
+import { hydrationPromise, syncify } from '../../utils/syncify.js'
+
+const { html, head, title, meta, link, body, main, h1, form, label, input, button, ol, li, a, style, script } = elementFactory
+
+const state = createState({
+  todos: ['Write todos']
+})
+
+const styles = css`
+  :scope {
+    color: #f1f1f1;
+    background: #0f0f0f;
+  }
+
+  body {
+    max-width: 40ch;
+    margin: 0 auto;
+  }
+
+  form {
+    display: flex;
+    align-items: end;
+  }
+  label { flex: 1; }
+  input { width: 100%; }
+  a { color: #9b9b9b; }
+`
+
+const dom = syncify(
+  html({ lang: 'en-US', class: styles },
+    head(
+      title(state.todos.getGenerator(0)),
+      meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
+      style(cssTextGenerator),
+      link({ rel: 'icon', href: '/icon.svg', type: 'image/svg+xml', sizes: 'any' }),
+      meta({ name: 'description', content: 'Skruv todo-list' })
+    ),
+    body(
+      main(
+        h1(state.todos.getGenerator(0)),
+        form({
+          onsubmit: e => {
+            e.preventDefault()
+            state.todos.unshift(new FormData(e.target).get('todo'))
+            e.target.reset()
+          }
+        },
+        label(
+          'What do you need to do?',
+          input({
+            type: 'text',
+            name: 'todo'
+          })
+        ),
+        button('New!')
+        ),
+        async function * () {
+          for await (const currentState of state) {
+            yield ol(
+              currentState.todos.map((todo, i) => li(
+                `${todo} `,
+                a({
+                  href: '#',
+                  onclick: e => {
+                    e.preventDefault()
+                    currentState.todos.splice(i, 1)
+                  }
+                }, 'x')
+              ))
+            )
+          }
+        }
+      ),
+      !!globalThis.skruvSSRScript && script({ type: 'module' }, globalThis.skruvSSRScript)
+    )
+  )
+)
+
+export const doRender = async () => {
+  await hydrationPromise
+  render(dom)
+  // Microsleep to allow for rendering to finish
+  await new Promise(resolve => setTimeout(resolve, 0))
+}
+
+doRender()
+```
+The important parts are
+ * the ssrRender function which waits for the hydrationPromise from syncify. This makes sure that all async work has finished before rendering.
+ * the script which contains globalThis.skruvSSRScript, which injects the js for the application
+
+The result can be seen [here](./examples/ssr/) and a non-built version is [here](./examples/ssr/index-nobuild.html) for comparison.
+
 ## TODO:
 
 * [ ] Document
@@ -269,7 +417,6 @@ render(
   * [ ] data-skruv-finished
   * [ ] data-skruv-wait-for-not-empty
   * [ ] oncreate
-* [ ] Build example with SSR bundling the request cache
 * [ ] Add router, generatorUtils, loader, etc.
 * [ ] Add template repo
   * [ ] One basic and one with postgrest backend, nginx frontend and SSR

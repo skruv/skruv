@@ -18,7 +18,7 @@ const process = (value, key, parent, cbparent, result) => {
     if (!waitingGens.size) {
       // TODO: Check if needed
       hydrating = false
-      hydrationResolve()
+      setTimeout(() => hydrationResolve(), 0)
     }
   }
   generatorResults.set(value, result)
@@ -102,7 +102,7 @@ const syncify = (value, key, parent, cbparent, root = true) => {
         _r: () => {
           if ((hydrating && !waitingGens.size) || !hydrating) {
             hydrating = false
-            hydrationResolve()
+            setTimeout(() => hydrationResolve(), 0)
           }
           return true
         }
@@ -129,7 +129,7 @@ const syncify = (value, key, parent, cbparent, root = true) => {
     // If we are at the root and did a pass with no async work the promise should resolve
     if ((root && hydrating && !waitingGens.size) || !hydrating) {
       hydrating = false
-      hydrationResolve()
+      setTimeout(() => hydrationResolve(), 0)
     }
     return newVal
   }
