@@ -1,7 +1,6 @@
-const s = Symbol.for('skruvDom')
-const eventPrefix = 'data-event-'
+// @ts-nocheck
 /**
- * @typedef {Vnode|Vnode[]|String|Boolean|Number} SkruvChildNode
+ * @typedef {Vnode|Vnode[]|String|Boolean|Number|Record<string,(string|boolean|Function|number|Object)> & {_r:{_r:() => boolean}?}} SkruvChildNode
  * @typedef {SkruvChildNode[]} SkruvChildNodes
  * @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAttributes
  */
@@ -10,131 +9,117 @@ const eventPrefix = 'data-event-'
  * @prop {Symbol} s
  * @prop {String} t
  * @prop {SkruvChildNodes} c
- * @prop {Record<string,(string|boolean|Function|number|Object)> & {_r:{_r:() => boolean}?}} a
  * @prop {{_r:() => boolean}} [_r]
  */
-/**
- * @param {string} t
- * @param  {(Record<string, any>|Vnode)[]} c
- * @returns {Vnode}
- */
-// @ts-ignore: TODO: The check for non-attribute objects does not satisfy TS
-export const h = (t, ...c) => ({
-  s,
-  t: t.toUpperCase(),
-  ...(
-    // @ts-ignore: its exactly because we don't know if its there that we check it
-    !(c[0]?.[Symbol.asyncIterator]) &&
-        c[0]?.constructor === Object &&
-      c[0]?.s !== s
-      ? {
-        a: c[0],
-        c: c.slice(1)
-      }
-      : {
-        a: {},
-        c: c
-      }
-  )
-})
-
+const s = Symbol.for('skruvDom')
+const skruvKey = 'data-skruv-key'
 /** @type {WeakMap<Vnode, Node>} */
 const keyed = new WeakMap()
+/** @type {WeakMap<Vnode, Node>} */
+const oldKeys = new WeakMap()
+/** @type {WeakMap<Vnode, Record<string, function>>} */
+const listenersMap = new WeakMap()
 /** @type {Record<string, Node>} */
 const domCache = {}
 /**
  * @param {Vnode} current
- * @param {Node} _currentNode
+ * @param {Node} currentNode
  * @param {ParentNode?} parentNode
- * @param {*} isSvg
- * @returns {boolean}
+ * @param {boolean} isSvg
  */
 export const render = (
   current,
-  _currentNode = globalThis.document.documentElement,
-  parentNode = _currentNode.parentNode,
-  isSvg = false
+  currentNode = globalThis.document.documentElement,
+  parentNode = currentNode.parentNode,
+  isSvg = false,
+  forceFull = false
 ) => {
-  let currentNode = _currentNode
-  const doc = parentNode?.ownerDocument || currentNode.ownerDocument
-  if (!parentNode || !doc || (currentNode && !parentNode.contains(currentNode))) { return false }
-  if (typeof current === 'boolean' || current === null || current === undefined) {
+  if (typeof current === 'boolean') {
     if (currentNode) { parentNode.removeChild(currentNode) }
-    return true
+    return
   }
+  const txtNode = (typeof current === 'string' || typeof current === 'number')
   if (
-    ((typeof current === 'string' || typeof current === 'number') && currentNode?.nodeName !== '#text') ||
-    (current?.t && currentNode?.nodeName !== current?.t) ||
-    // @ts-ignore: Check for keying
-    (currentNode?.getAttribute?.('data-skruv-key') && currentNode?.getAttribute?.('data-skruv-key') !== current?.a?.['data-skruv-key'])
+    forceFull ||
+    !currentNode ||
+    (
+      txtNode &&
+      currentNode?.nodeName !== '#text'
+    ) ||
+    (
+      !txtNode &&
+      currentNode?.nodeName.toLowerCase() !== current.t.toLowerCase()
+    )
   ) {
-    if (typeof current === 'string' || typeof current === 'number') {
-      currentNode = (domCache.text || (domCache.text = doc.createTextNode(''))).cloneNode()
+    const _currentNode = currentNode
+    if (txtNode) {
+      currentNode = document.createTextNode(current)
     } else if (isSvg || current.t === 'svg') {
-      currentNode = (domCache[current.t] || (domCache[current.t] = doc.createElementNS('http://www.w3.org/2000/svg', current.t))).cloneNode()
+      isSvg = true
+      currentNode = (domCache[current.t] || (domCache[current.t] = document.createElementNS('http://www.w3.org/2000/svg', current.t))).cloneNode(false)
     } else {
-      currentNode = (domCache[current.t] || (domCache[current.t] = doc.createElement(current.t))).cloneNode()
+      currentNode = (domCache[current.t] || (domCache[current.t] = document.createElement(current.t))).cloneNode(false)
     }
     if (_currentNode) {
       parentNode.replaceChild(currentNode, _currentNode)
     } else {
       parentNode.appendChild(currentNode)
     }
-    // @ts-ignore: oncreate should always be callable. TODO: add strict typing
-    if (current?.a?.oncreate) { current.a.oncreate(currentNode) }
+    if (txtNode) { return }
+    // eslint-disable-next-line no-unused-expressions
+    if (current.c[0]?.oncreate) { current?.c[0]?.oncreate(currentNode) }
   }
-  if ((typeof current === 'string' || typeof current === 'number')) {
-    // @ts-ignore: We already checked this above. It's not 'never'
-    if (('' + currentNode.data) !== ('' + current)) { currentNode.data = current }
-    return true
+  if (txtNode) {
+    // eslint-disable-next-line eqeqeq
+    if (currentNode.data != current) { currentNode.data = current }
+    return
   }
-  if (current._r) { current._r._r = () => render(current, currentNode, parentNode, isSvg) }
-  for (const key in current.a) {
-    if (key[0] === 'o' && key[1] === 'n') {
-      const evt = key.slice(2)
-      // @ts-ignore: TODO: this is a hacky way to store what the last eventlistener was
-      if (!currentNode[eventPrefix + key] || ('' + currentNode[eventPrefix + key]) !== ('' + current.a[key])) {
-        // @ts-ignore: See above
-        if (currentNode[eventPrefix + key]) { currentNode.removeEventListener(evt, currentNode[eventPrefix + key]) }
-        // @ts-ignore: See above
-        currentNode.addEventListener(evt, current.a[key])
-        // @ts-ignore: See above
-        currentNode[eventPrefix + key] = current.a[key]
-      } else if (!current.a[key]) {
-        // @ts-ignore: data-event-* is the old function
-        currentNode.removeEventListener(evt, currentNode[eventPrefix + key])
-      }
-    // @ts-ignore: If this was a text or comment element we would have returned above
-    } else if (current.a[key] !== currentNode.getAttribute(key)) {
-      if (
-        (
-          typeof current.a[key] === 'boolean' &&
-          (
-            (current.t === 'INPUT' && key === 'checked') ||
-            (current.t === 'OPTION' && key === 'selected')
-          )
-        ) || typeof current.a[key] === 'object' // Support complex data passing for custom elements
-      ) {
-        // @ts-ignore TS does not think HTML properties are accessible directly?
-        currentNode[key] = current.a[key]
-      }
-      if (current.a[key]) {
-        // @ts-ignore: If this was a text or comment element we would have returned above
-        currentNode.setAttribute(key, '' + current.a[key])
-      } else {
-        // @ts-ignore: If this was a text or comment element we would have returned above
-        currentNode.removeAttribute(key)
-      }
-    }
-  }
-  const children = current.c.flat(Infinity)
-  if (!children.length && currentNode.childNodes.length) {
-    if (current.a['data-skruv-wait-for-not-empty']) {
+  if (current._r) {
+    current._r._r = () => {
+      if (!currentNode || !parentNode.contains(currentNode)) { return false }
+      render(current, currentNode, parentNode, isSvg)
       return true
     }
-    // @ts-ignore: If this was a text or comment element we would have returned above
+  }
+  let children = current.c.flat(Infinity)
+  let attributes = {}
+  if (children[0]?.constructor === Object && children[0]?.s !== s) {
+    attributes = children[0]
+    children = children.slice(1)
+    for (const key in attributes) {
+      if (key === skruvKey || key[0] === '_') { continue }
+      if (key[0] === 'o' && key[1] === 'n') {
+        let listeners = listenersMap.get(currentNode)
+        if (!listeners) { listeners = {} && listenersMap.set(currentNode, listeners) }
+        const evt = key.slice(2)
+        if (!listenersMap[key] || listenersMap[key] !== attributes[key]) {
+          if (listenersMap[key]) { currentNode.removeEventListener(evt, listenersMap[key]) }
+          currentNode.addEventListener(evt, attributes[key])
+          listenersMap[key] = attributes[key]
+        } else if (!attributes[key]) {
+          currentNode.removeEventListener(evt, listenersMap[key])
+        }
+      } else if (attributes[key] !== currentNode.getAttribute(key)) {
+        if (
+          (key === 'checked' || key === 'selected' || key === 'value') ||
+          typeof attributes[key] === 'object' // Support complex data passing for custom elements
+        ) {
+          currentNode[key] = attributes[key]
+        }
+        if (attributes[key]) {
+          currentNode.setAttribute(key, '' + attributes[key])
+        } else {
+          currentNode.removeAttribute(key)
+        }
+      }
+    }
+  }
+  if (!children.length && currentNode.childNodes.length) {
+    if (attributes['data-skruv-wait-for-not-empty']) {
+      return
+    }
     currentNode.replaceChildren()
-    return true
+    return
   }
   if (currentNode.childNodes.length > children.length) {
     for (let i = children.length; i < currentNode.childNodes.length; i++) {
@@ -142,37 +127,50 @@ export const render = (
     }
   }
   for (let i = 0; i < children.length; i++) {
-    // @ts-ignore: TODO: the flattening seems to confuse TS
-    if (keyed.has(children[i])) {
-      // @ts-ignore: See above
-      const keyedNode = keyed.get(children[i])
-      if (keyedNode !== currentNode.childNodes[i]) {
-        if (keyedNode === currentNode.childNodes[i + 1]) {
-          currentNode.removeChild(currentNode.childNodes[i])
-        // @ts-ignore: See above
-        } else if (keyed.has(children[i + 1]) && keyed.get(children[i + 1]) === currentNode.childNodes[i]) {
-          // @ts-ignore
-          currentNode.insertBefore(keyedNode, currentNode.childNodes[i])
-        } else if (currentNode.childNodes[i]) {
-          // @ts-ignore
-          currentNode.replaceChild(keyedNode, currentNode.childNodes[i])
-        } else {
-          // @ts-ignore
-          currentNode.appendChild(keyedNode)
+    let forceFull = false
+    let keyedNode
+    if (children[i].constructor === Object) {
+      keyedNode = keyed.get(children[i].c[0]?.[skruvKey])
+      if (keyedNode) {
+        if (keyedNode !== currentNode.childNodes[i]) {
+          if (keyedNode === currentNode.childNodes[i + 1]) {
+            currentNode.removeChild(currentNode.childNodes[i])
+          } else if (keyed.get(children[i + 1]?.c?.[0]?.[skruvKey]) === currentNode.childNodes[i]) {
+            currentNode.insertBefore(keyedNode, currentNode.childNodes[i])
+          } else if (currentNode.childNodes[i]) {
+            currentNode.replaceChild(keyedNode, currentNode.childNodes[i])
+          } else {
+            currentNode.appendChild(keyedNode)
+          }
         }
-        // @ts-ignore: See above
-        keyed.set(children[i], currentNode.childNodes[i])
+        forceFull = children[i].c[0][skruvKey] !== oldKeys.get(currentNode.childNodes[i])
+        if (!forceFull) {
+          const oldKey = keyed.get(currentNode.childNodes[i])
+          let noChange = true
+          for (const k in children[i].c[0][skruvKey]) { if (children[i].c[0][skruvKey][k] !== oldKey[k]) { noChange = false } }
+          if (noChange) { continue }
+        }
+      } else {
+        forceFull = keyed.has(currentNode.childNodes[i])
       }
-      continue
     }
-    // @ts-ignore: See above
-    render(children[i], currentNode.childNodes[i] || false, currentNode, isSvg)
+    render(children[i], currentNode.childNodes[i] || false, currentNode, isSvg, forceFull)
   }
-  keyed.set(current, currentNode)
-  return true
+  if (attributes[skruvKey]) {
+    keyed.set(attributes[skruvKey], currentNode)
+    oldKeys.set(currentNode, attributes[skruvKey])
+    keyed.set(currentNode, { ...attributes[skruvKey] })
+  }
 }
 
 export const elementFactory = new Proxy({}, {
   /** @type {(_: any, name: string) => (arg0: (Record<string, any>|Vnode)[]) => Vnode} */
-  get: (_, name) => (...c) => h(name, ...c)
+  get: (_, t) => (...c) => ({ s, t, c })
 })
+
+/**
+ * @param {string} t
+ * @param  {(Record<string, any>|Vnode)[]} c
+ * @returns {Vnode}
+ */
+export const h = (t, ...c) => ({ s, t, c })

@@ -1,5 +1,6 @@
+// @ts-nocheck
 /**
- * @typedef {Vnode|Vnode[]|String|Boolean|Number} SkruvChildNode
+ * @typedef {Vnode|Vnode[]|String|Boolean|Number|Record<string,(string|boolean|Function|number|Object)> & {_r:{_r:() => boolean}?}} SkruvChildNode
  * @typedef {SkruvChildNode[]} SkruvChildNodes
  * @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAttributes
  */
@@ -8,17 +9,9 @@
  * @prop {Symbol} s
  * @prop {String} t
  * @prop {SkruvChildNodes} c
- * @prop {Record<string,(string|boolean|Function|number|Object)> & {_r:{_r:() => boolean}?}} a
  * @prop {{_r:() => boolean}} [_r]
  */
 import { h } from '../index.js'
-
-/**
- * @typedef {Object} JSXAdditionalProperties
- * @property {[Vnode]} [children]
- *
- * @typedef {VnodeAttributes & JSXAdditionalProperties} JSXAttributes
- */
 
 /**
  * @param {String} str
@@ -30,15 +23,15 @@ export const Fragment = '#fragment'
 
 /**
  * @param {String} nodeName
- * @param {JSXAttributes} [attributes={}]
- * @returns {Vnode | [Vnode?]}
+ * @param {VnodeAttributes} [attributes={}]
+ * @returns {Vnode | []}
  */
 export const jsx = (nodeName, attributes = {}) => jsxs(nodeName, attributes)
 
 /**
  * @param {String} nodeName
- * @param {JSXAttributes} [attributes={}]
- * @returns {Vnode | [Vnode?]}
+ * @param {VnodeAttributes} [attributes={}]
+ * @returns {Vnode | []}
  */
 export const jsxs = (nodeName, attributes = {}) => {
   if (nodeName === Fragment && attributes.children) { return attributes.children }

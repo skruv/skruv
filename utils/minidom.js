@@ -234,8 +234,8 @@ globalThis.addEventListener = () => {}
 
 // Reset function to get a new global document
 export const reset = () => {
-  const rootElement = new HTMLElement('DOCUMENT')
-  const documentElement = new HTMLElement('HTML')
+  const rootElement = new HTMLElement('document')
+  const documentElement = new HTMLElement('html')
   documentElement.parentNode = rootElement
   rootElement.childNodes = [documentElement]
   document.documentElement = documentElement
@@ -324,7 +324,7 @@ const htmlTag = (vDom, headers) => {
   .join(' '))
     }/>`
   }
-  return `<${quoteattr(vDom.nodeName.toLowerCase())}${
+  return `<${quoteattr(vDom.nodeName)}${
     !Object.entries(vDom.attributes).length
       ? ''
       : (' ' + Object.entries(vDom.attributes).map(htmlAttr)
@@ -333,7 +333,7 @@ const htmlTag = (vDom, headers) => {
     vDom.childNodes.map(e =>
       toHTML(e, vDom.nodeName, headers)
     ).join('')
-  }</${quoteattr(vDom.nodeName.toLowerCase())}>`
+  }</${quoteattr(vDom.nodeName)}>`
 }
 
 /**
