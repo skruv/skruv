@@ -42,14 +42,8 @@ export const render = (
   if (
     forceFull ||
     !currentNode ||
-    (
-      txtNode &&
-      currentNode?.nodeName !== '#text'
-    ) ||
-    (
-      !txtNode &&
-      currentNode?.nodeName.toLowerCase() !== current.t.toLowerCase()
-    )
+    (txtNode && currentNode?.nodeName !== '#text') ||
+    (!txtNode && currentNode?.nodeName.toLowerCase() !== current.t.toLowerCase())
   ) {
     const _currentNode = currentNode
     if (txtNode) {
