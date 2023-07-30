@@ -90,14 +90,17 @@ export const render = (
       if (key === skruvKey || key[0] === '_') { continue }
       if (key[0] === 'o' && key[1] === 'n') {
         let listeners = listenersMap.get(currentNode)
-        if (!listeners) { listeners = {} && listenersMap.set(currentNode, listeners) }
+        if (!listeners) {
+          listeners = {}
+          listenersMap.set(currentNode, listeners)
+        }
         const evt = key.slice(2)
-        if (!listenersMap[key] || listenersMap[key] !== attributes[key]) {
-          if (listenersMap[key]) { currentNode.removeEventListener(evt, listenersMap[key]) }
+        if (!listeners[key] || ('' + listeners[key]) !== ('' + attributes[key])) {
+          if (listeners[key]) { currentNode.removeEventListener(evt, listeners[key]) }
           currentNode.addEventListener(evt, attributes[key])
-          listenersMap[key] = attributes[key]
+          listeners[key] = attributes[key]
         } else if (!attributes[key]) {
-          currentNode.removeEventListener(evt, listenersMap[key])
+          currentNode.removeEventListener(evt, listeners[key])
         }
       } else if (attributes[key] !== currentNode.getAttribute(key)) {
         if (
