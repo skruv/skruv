@@ -1,7 +1,7 @@
 export function render(current: Record<string, any> | Vnode | string | number | boolean, currentNode?: Node, parentNode?: ParentNode | null, isSvg?: boolean, forceFull?: boolean): void;
-/** @type {Record<string, (...c: SkruvChildNodes) => Vnode>} */
-export const elementFactory: Record<string, (...c: SkruvChildNodes) => Vnode>;
-export function h(t: string, ...c: SkruvChildNode[]): Vnode;
+/** @type {Record<string, (...c: Array<Record<string, any>|Vnode|string|number|boolean>) => Vnode>} */
+export const elementFactory: Record<string, (...c: Array<Record<string, any> | Vnode | string | number | boolean>) => Vnode>;
+export function h(t: string, ...c: Array<Record<string, any> | Vnode | string | number | boolean>[]): Vnode;
 export type SkruvChildNode = string | number | boolean | Vnode | (Record<string, string | number | boolean | Object | Function> & {
     _r: {
         _r: () => boolean;

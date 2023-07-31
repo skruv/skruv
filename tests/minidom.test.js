@@ -7,6 +7,7 @@ import test from 'node:test'
 import wait from '../utils/generators/waitPromise.js'
 
 test('minidom', async () => {
+  // @ts-ignore: minidom makes locations constructible
   globalThis.location = new Location('http://127.0.0.1:8000/')
   const frontend = await import('../examples/ssr/index.js')
   await frontend.doRender()

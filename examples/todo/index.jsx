@@ -50,7 +50,7 @@ render(
                 yield todos.map((todo, i) => (
                   <li>{todo} <a
                     href="#"
-                    onclick={e => {
+                    onclick={ /** @param {MouseEvent} e */e => {
                       e.preventDefault()
                       todos.splice(i, 1)
                     }}

@@ -1,9 +1,6 @@
-import {Location} from './utils/minidom.js'
+import * as minidom from './utils/minidom.js'
 
-declare module "skruv" {
-  namespace JSX {
-    interface IntrinsicElements {}
-  }
+declare global {
   var skruvSSRScript: string;
-  var location: Location
+  var Location: minidom.Location;
 }

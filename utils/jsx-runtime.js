@@ -1,13 +1,13 @@
 // @ts-nocheck
 /**
- * @typedef {Vnode|Vnode[]|String|Boolean|Number|Record<string,(string|boolean|Function|number|Object)> & {_r:{_r:() => boolean}?}} SkruvChildNode
+ * @typedef {Vnode|string|Boolean|Number|Record<string,(string|boolean|Function|number|Object)> & {_r:{_r:() => boolean}?} & {oncreate:(e: Node) => void}?} SkruvChildNode
  * @typedef {SkruvChildNode[]} SkruvChildNodes
  * @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAttributes
  */
 /**
  * @typedef {object} Vnode
  * @prop {Symbol} s
- * @prop {String} t
+ * @prop {string} t
  * @prop {SkruvChildNodes} c
  * @prop {{_r:() => boolean}} [_r]
  */

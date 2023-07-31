@@ -183,12 +183,13 @@ export const render = (
   }
 }
 
-/** @type {Record<string, (...c: SkruvChildNodes) => Vnode>} */
-export const elementFactory = new Proxy({}, { get: (_, t) => (/** @type {SkruvChildNodes} */ ...c) => ({ s, t, c }) })
+/** @type {Record<string, (...c: Array<Record<string, any>|Vnode|string|number|boolean>) => Vnode>} */
+export const elementFactory = new Proxy({}, { get: (_, t) => (/** @type {Array<Record<string, any>|Vnode|string|number|boolean>} */ ...c) => ({ s, t, c }) })
 
 /**
  * @param {string} t
- * @param  {...SkruvChildNode} c
+ * @param  {...Array<Record<string, any>|Vnode|string|number|boolean>} c
  * @returns {Vnode}
  */
+// @ts-ignore: TODO: Check why c is being complained about here
 export const h = (t, ...c) => ({ s, t, c })

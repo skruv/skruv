@@ -424,3 +424,4 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
   * [ ] One basic and one with postgrest backend, nginx frontend and SSR
 * [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc. Show on separate page.
 * [ ] Error boundaries (custom events that bubble on error so they can be caught in the DOM instead of in the js call stack)
+* [ ] Check why typescript cannot import from its own package (import {render} from 'skruv' does not work) and why its jsx settings do not work

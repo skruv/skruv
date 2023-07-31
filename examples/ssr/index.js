@@ -32,6 +32,7 @@ const styles = css`
 const dom = syncify(
   html({ lang: 'en-US', class: styles },
     head(
+      // @ts-ignore: TODO: Check how to make the state typings recursive
       title(state.todos.getGenerator(0)),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
       style(cssTextGenerator),
@@ -40,6 +41,7 @@ const dom = syncify(
     ),
     body(
       main(
+        // @ts-ignore: TODO: Check how to make the state typings recursive
         h1(state.todos.getGenerator(0)),
         form({
           onsubmit: /** @param {SubmitEvent} e */ e => {
@@ -64,7 +66,7 @@ const dom = syncify(
                 `${todo} `,
                 a({
                   href: '#',
-                  onclick: e => {
+                  onclick: /** @param {MouseEvent}e */e => {
                     e.preventDefault()
                     currentState.todos.splice(i, 1)
                   }

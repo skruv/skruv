@@ -11,20 +11,21 @@
     "declarationMap": true,
     "moduleResolution": "node",
     "module": "es2020",
-    "jsx": "react-jsx"
+    "jsxFactory": "jsx",
+    "jsxImportSource": "skruv"
   },
   "include": [
     "global.d.ts",
-    "*"
+    "*",
+    "**/*"
   ],
   "exclude": [
     // htm uses remote modules
     "examples/htm/*",
-    // TODO: typescript does not like jsx in skruv?
-    "examples/todo/index.min.js",
-    "examples/jsx/index.min.js",
-    "examples/ssr/index.min.js",
-    "examples/ssr/index.html",
+    "tests/jsx.test.js",
+    "examples/todo/*",
+    "examples/jsx/*",
+    "examples/ssr/*",
     "node_modules",
     "types"
   ]
