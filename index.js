@@ -1,28 +1,27 @@
-// @ts-nocheck
 /**
- * @typedef {Vnode|Vnode[]|String|Boolean|Number|Record<string,(string|boolean|Function|number|Object)> & {_r:{_r:() => boolean}?}} SkruvChildNode
+ * @typedef {Vnode|string|Boolean|Number|Record<string,(string|boolean|Function|number|Object)> & {_r:{_r:() => boolean}?} & {oncreate:(e: Node) => void}?} SkruvChildNode
  * @typedef {SkruvChildNode[]} SkruvChildNodes
  * @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAttributes
  */
 /**
  * @typedef {object} Vnode
  * @prop {Symbol} s
- * @prop {String} t
+ * @prop {string} t
  * @prop {SkruvChildNodes} c
  * @prop {{_r:() => boolean}} [_r]
  */
 const s = Symbol.for('skruvDom')
 const skruvKey = 'data-skruv-key'
-/** @type {WeakMap<Vnode, Node>} */
+/** @type {WeakMap<Vnode|Node, Node|Object>} */
 const keyed = new WeakMap()
-/** @type {WeakMap<Vnode, Node>} */
+/** @type {WeakMap<Node, Object>} */
 const oldKeys = new WeakMap()
-/** @type {WeakMap<Vnode, Record<string, function>>} */
+/** @type {WeakMap<Node, Record<string, function|string|boolean|object>>} */
 const listenersMap = new WeakMap()
 /** @type {Record<string, Node>} */
 const domCache = {}
 /**
- * @param {Vnode} current
+ * @param {Record<string, any>|Vnode|string|number|boolean} current
  * @param {Node} currentNode
  * @param {ParentNode?} parentNode
  * @param {boolean} isSvg
@@ -34,6 +33,9 @@ export const render = (
   isSvg = false,
   forceFull = false
 ) => {
+  if (!parentNode) {
+    throw new Error('No parent to render to')
+  }
   if (typeof current === 'boolean') {
     if (currentNode) { parentNode.removeChild(currentNode) }
     return
@@ -47,7 +49,7 @@ export const render = (
   ) {
     const _currentNode = currentNode
     if (txtNode) {
-      currentNode = document.createTextNode(current)
+      currentNode = document.createTextNode('' + current)
     } else if (isSvg || current.t === 'svg') {
       isSvg = true
       currentNode = (domCache[current.t] || (domCache[current.t] = document.createElementNS('http://www.w3.org/2000/svg', current.t))).cloneNode(false)
@@ -65,7 +67,7 @@ export const render = (
   }
   if (txtNode) {
     // eslint-disable-next-line eqeqeq
-    if (currentNode.data != current) { currentNode.data = current }
+    if (currentNode.textContent != current) { currentNode.textContent = '' + current }
     return
   }
   if (current._r) {
@@ -76,6 +78,7 @@ export const render = (
     }
   }
   let children = current.c.flat(Infinity)
+  /** @type {Record<string, string|boolean|function|object>} */
   let attributes = {}
   if (children[0]?.constructor === Object && children[0]?.s !== s) {
     attributes = children[0]
@@ -90,22 +93,29 @@ export const render = (
         }
         const evt = key.slice(2)
         if (!listeners[key] || ('' + listeners[key]) !== ('' + attributes[key])) {
+          // @ts-ignore: TODO: TS does not think Function is compatible with EventListenerOrEventListenerObject
           if (listeners[key]) { currentNode.removeEventListener(evt, listeners[key]) }
+          // @ts-ignore: TODO: TS does not think Function is compatible with EventListenerOrEventListenerObject
           currentNode.addEventListener(evt, attributes[key])
           listeners[key] = attributes[key]
         } else if (!attributes[key]) {
+          // @ts-ignore: TODO: TS does not think Function is compatible with EventListenerOrEventListenerObject
           currentNode.removeEventListener(evt, listeners[key])
         }
+        // @ts-ignore: TODO: TS does not like that currentNode "might" be a Node here, but since we do checking for text nodes above it is a Element
       } else if (attributes[key] !== currentNode.getAttribute(key)) {
         if (
           (key === 'checked' || key === 'selected' || key === 'value') ||
           typeof attributes[key] === 'object' // Support complex data passing for custom elements
         ) {
+          // @ts-ignore: TODO: TS does not like indexing elements with strings, but in this case we need to to set special props. Could be fixed with excessive checking, but that'd slow down perf
           currentNode[key] = attributes[key]
         }
         if (attributes[key]) {
+          // @ts-ignore: TODO: TS does not like that currentNode "might" be a Node here, but since we do checking for text nodes above it is a Element
           currentNode.setAttribute(key, '' + attributes[key])
         } else {
+          // @ts-ignore: TODO: TS does not like that currentNode "might" be a Node here, but since we do checking for text nodes above it is a Element
           currentNode.removeAttribute(key)
         }
       }
@@ -115,6 +125,7 @@ export const render = (
     if (attributes['data-skruv-wait-for-not-empty']) {
       return
     }
+    // @ts-ignore: TODO: TS does not like that currentNode "might" be a Node here, but since we do checking for text nodes above it is a Element
     currentNode.replaceChildren()
     return
   }
@@ -125,8 +136,10 @@ export const render = (
   }
   for (let i = 0; i < children.length; i++) {
     let forceFull = false
+    /** @type {Element} */
     let keyedNode
     if (children[i].constructor === Object) {
+      // @ts-ignore: A key in the keyed map only points to actual Elements.
       keyedNode = keyed.get(children[i].c[0]?.[skruvKey])
       if (keyedNode) {
         if (keyedNode !== currentNode.childNodes[i]) {
@@ -142,32 +155,40 @@ export const render = (
         }
         forceFull = children[i].c[0][skruvKey] !== oldKeys.get(currentNode.childNodes[i])
         if (!forceFull) {
-          const oldKey = keyed.get(currentNode.childNodes[i])
-          let noChange = true
-          for (const k in children[i].c[0][skruvKey]) { if (children[i].c[0][skruvKey][k] !== oldKey[k]) { noChange = false } }
-          if (noChange) { continue }
+          const lastKeyCopy = keyed.get(currentNode.childNodes[i])
+          if (lastKeyCopy) {
+            let noChange = true
+            for (const k in children[i].c[0][skruvKey]) {
+              // @ts-ignore: oldKey might be undefinded
+              if (children[i].c[0][skruvKey][k] !== lastKeyCopy[k]) {
+                noChange = false
+              }
+            }
+            if (noChange) { continue }
+          }
         }
       } else {
         forceFull = keyed.has(currentNode.childNodes[i])
       }
     }
+    // @ts-ignore: TODO: TS does not like that currentNode "might" be a Node here, but since we do checking for text nodes above it is a Element
     render(children[i], currentNode.childNodes[i] || false, currentNode, isSvg, forceFull)
   }
   if (attributes[skruvKey]) {
+    // @ts-ignore: TODO: The skruvkey is always an object here, but clarify the types for the attributes a bit more
     keyed.set(attributes[skruvKey], currentNode)
     oldKeys.set(currentNode, attributes[skruvKey])
+    // @ts-ignore: TODO: The skruvkey is always an object here, but clarify the types for the attributes a bit more
     keyed.set(currentNode, { ...attributes[skruvKey] })
   }
 }
 
-export const elementFactory = new Proxy({}, {
-  /** @type {(_: any, name: string) => (arg0: (Record<string, any>|Vnode)[]) => Vnode} */
-  get: (_, t) => (...c) => ({ s, t, c })
-})
+/** @type {Record<string, (...c: SkruvChildNodes) => Vnode>} */
+export const elementFactory = new Proxy({}, { get: (_, t) => (/** @type {SkruvChildNodes} */ ...c) => ({ s, t, c }) })
 
 /**
  * @param {string} t
- * @param  {(Record<string, any>|Vnode)[]} c
+ * @param  {...SkruvChildNode} c
  * @returns {Vnode}
  */
 export const h = (t, ...c) => ({ s, t, c })

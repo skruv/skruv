@@ -1,3 +1,4 @@
+/** @typedef {import("../../index.js").Vnode} Vnode */
 import combineGens from './combineGens.js'
 import waitGen from './waitGen.js'
 
@@ -5,8 +6,8 @@ import waitGen from './waitGen.js'
  * Adds a loader after waiting for the component for 300ms.
  * The loader can be something like div({ "data-skruv-finished": false }, "Loading content");
  *
- * @param {AsyncGenerator<Vnode>} component
- * @param {import("../../index.js").Vnode} loader
+ * @param {() => AsyncGenerator<Vnode|boolean|string>} component
+ * @param {Vnode} loader
  */
 const addLoader = async function * addLoader (component, loader) {
   for await (
@@ -15,9 +16,9 @@ const addLoader = async function * addLoader (component, loader) {
       component()
     )
   ) {
-    if (!loadedComponent && showLoader) {
+    if (loadedComponent === undefined && showLoader) {
       yield loader
-    } else if (loadedComponent) {
+    } else if (loadedComponent !== undefined) {
       yield loadedComponent
     }
   }

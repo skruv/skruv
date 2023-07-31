@@ -1,31 +1,15 @@
+import waitPromise from './waitPromise.js'
 /**
- * @param {number} interval
- * @returns {AsyncIterable<void>}
+ * @template T
+ * @param {number} time
+ * @param {T} value
+ * @returns {AsyncGenerator<T>}
  */
-const interval = interval => {
-  /** @type {function} */
-  let resolver = () => {}
-  let promise = new Promise(resolve => {
-    resolver = resolve
-  })
-
-  /** @type AsyncIterableIterator<void> */
-  const subscriber = {
-    next: async () => {
-      const value = await promise
-      promise = new Promise(resolve => {
-        resolver = resolve
-      })
-      return { done: false, value }
-    },
-    [Symbol.asyncIterator]: () => subscriber
+const interval = async function * (time, value) {
+  while (true) {
+    await waitPromise(time)
+    yield value
   }
-
-  resolver()
-
-  setInterval(() => resolver(), interval)
-
-  return subscriber
 }
 
 export default interval

@@ -1,14 +1,16 @@
-const combineGens = async function * (
-  /** @type {AsyncIterable<any>[]} */ ...gens
-) {
-  /** @type {any[][]} */
+/**
+ * @template T
+ * @param  {...AsyncGenerator<T>} gens
+ * @returns {AsyncGenerator<T[]>}
+ */
+const combineGens = async function * (...gens) {
+  /** @type {T[][]} */
   const vals = []
+  /** @type {T[]} */
   const lastVals = new Array(gens.length)
-  /** @type {(arg0: any[][]) => void} */
+  /** @type {(arg0: T[][]) => void} */
   let resolver
-  let promise = new Promise(resolve => {
-    resolver = resolve
-  })
+  let promise = new Promise(resolve => { resolver = resolve })
 
   gens.forEach(async (gen, i) => {
     for await (const val of gen) {
@@ -23,11 +25,10 @@ const combineGens = async function * (
 
   while (true) {
     await promise
-    promise = new Promise(resolve => {
-      resolver = resolve
-    })
+    promise = new Promise(resolve => { resolver = resolve })
     while (vals.length) {
-      yield vals.shift()
+      const val = vals.shift()
+      if (val) { yield val }
     }
   }
 }

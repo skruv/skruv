@@ -4,11 +4,11 @@ import assert from 'node:assert'
 import test from 'node:test'
 
 import { elementFactory, render } from '../index.js'
+import wait from '../utils/generators/waitPromise.js'
 import { createState } from '../utils/state.js'
 import { hydrationPromise, syncify } from '../utils/syncify.js'
-const { body, div, html, hr } = elementFactory
 
-const wait = time => new Promise(resolve => setTimeout(resolve, time))
+const { body, div, html, hr } = elementFactory
 
 test('switch type', async () => {
   const sub = createState({ elem: 0 })

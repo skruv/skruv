@@ -2,6 +2,11 @@
 // TODO: This file will be hard to typecheck without generic types, check how to do it with TS later
 const resolveTimer = globalThis?.requestAnimationFrame || (cb => setTimeout(cb, 0))
 
+/**
+ * @template T
+ * @param {T} stateObj
+ * @returns {AsyncGenerator<T> & T & ({getGenerator: (key: string|number) => T[key], toJSON: () => T})}
+ */
 export const createState = stateObj => {
   const Handler = class Handler {
     constructor (name) {

@@ -33,10 +33,10 @@ const doRender = () => render(
       main(
         h1(state.todos[0]),
         form({
-          onsubmit: e => {
+          onsubmit: /** @param {SubmitEvent} e */ e => {
             e.preventDefault()
-            state.todos.unshift(new FormData(e.target).get('todo'))
-            e.target.reset()
+            // @ts-ignore: The target here is a form.
+            state.todos.unshift(new FormData(e.target).get('todo')) && e.target.reset()
             doRender()
           }
         },
@@ -50,7 +50,7 @@ const doRender = () => render(
             `${todo} `,
             a({
               href: '#',
-              onclick: e => {
+              onclick: /** @param {MouseEvent} e */ e => {
                 e.preventDefault()
                 state.todos.splice(i, 1)
                 doRender()

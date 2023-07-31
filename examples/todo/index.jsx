@@ -33,11 +33,13 @@ render(
         <main>
           <h1>{state.todos.getGenerator(0)}</h1>
           <form
-            onsubmit={e => {
-              e.preventDefault()
-              state.todos.unshift(new FormData(e.target).get('todo'))
-              e.target.reset()
-            }}
+            onsubmit={
+              /** @param {SubmitEvent} e */ e => {
+                e.preventDefault()
+                state.todos.unshift(new FormData(e.target).get('todo'))
+                e.target.reset()
+              }
+            }
           >
             <input name="todo"></input>
             <button>New!</button>

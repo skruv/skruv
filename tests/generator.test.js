@@ -1,18 +1,16 @@
-import '../utils/minidom.js'
-
 import assert from 'node:assert'
 import test from 'node:test'
 
 import { elementFactory, render } from '../index.js'
+import wait from '../utils/generators/waitPromise.js'
+import { Element } from '../utils/minidom.js'
 import { createState } from '../utils/state.js'
 import { hydrationPromise, syncify } from '../utils/syncify.js'
 const { html, body, div } = elementFactory
 
-const wait = time => new Promise(resolve => setTimeout(resolve, time))
-
 const state = createState({ str: '' })
 
-let elem = false
+let elem = new Element()
 
 test('update on state update: Array', async () => {
   render(
@@ -22,7 +20,7 @@ test('update on state update: Array', async () => {
           async function * () {
             for await (const currentState of state) {
               yield div({
-                oncreate: e => { elem = e }
+                oncreate: (/** @type {Element} */ e) => { elem = e }
               }, currentState.str)
             }
           }

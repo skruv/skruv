@@ -60,6 +60,7 @@ test('syncify', async () => {
   assert.strictEqual(syncify(a).onclick, internalFunc2)
   assert.strictEqual(syncify(a).b, 'b')
   assert.strictEqual(syncify(a).ai, 'ai')
+  // @ts-ignore
   assert.strictEqual(syncify(a).d[0][0][0].a, 'a')
   const newObj = {
     i: async function * () {
@@ -70,6 +71,7 @@ test('syncify', async () => {
       }
     }
   }
+  // @ts-ignore
   syncify(newObj)._r._r = () => false
   await new Promise(resolve => setTimeout(() => resolve(''), 1))
   assert.strictEqual(syncify(newObj).i, 0)

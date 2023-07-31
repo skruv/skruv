@@ -4,11 +4,10 @@ import assert from 'node:assert'
 import test from 'node:test'
 
 import { elementFactory, render } from '../index.js'
+import wait from '../utils/generators/waitPromise.js'
 import { createState } from '../utils/state.js'
 import { hydrationPromise, syncify } from '../utils/syncify.js'
 const { body, div, html } = elementFactory
-
-const wait = time => new Promise(resolve => setTimeout(resolve, time))
 
 test('update on array push', async () => {
   const sub = createState({ arr: ['test', 'test2'] })

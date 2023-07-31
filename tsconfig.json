@@ -10,19 +10,22 @@
     "target": "es2018",
     "declarationMap": true,
     "moduleResolution": "node",
-    "module": "es2020"
+    "module": "es2020",
+    "jsx": "react-jsx"
   },
+  "include": [
+    "global.d.ts",
+    "*"
+  ],
   "exclude": [
+    // htm uses remote modules
+    "examples/htm/*",
+    // TODO: typescript does not like jsx in skruv?
+    "examples/todo/index.min.js",
+    "examples/jsx/index.min.js",
+    "examples/ssr/index.min.js",
+    "examples/ssr/index.html",
     "node_modules",
     "types"
-  ],
-  "files": [
-    "index.js",
-    "utils/css.js",
-    "utils/cssom.js",
-    "utils/state.js",
-    "utils/minidom.js",
-    "utils/bundle.js",
-    "utils/jsx-runtime.js"
   ]
 }

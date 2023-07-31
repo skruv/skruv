@@ -42,10 +42,10 @@ const dom = syncify(
       main(
         h1(state.todos.getGenerator(0)),
         form({
-          onsubmit: e => {
+          onsubmit: /** @param {SubmitEvent} e */ e => {
             e.preventDefault()
-            state.todos.unshift(new FormData(e.target).get('todo'))
-            e.target.reset()
+            // @ts-ignore: The target here is a form.
+            state.todos.unshift(new FormData(e.target).get('todo')) && e.target.reset()
           }
         },
         label(

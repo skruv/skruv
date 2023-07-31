@@ -4,14 +4,15 @@ import assert from 'node:assert'
 import test from 'node:test'
 
 import { elementFactory, render } from '../index.js'
+import wait from '../utils/generators/waitPromise.js'
 import { createState } from '../utils/state.js'
 import { hydrationPromise, syncify } from '../utils/syncify.js'
 const { body, div, html } = elementFactory
 
-const wait = time => new Promise(resolve => setTimeout(resolve, time))
-
 test('update on object modify', async () => {
-  const sub = createState({ obj: {} })
+  /** @type {{obj: Record<string, string>}} */
+  const state = { obj: {} }
+  const sub = createState(state)
   render(
     syncify(
       html(

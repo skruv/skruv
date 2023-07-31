@@ -37,7 +37,7 @@ const document = {
   querySelectorAll: () => []
 }
 
-class Element {
+export class Element {
   /** @param {string} nodeName */
   constructor (nodeName = '') {
     /** @type {Element[]} */
@@ -147,15 +147,19 @@ class Element {
   get textContent () {
     return toText(this)
   }
+
+  set textContent (data) {
+    this.data = data
+  }
 }
 
-class SVGElement extends Element {}
-class HTMLElement extends Element {}
+export class SVGElement extends Element {}
+export class HTMLElement extends Element {}
 
-class HTMLOptionElement extends Element {}
-class HTMLInputElement extends Element {}
+export class HTMLOptionElement extends Element {}
+export class HTMLInputElement extends Element {}
 
-class Text extends HTMLElement {
+export class Text extends HTMLElement {
   constructor (data = '') {
     super('#text')
     /** @type {string} */
@@ -163,7 +167,7 @@ class Text extends HTMLElement {
   }
 }
 
-class Comment extends HTMLElement {
+export class Comment extends HTMLElement {
   constructor (data = '') {
     super('#comment')
     /** @type {string} */
@@ -171,7 +175,7 @@ class Comment extends HTMLElement {
   }
 }
 
-class Location extends URL {
+export class Location extends URL {
   get ancestorOrigins () {
     return {
       length: 0,
@@ -213,7 +217,7 @@ globalThis.Text = Text
 globalThis.Comment = Comment
 
 // Fake eventsource
-class FakeEventSource {
+export class EventSource {
   /**
    * @param {URL | string} _url
    * @param {EventSourceInit} [_init]
@@ -228,7 +232,7 @@ class FakeEventSource {
   close () {}
 }
 // @ts-ignore: Type confusion between polyfilled and real elements
-globalThis.EventSource = FakeEventSource
+globalThis.EventSource = EventSource
 
 globalThis.addEventListener = () => {}
 

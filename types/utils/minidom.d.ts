@@ -1,11 +1,4 @@
-export function reset(): void;
-export function toHTML(vDom: HTMLElement, context: string, headers: {
-    [key: string]: string;
-}): string;
-export function toText(vDom: HTMLElement): string;
-declare class HTMLElement extends Element {
-}
-declare class Element {
+export class Element {
     /** @param {string} nodeName */
     constructor(nodeName?: string);
     /** @type {Element[]} */
@@ -82,9 +75,49 @@ declare class Element {
     /** @returns {Element} */
     cloneNode(): Element;
     get innerHTML(): string;
+    set textContent(arg: string);
     get textContent(): string;
 }
-declare class Text extends HTMLElement {
+export class SVGElement extends Element {
 }
-export {};
+export class HTMLElement extends Element {
+}
+export class HTMLOptionElement extends Element {
+}
+export class HTMLInputElement extends Element {
+}
+export class Text extends HTMLElement {
+}
+export class Comment extends HTMLElement {
+}
+export class Location extends URL {
+    get ancestorOrigins(): {
+        length: number;
+        item: () => null;
+        contains: () => boolean;
+        [Symbol.iterator]: () => Generator<never, void, unknown>;
+    };
+    /** @param {string|URL} url */
+    assign(url: string | URL): void;
+    reload(): void;
+    /** @param {string|URL} url */
+    replace(url: string | URL): void;
+}
+export class EventSource {
+    /**
+     * @param {URL | string} _url
+     * @param {EventSourceInit} [_init]
+     */
+    constructor(_url: URL | string, _init?: EventSourceInit | undefined);
+    CONNECTING: number;
+    OPEN: number;
+    CLOSED: number;
+    addEventListener(): void;
+    close(): void;
+}
+export function reset(): void;
+export function toHTML(vDom: HTMLElement, context: string, headers: {
+    [key: string]: string;
+}): string;
+export function toText(vDom: HTMLElement): string;
 //# sourceMappingURL=minidom.d.ts.map

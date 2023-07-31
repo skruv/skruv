@@ -1,12 +1,13 @@
 /**
+ * @template T
  * @param {number} time
- * @param {any} value
- * @returns {Promise<value>}
+ * @param {T?} value
+ * @returns {Promise<void>}
  */
-const waitPromise = (time, value) =>
+const waitPromise = (time, value = null) =>
   new Promise(resolve =>
     setTimeout(() => {
-      resolve(value)
+      resolve()
     }, time)
   )
 

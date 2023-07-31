@@ -1,21 +1,13 @@
 import waitPromise from './waitPromise.js'
 /**
+ * @template T
  * @param {number} time
- * @param {any} value
- * @returns {AsyncIterable<value>}
+ * @param {T} value
+ * @returns {AsyncGenerator<T>}
  */
-const waitGen = (time, value) => {
-  let done = false
-  return {
-    [Symbol.asyncIterator]: () => ({
-      next: async function () {
-        const newValue = await waitPromise(time, value)
-        const oldDone = done
-        done = true
-        return { done: oldDone, value: newValue }
-      }
-    })
-  }
+const waitGen = async function * (time, value) {
+  await waitPromise(time)
+  yield value
 }
 
 export default waitGen
