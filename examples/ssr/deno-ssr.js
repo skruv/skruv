@@ -2,17 +2,13 @@
 /** @typedef  */
 import { reset, toHTML } from '../../utils/minidom.js'
 
-// @ts-ignore: TODO: Pull in deno definitions here
 Deno.serve(async req => {
-  // @ts-ignore: minidom makes locations constructible
   globalThis.location = new Location(req.url)
-  // @ts-ignore: TODO: Pull in deno definitions here
   globalThis.skruvSSRScript = await Deno.readTextFile('./index.min.js')
   const frontend = await import('./index.js')
   await frontend.doRender()
   /** @type {Record<string, string>} */
   const headers = {}
-  // @ts-ignore: Type confusion between builtins and polyfilled
   const responseBody = toHTML(document.documentElement, '', headers)
   reset()
   if (!headers['content-type']) { headers['content-type'] = 'text/html' }

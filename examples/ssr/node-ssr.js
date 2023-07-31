@@ -6,14 +6,12 @@ import { reset, toHTML } from '../../utils/minidom.js'
 
 const server = createServer()
 server.on('request', async (req, res) => {
-  // @ts-ignore: minidom makes locations constructible
   globalThis.location = new Location(new URL(req.url, `http://${req.headers.host}`))
   globalThis.skruvSSRScript = await readFile('./index.min.js', 'utf8')
   const frontend = await import('./index.js')
   await frontend.doRender()
   /** @type {Record<string, string>} */
   const headers = {}
-  // @ts-ignore: Type confusion between builtins and polyfilled
   const responseBody = toHTML(document.documentElement, '', headers)
   reset()
   if (!headers['content-type']) { headers['content-type'] = 'text/html' }

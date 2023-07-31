@@ -27,7 +27,9 @@ test('update on object modify', async () => {
     )
   )
   await hydrationPromise
+  // @ts-ignore: SKRUV_1
   sub.obj.test = 'testvalue'
+  // @ts-ignore: SKRUV_1
   sub.obj.test2 = 'testvalue2'
   await wait(1)
   assert.strictEqual(

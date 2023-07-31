@@ -1,16 +1,13 @@
-// @ts-nocheck
-// TODO: This file will be hard to typecheck without generic types, check how to do it with TS later
 const resolveTimer = globalThis?.requestAnimationFrame || (cb => setTimeout(cb, 0))
 
 /**
  * @template T
  * @param {T} stateObj
- * @returns {AsyncGenerator<T> & T & ({getGenerator: (key: string|number) => T[key], toJSON: () => T})}
+ * @returns {import("./stateType").State<T>}
  */
 export const createState = stateObj => {
   const Handler = class Handler {
-    constructor (name) {
-      this.name = name
+    constructor () {
       this._scheduled = false
       this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
     }
@@ -22,25 +19,40 @@ export const createState = stateObj => {
       if (this._scheduled) { return }
       this._scheduled = true
       resolveTimer(() => {
-        this._skruv_resolve()
+        this._skruv_resolve('')
         this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
         this._scheduled = false
       })
     }
 
+    /**
+     * @param {Record<string,any>|Array<any>} target
+     * @param {string|number} key
+     * @param {any} value
+     * @returns {boolean}
+     */
     set (target, key, value) {
       if (key === '_skruv_parent') {
         this._skruv_parent = value
         return true
       }
+      // @ts-ignore
       if (target[key] !== value) {
+        // @ts-ignore
         target[key] = this.recurse(key, value, target)
       }
       return true
     }
 
+    /**
+     * @param {Record<string,any>|Array<any>} target
+     * @param {string|number|Symbol} key
+     * @param {Proxy} proxy
+     * @returns {any}
+     */
     get (target, key, proxy) {
       if (key === 'getGenerator') {
+        // @ts-ignore
         return key => ({
           key: [key, target],
           [Symbol.asyncIterator]: () => {
@@ -53,6 +65,7 @@ export const createState = stateObj => {
                 } else {
                   booted = true
                 }
+                // @ts-ignore
                 return { done: false, value: proxy[key] }
               }
             }
@@ -65,6 +78,7 @@ export const createState = stateObj => {
       if (key === 'toJSON') {
         if (target.constructor === Object) {
           return Object.getOwnPropertyNames(target).reduce((acc, curr) => {
+            // @ts-ignore
             acc[curr] = target[curr]?.toJSON || target[curr]
             return acc
           }, {})
@@ -90,50 +104,74 @@ export const createState = stateObj => {
           }
         }
       }
+      // @ts-ignore
       return target[key]
     }
 
+    /**
+     * @param {Record<string,any>|Array<any>} target
+     * @param {string|number} key
+     * @returns {boolean}
+     */
     deleteProperty (target, key) {
+      // @ts-ignore
       const res = delete target[key]
       this._resolve()
       return res
     }
 
+    /**
+     * @param {string} path
+     * @param {any} value
+     * @param {Record<string,any>|Array<any>} target
+     * @returns {any}
+     */
     recurse (path, value, target) {
       // check for falsy values
       if (value && value.constructor) {
+        // @ts-ignore
         if (value.constructor === Object && target?.[path]?.constructor === Object) {
           for (const key of Object.getOwnPropertyNames(value)) {
+            // @ts-ignore
             if (target[path][key] !== value[key]) {
+              // @ts-ignore
               target[path][key] = value[key]
             }
           }
+          // @ts-ignore
           for (const key of Object.getOwnPropertyNames(target[path])
             .filter(item => !Object.getOwnPropertyNames(value).includes(item))
           ) {
+            // @ts-ignore
             delete target[path][key]
             this._resolve()
           }
+          // @ts-ignore
           return target[path]
         } else if (value.constructor === Object) {
-          const subProxy = new this.constructor(`${this.name}.${path}`)
+          const subProxy = new Handler()
           // check object properties for other objects or arrays
           value = Object.keys(value).reduce((acc, key) => {
+            // @ts-ignore
             acc[key] = this.recurse(`${path}.${key}`, value[key])
+            // @ts-ignore
             if (typeof acc[key] === 'object' && acc[key] !== null) { acc[key]._skruv_parent = subProxy }
             return acc
           }, {})
+          // @ts-ignore
           value = new Proxy(value, subProxy)
           value._skruv_parent = this
           this._resolve()
         } else if (value.constructor === Array) {
-          const subProxy = new this.constructor(`${this.name}.${path}`)
+          const subProxy = new Handler()
           // check arrays for objects or arrays
           value = value.map((child, key) => {
+            // @ts-ignore
             const newValue = this.recurse(`${path}[${key}]`, child)
             if (typeof newValue === 'object' && newValue !== null) { newValue._skruv_parent = subProxy }
             return newValue
           })
+          // @ts-ignore
           value = new Proxy(value, subProxy)
           value._skruv_parent = this
           this._resolve()
@@ -148,7 +186,9 @@ export const createState = stateObj => {
   }
 
   // create root proxy
+  // @ts-ignore
   const rootProxy = new Proxy(stateObj.constructor === Array ? [] : {}, new Handler('root'))
   Object.assign(rootProxy, stateObj)
+  // @ts-ignore
   return rootProxy
 }
