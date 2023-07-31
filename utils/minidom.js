@@ -345,7 +345,7 @@ const htmlTag = (vDom, headers) => {
 export const toHTML = (vDom, context, headers) => {
   if (
     vDom.nodeName.toLowerCase() === '#text' &&
-    (context === 'RAW' || context === 'SCRIPT' || context === 'STYLE')
+    (context === 'raw' || context === 'script' || context === 'style')
   ) {
     return vDom.data // TODO: SECURITY: check escaping on CSS/JS. Or rely on CSP to make it safe
   } else if (vDom.nodeName.toLowerCase() === '#text') {

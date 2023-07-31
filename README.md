@@ -173,10 +173,9 @@ doRender()
 ## Docs
 
 The core of skruv is the render function. It takes a structure created by elementFactory and optionally which DOM node to write to.
-If the same object is passed to a render it will be moved (if it is not currently at the right place) or not modified, allowing for caching/memoization optimizations.
 
 Besides the normal attributes there are the following:
- * data-skruv-key: This marks a node as non-reusable, so that if any element without the same key tries to render to it it will be replaced instead of reused.
+ * data-skruv-key: Any object, will be used to allow the element to move (instead of being recreated) and will be shallow-diffed on updates to allow for skipping re-rendering this node if not changed.
  * data-skruv-finished: If you want to mark the result of a async task as incomplete (like for example a loader icon) you can give it the attribute `data-skruv-finished: false` and it will not be considered complete until we get a new element without that attribute.
  * data-skruv-wait-for-not-empty: If you swap one generator for another or similar async work you might want to keep the old children until new ones are ready to prevent flicker. Tag the parent element with `data-skruv-wait-for-not-empty: true` and skruv will not clear the dom children until there are new children to render.
  * oncreate: Called with the element after it is created. Useful for attaching other libraries to the dom node.
