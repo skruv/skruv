@@ -116,8 +116,6 @@ export class Element {
 
   /** @param {Event} event */
   dispatchEvent (event) {
-    // @ts-ignore: This event is assumed to be synthetic
-    if (!event.target) { event.target = this }
     if (this.eventListeners[event.type]) {
       this.eventListeners[event.type].forEach(listener => listener({
         ...event,
@@ -216,7 +214,7 @@ globalThis.Text = Text
 // @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.Comment = Comment
 
-// Fake eventsource
+// Fake EventSource
 export class EventSource {
   /**
    * @param {URL | string} _url
