@@ -42,6 +42,7 @@ export class Element {
     };
     nodeName: string;
     data: string;
+    isSvg: boolean;
     /**
      * @param {Element} newNode
      * @param {Element} oldNode
@@ -51,6 +52,11 @@ export class Element {
     appendChild(node: Element): void;
     /** @param {Element} node */
     removeChild(node: Element): void;
+    /**
+     * @param {Element} newNode
+     * @param {Element} oldNode
+     */
+    insertBefore(newNode: Element, oldNode: Element): void;
     replaceChildren(): void;
     /** @param {string | number} name */
     getAttribute(name: string | number): string;
@@ -86,9 +92,9 @@ export class HTMLOptionElement extends Element {
 }
 export class HTMLInputElement extends Element {
 }
-export class Text extends HTMLElement {
+export class Text extends Element {
 }
-export class Comment extends HTMLElement {
+export class Comment extends Element {
 }
 export class Location extends URL {
     get ancestorOrigins(): {

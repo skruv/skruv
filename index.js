@@ -149,7 +149,7 @@ export const render = (
         if (keyedNode !== currentNode.childNodes[i]) {
           if (keyedNode === currentNode.childNodes[i + 1]) {
             currentNode.removeChild(currentNode.childNodes[i])
-          } else if (keyed.get(children[i + 1]?.c?.[0]?.[skruvKey]) === currentNode.childNodes[i]) {
+          } else if (currentNode.childNodes[i] && keyed.get(children[i + 1]?.c?.[0]?.[skruvKey]) === currentNode.childNodes[i]) {
             currentNode.insertBefore(keyedNode, currentNode.childNodes[i])
           } else if (currentNode.childNodes[i]) {
             currentNode.replaceChild(keyedNode, currentNode.childNodes[i])
@@ -176,7 +176,7 @@ export const render = (
       }
     }
     // @ts-ignore: TODO: TS does not like that currentNode "might" be a Node here, but since we do checking for text nodes above it is a Element
-    render(children[i], currentNode.childNodes[i] || false, currentNode, isSvg, forceFull)
+    render(children[i], currentNode.childNodes[i] || false, currentNode, isSvg && current.t !== 'foreignObject', forceFull)
   }
   if (attributes[skruvKey]) {
     // @ts-ignore: TODO: The skruvkey is always an object here, but clarify the types for the attributes a bit more

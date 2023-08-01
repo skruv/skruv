@@ -1,3 +1,4 @@
+/* global HTMLElement */
 import '../utils/minidom.js'
 
 import assert from 'node:assert'
@@ -10,7 +11,7 @@ import { hydrationPromise, syncify } from '../utils/syncify.js'
 
 const { body, div, html } = elementFactory
 
-test('switch type', async () => {
+test('errors', async () => {
   const sub = createState({ elem: 0 })
   render(
     syncify(
@@ -42,9 +43,11 @@ test('switch type', async () => {
   // @ts-ignore: SKRUV_1
   sub.elem = 1
   await wait(1)
-  console.log(document.documentElement.innerHTML)
   assert.strictEqual(
     document.documentElement.innerHTML,
     '<!DOCTYPE html><html><body><div class="error">Shit went real!!!</div></body></html>'
   )
+  assert.throws(() => {
+    render(html(), new HTMLElement())
+  })
 })

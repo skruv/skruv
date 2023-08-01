@@ -3,14 +3,14 @@ import test from 'node:test'
 
 import { elementFactory, render } from '../index.js'
 import wait from '../utils/generators/waitPromise.js'
-import { Element } from '../utils/minidom.js'
+import { HTMLElement } from '../utils/minidom.js'
 import { createState } from '../utils/state.js'
 import { hydrationPromise, syncify } from '../utils/syncify.js'
 const { html, body, div } = elementFactory
 
 const state = createState({ str: '' })
 
-let elem = new Element()
+let elem = new HTMLElement()
 
 test('update on state update: Array', async () => {
   render(
@@ -20,7 +20,7 @@ test('update on state update: Array', async () => {
           async function * () {
             for await (const currentState of state) {
               yield div({
-                oncreate: (/** @type {Element} */ e) => { elem = e }
+                oncreate: (/** @type {HTMLElement} */ e) => { elem = e }
               }, currentState.str)
             }
           }

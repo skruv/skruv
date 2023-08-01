@@ -27,7 +27,7 @@ const document = {
    * @param {string} nodeName
    * @returns {HTMLElement}
    */
-  createElementNS: (_ns, nodeName) => new HTMLElement(nodeName),
+  createElementNS: (_ns, nodeName) => new SVGElement(nodeName),
   /**
    * @param {string} nodeName
    * @returns {HTMLElement}
@@ -52,6 +52,7 @@ export class Element {
     this.ownerDocument = document
     this.nodeName = nodeName
     this.data = ''
+    this.isSvg = false
   }
 
   /**
@@ -59,6 +60,7 @@ export class Element {
    * @param {Element} oldNode
    */
   replaceChild (newNode, oldNode) {
+    if (newNode.parentNode) { newNode.parentNode.childNodes.splice(newNode.parentNode.childNodes.indexOf(newNode), 1) }
     this.childNodes[this.childNodes.indexOf(oldNode)] = newNode
     newNode.parentNode = this
     oldNode.parentNode = null
@@ -66,6 +68,7 @@ export class Element {
 
   /** @param {Element} node */
   appendChild (node) {
+    if (node.parentNode) { node.parentNode.childNodes.splice(node.parentNode.childNodes.indexOf(node), 1) }
     this.childNodes.push(node)
     node.parentNode = this
   }
@@ -74,6 +77,16 @@ export class Element {
   removeChild (node) {
     this.childNodes.splice(this.childNodes.indexOf(node), 1)
     node.parentNode = null
+  }
+
+  /**
+   * @param {Element} newNode
+   * @param {Element} oldNode
+   */
+  insertBefore (newNode, oldNode) {
+    if (newNode.parentNode) { newNode.parentNode.childNodes.splice(newNode.parentNode.childNodes.indexOf(newNode), 1) }
+    this.childNodes.splice(this.childNodes.indexOf(oldNode), 0, newNode)
+    newNode.parentNode = this
   }
 
   replaceChildren () {
@@ -135,7 +148,8 @@ export class Element {
   cloneNode () {
     if (this.nodeName === '#comment') { return new Comment(this.data) }
     if (this.nodeName === '#text') { return new Text(this.data) }
-    return new Element(this.nodeName)
+    // @ts-ignore: We need to clone this element
+    return new this.constructor(this.nodeName)
   }
 
   get innerHTML () {
@@ -151,13 +165,18 @@ export class Element {
   }
 }
 
-export class SVGElement extends Element {}
+export class SVGElement extends Element {
+  constructor (nodeName = '') {
+    super(nodeName)
+    this.isSvg = true
+  }
+}
 export class HTMLElement extends Element {}
 
 export class HTMLOptionElement extends Element {}
 export class HTMLInputElement extends Element {}
 
-export class Text extends HTMLElement {
+export class Text extends Element {
   constructor (data = '') {
     super('#text')
     /** @type {string} */
@@ -165,7 +184,7 @@ export class Text extends HTMLElement {
   }
 }
 
-export class Comment extends HTMLElement {
+export class Comment extends Element {
   constructor (data = '') {
     super('#comment')
     /** @type {string} */
