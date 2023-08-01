@@ -19,7 +19,7 @@ test('update on object modify', async () => {
         body(
           async function * () {
             for await (const state of sub) {
-              yield Object.keys(state.obj).map(key => div({ 'data-key': key }, state.obj[key]))
+              yield Object.keys(state.obj).map(key => div(state.obj[key]))
             }
           }
         )
@@ -34,6 +34,17 @@ test('update on object modify', async () => {
   await wait(1)
   assert.strictEqual(
     document.documentElement.innerHTML,
-    '<!DOCTYPE html><html><body><div data-key="test">testvalue</div><div data-key="test2">testvalue2</div></body></html>'
+    '<!DOCTYPE html><html><body><div>testvalue</div><div>testvalue2</div></body></html>'
+  )
+  // @ts-ignore: SKRUV_1
+  sub.obj = { test3: 'testvalue3' }
+  // @ts-ignore: SKRUV_1
+  sub.obj2 = { test3: 'testvalue3' }
+  assert.deepEqual(sub.toJSON, { obj: { test3: 'testvalue3' }, obj2: { test3: 'testvalue3' } })
+
+  await wait(1)
+  assert.strictEqual(
+    document.documentElement.innerHTML,
+    '<!DOCTYPE html><html><body><div>testvalue3</div></body></html>'
   )
 })

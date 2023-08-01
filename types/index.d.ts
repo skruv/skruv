@@ -3,10 +3,6 @@ export function render(current: Record<string, any> | Vnode | string | number | 
 export const elementFactory: Record<string, (...c: Array<Record<string, any> | Vnode | string | number | boolean>) => Vnode>;
 export function h(t: string, ...c: Array<Record<string, any> | Vnode | string | number | boolean>[]): Vnode;
 export type SkruvChildNode = string | number | boolean | Vnode | (Record<string, string | number | boolean | Object | Function> & {
-    _r: {
-        _r: () => boolean;
-    } | null;
-} & {
     oncreate: (e: Node) => void;
 });
 export type SkruvChildNodes = SkruvChildNode[];
@@ -15,8 +11,6 @@ export type Vnode = {
     s: Symbol;
     t: string;
     c: SkruvChildNodes;
-    _r?: {
-        _r: () => boolean;
-    } | undefined;
+    r?: (() => boolean) | undefined;
 };
 //# sourceMappingURL=index.d.ts.map

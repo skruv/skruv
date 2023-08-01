@@ -14,7 +14,7 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
 * Small:
   <!-- * [Smallest js framework in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html) -->
   * ~150 LOC
-  * 1kb minified and compressed (1051b with brotli, 1181b with gzip, 2482b uncompressed, 8527b unminified and uncompressed)
+  * 1kb minified and compressed (1064b with brotli, 1201b with gzip, 2523b uncompressed, 8779b unminified and uncompressed)
 * Usable without bundling/compilation/transpilation
 <!-- * [Plenty fast enough](https://krausest.github.io/js-framework-benchmark/index.html) -->
 * [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
@@ -428,6 +428,12 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
 * [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc. Show on separate page.
 * [ ] Check why typescript cannot import from its own package (import {render} from 'skruv' does not work) and why its jsx settings do not work
 * [ ] SKRUV_1: Handle state typing better after https://github.com/microsoft/TypeScript/issues/43826
+* [ ] Testing:
+  * [ ] Events (adding/removing listeners, dispatching)
+  * [ ] Location stuff (including routing)
+  * [ ] EventSource stuff
+  * [ ] All the generators
+  * [ ] Proper HTTP testing of the SSR stuff, including performance
 * [ ] Loader example:
 ```css
   canvas {

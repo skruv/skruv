@@ -48,7 +48,6 @@ test('syncify', async () => {
   assert.strictEqual(syncify(a).c, 'c')
   assert.strictEqual(syncify(a).f, false)
   assert.strictEqual(syncify(a).n, null)
-  assert.strictEqual(syncify(a)._a, internalFunc1)
   assert.strictEqual(syncify(a).onclick, internalFunc2)
   await hydrationPromise
   assert.strictEqual(syncify(a).a, 'a')
@@ -56,7 +55,6 @@ test('syncify', async () => {
   assert.strictEqual(syncify(a).f, false)
   assert.strictEqual(syncify(a).n, null)
   assert.strictEqual(syncify(a).func, 'func')
-  assert.strictEqual(syncify(a)._a, internalFunc1)
   assert.strictEqual(syncify(a).onclick, internalFunc2)
   assert.strictEqual(syncify(a).b, 'b')
   assert.strictEqual(syncify(a).ai, 'ai')
@@ -72,7 +70,7 @@ test('syncify', async () => {
     }
   }
   // @ts-ignore
-  syncify(newObj)._r._r = () => false
+  syncify(newObj).r = () => false
   await new Promise(resolve => setTimeout(() => resolve(''), 1))
   assert.strictEqual(syncify(newObj).i, 0)
 })

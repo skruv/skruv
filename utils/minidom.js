@@ -75,8 +75,8 @@ export class Element {
 
   /** @param {Element} node */
   removeChild (node) {
-    this.childNodes.splice(this.childNodes.indexOf(node), 1)
     node.parentNode = null
+    this.childNodes.splice(this.childNodes.indexOf(node), 1)
   }
 
   /**

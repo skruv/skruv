@@ -1,1 +1,1 @@
-{"version":3,"file":"syncify.d.ts","sourceRoot":"","sources":["../../utils/syncify.js"],"names":[],"mappings":"AAGA,4CAA6F;AA0B7F;;;;;;;GAOG;AACH,iKALW,CAAC,MAAM,GAAC,MAAM,CAAC,kBACf,CAAC,MAAM,GAAG,CAAC,GAAC,MAAM,CAAC,oBACnB;IAAC,EAAE,EAAC;QAAC,EAAE,EAAC,MAAM,OAAO,CAAA;KAAC,CAAA;CAAC,4BAmHjC"}
+{"version":3,"file":"syncify.d.ts","sourceRoot":"","sources":["../../utils/syncify.js"],"names":[],"mappings":"AAIA,4CAKE;AA6BF;;;;;;;GAOG;AACH,iKALW,CAAC,MAAM,GAAC,MAAM,CAAC,kBACf,CAAC,MAAM,GAAG,CAAC,GAAC,MAAM,CAAC,oBACnB;IAAC,CAAC,EAAC,MAAM,OAAO,CAAA;CAAC,4BAmH3B"}

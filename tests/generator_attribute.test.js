@@ -1,0 +1,41 @@
+import '../utils/minidom.js'
+
+import assert from 'node:assert'
+import test from 'node:test'
+
+import { elementFactory, render } from '../index.js'
+import wait from '../utils/generators/waitPromise.js'
+import { createState } from '../utils/state.js'
+import { hydrationPromise, syncify } from '../utils/syncify.js'
+const { html, body } = elementFactory
+
+const state = createState({ str: '' })
+
+test('update on state update: Array', async () => {
+  render(
+    syncify(
+      html(
+        body(
+          {
+            class: async function * () {
+              for await (const currentState of state) {
+                yield currentState.str
+              }
+            }
+          }
+        )
+      )
+    )
+  )
+  await hydrationPromise
+  // @ts-ignore: SKRUV_1
+  state.str = 'test'
+  await wait(1)
+  // @ts-ignore: This is a proper element, not a Node
+  assert.strictEqual(document.documentElement.childNodes[0].getAttribute('class'), 'test')
+  // @ts-ignore: SKRUV_1
+  state.str = 'test2'
+  await wait(1)
+  // @ts-ignore: This is a proper element, not a Node
+  assert.strictEqual(document.documentElement.childNodes[0].getAttribute('class'), 'test2')
+})

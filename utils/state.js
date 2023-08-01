@@ -1,5 +1,3 @@
-const resolveTimer = globalThis?.requestAnimationFrame || (cb => setTimeout(cb, 0))
-
 /**
  * @template T
  * @param {T} stateObj
@@ -18,11 +16,11 @@ export const createState = stateObj => {
       }
       if (this._scheduled) { return }
       this._scheduled = true
-      resolveTimer(() => {
+      setTimeout(() => {
         this._skruv_resolve('')
         this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
         this._scheduled = false
-      })
+      }, 0)
     }
 
     /**
@@ -71,9 +69,6 @@ export const createState = stateObj => {
             }
           }
         })
-      }
-      if (key === 'skruv_resolve') {
-        return () => this._resolve()
       }
       if (key === 'toJSON') {
         if (target.constructor === Object) {

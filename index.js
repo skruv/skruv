@@ -1,5 +1,5 @@
 /**
- * @typedef {Vnode|string|Boolean|Number|Record<string,(string|boolean|Function|number|Object)> & {_r:{_r:() => boolean}?} & {oncreate:(e: Node) => void}?} SkruvChildNode
+ * @typedef {Vnode|string|Boolean|Number|Record<string,(string|boolean|Function|number|Object)> & {oncreate:(e: Node) => void}?} SkruvChildNode
  * @typedef {SkruvChildNode[]} SkruvChildNodes
  * @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAttributes
  */
@@ -8,7 +8,7 @@
  * @prop {Symbol} s
  * @prop {string} t
  * @prop {SkruvChildNodes} c
- * @prop {{_r:() => boolean}} [_r]
+ * @prop {() => boolean} [r]
  */
 const s = Symbol.for('skruvDom')
 const skruvKey = 'data-skruv-key'
@@ -64,12 +64,13 @@ export const render = (
     if (txtNode) { return }
   }
   if (txtNode) {
+    // We do a loose comparison to allow for numbers
     // eslint-disable-next-line eqeqeq
     if (currentNode.textContent != current) { currentNode.textContent = '' + current }
     return
   }
-  if (current._r) {
-    current._r._r = () => {
+  if (current.r) {
+    current.r = () => {
       if (!currentNode || !parentNode.contains(currentNode)) { return false }
       render(current, currentNode, parentNode, isSvg)
       return true
@@ -82,7 +83,7 @@ export const render = (
     attributes = children[0]
     children = children.slice(1)
     for (const key in attributes) {
-      if (key === skruvKey || key[0] === '_') { continue }
+      if (key === skruvKey) { continue }
       if (key[0] === 'o' && key[1] === 'n') {
         let listeners = listenersMap.get(currentNode)
         if (!listeners) {
@@ -138,7 +139,7 @@ export const render = (
     return
   }
   if (currentNode.childNodes.length > children.length) {
-    for (let i = children.length; i < currentNode.childNodes.length; i++) {
+    for (let i = (currentNode.childNodes.length - 1); i >= children.length; i--) {
       currentNode.removeChild(currentNode.childNodes[i])
     }
   }
