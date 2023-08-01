@@ -151,7 +151,7 @@ export const render = (
     let forceFull = false
     /** @type {Element} */
     let keyedNode
-    if (children[i].constructor === Object) {
+    if (!!children[i].c && children[i].constructor === Object) {
       // @ts-ignore: A key in the keyed map only points to actual Elements.
       keyedNode = keyed.get(children[i].c[0]?.[skruvKey])
       if (keyedNode) {
@@ -198,11 +198,3 @@ export const render = (
 
 /** @type {Record<string, (...c: Array<Record<string, any>|Vnode|string|number|boolean>) => Vnode>} */
 export const elementFactory = new Proxy({}, { get: (_, t) => (/** @type {Array<Record<string, any>|Vnode|string|number|boolean>} */ ...c) => ({ s, t, c }) })
-
-/**
- * @param {string} t
- * @param  {...Array<Record<string, any>|Vnode|string|number|boolean>} c
- * @returns {Vnode}
- */
-// @ts-ignore: TODO: Check why c is being complained about here
-export const h = (t, ...c) => ({ s, t, c })

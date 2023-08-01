@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import test from 'node:test'
 
-import { elementFactory, h, render } from '../index.js'
+import { elementFactory, render } from '../index.js'
 import wait from '../utils/generators/waitPromise.js'
 import { toHTML } from '../utils/minidom.js'
 
@@ -119,12 +119,12 @@ test('key', async () => {
       div({ 'data-skruv-key': testKeys[9] }, 'Key9-noupdate'),
       div({ 'data-skruv-key': testKeys[3] }, 'Key3'),
       div({ 'data-skruv-key': arrayKey }, 'arrayKey-update'),
-      h('#comment', ['Testing a comment, with special chars!<>"&\'']),
-      h('#raw', [
+      elementFactory['#comment'](['Testing a comment, with special chars!<>"&\'']),
+      elementFactory['#raw'](
         div('raw nodes are removed when rendering to html?')
-      ]),
-      h('#meta', [{ 'http-equiv': 'X-My-Header', content: '1' }]),
-      h('#meta', [{ 'http-equiv': 'X-My-Other-Header', content: '2' }])
+      ),
+      elementFactory['#meta']([{ 'http-equiv': 'X-My-Header', content: '1' }]),
+      elementFactory['#meta']([{ 'http-equiv': 'X-My-Other-Header', content: '2' }])
     )
   )
   assert(document.documentElement.childNodes[2] === initialElements[3])

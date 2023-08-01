@@ -1,5 +1,5 @@
 
-import { h } from '../index.js'
+import { elementFactory } from '../index.js'
 
 /** @type {Record<string,string>} */
 const reactMappings = {
@@ -346,10 +346,8 @@ export const jsxs = (nodeName, attributes = {}) => {
         }
       })
   }
-  // @ts-ignore: TODO: Harmonize typings
-  if (children) { return h(nodeName, attrs || {}, children) }
-  // @ts-ignore: TODO: Harmonize typings
-  return h(nodeName, attrs || {})
+  if (children) { return elementFactory[nodeName](attrs || {}, children) }
+  return elementFactory[nodeName](attrs || {})
 }
 
 export const jsx = jsxs
