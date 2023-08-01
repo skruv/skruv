@@ -99,7 +99,10 @@ render(
 )
 ```
 
-Same example using just the core library, without bundling:
+Same example using just the core library, without bundling. It does mostly the same thing, with the differences being:
+* Not using JSX, instead destructing elementFactory to get element constructors
+* Manually calling doRender after each state change
+* Directly setting the css in a style element instead of getting a scoped class
 {% include_relative examples/todo-core/index.md %}
 ```js
 import { elementFactory, render } from '../../index.js'
@@ -175,10 +178,10 @@ doRender()
 The core of skruv is the render function. It takes a structure created by elementFactory and optionally which DOM node to write to.
 
 Besides the normal attributes there are the following:
- * data-skruv-key: Any object, will be used to allow the element to move (instead of being recreated) and will be shallow-diffed on updates to allow for skipping re-rendering this node if not changed.
+ * data-skruv-key: Any object/array, will be used to allow the element to move (instead of being recreated) and will be shallow-diffed on updates to allow for skipping re-rendering this node if not changed. If you want to keep children injected by other libraries make sure to not change the key.
  * data-skruv-finished: If you want to mark the result of a async task as incomplete (like for example a loader icon) you can give it the attribute `data-skruv-finished: false` and it will not be considered complete until we get a new element without that attribute.
  * data-skruv-wait-for-not-empty: If you swap one generator for another or similar async work you might want to keep the old children until new ones are ready to prevent flicker. Tag the parent element with `data-skruv-wait-for-not-empty: true` and skruv will not clear the dom children until there are new children to render.
- * oncreate: Called with the element after it is created. Useful for attaching other libraries to the dom node.
+ * oncreate: Called with the element after it is created, with the element as its argument. Useful for attaching other libraries to the dom node.
 
 Utilities:
  * css.js: If you want to use scoped css you can import the css [tagged template function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) and it's corresponding cssTextGenerator. The result of the `css`\`` call is a classname and cssTextGenerator will resolve with the full css for the application, prefixed with the classname for each scope. The styles are deduplicated so you can use it in components that you might use in multiple places.

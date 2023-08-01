@@ -1,6 +1,6 @@
 {
   "name": "skruv",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "No-dependency, no-build, small JS framework",
   "keywords": [],
   "bugs": {
@@ -37,7 +37,9 @@
     "index.min.js",
     "index.min.js.map",
     "utils/",
-    "types/"
+    "types/*.ts",
+    "types/*.ts.map",
+    "types/utils/"
   ],
   "scripts": {
     "build": "npm run build-ssr && npm run build-jsx && npm run build-todo && npm run build-index",

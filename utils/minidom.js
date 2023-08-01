@@ -161,7 +161,13 @@ export class Element {
   }
 
   set textContent (data) {
-    this.data = data
+    if (!(this instanceof Text || this instanceof Comment)) {
+      const text = new Text(data)
+      this.childNodes = [text]
+      text.parentNode = this
+    } else {
+      this.data = data
+    }
   }
 }
 

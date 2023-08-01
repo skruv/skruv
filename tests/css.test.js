@@ -39,16 +39,22 @@ test('css', async () => {
     '.skruv-css-scope--1293785199 {color: pink;}.skruv-css-scope--1293785199 .foo, .skruv-css-scope--1293785199  .baz, .skruv-css-scope--1293785199  div + div + div, .skruv-css-scope--1293785199  [data-test], .skruv-css-scope--1293785199  :not(div) {color: black;}.skruv-css-scope-326637340 .bar {color: white;}'
   )
   const additionalStyle = css`
-  .baz {
-    color: white;
-  }
-  `
-  assert.strictEqual(additionalStyle, 'skruv-css-scope-577256916')
+.baz {
+  color: white;
+}
+`
+  const additionalStyle2 = css`
+.bar {
+  color: white;
+}
+`
+  assert.strictEqual(additionalStyle, 'skruv-css-scope-1202056212')
+  assert.strictEqual(additionalStyle2, 'skruv-css-scope-326637340')
 
   const allCss2 = (await cssGen.next()).value
   assert.strictEqual(
     allCss2,
     // eslint-disable-next-line max-len
-    '.skruv-css-scope--1293785199 {color: pink;}.skruv-css-scope--1293785199 .foo, .skruv-css-scope--1293785199  .baz, .skruv-css-scope--1293785199  div + div + div, .skruv-css-scope--1293785199  [data-test], .skruv-css-scope--1293785199  :not(div) {color: black;}.skruv-css-scope-326637340 .bar {color: white;}.skruv-css-scope-577256916 .baz {color: white;}'
+    '.skruv-css-scope--1293785199 {color: pink;}.skruv-css-scope--1293785199 .foo, .skruv-css-scope--1293785199  .baz, .skruv-css-scope--1293785199  div + div + div, .skruv-css-scope--1293785199  [data-test], .skruv-css-scope--1293785199  :not(div) {color: black;}.skruv-css-scope-326637340 .bar {color: white;}.skruv-css-scope-1202056212 .baz {color: white;}'
   )
 })

@@ -92,8 +92,12 @@ export const render = (
         const evt = key.slice(2)
         if (!listeners[key] || ('' + listeners[key]) !== ('' + attributes[key])) {
           if (evt === 'create') {
-            // @ts-ignore: .on functions should always be callable
-            attributes[key](currentNode)
+            // Wait to call until after a microsleep to ensure that we don't remove any elements created in the oncreate
+            setTimeout(
+              // @ts-ignore: .on functions should always be callable
+              () => attributes[key](currentNode),
+              0
+            )
             listeners[key] = attributes[key]
             continue
           }
