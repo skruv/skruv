@@ -14,7 +14,7 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
 * Small:
   <!-- * [Smallest js framework in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html) -->
   * ~150 LOC
-  * 1kb minified and compressed (1072b with brotli, 1208b with gzip, 2514b uncompressed, 8252b unminified and uncompressed)
+  * 1kb minified and compressed (1051b with brotli, 1181b with gzip, 2482b uncompressed, 8527b unminified and uncompressed)
 * Usable without bundling/compilation/transpilation
 <!-- * [Plenty fast enough](https://krausest.github.io/js-framework-benchmark/index.html) -->
 * [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
@@ -425,3 +425,40 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
 * [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc. Show on separate page.
 * [ ] Check why typescript cannot import from its own package (import {render} from 'skruv' does not work) and why its jsx settings do not work
 * [ ] SKRUV_1: Handle state typing better after https://github.com/microsoft/TypeScript/issues/43826
+* [ ] Loader example:
+```css
+  canvas {
+    width: 100%;
+    background: #9b9b9b;
+    object-fit: contain;
+  }
+```
+```js
+  canvas({
+    width: "1080",
+    height:"1080",
+    oncreate: (c) => {
+      const x = c?.getContext?.("2d")
+      if (!x) return
+      const S = Math.sin
+      const C = Math.cos
+      const T = Math.tan
+      const R = (r,g,b,a = 1) => `rgba(${r}, ${g}, ${b}, ${a})`
+      const start = Date.now()
+      let t = 0
+      const loopFunc = () => {
+        t = (Date.now() - start) / 1000
+        // Other options:
+        // https://www.dwitter.net/d/2108
+        // https://www.dwitter.net/d/17835
+        // https://www.dwitter.net/d/26739
+
+        // code from dwitter https://www.dwitter.net/d/17835
+        // @ts-ignore
+        let f;c.width|=f=(X,Y,w)=>X*X+Y*Y<=2e6*S(t/9)**2?w>9&&f(X,Y,w/=2)|f(X+w,Y,w)|f(X,Y+w,w)|f(X+w,Y+w,w):x.strokeRect(X,Y,w,w);f(x.lineWidth=4,4,1072)
+        if (document.contains(c)) requestAnimationFrame(loopFunc)
+      }
+      const loop = requestAnimationFrame(loopFunc)
+    }
+  })
+```

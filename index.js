@@ -62,8 +62,6 @@ export const render = (
       parentNode.appendChild(currentNode)
     }
     if (txtNode) { return }
-    // eslint-disable-next-line no-unused-expressions
-    if (current.c[0]?.oncreate) { current?.c[0]?.oncreate(currentNode) }
   }
   if (txtNode) {
     // eslint-disable-next-line eqeqeq
@@ -93,6 +91,12 @@ export const render = (
         }
         const evt = key.slice(2)
         if (!listeners[key] || ('' + listeners[key]) !== ('' + attributes[key])) {
+          if (evt === 'create') {
+            // @ts-ignore: .on functions should always be callable
+            attributes[key](currentNode)
+            listeners[key] = attributes[key]
+            continue
+          }
           // @ts-ignore: TODO: TS does not think Function is compatible with EventListenerOrEventListenerObject
           if (listeners[key]) { currentNode.removeEventListener(evt, listeners[key]) }
           // @ts-ignore: TODO: TS does not think Function is compatible with EventListenerOrEventListenerObject

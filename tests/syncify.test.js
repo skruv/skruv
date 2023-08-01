@@ -21,9 +21,9 @@ const a = {
       async () => [
         async function * () {
           yield {
-            a: {
+            c: [{
               'data-skruv-finished': false
-            }
+            }]
           }
           await new Promise(resolve => setTimeout(() => resolve(''), 10))
           yield {

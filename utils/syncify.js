@@ -10,11 +10,11 @@ const waitingGens = new Set()
  * @param {string|number} key
  * @param {Array<any>|Object} parent
  * @param {{_r:{_r:() => boolean}}} cbparent
- * @param {Object|string|number|boolean|{a:{'data-skruv-finished':boolean}}} result
+ * @param {Object|string|number|boolean|{c:[{'data-skruv-finished':boolean}]}} result
  * @returns {boolean}
  */
 const process = (value, key, parent, cbparent, result) => {
-  if (hydrating && !(typeof result === 'object' && 'a' in result && result?.a?.['data-skruv-finished'] === false)) {
+  if (hydrating && !(typeof result === 'object' && 'c' in result && result?.c?.[0]?.['data-skruv-finished'] === false)) {
     waitingGens.delete(value)
     if (!waitingGens.size) {
       hydrating = false
