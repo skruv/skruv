@@ -47,7 +47,7 @@ test('switch type', async () => {
     document.documentElement.innerHTML,
     '<!DOCTYPE html><html><body><div></div></body></html>'
   )
-  // @ts-ignore
+  // @ts-ignore: SKRUV_1
   sub.elem = 3
   await wait(1)
   assert.strictEqual(
