@@ -1,4 +1,4 @@
-export function render(current: Record<string, any> | Vnode | string | number | boolean, currentNode?: Node, parentNode?: ParentNode | null, isSvg?: boolean, forceFull?: boolean): void;
+export function render(current: Record<string, any> | Vnode | string | number | boolean, currentNode?: Node, parentNode?: ParentNode | null, ns?: string, forceFull?: boolean): void;
 /** @type {Record<string, (...c: Array<Record<string, any>|Vnode|string|number|boolean>) => Vnode>} */
 export const elementFactory: Record<string, (...c: Array<Record<string, any> | Vnode | string | number | boolean>) => Vnode>;
 export function h(t: string, ...c: Array<Record<string, any> | Vnode | string | number | boolean>[]): Vnode;

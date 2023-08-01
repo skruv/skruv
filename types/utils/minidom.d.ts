@@ -27,16 +27,11 @@ export class Element {
          */
         createTextNode: (data: string) => Text;
         /**
-         * @param {string} _ns
+         * @param {htmlNS|svgNS|mathmlNS} ns
          * @param {string} nodeName
-         * @returns {HTMLElement}
+         * @returns {Element}
          */
-        createElementNS: (_ns: string, nodeName: string) => HTMLElement;
-        /**
-         * @param {string} nodeName
-         * @returns {HTMLElement}
-         */
-        createElement: (nodeName: string) => HTMLElement;
+        createElementNS: (ns: "http://www.w3.org/1999/xhtml" | "http://www.w3.org/2000/svg" | "http://www.w3.org/1998/Math/MathML", nodeName: string) => Element;
         querySelector: () => null;
         querySelectorAll: () => never[];
     };
@@ -84,13 +79,15 @@ export class Element {
     set textContent(arg: string);
     get textContent(): string;
 }
-export class SVGElement extends Element {
-}
 export class HTMLElement extends Element {
 }
-export class HTMLOptionElement extends Element {
+export class SVGElement extends Element {
 }
-export class HTMLInputElement extends Element {
+export class MathMLElement extends Element {
+}
+export class HTMLOptionElement extends HTMLElement {
+}
+export class HTMLInputElement extends HTMLElement {
 }
 export class Text extends Element {
 }

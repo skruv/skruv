@@ -12,6 +12,9 @@
  */
 const s = Symbol.for('skruvDom')
 const skruvKey = 'data-skruv-key'
+const htmlNS = 'http://www.w3.org/1999/xhtml'
+const svgNS = 'http://www.w3.org/2000/svg'
+const mathmlNS = 'http://www.w3.org/1998/Math/MathML'
 /** @type {WeakMap<Vnode|Node, Node|Object>} */
 const keyed = new WeakMap()
 /** @type {WeakMap<Node, Object>} */
@@ -24,13 +27,13 @@ const domCache = {}
  * @param {Record<string, any>|Vnode|string|number|boolean} current
  * @param {Node} currentNode
  * @param {ParentNode?} parentNode
- * @param {boolean} isSvg
+ * @param {string} ns
  */
 export const render = (
   current,
   currentNode = globalThis.document.documentElement,
   parentNode = currentNode.parentNode,
-  isSvg = false,
+  ns = htmlNS,
   forceFull = false
 ) => {
   if (!parentNode) {
@@ -44,17 +47,16 @@ export const render = (
   if (
     forceFull ||
     !currentNode ||
-    (txtNode && currentNode?.nodeName !== '#text') ||
-    (!txtNode && currentNode?.nodeName.toLowerCase() !== current.t.toLowerCase())
+    (txtNode && currentNode.nodeName !== '#text') ||
+    (!txtNode && currentNode.nodeName.toLowerCase() !== current.t.toLowerCase())
   ) {
     const _currentNode = currentNode
     if (txtNode) {
       currentNode = document.createTextNode('' + current)
-    } else if (isSvg || current.t === 'svg') {
-      isSvg = true
-      currentNode = (domCache[current.t] || (domCache[current.t] = document.createElementNS('http://www.w3.org/2000/svg', current.t))).cloneNode(false)
     } else {
-      currentNode = (domCache[current.t] || (domCache[current.t] = document.createElement(current.t))).cloneNode(false)
+      if (current.t === 'svg') { ns = svgNS }
+      if (current.t === 'math') { ns = mathmlNS }
+      currentNode = (domCache[current.t] || (domCache[current.t] = document.createElementNS(ns, current.t))).cloneNode(false)
     }
     if (_currentNode) {
       parentNode.replaceChild(currentNode, _currentNode)
@@ -72,10 +74,12 @@ export const render = (
   if (current.r) {
     current.r = () => {
       if (!currentNode || !parentNode.contains(currentNode)) { return false }
-      render(current, currentNode, parentNode, isSvg)
+      render(current, currentNode, parentNode, ns)
       return true
     }
   }
+  // This needs to come after the .r callback is registered since it should apply to child nodes, not the current node.
+  if (current.t === 'foreignObject') { ns = htmlNS }
   let children = current.c.flat(Infinity)
   /** @type {Record<string, string|boolean|function|object>} */
   let attributes = {}
@@ -181,7 +185,7 @@ export const render = (
       }
     }
     // @ts-ignore: TODO: TS does not like that currentNode "might" be a Node here, but since we do checking for text nodes above it is a Element
-    render(children[i], currentNode.childNodes[i] || false, currentNode, isSvg && current.t !== 'foreignObject', forceFull)
+    render(children[i], currentNode.childNodes[i] || false, currentNode, ns, forceFull)
   }
   if (attributes[skruvKey]) {
     // @ts-ignore: TODO: The skruvkey is always an object here, but clarify the types for the attributes a bit more

@@ -201,9 +201,10 @@ export const css = (strings, ...keys) => {
     // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari (supported from 16.4 (Released 2023-03-27))
     // TODO: don't recreate each run
     const styleDoc = globalThis.document.implementation.createHTMLDocument('')
-    const styleElem = styleDoc.createElement('style')
+    const styleElem = styleDoc.createElementNS('http://www.w3.org/1999/xhtml', 'style')
     styleElem.innerText = stylesheet
     styleDoc.body.append(styleElem)
+    // @ts-ignore: TODO: Fix this with better typings and by using new CSSStyleSheet directly
     sheet = styleElem.sheet
     styleDoc.body.removeChild(styleElem)
   }

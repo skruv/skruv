@@ -1,5 +1,9 @@
 import cssom from './cssom.js'
 
+const htmlNS = 'http://www.w3.org/1999/xhtml'
+const svgNS = 'http://www.w3.org/2000/svg'
+const mathmlNS = 'http://www.w3.org/1998/Math/MathML'
+
 // CSSOM polyfill
 // @ts-ignore: TODO: instead polyfill CSSStyleSheet when safari adoption catches up
 globalThis.CSSOM = cssom
@@ -23,16 +27,16 @@ const document = {
    */
   createTextNode: data => new Text(data),
   /**
-   * @param {string} _ns
+   * @param {htmlNS|svgNS|mathmlNS} ns
    * @param {string} nodeName
-   * @returns {HTMLElement}
+   * @returns {Element}
    */
-  createElementNS: (_ns, nodeName) => new SVGElement(nodeName),
-  /**
-   * @param {string} nodeName
-   * @returns {HTMLElement}
-   */
-  createElement: nodeName => new HTMLElement(nodeName),
+  createElementNS: (ns, nodeName) => {
+    if (ns === htmlNS) { return new HTMLElement(nodeName) }
+    if (ns === svgNS) { return new SVGElement(nodeName) }
+    if (ns === mathmlNS) { return new MathMLElement(nodeName) }
+    throw new Error('Unkown namespace: ' + ns)
+  },
   querySelector: () => null,
   querySelectorAll: () => []
 }
@@ -171,16 +175,11 @@ export class Element {
   }
 }
 
-export class SVGElement extends Element {
-  constructor (nodeName = '') {
-    super(nodeName)
-    this.isSvg = true
-  }
-}
 export class HTMLElement extends Element {}
-
-export class HTMLOptionElement extends Element {}
-export class HTMLInputElement extends Element {}
+export class SVGElement extends Element {}
+export class MathMLElement extends Element {}
+export class HTMLOptionElement extends HTMLElement {}
+export class HTMLInputElement extends HTMLElement {}
 
 export class Text extends Element {
   constructor (data = '') {
@@ -234,6 +233,8 @@ globalThis.HTMLInputElement = HTMLInputElement
 globalThis.SVGElement = SVGElement
 // @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.HTMLElement = HTMLElement
+// @ts-ignore: Type confusion between polyfilled and real elements
+globalThis.MathMLElement = MathMLElement
 // @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.Text = Text
 // @ts-ignore: Type confusion between polyfilled and real elements
