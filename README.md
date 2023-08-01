@@ -191,7 +191,7 @@ Utilities:
     * createState takes in a object and returns a [proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) which is also an [async generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).
     * You modify the state by using normal methods (including things like [`delete`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete), [`splice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice), etc.).
     * Where you want to subscribe to state changes you use [for-await-of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of).
-    * You can subscribe to subobjects with `for await (const bar of state.foo.bar)`.
+    * You can subscribe to sub-objects with `for await (const bar of state.foo.bar)`.
     * As a shortcut you can call state.getGenerator(key) to subscribe to and output a single value.
       * This is useful to output primitive values (like strings/numbers etc.) in for example text or attributes without requiring a whole generator function
  * minidom.js: SSR/SSG examples are bundled in this repo, they use the minidom utility to polyfill what is needed to use skruv in node/deno and serialize the DOM to HTML.
@@ -428,6 +428,7 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
 * [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc. Show on separate page.
 * [ ] Check why typescript cannot import from its own package (import {render} from 'skruv' does not work) and why its jsx settings do not work
 * [ ] SKRUV_1: Handle state typing better after https://github.com/microsoft/TypeScript/issues/43826
+* [ ] Make react JSX naming conventions optional, they are extremely misguided.
 * [ ] Testing:
   * [ ] Events (adding/removing listeners, dispatching)
   * [ ] Location stuff (including routing)
@@ -457,6 +458,7 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
       let t = 0
       const loopFunc = () => {
         t = (Date.now() - start) / 1000
+        let f
         // Other options:
         // https://www.dwitter.net/d/2108
         // https://www.dwitter.net/d/17835
@@ -464,7 +466,7 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
 
         // code from dwitter https://www.dwitter.net/d/17835
         // @ts-ignore
-        let f;c.width|=f=(X,Y,w)=>X*X+Y*Y<=2e6*S(t/9)**2?w>9&&f(X,Y,w/=2)|f(X+w,Y,w)|f(X,Y+w,w)|f(X+w,Y+w,w):x.strokeRect(X,Y,w,w);f(x.lineWidth=4,4,1072)
+        ;c.width|=f=(X,Y,w)=>X*X+Y*Y<=2e6*S(t/9)**2?w>9&&f(X,Y,w/=2)|f(X+w,Y,w)|f(X,Y+w,w)|f(X+w,Y+w,w):x.strokeRect(X,Y,w,w);f(x.lineWidth=4,4,1072)
         if (document.contains(c)) requestAnimationFrame(loopFunc)
       }
       const loop = requestAnimationFrame(loopFunc)
