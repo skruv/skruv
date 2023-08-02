@@ -421,6 +421,10 @@ The important parts are
 
 The result can be seen [here](./examples/ssr/) and a non-built version is [here](./examples/ssr/index-nobuild.html) for comparison. In mobile lighthouse testing the SSR:ed version gets a 100 and the nobuild version gets a 90.
 
+## Open issues
+
+* [ ] SKRUV_1: Handle state typing better after https://github.com/microsoft/TypeScript/issues/43826 is resolved
+
 ## TODO:
 
 * [ ] Add router, generatorUtils, loader, etc.
@@ -428,8 +432,7 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
   * [ ] One basic and one with postgrest backend, nginx frontend and SSR
 * [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc. Show on separate page.
 * [ ] Check why typescript cannot import from its own package (import {render} from 'skruv' does not work) and why its jsx settings do not work
-* [ ] SKRUV_1: Handle state typing better after https://github.com/microsoft/TypeScript/issues/43826
-* [ ] Make react JSX naming conventions optional, they are extremely misguided.
+* [ ] Make react JSX naming conventions optional
 * [ ] Make typings work for ElementEventMap, GlobalEventHandlersEventMap, 
 * [ ] Testing:
   * [ ] Events (adding/removing listeners, dispatching)
@@ -439,16 +442,16 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
   * [ ] Proper HTTP testing of the SSR stuff, including performance
 * [ ] Loader example:
 ```css
-  canvas {
+  .loader {
     width: 100%;
-    background: #9b9b9b;
     object-fit: contain;
   }
 ```
 ```js
   canvas({
+    class: 'loader',
     width: "1080",
-    height:"1080",
+    height: "1080",
     oncreate: (c) => {
       const x = c?.getContext?.("2d")
       if (!x) return
@@ -458,9 +461,10 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
       const R = (r,g,b,a = 1) => `rgba(${r}, ${g}, ${b}, ${a})`
       const start = Date.now()
       let t = 0
+      const color = getComputedStyle(c).getPropertyValue("color");
       const loopFunc = () => {
         t = (Date.now() - start) / 1000
-        let f
+        let f;
         // Other options:
         // https://www.dwitter.net/d/2108
         // https://www.dwitter.net/d/17835
@@ -468,10 +472,10 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
 
         // code from dwitter https://www.dwitter.net/d/17835
         // @ts-ignore
-        ;c.width|=f=(X,Y,w)=>X*X+Y*Y<=2e6*S(t/9)**2?w>9&&f(X,Y,w/=2)|f(X+w,Y,w)|f(X,Y+w,w)|f(X+w,Y+w,w):x.strokeRect(X,Y,w,w);f(x.lineWidth=4,4,1072)
+        c.width|=f=(X,Y,w)=>X*X+Y*Y<=2e6*S(t/9)**2?w>9&&f(X,Y,w/=2)|f(X+w,Y,w)|f(X,Y+w,w)|f(X+w,Y+w,w):(()=>{x.strokeStyle=color;x.strokeRect(X,Y,w,w)})();f(x.lineWidth=4,4,1072)
         if (document.contains(c)) requestAnimationFrame(loopFunc)
       }
       const loop = requestAnimationFrame(loopFunc)
     }
-  })
+  }, 'Loading content, if stuck here please enable js or contact your friendly webmaster')
 ```
