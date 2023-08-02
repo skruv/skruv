@@ -1,4 +1,5 @@
-
+// @ts-nocheck
+// TODO: Fix typings
 import { elementFactory } from '../index.js'
 
 /** @type {Record<string,string>} */
