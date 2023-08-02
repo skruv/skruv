@@ -1,7 +1,7 @@
 /**
- * @typedef {Vnode|string|Boolean|Number|Record<string,(string|boolean|Function|number|Object)> & {oncreate:(e: Node) => void}?} SkruvChildNode
+ * @typedef {Record<string,(string|boolean|Function|number)> & {oncreate?:(e: Node) => void, 'data-skruv-key'?: object}} VnodeAttributes
+ * @typedef {Vnode|VnodeAttributes} SkruvChildNode
  * @typedef {SkruvChildNode[]} SkruvChildNodes
- * @typedef {Record<string,(string|boolean|Function|number|Object)>} VnodeAttributes
  */
 /**
  * @typedef {object} Vnode
