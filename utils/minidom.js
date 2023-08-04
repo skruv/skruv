@@ -3,6 +3,8 @@ import cssom from './cssom.js'
 const htmlNS = 'http://www.w3.org/1999/xhtml'
 const svgNS = 'http://www.w3.org/2000/svg'
 const mathmlNS = 'http://www.w3.org/1998/Math/MathML'
+const atomNS = 'http://www.w3.org/2005/Atom'
+const sitemapNS = 'https://www.sitemaps.org/schemas/sitemap/0.9'
 
 // CSSOM polyfill
 // @ts-ignore: TODO: instead polyfill CSSStyleSheet when safari adoption catches up
@@ -370,7 +372,20 @@ const htmlTag = (vDom, headers) => {
  * @param {{ [key: string]: string; }} headers
  * @returns {string}
  */
-export const toHTML = (vDom, context, headers) => {
+export const toHTML = (vDom, context, headers, addNS = true) => {
+  if (vDom.nodeName === 'html') return `<!DOCTYPE html>${htmlTag(vDom, headers)}`
+  if (vDom.nodeName === 'svg') {
+    vDom.setAttribute('xmlns', svgNS)
+  }
+  if (vDom.nodeName === 'math') {
+    vDom.setAttribute('xmlns', mathmlNS)
+  }
+  if (vDom.nodeName === 'feed') {
+    vDom.setAttribute('xmlns', atomNS)
+  }
+  if (vDom.nodeName === 'urlset' || vDom.nodeName === 'sitemapindex') {
+    vDom.setAttribute('xmlns', sitemapNS)
+  }
   if (
     vDom.nodeName.toLowerCase() === '#text' &&
     (context === 'raw' || context === 'script' || context === 'style')
@@ -384,9 +399,6 @@ export const toHTML = (vDom, context, headers) => {
         vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join('')
       )
     }-->`
-  } else if (vDom.nodeName.toLowerCase() === 'html') {
-    // Hacky way to make sure we have a doctype
-    return `<!DOCTYPE html>${htmlTag(vDom, headers)}`
   } else if (vDom.nodeName.toLowerCase() === '#raw') {
     return vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join(
       ''

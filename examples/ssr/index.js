@@ -42,10 +42,11 @@ const dom = syncify(
       main(
         h1(state.todos.getGenerator(0)),
         form({
-          onsubmit: /** @param {SubmitEvent} e */ e => {
+          onsubmit: e => {
             e.preventDefault()
-            // @ts-ignore: The target here is a form.
-            state.todos.unshift(new FormData(e.target).get('todo')) && e.target.reset()
+            const newTodo = '' + new FormData(e.currentTarget).get('todo')
+            state.todos.unshift(newTodo)
+            e.currentTarget.reset()
           }
         },
         label(
@@ -64,7 +65,7 @@ const dom = syncify(
                 `${todo} `,
                 a({
                   href: '#',
-                  onclick: /** @param {MouseEvent}e */e => {
+                  onclick: e => {
                     e.preventDefault()
                     currentState.todos.splice(i, 1)
                   }
