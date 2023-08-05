@@ -121,6 +121,6 @@ export class EventSource {
 export function reset(): void;
 export function toHTML(vDom: HTMLElement, context: string, headers: {
     [key: string]: string;
-}): string;
+}, addNS?: boolean): string;
 export function toText(vDom: HTMLElement): string;
 //# sourceMappingURL=minidom.d.ts.map

@@ -1,4 +1,3 @@
-const s = Symbol.for('skruvDom')
 let hydrating = true
 const generatorResults = new WeakMap()
 let hydrationResolve = () => { }
@@ -108,8 +107,12 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
     if (typeof value === 'function') {
       // check for eventlisteners or internal functions
       // TODO: Have some sort of way to pass functions to web components
-      // @ts-ignore: TODO: Fix better types for Vnodes (and how to typeguard for them)
-      if ((key[0] === 'o' && key[1] === 'n') || (key === 'r' && parent?.s === s)) {
+      if (
+        // @ts-ignore: TODO: Fix better types for Vnodes (and how to typeguard for them)
+        (key[0] === 'o' && key[1] === 'n') || (key === 'r' && parent?.isSkruvDom === true) ||
+        key === 'data-skruv-after-create' ||
+        key === 'data-skruv-after-remove'
+      ) {
         // @ts-ignore
         return value
       }
@@ -124,7 +127,7 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
     let newVal = {}
     let cb = newVal
     // @ts-ignore: TODO: Fix better types for Vnodes
-    if (value.s === s) {
+    if (value.isSkruvDom === true) {
       newVal.r = () => {
         if ((hydrating && !waitingGens.size) || !hydrating) {
           hydrationResolve()

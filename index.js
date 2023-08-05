@@ -1,4 +1,4 @@
-/** @typedef {HTMLElement | SVGElement | MathMLElement} Element */
+// TODO: Define a basic Element class to satisfy TS
 const htmlNS = 'http://www.w3.org/1999/xhtml'
 const svgNS = 'http://www.w3.org/2000/svg'
 const mathmlNS = 'http://www.w3.org/1998/Math/MathML'
@@ -146,6 +146,7 @@ export const render = (
         if (keyedNode !== currentNode.childNodes[i]) {
           if (keyedNode === currentNode.childNodes[i + 1]) {
             currentNode.removeChild(currentNode.childNodes[i])
+          // @ts-ignore
           } else if (currentNode.childNodes[i] && keyed.get(children[i + 1]?.c?.[0]?.['data-skruv-key']) === currentNode.childNodes[i]) {
             currentNode.insertBefore(keyedNode, currentNode.childNodes[i])
           } else if (currentNode.childNodes[i]) {
@@ -160,6 +161,7 @@ export const render = (
           const lastKeyCopy = keyed.get(currentNode.childNodes[i])
           if (lastKeyCopy) {
             let noChange = true
+            // @ts-ignore
             for (const k in children[i].c[0]['data-skruv-key']) {
               // @ts-ignore
               if (children[i].c[0]['data-skruv-key'][k] !== lastKeyCopy[k]) {
