@@ -25,11 +25,11 @@ test('key', async () => {
         div({ 'data-skruv-key': testKeys[9] }, 'Key9')
       ),
       // Check that we don't purge any children not created by skruv unless key changes
-      div({ 'data-skruv-key': arrayKey, oncreate: /** @param {HTMLElement} e */ async e => { e.textContent = 'arrayKey' } }, '')
+      div({ 'data-skruv-key': arrayKey, 'data-skruv-after-create': /** @param {HTMLElement} e */ async e => { e.textContent = 'arrayKey' } }, '')
     )
   )
 
-  // Microsleep to allow the scheduled oncreate to run
+  // Microsleep to allow the scheduled data-skruv-after-create to run
   await wait(0)
   const initialElements = [...document.documentElement.childNodes[0].childNodes]
   const arrayKeyedElem = document.documentElement.childNodes[1]
@@ -121,7 +121,7 @@ test('key', async () => {
       div({ 'data-skruv-key': arrayKey }, 'arrayKey-update'),
       elementFactory['#comment'](['Testing a comment, with special chars!<>"&\'']),
       elementFactory['#raw'](
-        div('raw nodes are removed when rendering to html?')
+        div('raw nodes are removed when rendering to html')
       ),
       elementFactory['#meta']([{ 'http-equiv': 'X-My-Header', content: '1' }]),
       elementFactory['#meta']([{ 'http-equiv': 'X-My-Other-Header', content: '2' }])
@@ -130,7 +130,7 @@ test('key', async () => {
   assert(document.documentElement.childNodes[2] === initialElements[3])
   assert(document.documentElement.childNodes[3] === arrayKeyedElem)
   // eslint-disable-next-line max-len
-  assert.equal(document.documentElement.innerHTML, '<!DOCTYPE html><html><body><div></div><div>Key2</div><div>Key4</div><div>Key5</div><div>Key6</div><div>Key7</div><div>Key8</div><div></div></body><div>Key9</div><div>Key3</div><div>arrayKey-update</div><!--Testing a comment, with special chars!&amp;lt;&amp;gt;&amp;quot;&amp;amp;&amp;#39;--><div>raw nodes are removed when rendering to html?</div></html>')
+  assert.equal(document.documentElement.innerHTML, '<!DOCTYPE html><html><body><div></div><div>Key2</div><div>Key4</div><div>Key5</div><div>Key6</div><div>Key7</div><div>Key8</div><div></div></body><div>Key9</div><div>Key3</div><div>arrayKey-update</div><!--Testing a comment, with special chars!&amp;lt;&amp;gt;&amp;quot;&amp;amp;&amp;#39;--><div>raw nodes are removed when rendering to html</div></html>')
   const headers = {}
   // @ts-ignore
   toHTML(document.documentElement, '', headers)

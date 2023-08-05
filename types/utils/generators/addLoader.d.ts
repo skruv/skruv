@@ -7,5 +7,5 @@ export type Vnode = import("../../index.js").Vnode;
  * @param {() => AsyncGenerator<Vnode|boolean|string>} component
  * @param {Vnode} loader
  */
-declare function addLoader(component: () => AsyncGenerator<Vnode | boolean | string>, loader: Vnode): AsyncGenerator<string | boolean | import("../../index.js").Vnode, void, unknown>;
+declare function addLoader(component: () => AsyncGenerator<Vnode | boolean | string>, loader: any): AsyncGenerator<any, void, unknown>;
 //# sourceMappingURL=addLoader.d.ts.map

@@ -373,7 +373,7 @@ const htmlTag = (vDom, headers) => {
  * @returns {string}
  */
 export const toHTML = (vDom, context, headers, addNS = true) => {
-  if (vDom.nodeName === 'html') return `<!DOCTYPE html>${htmlTag(vDom, headers)}`
+  if (vDom.nodeName === 'html') { return `<!DOCTYPE html>${htmlTag(vDom, headers)}` }
   if (vDom.nodeName === 'svg') {
     vDom.setAttribute('xmlns', svgNS)
   }

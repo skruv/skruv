@@ -68,7 +68,8 @@
     "**/package-lock.json",
     "**/tsconfig.json",
     ".vscode/**",
-    "*.min.js"
+    "*.min.js",
+    "fromMdn.js"
   ],
   "globals": {
     "fetch": "readonly",
