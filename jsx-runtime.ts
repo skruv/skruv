@@ -1,6 +1,4 @@
-// @ts-nocheck
-// TODO: Fix typings
-import { elementFactory } from '../index.js'
+import './index.js'
 
 /** @type {Record<string,string>} */
 const reactMappings = {
@@ -311,27 +309,9 @@ const reactMappings = {
   onchange: 'oninput'
 }
 
-/**
- * @typedef {Vnode|string|Boolean|Number|Record<string,(string|boolean|Function|number|Object)> & {oncreate:(e: Node) => void}?} SkruvChildNode
- * @typedef {SkruvChildNode[]} SkruvChildNodes
- * @typedef {Record<string,(string|boolean|Function|number|Object)> & {children?: SkruvChildNodes}} VnodeAttributes
- */
-/**
- * @typedef {object} Vnode
- * @prop {Symbol} s
- * @prop {string} t
- * @prop {SkruvChildNodes} c
- * @prop {() => boolean} [r]
- */
-
 export const Fragment = '#fragment'
 
-/**
- * @param {string} nodeName
- * @param {VnodeAttributes} [attributes={}]
- * @returns {Vnode|SkruvChildNodes}
- */
-export const jsxs = (nodeName, attributes = {}) => {
+export const jsxs = (nodeName: string, attributes = {children: []}) => {
   if (nodeName === Fragment && attributes.children) { return attributes.children }
   if (nodeName === Fragment) { return [] }
   const { children, ...attrs } = attributes
@@ -339,16 +319,21 @@ export const jsxs = (nodeName, attributes = {}) => {
     Object.keys(attrs)
       .forEach(e => {
         if (e[0] === 'o' && e[1] === 'n' && e !== e.toLowerCase()) {
+          // @ts-ignore
           attrs[e.toLowerCase()] = attrs[e]
+          // @ts-ignore
           delete attrs[e]
+          // @ts-ignore
         } else if (reactMappings[e]) {
+          // @ts-ignore
           attrs[reactMappings[e]] = attrs[e]
+          // @ts-ignore
           delete attrs[e]
         }
       })
   }
-  if (children) { return elementFactory[nodeName](attrs || {}, children) }
-  return elementFactory[nodeName](attrs || {})
+  if (children) { return { isSkruvDom: true, t: nodeName, c: [attrs || {}, children] } }
+  return { isSkruvDom: true, t: nodeName, c: [attrs || {}] }
 }
 
 export const jsx = jsxs

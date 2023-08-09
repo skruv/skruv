@@ -164,6 +164,10 @@ export class Element {
     return new this.constructor(this.nodeName)
   }
 
+  get children () {
+    return this.childNodes.filter(e => e.nodeName !== '#text' && e.nodeName !== '#comment')
+  }
+
   get innerHTML () {
     return toHTML(this, '', {})
   }

@@ -76,6 +76,7 @@ export class Element {
     contains(node: Element): boolean;
     /** @returns {Element} */
     cloneNode(): Element;
+    get children(): Element[];
     get innerHTML(): string;
     set textContent(arg: string);
     get textContent(): string;

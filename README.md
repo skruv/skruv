@@ -13,7 +13,7 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
 * No dependencies
 * Small:
   <!-- * [Smallest js framework in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html) -->
-  * ~150 LOC
+  * ~200 LOC
   * 1kb minified and compressed (1116b with brotli, 1262b with gzip, 2689b uncompressed)
 * Usable without bundling/compilation/transpilation
 * Supports SVG & MathML

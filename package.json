@@ -25,7 +25,7 @@
     "./utils/syncify.js": "./utils/syncify.js",
     "./utils/minidom.js": "./utils/minidom.js",
     "./utils/bundle.js": "./utils/bundle.js",
-    "./jsx-runtime": "./utils/jsx-runtime.js"
+    "./jsx-runtime": "./jsx-runtime.ts"
   },
   "main": "index.js",
   "types": "./types/index.js",
@@ -34,6 +34,8 @@
   },
   "files": [
     "index.js",
+    "skruv.d.ts",
+    "jsx-runtime.ts",
     "index.min.js",
     "index.min.js.map",
     "utils/",
