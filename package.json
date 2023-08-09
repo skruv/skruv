@@ -14,33 +14,11 @@
   "license": "MIT",
   "author": "Svante Richter",
   "type": "module",
-  "exports": {
-    ".": {
-      "import": "./skruv.js",
-      "default": "./skruv.js"
-    },
-    "./utils/css.js": "./utils/css.js",
-    "./utils/cssom.js": "./utils/cssom.js",
-    "./utils/state.js": "./utils/state.js",
-    "./utils/syncify.js": "./utils/syncify.js",
-    "./utils/minidom.js": "./utils/minidom.js",
-    "./utils/bundle.js": "./utils/bundle.js",
-    "./jsx-runtime": "./jsx-runtime.ts"
-  },
   "main": "skruv.js",
   "bin": {
     "skruv-bundle": "./utils/bundle.js",
     "skruv-ssg": "./utils/ssg.js"
   },
-  "files": [
-    "skruv.js",
-    "skruv.d.ts",
-    "jsx-runtime.ts",
-    "skruv.min.js",
-    "skruv.min.js.map",
-    "utils/",
-    "utilityTypes.ts"
-  ],
   "scripts": {
     "build": "npm run build-ssr && npm run build-jsx && npm run build-todo && npm run build-index",
     "build-index": "node ./utils/bundle.js skruv.js skruv.min.js",
@@ -66,9 +44,6 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-standard": "^4.0.2",
     "skruv": "github:skruv/skruv#dom-types",
-    "stylelint": "^13.12.0",
-    "stylelint-config-recess-order": "^2.3.0",
-    "stylelint-config-standard": "^20.0.0",
     "typescript": "^4.7.4"
   }
 }
