@@ -8,9 +8,9 @@ const sitemapNS = 'https://www.sitemaps.org/schemas/sitemap/0.9'
 
 // CSSOM polyfill
 globalThis.CSSOM = cssom
-// @ts-ignore: Type confusion between polyfilled and real elements
+// @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.CSSMediaRule = cssom.CSSMediaRule
-// @ts-ignore: Type confusion between polyfilled and real elements
+// @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.CSSStyleRule = cssom.CSSStyleRule
 
 // Minimal, naive DOM implementation. Enough for skruv
@@ -163,7 +163,7 @@ export class Element {
   cloneNode () {
     if (this.nodeName === '#comment') { return new Comment(this.data) }
     if (this.nodeName === '#text') { return new Text(this.data) }
-    // @ts-ignore: We need to clone this element
+    // @ts-expect-error: We need to clone this element
     return new this.constructor(this.nodeName)
   }
 
@@ -234,25 +234,25 @@ export class Location extends URL {
   }
 }
 
-// @ts-ignore: Type confusion between polyfilled and real elements
+// @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.Location = Location
 
 // Global MiniDOM classes for use in instanceof
-// @ts-ignore: Type confusion between polyfilled and real elements
+// @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.Element = Element
-// @ts-ignore: Type confusion between polyfilled and real elements
+// @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.HTMLOptionElement = HTMLOptionElement
-// @ts-ignore: Type confusion between polyfilled and real elements
+// @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.HTMLInputElement = HTMLInputElement
-// @ts-ignore: Type confusion between polyfilled and real elements
+// @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.SVGElement = SVGElement
-// @ts-ignore: Type confusion between polyfilled and real elements
+// @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.HTMLElement = HTMLElement
-// @ts-ignore: Type confusion between polyfilled and real elements
+// @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.MathMLElement = MathMLElement
-// @ts-ignore: Type confusion between polyfilled and real elements
+// @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.Text = Text
-// @ts-ignore: Type confusion between polyfilled and real elements
+// @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.Comment = Comment
 
 // Fake EventSource
@@ -270,7 +270,7 @@ export class EventSource {
   addEventListener () { }
   close () { }
 }
-// @ts-ignore: Type confusion between polyfilled and real elements
+// @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.EventSource = EventSource
 
 globalThis.addEventListener = () => { }
@@ -282,7 +282,7 @@ export const reset = () => {
   documentElement.parentNode = rootElement
   rootElement.childNodes = [documentElement]
   document.documentElement = documentElement
-  // @ts-ignore: Type confusion between polyfilled and real elements
+  // @ts-expect-error: Type confusion between polyfilled and real elements
   globalThis.document = document
 }
 reset()

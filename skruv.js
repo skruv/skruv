@@ -17,9 +17,9 @@ const domCache = {}
  */
 export const render = (
   current,
-  // @ts-ignore
+  // @ts-expect-error
   currentNode = globalThis.document.documentElement,
-  // @ts-ignore
+  // @ts-expect-error
   parentNode = currentNode.parentNode,
   ns = htmlNS,
   forceFull = false
@@ -28,7 +28,7 @@ export const render = (
     throw new Error('No parent to render to')
   }
   if (typeof current === 'boolean') {
-    // @ts-ignore
+    // @ts-expect-error
     if (currentNode) { parentNode.removeChild(currentNode) }
     return
   }
@@ -41,19 +41,19 @@ export const render = (
   ) {
     const _currentNode = currentNode
     if (txtNode) {
-      // @ts-ignore: When this is a textnode we will only use it for text, so this should be fine
+      // @ts-expect-error: When this is a textnode we will only use it for text, so this should be fine
       currentNode = document.createTextNode('' + current)
     } else {
       if (current.t === 'svg') { ns = svgNS }
       if (current.t === 'math') { ns = mathmlNS }
-      // @ts-ignore: All the nodes are actually elements, since the domCache only contains elements
+      // @ts-expect-error: All the nodes are actually elements, since the domCache only contains elements
       currentNode = (domCache[current.t] || (domCache[current.t] = document.createElementNS(ns, current.t))).cloneNode(false)
     }
     if (_currentNode) {
-      // @ts-ignore
+      // @ts-expect-error
       parentNode.replaceChild(currentNode, _currentNode)
     } else {
-      // @ts-ignore
+      // @ts-expect-error
       parentNode.appendChild(currentNode)
     }
     if (txtNode) { return }
@@ -66,7 +66,7 @@ export const render = (
   }
   if (current.r) {
     current.r = () => {
-      // @ts-ignore
+      // @ts-expect-error
       if (!currentNode || !parentNode.contains(currentNode)) { return false }
       render(current, currentNode, parentNode, ns)
       return true
@@ -75,13 +75,13 @@ export const render = (
   // This needs to come after the .r callback is registered since it should apply to child nodes, not the current node.
   if (current.t === 'foreignObject') { ns = htmlNS }
   /** @type {import("./utilityTypes").Vnode[]} */
-  // @ts-ignore
+  // @ts-expect-error
   let children = current.c.flat(Infinity)
   /** @type {import("./utilityTypes").attributes} */
-  // @ts-ignore
+  // @ts-expect-error
   let attributes = {}
   if (children[0]?.constructor === Object && !children[0]?.isSkruvDom) {
-    // @ts-ignore
+    // @ts-expect-error
     attributes = children[0]
     children = children.slice(1)
     let oldAttributes = attributesMap.get(currentNode)
@@ -113,7 +113,7 @@ export const render = (
         (key === 'checked' || key === 'selected' || key === 'value') ||
         currentNode.nodeName.includes('-') // Support complex data passing for custom elements
       ) {
-        // @ts-ignore We have to index the element for custom elements or setting checked/selected/value
+        // @ts-expect-error We have to index the element for custom elements or setting checked/selected/value
         currentNode[key] = value
       }
       if (value !== undefined) {
@@ -144,35 +144,35 @@ export const render = (
     /** @type {Element} */
     let keyedNode
     if (children[i]?.c) {
-      // @ts-ignore
+      // @ts-expect-error
       keyedNode = keyed.get(children[i].c[0]?.['data-skruv-key'])
       if (keyedNode) {
-        // @ts-ignore
+        // @ts-expect-error
         if (keyedNode !== currentNode.childNodes[i]) {
-          // @ts-ignore
+          // @ts-expect-error
           if (keyedNode === currentNode.childNodes[i + 1]) {
             currentNode.removeChild(currentNode.childNodes[i])
-          // @ts-ignore
+          // @ts-expect-error
           } else if (currentNode.childNodes[i] && keyed.get(children[i + 1]?.c?.[0]?.['data-skruv-key']) === currentNode.childNodes[i]) {
-            // @ts-ignore
+            // @ts-expect-error
             currentNode.insertBefore(keyedNode, currentNode.childNodes[i])
           } else if (currentNode.childNodes[i]) {
-            // @ts-ignore
+            // @ts-expect-error
             currentNode.replaceChild(keyedNode, currentNode.childNodes[i])
           } else {
-            // @ts-ignore
+            // @ts-expect-error
             currentNode.appendChild(keyedNode)
           }
         }
-        // @ts-ignore
+        // @ts-expect-error
         forceFull = children[i].c[0]['data-skruv-key'] !== oldKeys.get(currentNode.childNodes[i])
         if (!forceFull) {
           const lastKeyCopy = keyed.get(currentNode.childNodes[i])
           if (lastKeyCopy) {
             let noChange = true
-            // @ts-ignore
+            // @ts-expect-error
             for (const k in children[i].c[0]['data-skruv-key']) {
-              // @ts-ignore
+              // @ts-expect-error
               if (children[i].c[0]['data-skruv-key'][k] !== lastKeyCopy[k]) {
                 noChange = false
               }
@@ -184,7 +184,7 @@ export const render = (
         forceFull = keyed.has(currentNode.childNodes[i])
       }
     }
-    // @ts-ignore: This will be fine since if the node is of the wrong type a new one is created
+    // @ts-expect-error: This will be fine since if the node is of the wrong type a new one is created
     render(children[i], currentNode.childNodes[i] || false, currentNode, ns, forceFull)
   }
   if (attributes['data-skruv-key']) {
@@ -194,5 +194,5 @@ export const render = (
   }
 }
 
-/** @type {import("./utilityTypes").ElementMap} */ // @ts-ignore
+/** @type {import("./utilityTypes").ElementMap} */ // @ts-expect-error
 export const elementFactory = new Proxy({}, { get: (_, t) => (...c) => ({ isSkruvDom: true, t, c }) })

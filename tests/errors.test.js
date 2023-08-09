@@ -38,7 +38,7 @@ test('errors', async () => {
     document.documentElement.innerHTML,
     '<!DOCTYPE html><html><body><div></div></body></html>'
   )
-  // @ts-ignore: SKRUV_1
+  // @ts-expect-error: SKRUV_1
   sub.elem = 1
   await wait(1)
   assert.strictEqual(

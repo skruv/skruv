@@ -76,7 +76,7 @@ const dom = syncify(
           }
         }
       ),
-      // @ts-ignore
+      // @ts-expect-error
       !!globalThis.skruvSSRScript && script({ type: 'module' }, globalThis.skruvSSRScript)
     )
   )

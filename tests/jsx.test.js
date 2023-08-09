@@ -8,7 +8,7 @@ import wait from '../utils/generators/waitPromise.js'
 
 test('jsx', async () => {
   globalThis.location = new Location('http://127.0.0.1:8000/')
-  // @ts-ignore: TS thinks its not a module, because it does not have exports
+  // @ts-expect-error: TS thinks its not a module, because it does not have exports
   await import('../examples/jsx/index.min.js')
   await wait(1)
   assert.strictEqual(

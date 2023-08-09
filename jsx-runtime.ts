@@ -789,15 +789,15 @@ export const jsxs = (nodeName: string, attributes = {children: []}) => {
     Object.keys(attrs)
       .forEach(e => {
         if (e[0] === 'o' && e[1] === 'n' && e !== e.toLowerCase()) {
-          // @ts-ignore
+          // @ts-expect-error
           attrs[e.toLowerCase()] = attrs[e]
-          // @ts-ignore
+          // @ts-expect-error
           delete attrs[e]
-          // @ts-ignore
+          // @ts-expect-error
         } else if (reactMappings[e]) {
-          // @ts-ignore
+          // @ts-expect-error
           attrs[reactMappings[e]] = attrs[e]
-          // @ts-ignore
+          // @ts-expect-error
           delete attrs[e]
         }
       })

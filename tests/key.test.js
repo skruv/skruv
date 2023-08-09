@@ -75,7 +75,7 @@ test('key', async () => {
     )
   )
   assert(initialElements[9] === document.documentElement.childNodes[1])
-  // @ts-ignore: TS thinks the node is "never", if so the test will fail
+  // @ts-expect-error: TS thinks the node is "never", if so the test will fail
   assert(document.documentElement.childNodes[1].textContent === 'Key9')
   assert(document.documentElement.childNodes[2].textContent === 'arrayKey')
   assert(document.documentElement.childNodes[2] === arrayKeyedElem)
@@ -100,7 +100,7 @@ test('key', async () => {
     )
   )
   assert(document.documentElement.childNodes[2] === arrayKeyedElem)
-  // @ts-ignore: TS thinks the node is "never", if so the test will fail
+  // @ts-expect-error: TS thinks the node is "never", if so the test will fail
   assert(document.documentElement.childNodes[2].textContent === 'arrayKey-update')
 
   // insertBefore test
@@ -132,7 +132,7 @@ test('key', async () => {
   // eslint-disable-next-line max-len
   assert.equal(document.documentElement.innerHTML, '<!DOCTYPE html><html><body><div></div><div>Key2</div><div>Key4</div><div>Key5</div><div>Key6</div><div>Key7</div><div>Key8</div><div></div></body><div>Key9</div><div>Key3</div><div>arrayKey-update</div><!--Testing a comment, with special chars!&amp;lt;&amp;gt;&amp;quot;&amp;amp;&amp;#39;--><div>raw nodes are removed when rendering to html</div></html>')
   const headers = {}
-  // @ts-ignore
+  // @ts-expect-error
   toHTML(document.documentElement, '', headers)
   assert.deepEqual(headers, { 'content-type': 'text/html', 'X-My-Header': '1', 'X-My-Other-Header': '2' })
 })

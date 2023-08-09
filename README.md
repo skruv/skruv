@@ -469,7 +469,7 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
         // https://www.dwitter.net/d/26739
 
         // code from dwitter https://www.dwitter.net/d/17835
-        // @ts-ignore
+        // @ts-expect-error
         c.width|=f=(X,Y,w)=>X*X+Y*Y<=2e6*S(t/9)**2?w>9&&f(X,Y,w/=2)|f(X+w,Y,w)|f(X,Y+w,w)|f(X+w,Y+w,w):(()=>{x.strokeStyle=color;x.strokeRect(X,Y,w,w)})();f(x.lineWidth=4,4,1072)
         if (document.contains(c)) requestAnimationFrame(loopFunc)
       }
