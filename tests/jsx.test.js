@@ -1,3 +1,5 @@
+// TODO: Reactivate once resolution of jsx-runtime is fixed (or moved to another repo)
+
 // /* global Location */
 // import '../utils/minidom.js'
 
