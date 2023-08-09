@@ -323,8 +323,6 @@ declare class CSSDocumentRule extends CSSRule {
 /**
  * @constructor
  * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSValue
- *
- * TODO: add if needed
  */
 declare class CSSValue {
     set cssText(arg: void);

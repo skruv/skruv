@@ -3390,12 +3390,12 @@ const elements = {
     elements: {
       feed: {
         comment: '',
-        permittedContent: 'SkruvIdAtomElement | SkruvTitleAtomElement | SkruvUpdatedAtomElement | SkruvAuthorAtomElement | SkruvLinkAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvLogoAtomElement | SkruvRightsAtomElement | SkruvSubtitleAtomElement',
+        permittedContent: 'SkruvIdAtomElement | SkruvTitleAtomElement | SkruvUpdatedAtomElement | SkruvAuthorAtomElement | SkruvLinkAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvLogoAtomElement | SkruvRightsAtomElement | SkruvSubtitleAtomElement | SkruvEntryAtomElement',
         attributes: []
       },
       entry: {
         comment: '',
-        permittedContent: 'SkruvAuthorAtomElement | SkruvContentAtomElement | SkruvLinkAtomElement | SkruvSummaryAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvPublishedAtomElement | SkruvRightsAtomElement | SkruvSourceAtomElement',
+        permittedContent: 'SkruvAuthorAtomElement | SkruvContentAtomElement | SkruvLinkAtomElement | SkruvSummaryAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvPublishedAtomElement | SkruvRightsAtomElement | SkruvSourceAtomElement | SkruvTitleAtomElement',
         attributes: []
       },
       id: { comment: '', permittedContent: 'string', attributes: [] },
@@ -4189,8 +4189,6 @@ type CustomElements = { [id: \`\${string}-\${string}\`]: getHTMLVnode<Record<str
 
 export type getHTMLVnode<N, T, A, C> = (...args: [(HTMLAttributes<T, A> | C), ...C[]]) => HTMLVnode<N, T, A, C>
 
-// TODO: describe unions of title, script, style, link, a, source, summary, font. Exclude math, svg from HTML
-
 export type keyedMap = WeakMap<Element|object, Element|object>
 export type oldKeysMap = WeakMap<Element, object>
 export type attributesMap = WeakMap<Element, Record<string, Function|string|boolean|object>>
@@ -4206,6 +4204,3 @@ export type voidCheck = void
     .replaceAll(/ \* \n \* \n/g, ' * \n')
     .replaceAll(/ \* \n \* \n/g, ' * \n')
 )
-
-// TODO: Add math to all allowed html content
-// TODO: Add math and all html to foreignObject

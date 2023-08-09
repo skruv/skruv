@@ -1,5 +1,4 @@
 // @ts-nocheck
-// TODO: This will take some work to type up
 
 // Copyright (c) Nikita Vasilyev
 
@@ -884,8 +883,6 @@ class CSSDocumentRule extends CSSRule {
 /**
  * @constructor
  * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSValue
- *
- * TODO: add if needed
  */
 class CSSValue {
   // @see: http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSValue

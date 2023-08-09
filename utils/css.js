@@ -1,6 +1,5 @@
 /* global CSSMediaRule CSSStyleRule CSSOM */
 
-// TODO: package
 /** @type {function} */
 let resolveStyles = () => {}
 let promiseStyles = new Promise(resolve => { resolveStyles = resolve })
@@ -189,13 +188,10 @@ export const css = (strings, ...keys) => {
     return retval
   }
   let sheet
-  // @ts-ignore TODO: If we don't have any way to parse the css bail out
   if (!globalThis?.CSSOM && !globalThis.document?.implementation) {
     throw new Error('No css parser available. Either add CSSOM to globalThis or run in browser.')
   }
-  // @ts-ignore: TODO: Type confusion between polyfill and native.
   if (globalThis?.CSSOM) {
-    // @ts-ignore: TODO: Type confusion between polyfill and native.
     sheet = CSSOM.parse(stylesheet)
   } else {
     // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari (supported from 16.4 (Released 2023-03-27))

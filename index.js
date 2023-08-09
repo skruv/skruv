@@ -67,7 +67,6 @@ export const render = (
     }
   }
   // This needs to come after the .r callback is registered since it should apply to child nodes, not the current node.
-  // TODO: How to handle things that are named the same in multiple namespaces (like title in both HTML and SVG)
   if (current.t === 'foreignObject') { ns = htmlNS }
   /** @type {import("./skruv").Vnode[]} */
   // @ts-ignore

@@ -7,7 +7,6 @@ const atomNS = 'http://www.w3.org/2005/Atom'
 const sitemapNS = 'https://www.sitemaps.org/schemas/sitemap/0.9'
 
 // CSSOM polyfill
-// @ts-ignore: TODO: instead polyfill CSSStyleSheet when safari adoption catches up
 globalThis.CSSOM = cssom
 // @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.CSSMediaRule = cssom.CSSMediaRule

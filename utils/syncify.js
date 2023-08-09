@@ -106,7 +106,7 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
     }
     if (typeof value === 'function') {
       // check for eventlisteners or internal functions
-      // TODO: Have some sort of way to pass functions to web components
+      // TODO: Have some sort of way to pass functions to web components, check for - in parent tag name
       if (
         // @ts-ignore: TODO: Fix better types for Vnodes (and how to typeguard for them)
         (key[0] === 'o' && key[1] === 'n') || (key === 'r' && parent?.isSkruvDom === true) ||
