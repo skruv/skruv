@@ -6,9 +6,6 @@
     "strict": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    // "outDir": "types",
-    // "outFile": "./types.d.ts",
-    // "noEmit": true,
     "target": "es2018",
     "declarationMap": true,
     "moduleResolution": "node",
@@ -25,6 +22,7 @@
   "exclude": [
     // htm uses remote modules
     "examples/htm/*",
+    // typescript does not seem to understand this package being imported into itself
     "tests/jsx.test.js",
     "examples/todo/*",
     "examples/jsx/*",
