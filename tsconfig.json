@@ -27,7 +27,6 @@
     "examples/todo/*",
     "examples/jsx/*",
     "examples/ssr/*",
-    "node_modules",
-    "types"
+    "node_modules"
   ]
 }
