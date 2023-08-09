@@ -22,6 +22,7 @@
   },
   "scripts": {
     "build": "npm run build-ssr && npm run build-index",
+    "build-ext": "npm run build-jsx && npm run build-todo",
     "build-index": "node ./utils/bundle.js skruv.js skruv.min.js",
     "build-jsx": "(cd examples/jsx && node ../../utils/bundle.js index.jsx index.min.js)",
     "build-ssr": "(cd examples/ssr && node ../../utils/bundle.js index.js index.min.js && node ../../utils/ssg.js 'https://skruv.io' index.min.js index.html)",
