@@ -66,7 +66,7 @@ const objToPgUrl = pg =>
     pg?.limit ? `&limit=${parseInt(pg.limit)}` : '',
     pg?.offset ? `&offset=${parseInt(pg.offset)}` : '',
     ...Object.keys(pg?.where || {})
-      .map(k => // @ts-ignore: Won't happened, but fix anyway
+      .map(k => // @ts-expect-error: Won't happened, but fix anyway
         `&${encodeURIComponent(k)}=${encodeURIComponent(pg?.where[k])}`)
   ].join('')
 
@@ -181,7 +181,7 @@ const fetchAndParse = async (req, opt = {}) => {
 }
 /** @param {string | Request | AsyncGenerator<string> | AsyncGenerator<pgReq>} obj */
 const toGenerator = async function * (obj) {
-  // @ts-ignore: TODO: Check how to properly check for this
+  // @ts-expect-error: TODO: Check how to properly check for this
   if (obj?.[Symbol.asyncIterator]) { yield * obj }
   yield obj
 }
@@ -263,8 +263,7 @@ export const idMap = new Map(
  */
 export const fetchGenerator = async function * (_req, opt = {}) {
   const reqGen = toGenerator(_req)
-  // @ts-ignore: TODO: Investigate: Type 'any[] | undefined' must have a '[Symbol.iterator]()' method that returns an iterator
-  for await (const [update, req] of combine(channel('event'), reqGen)) {
+  for await (const [update, req] of combine(channel('https://127.0.0.1/event-source', 'event'), reqGen)) {
     const cacheKey = JSON.stringify({ req, opt })
     const ids = idMap.get(cacheKey) || []
     if (cacheKey?.includes(update?.id) || ids.includes(update?.id)) {
@@ -277,12 +276,12 @@ export const fetchGenerator = async function * (_req, opt = {}) {
         idMap.set(
           cacheKey,
           [
-            // @ts-ignore: TODO: Properly check for object
+            // @ts-expect-error: TODO: Properly check for object
             res.body?.id,
             ...(Array.isArray(res.body) ? res.body?.map?.(obj => obj.id) : []),
             ...(Array.isArray(res.body)
               ? res.body?.filter?.(val => Array.isArray(val))?.map?.(val =>
-                // @ts-ignore: TODO: Properly check for object
+                // @ts-expect-error: TODO: Properly check for object
                 val.map(obj => obj?.id)
               )
               : [])

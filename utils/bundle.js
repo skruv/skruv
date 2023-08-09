@@ -63,14 +63,14 @@ const minifyCssLiteral = {
   }
 }
 
-// @ts-ignore: Check both deno and node arguments
+// @ts-expect-error: Check both deno and node arguments
 const input = globalThis?.process?.argv?.[2] || globalThis?.Deno?.args?.[0]
-// @ts-ignore: Check both deno and node arguments
+// @ts-expect-error: Check both deno and node arguments
 const output = globalThis?.process?.argv?.[3] || globalThis?.Deno?.args?.[1]
 
 if (!input || !output) {
   console.error('please supply one input file and one output path')
-  // @ts-ignore: Deno and node compat
+  // @ts-expect-error: Deno and node compat
   if (globalThis?.process) { globalThis.process.exit(1) } else if (globalThis?.Deno) { globalThis.Deno.exit(1) }
 }
 

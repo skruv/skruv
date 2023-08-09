@@ -200,12 +200,11 @@ export const css = (strings, ...keys) => {
     const styleElem = styleDoc.createElementNS('http://www.w3.org/1999/xhtml', 'style')
     styleElem.innerText = stylesheet
     styleDoc.body.append(styleElem)
-    // @ts-ignore: TODO: Fix this with better typings and by using new CSSStyleSheet directly
+    // @ts-expect-error: TODO: Fix this with better typings and by using new CSSStyleSheet directly
     sheet = styleElem.sheet
     styleDoc.body.removeChild(styleElem)
   }
   Array.from(sheet?.cssRules || []).forEach(e =>
-    // @ts-ignore: TODO: Type confusion between polyfill and native.
     upgradeRule(e, prefix)
   )
   const upgradedStyles = Array.from(sheet?.cssRules || []).map(e =>

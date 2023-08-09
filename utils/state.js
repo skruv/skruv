@@ -34,9 +34,9 @@ export const createState = stateObj => {
         this._skruv_parent = value
         return true
       }
-      // @ts-ignore
+      // @ts-expect-error
       if (target[key] !== value) {
-        // @ts-ignore
+        // @ts-expect-error
         target[key] = this.recurse(key, value, target)
       }
       return true
@@ -50,7 +50,7 @@ export const createState = stateObj => {
      */
     get (target, key, proxy) {
       if (key === 'getGenerator') {
-        // @ts-ignore
+        // @ts-expect-error
         return key => ({
           key: [key, target],
           [Symbol.asyncIterator]: () => {
@@ -63,7 +63,7 @@ export const createState = stateObj => {
                 } else {
                   booted = true
                 }
-                // @ts-ignore
+                // @ts-expect-error
                 return { done: false, value: proxy[key] }
               }
             }
@@ -73,7 +73,7 @@ export const createState = stateObj => {
       if (key === 'toJSON') {
         if (target.constructor === Object) {
           return Object.getOwnPropertyNames(target).reduce((acc, curr) => {
-            // @ts-ignore
+            // @ts-expect-error
             acc[curr] = target[curr]?.toJSON || target[curr]
             return acc
           }, {})
@@ -99,7 +99,7 @@ export const createState = stateObj => {
           }
         }
       }
-      // @ts-ignore
+      // @ts-expect-error
       return target[key]
     }
 
@@ -109,7 +109,7 @@ export const createState = stateObj => {
      * @returns {boolean}
      */
     deleteProperty (target, key) {
-      // @ts-ignore
+      // @ts-expect-error
       const res = delete target[key]
       this._resolve()
       return res
@@ -124,36 +124,36 @@ export const createState = stateObj => {
     recurse (path, value, target) {
       // check for falsy values
       if (value && value.constructor) {
-        // @ts-ignore
+        // @ts-expect-error
         if (value.constructor === Object && target?.[path]?.constructor === Object) {
           for (const key of Object.getOwnPropertyNames(value)) {
-            // @ts-ignore
+            // @ts-expect-error
             if (target[path][key] !== value[key]) {
-              // @ts-ignore
+              // @ts-expect-error
               target[path][key] = value[key]
             }
           }
-          // @ts-ignore
+          // @ts-expect-error
           for (const key of Object.getOwnPropertyNames(target[path])
             .filter(item => !Object.getOwnPropertyNames(value).includes(item))
           ) {
-            // @ts-ignore
+            // @ts-expect-error
             delete target[path][key]
             this._resolve()
           }
-          // @ts-ignore
+          // @ts-expect-error
           return target[path]
         } else if (value.constructor === Object) {
           const subProxy = new Handler()
           // check object properties for other objects or arrays
           value = Object.keys(value).reduce((acc, key) => {
-            // @ts-ignore
+            // @ts-expect-error
             acc[key] = this.recurse(`${path}.${key}`, value[key])
-            // @ts-ignore
+            // @ts-expect-error
             if (typeof acc[key] === 'object' && acc[key] !== null) { acc[key]._skruv_parent = subProxy }
             return acc
           }, {})
-          // @ts-ignore
+          // @ts-expect-error
           value = new Proxy(value, subProxy)
           value._skruv_parent = this
           this._resolve()
@@ -161,12 +161,12 @@ export const createState = stateObj => {
           const subProxy = new Handler()
           // check arrays for objects or arrays
           value = value.map((child, key) => {
-            // @ts-ignore
+            // @ts-expect-error
             const newValue = this.recurse(`${path}[${key}]`, child)
             if (typeof newValue === 'object' && newValue !== null) { newValue._skruv_parent = subProxy }
             return newValue
           })
-          // @ts-ignore
+          // @ts-expect-error
           value = new Proxy(value, subProxy)
           value._skruv_parent = this
           this._resolve()
@@ -181,9 +181,9 @@ export const createState = stateObj => {
   }
 
   // create root proxy
-  // @ts-ignore
+  // @ts-expect-error
   const rootProxy = new Proxy(stateObj.constructor === Array ? [] : {}, new Handler('root'))
   Object.assign(rootProxy, stateObj)
-  // @ts-ignore
+  // @ts-expect-error
   return rootProxy
 }

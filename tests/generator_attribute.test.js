@@ -28,11 +28,11 @@ test('update on state update: Array', async () => {
     )
   )
   await hydrationPromise
-  // @ts-ignore: SKRUV_1
+  // @ts-expect-error: SKRUV_1
   state.str = 'test'
   await wait(1)
   assert.strictEqual(document.documentElement.children[0].getAttribute('class'), 'test')
-  // @ts-ignore: SKRUV_1
+  // @ts-expect-error: SKRUV_1
   state.str = 'test2'
   await wait(1)
   assert.strictEqual(document.documentElement.children[0].getAttribute('class'), 'test2')

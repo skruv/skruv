@@ -22,7 +22,7 @@ test('update on state update: Array', async () => {
             for await (const currentState of state) {
               yield div({
                 'data-skruv-after-create': e => {
-                  // @ts-ignore: TODO: Check what HTMLElements are assignable to different element classes
+                  // @ts-expect-error: TODO: Check what HTMLElements are assignable to different element classes
                   elem = e
                 }
               }, currentState.str)
@@ -33,11 +33,11 @@ test('update on state update: Array', async () => {
     )
   )
   await hydrationPromise
-  // @ts-ignore: SKRUV_1
+  // @ts-expect-error: SKRUV_1
   state.str = 'test'
   await wait(1)
   assert.strictEqual(document.documentElement.childNodes[0].childNodes[0].childNodes[0].textContent, 'test')
-  // @ts-ignore: SKRUV_1
+  // @ts-expect-error: SKRUV_1
   state.str = 'test2'
   await wait(1)
   assert.strictEqual(document.documentElement.childNodes[0].childNodes[0].childNodes[0].textContent, 'test2')

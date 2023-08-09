@@ -26,7 +26,7 @@ const process = (value, key, parent, cbparent, result) => {
     }
   }
   generatorResults.set(value, result)
-  // @ts-ignore: This complains, but we should always get either array and number key or object and string key
+  // @ts-expect-error: This complains, but we should always get either array and number key or object and string key
   parent[key] = result
   if (cbparent.r) {
     return cbparent.r()
@@ -45,12 +45,12 @@ const process = (value, key, parent, cbparent, result) => {
  */
 const syncify = (value, key = null, parent = null, cbparent = null, root = true) => {
   if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === null) {
-    // @ts-ignore
+    // @ts-expect-error
     return value
   }
-  // @ts-ignore
+  // @ts-expect-error
   if (generatorResults.has(value)) {
-    // @ts-ignore
+    // @ts-expect-error
     return generatorResults.get(value)
   }
   if (key && parent && cbparent) {
@@ -61,10 +61,10 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
       if (hydrating) { waitingGens.add(value) }
       generatorResults.set(value, null);
       (async () => {
-        // @ts-ignore
+        // @ts-expect-error
         for await (const result of (typeof value === 'function' ? value() : value)) {
           if (!process(
-            // @ts-ignore
+            // @ts-expect-error
             value,
             key,
             parent,
@@ -75,7 +75,7 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
           }
         }
       })()
-      // @ts-ignore
+      // @ts-expect-error
       return null
     }
     if (
@@ -86,13 +86,13 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
       generatorResults.set(value, null);
       (async () => {
         process(
-          // @ts-ignore
+          // @ts-expect-error
           value,
           key,
           parent,
           cbparent,
           syncify(
-            // @ts-ignore
+            // @ts-expect-error
             await (typeof value === 'function' ? value() : value),
             key,
             parent,
@@ -101,21 +101,21 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
           )
         )
       })()
-      // @ts-ignore
+      // @ts-expect-error
       return null
     }
     if (typeof value === 'function') {
       // check for eventlisteners or internal functions
       // TODO: Have some sort of way to pass functions to web components, check for - in parent tag name
       if (
-        // @ts-ignore: TODO: Fix better types for Vnodes (and how to typeguard for them)
+        // @ts-expect-error: TODO: Fix better types for Vnodes (and how to typeguard for them)
         (key[0] === 'o' && key[1] === 'n') || (key === 'r' && parent?.isSkruvDom === true) ||
         key === 'data-skruv-after-create'
       ) {
-        // @ts-ignore
+        // @ts-expect-error
         return value
       }
-      // @ts-ignore
+      // @ts-expect-error
       const newValue = syncify(value(), key, parent, cbparent, false)
       generatorResults.set(value, newValue)
       return newValue
@@ -125,7 +125,7 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
     /** @type {{r?:() => boolean}|Array<any>} */
     let newVal = {}
     let cb = newVal
-    // @ts-ignore: TODO: Fix better types for Vnodes
+    // @ts-expect-error: TODO: Fix better types for Vnodes
     if (value.isSkruvDom === true) {
       newVal.r = () => {
         if ((hydrating && !waitingGens.size) || !hydrating) {
@@ -141,11 +141,11 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
     }
     // Object with dummy default rerender callback
     for (const key in value) {
-      // @ts-ignore: TODO: Have a stricter check than typeof value === 'object' above
+      // @ts-expect-error: TODO: Have a stricter check than typeof value === 'object' above
       const partialNewVal = syncify(value[key], key, newVal, cb, false)
-      // @ts-ignore
+      // @ts-expect-error
       if (partialNewVal !== null || value[key] === null) {
-        // @ts-ignore: This complains, but we will always get either array and number key or object and string key
+        // @ts-expect-error: This complains, but we will always get either array and number key or object and string key
         newVal[key] = partialNewVal
       }
     }
@@ -153,10 +153,10 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
     if ((root && hydrating && !waitingGens.size) || !hydrating) {
       hydrationResolve()
     }
-    // @ts-ignore
+    // @ts-expect-error
     return newVal
   }
-  // @ts-ignore
+  // @ts-expect-error
   return value
 }
 
