@@ -17,8 +17,7 @@
   "exports": {
     ".": {
       "import": "./skruv.js",
-      "default": "./skruv.js",
-      "types": "./types.d.ts"
+      "default": "./skruv.js"
     },
     "./utils/css.js": "./utils/css.js",
     "./utils/cssom.js": "./utils/cssom.js",
@@ -29,7 +28,6 @@
     "./jsx-runtime": "./jsx-runtime.ts"
   },
   "main": "skruv.js",
-  "types": "./types.d.ts",
   "bin": {
     "skruv-bundle": "./utils/bundle.js"
   },
@@ -40,8 +38,6 @@
     "skruv.min.js",
     "skruv.min.js.map",
     "utils/",
-    "types.d.ts",
-    "types.d.ts.map",
     "utilityTypes.ts"
   ],
   "scripts": {
@@ -55,7 +51,7 @@
     "node-ssr": "npm run build-ssr && (cd ./examples/ssr && node ./node-ssr.js)",
     "pre-release": "npm run build && npm run test && npm run lint -- --fix && npm run typecheck && gzip -9kf skruv.min.js && brotli -Zkf skruv.min.js && du --apparent-size --bytes skruv.min.j* skruv.js && rm -f skruv.min.js.{gz,br}",
     "test": "node --test --experimental-test-coverage --test-reporter=spec",
-    "typecheck": "rm -rf types.d.ts && tsc"
+    "typecheck": "tsc"
   },
   "devDependencies": {
     "esbuild": "^0.14.48",
