@@ -1,1 +1,1 @@
-{"version":3,"file":"addLoader.d.ts","sourceRoot":"","sources":["../../../utils/generators/addLoader.js"],"names":[],"mappings":";oBAAc,OAAO,gBAAgB,EAAE,KAAK;AAI5C;;;;;;GAMG;AACH,sCAHW,MAAM,eAAe,KAAK,GAAC,OAAO,GAAC,MAAM,CAAC,mDAgBpD"}
+{"version":3,"file":"addLoader.d.ts","sourceRoot":"","sources":["../../../utils/generators/addLoader.js"],"names":[],"mappings":";oBAAc,OAAO,gBAAgB,EAAE,KAAK;AAI5C;;;;;;GAMG;AACH,sCAHW,MAAM,eAAe,KAAK,GAAC,OAAO,GAAC,MAAM,CAAC,UAC1C,KAAK,yFAef"}

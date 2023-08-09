@@ -70,6 +70,9 @@ export class Element {
     this.childNodes[this.childNodes.indexOf(oldNode)] = newNode
     newNode.parentNode = this
     oldNode.parentNode = null
+    if (oldNode === document.documentElement) {
+      document.documentElement = newNode
+    }
   }
 
   /** @param {Element} node */
@@ -109,6 +112,10 @@ export class Element {
     delete this.attributes[name]
   }
 
+  getAttributeNames () {
+    return Object.keys(this.attributes)
+  }
+
   /**
    * @param {string | number} name
    * @param {any} value
@@ -139,7 +146,7 @@ export class Element {
       this.eventListeners[event.type].forEach(listener => listener({
         ...event,
         currentTarget: this,
-        preventDefault: () => {}
+        preventDefault: () => { }
       }))
     }
     if (this.parentNode) { this.parentNode.dispatchEvent(event) }
@@ -177,11 +184,11 @@ export class Element {
   }
 }
 
-export class HTMLElement extends Element {}
-export class SVGElement extends Element {}
-export class MathMLElement extends Element {}
-export class HTMLOptionElement extends HTMLElement {}
-export class HTMLInputElement extends HTMLElement {}
+export class HTMLElement extends Element { }
+export class SVGElement extends Element { }
+export class MathMLElement extends Element { }
+export class HTMLOptionElement extends HTMLElement { }
+export class HTMLInputElement extends HTMLElement { }
 
 export class Text extends Element {
   constructor (data = '') {
@@ -205,7 +212,7 @@ export class Location extends URL {
       length: 0,
       item: () => null,
       contains: () => false,
-      [Symbol.iterator]: function * () {}
+      [Symbol.iterator]: function * () { }
     }
   }
 
@@ -214,7 +221,7 @@ export class Location extends URL {
     this.constructor(url)
   }
 
-  reload () {}
+  reload () { }
   /** @param {string|URL} url */
   replace (url) {
     this.constructor(url)
@@ -254,13 +261,13 @@ export class EventSource {
     this.CLOSED = 2
   }
 
-  addEventListener () {}
-  close () {}
+  addEventListener () { }
+  close () { }
 }
 // @ts-ignore: Type confusion between polyfilled and real elements
 globalThis.EventSource = EventSource
 
-globalThis.addEventListener = () => {}
+globalThis.addEventListener = () => { }
 
 // Reset function to get a new global document
 export const reset = () => {
@@ -337,7 +344,7 @@ const quoteattr = (s, preserveCR) => {
     .replace(/[\r\n]/g, preserveCR)
 }
 
-const htmlAttr = (/** @type {[string, string]} */ [name, value]) =>
+const htmlAttr = (/** @type {[string, string]} */[name, value]) =>
   `${quoteattr(name)}="${quoteattr(value)}"`
 
 /**
@@ -347,23 +354,20 @@ const htmlAttr = (/** @type {[string, string]} */ [name, value]) =>
  */
 const htmlTag = (vDom, headers) => {
   if (['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'].includes(vDom.nodeName.toLowerCase())) {
-    return `<${quoteattr(vDom.nodeName.toLowerCase())}${
-      !Object.entries(vDom.attributes).length
+    return `<${quoteattr(vDom.nodeName.toLowerCase())}${!Object.entries(vDom.attributes).length
         ? ''
         : (' ' + Object.entries(vDom.attributes).map(htmlAttr)
-  .join(' '))
-    }/>`
+          .join(' '))
+      }/>`
   }
-  return `<${quoteattr(vDom.nodeName)}${
-    !Object.entries(vDom.attributes).length
+  return `<${quoteattr(vDom.nodeName)}${!Object.entries(vDom.attributes).length
       ? ''
       : (' ' + Object.entries(vDom.attributes).map(htmlAttr)
-.join(' '))
-  }>${
-    vDom.childNodes.map(e =>
+        .join(' '))
+    }>${vDom.childNodes.map(e =>
       toHTML(e, vDom.nodeName, headers)
     ).join('')
-  }</${quoteattr(vDom.nodeName)}>`
+    }</${quoteattr(vDom.nodeName)}>`
 }
 
 /**
@@ -372,8 +376,7 @@ const htmlTag = (vDom, headers) => {
  * @param {{ [key: string]: string; }} headers
  * @returns {string}
  */
-export const toHTML = (vDom, context, headers, addNS = true) => {
-  if (vDom.nodeName === 'html') { return `<!DOCTYPE html>${htmlTag(vDom, headers)}` }
+export const toHTML = (vDom, context, headers) => {
   if (vDom.nodeName === 'svg') {
     vDom.setAttribute('xmlns', svgNS)
   }
@@ -386,19 +389,49 @@ export const toHTML = (vDom, context, headers, addNS = true) => {
   if (vDom.nodeName === 'urlset' || vDom.nodeName === 'sitemapindex') {
     vDom.setAttribute('xmlns', sitemapNS)
   }
+
+  // If this is the root add a content-type header and the html/xml preamble
+  if (context === '') {
+    if (vDom.nodeName === 'html') {
+      headers['content-type'] = 'text/html'
+      return `<!DOCTYPE html>${toHTML(vDom, 'root', headers)}`
+    }
+    if (vDom.nodeName === 'svg') {
+      headers['content-type'] = 'mage/svg+xml'
+    }
+    if (vDom.nodeName === 'math') {
+      headers['content-type'] = 'application/mathml+xml'
+    }
+    if (vDom.nodeName === 'feed') {
+      headers['content-type'] = 'application/atom+xml'
+    }
+    if (vDom.nodeName === 'urlset' || vDom.nodeName === 'sitemapindex') {
+      headers['content-type'] = 'application/xml'
+    }
+    return `<?xml version="1.0" encoding="UTF-8"?>${toHTML(vDom, 'root', headers)}`
+  }
+
   if (
-    vDom.nodeName.toLowerCase() === '#text' &&
-    (context === 'raw' || context === 'script' || context === 'style')
+    vDom.nodeName.toLowerCase() === '#text' && context === 'raw'
   ) {
-    return vDom.data // TODO: SECURITY: check escaping on CSS/JS. Or rely on CSP to make it safe
+    return vDom.data
+  } else if (
+    vDom.nodeName.toLowerCase() === '#text' && context === 'script'
+  ) {
+    // TODO: SECURITY: check escaping on CSS/JS. Or rely on CSP to make it safe
+    return vDom.data.replace('</script>', '<\\/script>')
+  } else if (
+    vDom.nodeName.toLowerCase() === '#text' && context === 'style'
+  ) {
+    // TODO: SECURITY: check escaping on CSS/JS. Or rely on CSP to make it safe
+    return vDom.data.replace('</style>', '<\\/style>')
   } else if (vDom.nodeName.toLowerCase() === '#text') {
     return escapeHtml(vDom.data)
   } else if (vDom.nodeName.toLowerCase() === '#comment') {
-    return `<!--${
-      escapeHtml(
-        vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join('')
-      )
-    }-->`
+    return `<!--${escapeHtml(
+      vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join('')
+    )
+      }-->`
   } else if (vDom.nodeName.toLowerCase() === '#raw') {
     return vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join(
       ''

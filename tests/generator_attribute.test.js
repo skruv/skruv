@@ -16,10 +16,10 @@ test('update on state update: Array', async () => {
     syncify(
       html(
         body(
-          {
-            class: async function * () {
-              for await (const currentState of state) {
-                yield currentState.str
+          async function * () {
+            for await (const currentState of state) {
+              yield {
+                class: currentState.str
               }
             }
           }

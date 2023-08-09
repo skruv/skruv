@@ -1,2 +1,2 @@
-export function createState<T>(stateObj: T): import("./stateType").State<T>;
+export function createState<T>(stateObj: T): import("../skruv").State<T>;
 //# sourceMappingURL=state.d.ts.map

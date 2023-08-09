@@ -20,7 +20,7 @@ test('switch type', async () => {
             for await (const state of sub) {
               if (state.elem === 0) { yield hr() }
               if (state.elem === 1) { yield [div({ 'data-test': 'hello' }), div()] }
-              if (state.elem === 2) { yield [div({ 'data-test': false })] }
+              if (state.elem === 2) { yield [div({ 'data-test': undefined })] }
               if (state.elem === 3) { yield [] }
             }
           }

@@ -57,6 +57,7 @@ export class Element {
     getAttribute(name: string | number): string;
     /** @param {string | number} name */
     removeAttribute(name: string | number): void;
+    getAttributeNames(): string[];
     /**
      * @param {string | number} name
      * @param {any} value
@@ -121,6 +122,6 @@ export class EventSource {
 export function reset(): void;
 export function toHTML(vDom: HTMLElement, context: string, headers: {
     [key: string]: string;
-}, addNS?: boolean): string;
+}): string;
 export function toText(vDom: HTMLElement): string;
 //# sourceMappingURL=minidom.d.ts.map

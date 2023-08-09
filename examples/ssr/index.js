@@ -44,8 +44,9 @@ const dom = syncify(
         form({
           onsubmit: e => {
             e.preventDefault()
-            const newTodo = '' + new FormData(e.currentTarget).get('todo')
-            state.todos.unshift(newTodo)
+            const todo = new FormData(e.currentTarget).get('todo')
+              ?.toString()
+            if (todo) { state.todos.unshift(todo) }
             e.currentTarget.reset()
           }
         },

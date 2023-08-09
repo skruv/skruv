@@ -10,7 +10,8 @@ const { html, body, div } = elementFactory
 
 const state = createState({ str: '' })
 
-let elem = new HTMLDivElement()
+/** @type {HTMLElement} */
+let elem = new HTMLElement()
 
 test('update on state update: Array', async () => {
   render(
@@ -20,7 +21,10 @@ test('update on state update: Array', async () => {
           async function * () {
             for await (const currentState of state) {
               yield div({
-                'data-skruv-after-create': e => { elem = e }
+                'data-skruv-after-create': e => {
+                  // @ts-ignore: TODO: Check what HTMLElements are assignable to different element classes
+                  elem = e
+                }
               }, currentState.str)
             }
           }
