@@ -1,17 +1,17 @@
 const htmlNS = 'http://www.w3.org/1999/xhtml'
 const svgNS = 'http://www.w3.org/2000/svg'
 const mathmlNS = 'http://www.w3.org/1998/Math/MathML'
-/** @type {import("./skruv").keyedMap} */
+/** @type {import("./index").keyedMap} */
 const keyed = new WeakMap()
-/** @type {import("./skruv").oldKeysMap} */
+/** @type {import("./index").oldKeysMap} */
 const oldKeys = new WeakMap()
-/** @type {import("./skruv").attributesMap} */
+/** @type {import("./index").attributesMap} */
 const attributesMap = new WeakMap()
-/** @type {import("./skruv").domCacheObj} */
+/** @type {import("./index").domCacheObj} */
 const domCache = {}
 /**
- * @param {import("./skruv").Vnode} current
- * @param {import("./skruv").AnyRealElement} currentNode
+ * @param {import("./index").Vnode} current
+ * @param {import("./index").AnyRealElement} currentNode
  * @param {ParentNode?} parentNode
  * @param {string} ns
  */
@@ -68,10 +68,10 @@ export const render = (
   }
   // This needs to come after the .r callback is registered since it should apply to child nodes, not the current node.
   if (current.t === 'foreignObject') { ns = htmlNS }
-  /** @type {import("./skruv").Vnode[]} */
+  /** @type {import("./index").Vnode[]} */
   // @ts-ignore
   let children = current.c.flat(Infinity)
-  /** @type {import("./skruv").attributes} */
+  /** @type {import("./index").attributes} */
   // @ts-ignore
   let attributes = {}
   if (children[0]?.constructor === Object && !children[0]?.isSkruvDom) {
@@ -183,5 +183,5 @@ export const render = (
   }
 }
 
-/** @type {import("./skruv").ElementMap} */ // @ts-ignore
+/** @type {import("./index").ElementMap} */ // @ts-ignore
 export const elementFactory = new Proxy({}, { get: (_, t) => (...c) => ({ isSkruvDom: true, t, c }) })

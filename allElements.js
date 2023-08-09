@@ -3869,7 +3869,7 @@ const interfaces = Object.entries(elements).map(([k, v]) => {
   return Object.entries(v.elements).map(([c, e]) => `
 ${e.comment ? '/** ' + e.comment.split(/\n/).map(e => e.trim())
       .join('\n * \n * ') + ' */' : ''}
-export interface Skruv${toElementName(c)}${k}Element extends ${k}Vnode<'${c}', ${document.createElementNS(ns, c).constructor.name}, AsyncContent<{${e.attributes.map(e => `
+export type Skruv${toElementName(c)}${k}Attributes = AsyncContent<${k}Attributes<${document.createElementNS(ns, c).constructor.name}, {${e.attributes.map(e => `
 ${
         // @ts-ignore
         e?.comment ? `/**
@@ -3883,7 +3883,9 @@ ${
         e.name}'?: ${types[e.name] || 'UNKNOWN'} | false`).join('')}
 } ${
   // @ts-ignore
-  e.extendsAttributes ? ' & ' + e.extendsAttributes.join(' & ') + '>' : '>'}, ${e.permittedContent === 'void' ? e.permittedContent : `AsyncContent<${e.permittedContent} | string | number | boolean>`}> {}`)
+  e.extendsAttributes ? ' & ' + e.extendsAttributes.join(' & ') + '>>' : '>>'}
+
+export interface Skruv${toElementName(c)}${k}Element extends ${k}Vnode<'${c}', Skruv${toElementName(c)}${k}Attributes, ${e.permittedContent === 'void' ? e.permittedContent : `AsyncContent<${e.permittedContent} | string | number | boolean>`}> {}`)
     .join('\n') + `
 
 ${
@@ -3903,9 +3905,10 @@ export type AsyncContent<T> = T | T[] | AsyncGenerator<T> | Promise<T> | (() => 
 export interface SkruvMathHTMLElement extends SkruvMathMathMLElement {}
 export interface SkruvSvgHTMLElement extends SkruvSvgSVGElement {}
 
-export interface SkruvCommentElement extends HTMLVnode<'#comment', Element, {}, AnyHTMLContent> {}
-export interface SkruvRawElement extends HTMLVnode<'#raw', Element, {}, AnyHTMLContent> {}
-export interface SkruvMetaElement extends HTMLVnode<'#meta', Element, {}, AnyHTMLContent> {}
+export interface SkruvCommentElement extends HTMLVnode<'#comment', {}, AnyHTMLContent> {}
+export interface SkruvRawElement extends HTMLVnode<'#raw', {}, AnyHTMLContent> {}
+// TODO: Defined attributes for meta or consider if it should even exist
+export interface SkruvMetaElement extends HTMLVnode<'#meta', {}, AnyHTMLContent> {}
 
 export type AnyElement = ${Object.keys(elements).map(k => `Any${k}Element`)
     .join(' | ')} | SkruvCommentElement | SkruvRawElement | SkruvMetaElement
@@ -3928,6 +3931,19 @@ export type ElementMap = {
     '#raw': (...c: SkruvRawElement['c']) => SkruvRawElement
     '#meta': (...c: SkruvMetaElement['c']) => SkruvMetaElement
 } & CustomElements
+
+export namespace JSX {
+  export interface IntrinsicElements {
+    ${
+      // @ts-ignore
+      Object.entries(elements).map(([k, v]) => Object.entries(v.elements)
+        .map(([c, e]) => `
+      '${['title', 'script', 'style', 'link', 'a', 'source', 'summary'].includes(c) && k !== 'HTML' ? `${k.toLowerCase()}${toElementName(c)}` : c}': Skruv${toElementName(c)}${k}Attributes`)
+        .join('\n'))
+        .join('\n')}
+    [elemName: string]: any;
+  }
+}
 `
 // @ts-ignore
 copy(`
@@ -4128,43 +4144,38 @@ type MathMlEvents<T> = { [key in keyof MathMLElementEventMap as \`on\${key}\`]?:
 type HTMLAttributes<T, A> = A & CustomEvents<T> & HTMLEvents<T> & DataAttributes & SkruvAdditionalAttributes<T> & HTMLGlobalAttributes & { isSkruvDom?: false }
 type SVGAttributes<T, A> = A & CustomEvents<T> & SVGEvents<T> & DataAttributes & SkruvAdditionalAttributes<T> & SVGGlobalAttributes & { isSkruvDom?: false }
 type MathMLAttributes<T, A> = A & CustomEvents<T> & MathMlEvents<T> & DataAttributes & SkruvAdditionalAttributes<T> & MathMLGlobalAttributes & { isSkruvDom?: false }
+type AtomAttributes<T, A> = A & { isSkruvDom?: false }
+type SitemapAttributes<T, A> = A & { isSkruvDom?: false }
 
-export type BasicVnode<N, T, A, C> = {
+export type HTMLVnode<N, A, C> = {
   isSkruvDom: true
   t: N
-  c: [(HTMLAttributes<T, A> & SVGAttributes<T, A> & MathMLAttributes<T, A> | C)?, ...C[]]
+  c: [(A | C)?, ...C[]]
   r?: () => boolean
 }
 
-export type HTMLVnode<N, T, A, C> = {
+export type SVGVnode<N, A, C> = {
   isSkruvDom: true
   t: N
-  c: [(HTMLAttributes<T, A> | C)?, ...C[]]
+  c: [(A | C)?, ...C[]]
   r?: () => boolean
 }
 
-export type SVGVnode<N, T, A, C> = {
+export type MathMLVnode<N, A, C> = {
   isSkruvDom: true
   t: N
-  c: [(SVGAttributes<T, A> | C)?, ...C[]]
+  c: [(A | C)?, ...C[]]
   r?: () => boolean
 }
 
-export type MathMLVnode<N, T, A, C> = {
-  isSkruvDom: true
-  t: N
-  c: [(MathMLAttributes<T, A> | C)?, ...C[]]
-  r?: () => boolean
-}
-
-export type AtomVnode<N, T, A, C> = {
+export type AtomVnode<N, A, C> = {
   isSkruvDom: true
   t: N
   c: [(A & { isSkruvDom?: false }| C)?, ...C[]]
   r?: () => boolean
 }
 
-export type SitemapVnode<N, T, A, C> = {
+export type SitemapVnode<N, A, C> = {
   isSkruvDom: true
   t: N
   c: [(A & { isSkruvDom?: false }| C)?, ...C[]]
@@ -4178,7 +4189,7 @@ export type children = Vnode['c']
 
 type CustomElements = { [id: \`\${string}-\${string}\`]: getHTMLVnode<Record<string, string | number | boolean | object | Function>, HTMLElement, typeof id, Vnode | string | number | boolean> }
 
-export type getHTMLVnode<N, T, A, C> = (...args: [(HTMLAttributes<T, A> | C), ...C[]]) => HTMLVnode<N, T, A, C>
+export type getHTMLVnode<N, T, A, C> = (...args: [(HTMLAttributes<T, A> | C), ...C[]]) => HTMLVnode<N, HTMLAttributes<T, A>, C>
 
 export type keyedMap = WeakMap<Element|object, Element|object>
 export type oldKeysMap = WeakMap<Element, object>

@@ -1,7 +1,7 @@
 /**
  * @template T
  * @param {T} stateObj
- * @returns {import("../skruv").State<T>}
+ * @returns {import("..").State<T>}
  */
 export const createState = stateObj => {
   const Handler = class Handler {

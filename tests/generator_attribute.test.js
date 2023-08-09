@@ -31,11 +31,9 @@ test('update on state update: Array', async () => {
   // @ts-ignore: SKRUV_1
   state.str = 'test'
   await wait(1)
-  // @ts-ignore: This is a proper element, not a Node
-  assert.strictEqual(document.documentElement.childNodes[0].getAttribute('class'), 'test')
+  assert.strictEqual(document.documentElement.children[0].getAttribute('class'), 'test')
   // @ts-ignore: SKRUV_1
   state.str = 'test2'
   await wait(1)
-  // @ts-ignore: This is a proper element, not a Node
-  assert.strictEqual(document.documentElement.childNodes[0].getAttribute('class'), 'test2')
+  assert.strictEqual(document.documentElement.children[0].getAttribute('class'), 'test2')
 })
