@@ -249,8 +249,6 @@ type CustomElements = { [id: `${string}-${string}`]: getHTMLVnode<Record<string,
 
 export type getHTMLVnode<N, T, A, C> = (...args: [(HTMLAttributes<T, A> | C), ...C[]]) => HTMLVnode<N, T, A, C>
 
-// TODO: describe unions of title, script, style, link, a, source, summary, font. Exclude math, svg from HTML
-
 export type keyedMap = WeakMap<Element | object, Element | object>
 export type oldKeysMap = WeakMap<Element, object>
 export type attributesMap = WeakMap<Element, Record<string, Function | string | boolean | object>>
@@ -4363,11 +4361,11 @@ export type AnyMathMLContent = AnyMathMLElement | string | number | boolean | An
 
 
 export interface SkruvFeedAtomElement extends AtomVnode<'feed', Element, AsyncContent<{
-}>, AsyncContent<SkruvIdAtomElement | SkruvTitleAtomElement | SkruvUpdatedAtomElement | SkruvAuthorAtomElement | SkruvLinkAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvLogoAtomElement | SkruvRightsAtomElement | SkruvSubtitleAtomElement | string | number | boolean>> { }
+}>, AsyncContent<SkruvIdAtomElement | SkruvTitleAtomElement | SkruvUpdatedAtomElement | SkruvAuthorAtomElement | SkruvLinkAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvLogoAtomElement | SkruvRightsAtomElement | SkruvSubtitleAtomElement | SkruvEntryAtomElement | string | number | boolean>> { }
 
 
 export interface SkruvEntryAtomElement extends AtomVnode<'entry', Element, AsyncContent<{
-}>, AsyncContent<SkruvAuthorAtomElement | SkruvContentAtomElement | SkruvLinkAtomElement | SkruvSummaryAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvPublishedAtomElement | SkruvRightsAtomElement | SkruvSourceAtomElement | string | number | boolean>> { }
+}>, AsyncContent<SkruvAuthorAtomElement | SkruvContentAtomElement | SkruvLinkAtomElement | SkruvSummaryAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvPublishedAtomElement | SkruvRightsAtomElement | SkruvSourceAtomElement | SkruvTitleAtomElement | string | number | boolean>> { }
 
 
 export interface SkruvIdAtomElement extends AtomVnode<'id', Element, AsyncContent<{
