@@ -29,4 +29,4 @@ server.on('request', async (req, res) => {
   res.end(responseBody)
 })
 
-server.listen()
+server.listen(process.env.PORT || 8000)
