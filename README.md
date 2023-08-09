@@ -183,7 +183,6 @@ Besides the normal attributes there are the following:
  * data-skruv-finished: If you want to mark the result of a async task as incomplete (like for example a loader icon) you can give it the attribute `data-skruv-finished: false` and it will not be considered complete until we get a new element without that attribute.
  * data-skruv-wait-for-not-empty: If you swap one generator for another or similar async work you might want to keep the old children until new ones are ready to prevent flicker. Tag the parent element with `data-skruv-wait-for-not-empty: true` and skruv will not clear the dom children until there are new children to render.
  * data-skruv-after-create: A function called with the element after it is created, with the element as its argument. Useful for attaching other libraries to the dom node.
- * data-skruv-after-remove: A function called with the element after it is removed.
 
 Utilities:
  * css.js: If you want to use scoped css you can import the css [tagged template function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) and it's corresponding cssTextGenerator. The result of the `css`\`` call is a classname and cssTextGenerator will resolve with the full css for the application, prefixed with the classname for each scope. The styles are deduplicated so you can use it in components that you might use in multiple places.
@@ -433,14 +432,10 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
   * [ ] One basic and one with postgrest backend, nginx frontend and SSR
 * [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc. Show on separate page.
 * [ ] Check why typescript cannot import from its own package (import {render} from 'skruv' does not work) and why its jsx settings do not work
-* [ ] Make react JSX naming conventions optional
-* [ ] Make typings work for ElementEventMap, GlobalEventHandlersEventMap,
-* [ ] Change oncreate to aftercreate
-* [ ] Add an async afterremove (that runs after the whole rendering cycle)
+* [ ] Make react JSX naming conventions opt-in via another repo
+* [ ] SSR/SSG fetcher cache example
+* [ ] Automated tests with all MDN examples
 * [ ] Testing:
-  * [ ] Events (adding/removing listeners, dispatching)
-  * [ ] Location stuff (including routing)
-  * [ ] EventSource stuff
   * [ ] All the generators
   * [ ] Proper HTTP testing of the SSR stuff, including performance
 * [ ] Loader example:

@@ -3907,14 +3907,6 @@ export interface SkruvCommentElement extends HTMLVnode<'#comment', Element, {}, 
 export interface SkruvRawElement extends HTMLVnode<'#raw', Element, {}, AnyHTMLContent> {}
 export interface SkruvMetaElement extends HTMLVnode<'#meta', Element, {}, AnyHTMLContent> {}
 
-type SkruvTitleElement = SkruvTitleHTMLElement & SkruvTitleSVGElement & SkruvTitleAtomElement
-type SkruvScriptElement = SkruvScriptHTMLElement & SkruvScriptSVGElement
-type SkruvStyleElement = SkruvStyleHTMLElement & SkruvStyleSVGElement
-type SkruvLinkElement = SkruvLinkHTMLElement & SkruvLinkAtomElement
-type SkruvAElement = SkruvAHTMLElement & SkruvASVGElement
-type SkruvSourceElement = SkruvSourceHTMLElement & SkruvSourceAtomElement
-type SkruvSummaryElement = SkruvSummaryHTMLElement & SkruvSummaryAtomElement
-
 export type AnyElement = ${Object.keys(elements).map(k => `Any${k}Element`)
     .join(' | ')} | SkruvCommentElement | SkruvRawElement | SkruvMetaElement
 export type AnyContent = ${Object.keys(elements).map(k => `Any${k}Content`)
@@ -3954,7 +3946,6 @@ type DataAttributes = Record<\`data-\${string}\`, string | number | boolean> | {
 
 type SkruvAdditionalAttributes<T> = {
   'data-skruv-after-create'?: (element: T) => void,
-  'data-skruv-after-remove'?: (element: T) => void,
   'data-skruv-key'?: object,
   'data-skruv-finished'?: boolean,
   'data-skruv-wait-for-not-empty'?: boolean

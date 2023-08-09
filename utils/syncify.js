@@ -110,8 +110,7 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
       if (
         // @ts-ignore: TODO: Fix better types for Vnodes (and how to typeguard for them)
         (key[0] === 'o' && key[1] === 'n') || (key === 'r' && parent?.isSkruvDom === true) ||
-        key === 'data-skruv-after-create' ||
-        key === 'data-skruv-after-remove'
+        key === 'data-skruv-after-create'
       ) {
         // @ts-ignore
         return value
