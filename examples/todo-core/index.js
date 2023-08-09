@@ -1,4 +1,4 @@
-import { elementFactory, render } from '../../index.js'
+import { elementFactory, render } from '../../skruv.js'
 
 const { html, head, title, meta, body, main, h1, form, input, button, ol, li, a, style } = elementFactory
 

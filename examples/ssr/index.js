@@ -1,4 +1,4 @@
-import { elementFactory, render } from '../../index.js'
+import { elementFactory, render } from '../../skruv.js'
 import { css, cssTextGenerator } from '../../utils/css.js'
 import { createState } from '../../utils/state.js'
 import { hydrationPromise, syncify } from '../../utils/syncify.js'
