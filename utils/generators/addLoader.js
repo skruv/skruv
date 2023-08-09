@@ -1,4 +1,4 @@
-/** @typedef {import("../../index.js").Vnode} Vnode */
+/** @typedef {import("../../utilityTypes").Vnode} Vnode */
 import combineGens from './combineGens.js'
 import waitGen from './waitGen.js'
 

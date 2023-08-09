@@ -1,9 +1,6 @@
-declare module './utils/syncify.js';
-declare module './utils/state.js';
-declare module './utils/css.js';
-
+import {Element, HTMLElement, SVGElement, MathMLElement, HTMLInputElement, HTMLOptionElement } from './utils/minidom'
+export type innerKey = any
 // TODO: To do this properly would require https://github.com/microsoft/TypeScript/issues/43826 as we need to always return a type with the generator/proxy but be able to set the original type (or any other type).
-// @ts-ignore: TODO: TS thinks we want innerKey as a type
 export type State<T> = T & AsyncGenerator<T> & { [key in keyof T]: State<T[key]> } & { getGenerator: (innerKey: string | number) => State<T[innerKey]>, toJSON: () => T };
 
 // Vnode/DOM types
@@ -6353,6 +6350,3 @@ export namespace JSX {
     [elemName: string]: any;
   }
 }
-
-export function render(current:Vnode, currentNode?: AnyRealElement, parentNode?: ParentNode, ns?: string): void
-export const elementFactory: ElementMap

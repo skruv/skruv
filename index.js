@@ -1,23 +1,25 @@
 const htmlNS = 'http://www.w3.org/1999/xhtml'
 const svgNS = 'http://www.w3.org/2000/svg'
 const mathmlNS = 'http://www.w3.org/1998/Math/MathML'
-/** @type {import("./index").keyedMap} */
+/** @type {import("./utilityTypes").keyedMap} */
 const keyed = new WeakMap()
-/** @type {import("./index").oldKeysMap} */
+/** @type {import("./utilityTypes").oldKeysMap} */
 const oldKeys = new WeakMap()
-/** @type {import("./index").attributesMap} */
+/** @type {import("./utilityTypes").attributesMap} */
 const attributesMap = new WeakMap()
-/** @type {import("./index").domCacheObj} */
+/** @type {import("./utilityTypes").domCacheObj} */
 const domCache = {}
 /**
- * @param {import("./index").Vnode} current
- * @param {import("./index").AnyRealElement} currentNode
+ * @param {import("./utilityTypes").Vnode} current
+ * @param {import("./utilityTypes").AnyRealElement} currentNode
  * @param {ParentNode?} parentNode
  * @param {string} ns
  */
 export const render = (
   current,
+  // @ts-ignore
   currentNode = globalThis.document.documentElement,
+  // @ts-ignore
   parentNode = currentNode.parentNode,
   ns = htmlNS,
   forceFull = false
@@ -26,6 +28,7 @@ export const render = (
     throw new Error('No parent to render to')
   }
   if (typeof current === 'boolean') {
+    // @ts-ignore
     if (currentNode) { parentNode.removeChild(currentNode) }
     return
   }
@@ -47,8 +50,10 @@ export const render = (
       currentNode = (domCache[current.t] || (domCache[current.t] = document.createElementNS(ns, current.t))).cloneNode(false)
     }
     if (_currentNode) {
+      // @ts-ignore
       parentNode.replaceChild(currentNode, _currentNode)
     } else {
+      // @ts-ignore
       parentNode.appendChild(currentNode)
     }
     if (txtNode) { return }
@@ -61,6 +66,7 @@ export const render = (
   }
   if (current.r) {
     current.r = () => {
+      // @ts-ignore
       if (!currentNode || !parentNode.contains(currentNode)) { return false }
       render(current, currentNode, parentNode, ns)
       return true
@@ -68,10 +74,10 @@ export const render = (
   }
   // This needs to come after the .r callback is registered since it should apply to child nodes, not the current node.
   if (current.t === 'foreignObject') { ns = htmlNS }
-  /** @type {import("./index").Vnode[]} */
+  /** @type {import("./utilityTypes").Vnode[]} */
   // @ts-ignore
   let children = current.c.flat(Infinity)
-  /** @type {import("./index").attributes} */
+  /** @type {import("./utilityTypes").attributes} */
   // @ts-ignore
   let attributes = {}
   if (children[0]?.constructor === Object && !children[0]?.isSkruvDom) {
@@ -141,15 +147,20 @@ export const render = (
       // @ts-ignore
       keyedNode = keyed.get(children[i].c[0]?.['data-skruv-key'])
       if (keyedNode) {
+        // @ts-ignore
         if (keyedNode !== currentNode.childNodes[i]) {
+          // @ts-ignore
           if (keyedNode === currentNode.childNodes[i + 1]) {
             currentNode.removeChild(currentNode.childNodes[i])
           // @ts-ignore
           } else if (currentNode.childNodes[i] && keyed.get(children[i + 1]?.c?.[0]?.['data-skruv-key']) === currentNode.childNodes[i]) {
+            // @ts-ignore
             currentNode.insertBefore(keyedNode, currentNode.childNodes[i])
           } else if (currentNode.childNodes[i]) {
+            // @ts-ignore
             currentNode.replaceChild(keyedNode, currentNode.childNodes[i])
           } else {
+            // @ts-ignore
             currentNode.appendChild(keyedNode)
           }
         }
@@ -183,5 +194,5 @@ export const render = (
   }
 }
 
-/** @type {import("./index").ElementMap} */ // @ts-ignore
+/** @type {import("./utilityTypes").ElementMap} */ // @ts-ignore
 export const elementFactory = new Proxy({}, { get: (_, t) => (...c) => ({ isSkruvDom: true, t, c }) })

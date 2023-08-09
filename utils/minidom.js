@@ -123,8 +123,11 @@ export class Element {
     this.attributes[name] = value
   }
 
-  /** @param {string | number} name */
-  removeEventListener (name) {
+  /**
+   * @param {string | number} name
+   * @param {Function} value
+   */
+  removeEventListener (name, value) {
     delete this.eventListeners[name]
   }
 
