@@ -51,7 +51,7 @@
     "node-ssr": "npm run build-ssr && (cd ./examples/ssr && node ./node-ssr.js)",
     "pre-release": "npm run build && npm run test && npm run lint -- --fix && npm run typecheck && gzip -9kf skruv.min.js && brotli -Zkf skruv.min.js && du --apparent-size --bytes skruv.min.j* skruv.js && rm -f skruv.min.js.{gz,br}",
     "test": "node --test --experimental-test-coverage --test-reporter=spec",
-    "typecheck": "tsc"
+    "typecheck": "find . -maxdepth 1 -iname '*.d.ts' -delete && find utils examples tests -iname '*.d.ts' -delete && tsc"
   },
   "devDependencies": {
     "esbuild": "^0.14.48",
