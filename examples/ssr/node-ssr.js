@@ -9,7 +9,7 @@ server.on('request', async (req, res) => {
   globalThis.location = new Location(new URL(req.url, `http://${req.headers.host}`))
   globalThis.skruvSSRScript = await readFile('./index.min.js', 'utf8')
   const frontend = await import('./index.js')
-  await frontend.doRender()
+  await frontend.default()
   /** @type {Record<string, string>} */
   const headers = {}
   const responseBody = toHTML(document.documentElement, '', headers)
