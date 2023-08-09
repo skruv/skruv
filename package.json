@@ -16,8 +16,8 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./index.js",
-      "default": "./index.js",
+      "import": "./skruv.js",
+      "default": "./skruv.js",
       "types": "./types.d.ts"
     },
     "./utils/css.js": "./utils/css.js",
@@ -28,17 +28,17 @@
     "./utils/bundle.js": "./utils/bundle.js",
     "./jsx-runtime": "./jsx-runtime.ts"
   },
-  "main": "index.js",
-  "types": "./types/index.js",
+  "main": "skruv.js",
+  "types": "./types.d.ts",
   "bin": {
     "skruv-bundle": "./utils/bundle.js"
   },
   "files": [
-    "index.js",
+    "skruv.js",
     "skruv.d.ts",
     "jsx-runtime.ts",
-    "index.min.js",
-    "index.min.js.map",
+    "skruv.min.js",
+    "skruv.min.js.map",
     "utils/",
     "types.d.ts",
     "types.d.ts.map",
@@ -46,14 +46,14 @@
   ],
   "scripts": {
     "build": "npm run build-ssr && npm run build-jsx && npm run build-todo && npm run build-index",
-    "build-index": "node ./utils/bundle.js index.js index.min.js",
+    "build-index": "node ./utils/bundle.js skruv.js skruv.min.js",
     "build-jsx": "(cd examples/jsx && node ../../utils/bundle.js index.jsx index.min.js)",
     "build-ssr": "(cd examples/ssr && node ../../utils/bundle.js index.js index.min.js && node ssg)",
     "build-todo": "(cd examples/todo && node ../../utils/bundle.js index.jsx index.min.js)",
     "deno-ssr": "npm run build-ssr && (cd ./examples/ssr && deno run --allow-net --allow-read ./deno-ssr.js)",
     "lint": "eslint . --ext js,jsx,json",
     "node-ssr": "npm run build-ssr && (cd ./examples/ssr && node ./node-ssr.js)",
-    "pre-release": "npm run build && npm run test && npm run lint -- --fix && npm run typecheck && gzip -9kf index.min.js && brotli -Zkf index.min.js && du --apparent-size --bytes index.min.j* index.js && rm -f index.min.js.{gz,br}",
+    "pre-release": "npm run build && npm run test && npm run lint -- --fix && npm run typecheck && gzip -9kf skruv.min.js && brotli -Zkf skruv.min.js && du --apparent-size --bytes skruv.min.j* skruv.js && rm -f skruv.min.js.{gz,br}",
     "test": "node --test --experimental-test-coverage --test-reporter=spec",
     "typecheck": "rm -rf types.d.ts && tsc"
   },

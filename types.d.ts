@@ -6108,10 +6108,6 @@ declare module "utilityTypes" {
         }
     }
 }
-declare module "index" {
-    export function render(current: import("utilityTypes").Vnode, currentNode?: import("utilityTypes").AnyRealElement, parentNode?: ParentNode | null, ns?: string, forceFull?: boolean): void;
-    /** @type {import("./utilityTypes").ElementMap} */ export const elementFactory: import("utilityTypes").ElementMap;
-}
 declare module "jsx-runtime" {
     import "utilityTypes";
     export const Fragment = "#fragment";
@@ -6129,6 +6125,10 @@ declare module "jsx-runtime" {
         t: string;
         c: {}[];
     };
+}
+declare module "skruv" {
+    export function render(current: import("utilityTypes").Vnode, currentNode?: import("utilityTypes").AnyRealElement, parentNode?: ParentNode | null, ns?: string, forceFull?: boolean): void;
+    /** @type {import("./utilityTypes").ElementMap} */ export const elementFactory: import("utilityTypes").ElementMap;
 }
 declare module "utils/css" {
     /**

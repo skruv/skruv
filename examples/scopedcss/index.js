@@ -1,4 +1,4 @@
-import { elementFactory, render } from '../../index.js'
+import { elementFactory, render } from '../../skruv.js'
 import { css, cssTextGenerator } from '../../utils/css.js'
 import { syncify } from '../../utils/syncify.js'
 

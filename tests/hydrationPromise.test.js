@@ -3,7 +3,7 @@ import '../utils/minidom.js'
 import assert from 'node:assert'
 import test from 'node:test'
 
-import { elementFactory, render } from '../index.js'
+import { elementFactory, render } from '../skruv.js'
 import addLoader from '../utils/generators/addLoader.js'
 import wait from '../utils/generators/waitPromise.js'
 import { hydrationPromise, syncify } from '../utils/syncify.js'
