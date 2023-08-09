@@ -14,7 +14,6 @@ type DataAttributes = Record<`data-${string}`, string | number | boolean> | {}
 
 type SkruvAdditionalAttributes<T> = {
   'data-skruv-after-create'?: (element: T) => void,
-  'data-skruv-after-remove'?: (element: T) => void,
   'data-skruv-key'?: object,
   'data-skruv-finished'?: boolean,
   'data-skruv-wait-for-not-empty'?: boolean
@@ -4529,14 +4528,6 @@ export interface SkruvSvgHTMLElement extends SkruvSvgSVGElement { }
 export interface SkruvCommentElement extends HTMLVnode<'#comment', Element, {}, AnyHTMLContent> { }
 export interface SkruvRawElement extends HTMLVnode<'#raw', Element, {}, AnyHTMLContent> { }
 export interface SkruvMetaElement extends HTMLVnode<'#meta', Element, {}, AnyHTMLContent> { }
-
-type SkruvTitleElement = SkruvTitleHTMLElement & SkruvTitleSVGElement & SkruvTitleAtomElement
-type SkruvScriptElement = SkruvScriptHTMLElement & SkruvScriptSVGElement
-type SkruvStyleElement = SkruvStyleHTMLElement & SkruvStyleSVGElement
-type SkruvLinkElement = SkruvLinkHTMLElement & SkruvLinkAtomElement
-type SkruvAElement = SkruvAHTMLElement & SkruvASVGElement
-type SkruvSourceElement = SkruvSourceHTMLElement & SkruvSourceAtomElement
-type SkruvSummaryElement = SkruvSummaryHTMLElement & SkruvSummaryAtomElement
 
 export type AnyElement = AnyHTMLElement | AnySVGElement | AnyMathMLElement | AnyAtomElement | AnySitemapElement | SkruvCommentElement | SkruvRawElement | SkruvMetaElement
 export type AnyContent = AnyHTMLContent | AnySVGContent | AnyMathMLContent | AnyAtomContent | AnySitemapContent
