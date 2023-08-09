@@ -22,6 +22,7 @@ import { readFile, writeFile } from 'node:fs/promises'
   globalThis.location = new Location(location)
   // @ts-ignore
   globalThis.skruvSSRScript = await readFile(input, 'utf8')
-  await import(process.cwd() + '/' + input)
+  const frontend = await import(process.cwd() + '/' + input)
+  if (frontend.default instanceof Function) { await frontend.default() }
   await writeFile(output, document.documentElement.innerHTML)
 })()

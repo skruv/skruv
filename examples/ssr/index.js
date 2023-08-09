@@ -82,7 +82,7 @@ const dom = syncify(
   )
 )
 
-export const doRender = async () => {
+const doRender = async () => {
   await hydrationPromise
   render(dom)
   // Microsleep to allow for rendering to finish
@@ -90,3 +90,5 @@ export const doRender = async () => {
 }
 
 doRender()
+
+export default doRender

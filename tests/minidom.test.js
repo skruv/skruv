@@ -10,7 +10,7 @@ test('minidom', async () => {
   // @ts-ignore: minidom makes locations constructible
   globalThis.location = new Location('http://127.0.0.1:8000/')
   const frontend = await import('../examples/ssr/index.js')
-  await frontend.doRender()
+  await frontend.default()
   await wait(1)
   assert.strictEqual(
     document.documentElement.innerHTML,
