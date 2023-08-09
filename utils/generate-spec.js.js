@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* global copy $$ */
 /* eslint max-len: 0 */
 

@@ -2,6 +2,17 @@
 /* eslint max-len: 0 */
 const elements = {
   HTML: {
+    elementGroups: [
+      { name: 'TransparentContent', children: ['a', 'ins', 'del', 'object', 'video', 'audio', 'map', 'noscript', 'slot', 'canvas'] },
+      { name: 'FlowContent', children: ['a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'bdi', 'bdo', 'blockquote', 'br', 'button', 'canvas', 'cite', 'code', 'data', 'datalist', 'del', 'details', 'dfn', 'dialog', 'div', 'dl', 'em', 'embed', 'fieldset', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'label', 'link', 'main', 'map', 'mark', 'math', 'menu', 'meta', 'meter', 'nav', 'noscript', 'object', 'ol', 'output', 'p', 'picture', 'pre', 'progress', 'q', 'ruby', 's', 'samp', 'script', 'search', 'section', 'select', 'slot', 'small', 'span', 'strong', 'sub', 'sup', 'svg', 'table', 'template', 'textarea', 'time', 'u', 'ul', 'var', 'video', 'wbr'] },
+      { name: 'HeadingContent', children: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hgroup'] },
+      { name: 'SectioningContent', children: ['article', 'aside', 'nav', 'section'] },
+      { name: 'MetadataContent', children: ['base', 'link', 'meta', 'noscript', 'script', 'style', 'template', 'title'] },
+      { name: 'InteractiveContent', children: ['a', 'audio', 'button', 'details', 'embed', 'iframe', 'img', 'input', 'label', 'object', 'select', 'textarea', 'video'] },
+      { name: 'PhrasingContent', children: ['a', 'abbr', 'area', 'audio', 'b', 'bdi', 'bdo', 'br', 'button', 'canvas', 'cite', 'code', 'data', 'datalist', 'del', 'dfn', 'em', 'embed', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'label', 'link', 'map', 'mark', 'math', 'meta', 'meter', 'noscript', 'object', 'output', 'picture', 'progress', 'q', 'ruby', 's', 'samp', 'script', 'select', 'slot', 'small', 'span', 'strong', 'sub', 'sup', 'svg', 'template', 'textarea', 'time', 'u', 'var', 'video', 'wbr'] },
+      { name: 'EmbeddedContent', children: ['audio', 'canvas', 'embed', 'iframe', 'img', 'math', 'object', 'picture', 'svg', 'video'] },
+      { name: 'OtherContent', children: ['html', 'head', 'body', 'li', 'dl', 'dt', 'dd', 'figcaption', 'rt', 'rp', 'source', 'track', 'caption', 'colgroup', 'col', 'tbody', 'thead', 'tfoot', 'tr', 'td', 'th', 'optgroup', 'option', 'legend', 'summary'] }
+    ],
     namespace: 'http://www.w3.org/1999/xhtml',
     elements: {
       html: {
@@ -20,7 +31,7 @@ const elements = {
             comment: 'Specifies the XML Namespace of the document. Default value is "http://www.w3.org/1999/xhtml". This is required in documents parsed with XML parsers, and optional in text/html documents.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyHTMLContent'
       },
       base: {
         comment: 'The <base> HTML element specifies the base URL to use for all relative URLs in a document. There can be only one <base> element in a document.',
@@ -34,7 +45,7 @@ const elements = {
             comment: 'A keyword or author-defined name of the default browsing context to show the results of navigation from <a>, <area>, or <form> elements without explicit target attributes. The following keywords have special meanings:\n \n _self (default): Show the result in the current browsing context.\n _blank: Show the result in a new, unnamed browsing context.\n _parent: Show the result in the parent browsing context of the current one, if the current page is inside a frame. If there is no parent, acts the same as _self.\n _top: Show the result in the topmost browsing context (the browsing context that is an ancestor of the current one and has no parent). If there is no parent, acts the same as _self.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'void'
       },
       head: {
         comment: 'The <head> HTML element contains machine-readable information (metadata) about the document, like its title, scripts, and style sheets.',
@@ -44,12 +55,12 @@ const elements = {
             comment: 'The URIs of one or more metadata profiles, separated by white space.'
           }
         ],
-        permittedContent: 'If the document is an <iframe>\n srcdoc document, or if title\n information is available from a higher level protocol (like the\n subject line in HTML email), zero or more elements of metadata\n content.\n \n \n Otherwise, one or more elements of metadata content where exactly one\n is a <title> element.'
+        permittedContent: 'SkruvHTMLMetadataContentGroup'
       },
       title: {
         comment: "The <title> HTML element defines the document's title that is shown in a browser's title bar or a page's tab. It only contains text; tags within the element are ignored.",
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'string'
       },
       script: {
         comment: "The <script> HTML element is used to embed executable code or data; this is typically used to embed or refer to JavaScript code. The <script> element can also be used with other languages, such as WebGL's GLSL shader programming language and JSON.",
@@ -99,7 +110,7 @@ const elements = {
             comment: 'This attribute explicitly indicates that certain operations should be blocked on the fetching of the script. The operations that are to be blocked must be a space-separated list of blocking attributes listed below.\n \n render: The rendering of content on the screen is blocked.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'string'
       },
       style: {
         comment: 'The <style> HTML element contains style information for a document, or part of a document. It contains CSS, which is applied to the contents of the document containing the <style> element.',
@@ -121,7 +132,7 @@ const elements = {
             comment: 'This attribute explicitly indicates that certain operations should be blocked on the fetching of critical subresources. @import-ed stylesheets are generally considered as critical subresources, whereas background-image and fonts are not.\n \n render: The rendering of content on the screen is blocked.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'string'
       },
       link: {
         comment: 'The <link> HTML element specifies relationships between the current document and an external resource.\n This element is most commonly used to link to stylesheets, but is also used to establish site icons (both "favicon" style icons and icons for the home screen and apps on mobile devices) among other things.',
@@ -167,7 +178,7 @@ const elements = {
             comment: "This attribute specifies the media that the linked resource applies to. Its value must be a media type / media query.\n This attribute is mainly useful when linking to external stylesheets — it allows the user agent to pick the best adapted one for the device it runs on.\n \n \n Note:\n \n \n In HTML 4, this can only be a simple white-space-separated list of media description literals, i.e., media types and groups, where defined and allowed as values for this attribute, such as print, screen, aural, braille.\n HTML5 extended this to any kind of media queries, which are a superset of the allowed values of HTML 4.\n \n Browsers not supporting CSS Media Queries won't necessarily recognize the adequate link; do not forget to set fallback links, the restricted set of media queries defined in HTML 4."
           },
           {
-            name: 'prefetch Secure context',
+            name: 'prefetch',
             comment: 'Identifies a resource that might be required by the next navigation and that the user agent should retrieve it.\n This allows the user agent to respond faster when the resource is requested in the future.'
           },
           {
@@ -195,7 +206,7 @@ const elements = {
             comment: 'This attribute explicitly indicates that certain operations should be blocked on the fetching of an external resource. The operations that are to be blocked must be a space-separated list of blocking attributes listed below.\n \n render: The rendering of content on the screen is blocked.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'void'
       },
       meta: {
         comment: 'The <meta> HTML element represents metadata that cannot be represented by other HTML meta-related elements, like <base>, <link>, <script>, <style> or <title>.',
@@ -217,180 +228,92 @@ const elements = {
             comment: 'The name and content attributes can be used together to provide document metadata in terms of name-value pairs, with the name attribute giving the metadata name, and the content attribute giving the value.\n See standard metadata names for details about the set of standard metadata names defined in the HTML specification.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'void'
       },
       body: {
         comment: 'The <body> HTML element represents the content of an HTML document. There can be only one <body> element in a document.',
-        attributes: [
-          {
-            name: 'alink',
-            comment: 'Color of text for hyperlinks when selected.\n Do not use this attribute! Use the CSS color property in conjunction with the :active pseudo-class instead.'
-          },
-          {
-            name: 'background',
-            comment: 'URI of an image to use as a background.\n Do not use this attribute! Use the CSS background property on the element instead.'
-          },
-          {
-            name: 'bgcolor',
-            comment: 'Background color for the document.\n Do not use this attribute! Use the CSS background-color property on the element instead.'
-          },
-          {
-            name: 'bottommargin',
-            comment: 'The margin of the bottom of the body.\n Do not use this attribute! Use the CSS margin-bottom property on the element instead.'
-          },
-          {
-            name: 'leftmargin',
-            comment: 'The margin of the left of the body.\n Do not use this attribute! Use the CSS margin-left property on the element instead.'
-          },
-          {
-            name: 'link',
-            comment: 'Color of text for unvisited hypertext links.\n Do not use this attribute! Use the CSS color property in conjunction with the :link pseudo-class instead.'
-          },
-          {
-            name: 'onafterprint',
-            comment: 'Function to call after the user has printed the document.'
-          },
-          {
-            name: 'onbeforeprint',
-            comment: 'Function to call when the user requests printing of the document.'
-          },
-          {
-            name: 'onbeforeunload',
-            comment: 'Function to call when the document is about to be unloaded.'
-          },
-          {
-            name: 'onblur',
-            comment: 'Function to call when the document loses focus.'
-          },
-          {
-            name: 'onerror',
-            comment: 'Function to call when the document fails to load properly.'
-          },
-          {
-            name: 'onfocus',
-            comment: 'Function to call when the document receives focus.'
-          },
-          {
-            name: 'onhashchange',
-            comment: "Function to call when the fragment identifier part (starting with the hash ('#') character) of the document's current address has changed."
-          },
-          {
-            name: 'onlanguagechange',
-            comment: 'Function to call when the preferred languages changed.'
-          },
-          {
-            name: 'onload',
-            comment: 'Function to call when the document has finished loading.'
-          },
-          {
-            name: 'onmessage',
-            comment: 'Function to call when the document has received a message.'
-          },
-          {
-            name: 'onoffline',
-            comment: 'Function to call when network communication has failed.'
-          },
-          {
-            name: 'ononline',
-            comment: 'Function to call when network communication has been restored.'
-          },
-          {
-            name: 'onpopstate',
-            comment: 'Function to call when the user has navigated session history.'
-          },
-          {
-            name: 'onredo',
-            comment: 'Function to call when the user has moved forward in undo transaction history.'
-          },
-          {
-            name: 'onresize',
-            comment: 'Function to call when the document has been resized.'
-          },
-          {
-            name: 'onstorage',
-            comment: 'Function to call when the storage area has changed.'
-          },
-          {
-            name: 'onundo',
-            comment: 'Function to call when the user has moved backward in undo transaction history.'
-          },
-          {
-            name: 'onunload',
-            comment: 'Function to call when the document is going away.'
-          },
-          {
-            name: 'rightmargin',
-            comment: 'The margin of the right of the body.\n Do not use this attribute! Use the CSS margin-right property on the element instead.'
-          },
-          {
-            name: 'text',
-            comment: 'Foreground color of text.\n Do not use this attribute! Use CSS color property on the element instead.'
-          },
-          {
-            name: 'topmargin',
-            comment: 'The margin of the top of the body.\n Do not use this attribute! Use the CSS margin-top property on the element instead.'
-          },
-          {
-            name: 'vlink',
-            comment: 'Color of text for visited hypertext links.\n Do not use this attribute! Use the CSS color property in conjunction with the :visited pseudo-class instead.'
-          }
-        ],
-        permittedContent: ''
+        attributes: [],
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       address: {
         comment: 'The <address> HTML element indicates that the enclosed HTML provides contact information for a person or people, or for an organization.',
         attributes: [],
-        permittedContent: 'Flow content, but with no nested <address> element, no heading\n content (<hgroup>, h1,\n h2, h3,\n h4, h5,\n h6), no sectioning content\n (<article>, <aside>,\n <section>, <nav>), and\n no <header> or <footer>\n element.'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       article: {
         comment: 'The <article> HTML element represents a self-contained composition in a document, page, application, or site, which is intended to be independently distributable or reusable (e.g., in syndication). Examples include: a forum post, a magazine or newspaper article, or a blog entry, a product card, a user-submitted comment, an interactive widget or gadget, or any other independent item of content.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       aside: {
         comment: "The <aside> HTML element represents a portion of a document whose content is only indirectly related to the document's main content. Asides are frequently presented as sidebars or call-out boxes.",
         attributes: [],
-        permittedContent: 'Flow content.'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       footer: {
         comment: 'The <footer> HTML element represents a footer for its nearest ancestor sectioning content or sectioning root element. A <footer> typically contains information about the author of the section, copyright data or links to related documents.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       h1: {
         comment: 'The <h1> to <h6> HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
+      },
+      h2: {
+        comment: 'The <h1> to <h6> HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.',
+        attributes: [],
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
+      },
+      h3: {
+        comment: 'The <h1> to <h6> HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.',
+        attributes: [],
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
+      },
+      h4: {
+        comment: 'The <h1> to <h6> HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.',
+        attributes: [],
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
+      },
+      h5: {
+        comment: 'The <h1> to <h6> HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.',
+        attributes: [],
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
+      },
+      h6: {
+        comment: 'The <h1> to <h6> HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest.',
+        attributes: [],
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       header: {
         comment: 'The <header> HTML element represents introductory content, typically a group of introductory or navigational aids. It may contain some heading elements but also a logo, a search form, an author name, and other elements.',
         attributes: [],
-        permittedContent: 'Flow content, but with no <header> or\n <footer> descendant.'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       hgroup: {
         comment: 'The <hgroup> HTML element represents a heading and related content. It groups a single <h1>–<h6> element with one or more <p>.',
         attributes: [],
-        permittedContent: 'Zero or more <p> elements, followed by one\n h1, h2,\n h3, h4,\n h5, or h6 element,\n followed by zero or more <p> elements.'
+        permittedContent: 'SkruvPHTMLElement | SkruvH1HTMLElement | SkruvH2HTMLElement | SkruvH3HTMLElement | SkruvH4HTMLElement | SkruvH5HTMLElement | SkruvH6HTMLElement'
       },
       main: {
         comment: 'The <main> HTML element represents the dominant content of the <body> of a document. The main content area consists of content that is directly related to or expands upon the central topic of a document, or the central functionality of an application.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       nav: {
         comment: 'The <nav> HTML element represents a section of a page whose purpose is to provide navigation links, either within the current document or to other documents. Common examples of navigation sections are menus, tables of contents, and indexes.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       section: {
         comment: "The <section> HTML element represents a generic standalone section of a document, which doesn't have a more specific semantic element to represent it. Sections should always have a heading, with very few exceptions.",
         attributes: [],
-        permittedContent: 'Flow content.'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       search: {
         comment: "The <search> HTML element is a container representing the parts of the document or application with form controls or other content related to performing a search or filtering operation. The <search> element semantically identifies the purpose of the element's contents as having search or filtering capabilities. The search or filtering functionality can be for the website or application, the current web page or document, or the entire Internet or subsection thereof.",
         attributes: [],
-        permittedContent: 'Flow content.'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       blockquote: {
         comment: 'The <blockquote> HTML element indicates that the enclosed text is an extended quotation. Usually, this is rendered visually by indentation (see Notes for how to change it). A URL for the source of the quotation may be given using the cite attribute, while a text representation of the source can be given using the <cite> element.',
@@ -400,12 +323,12 @@ const elements = {
             comment: 'A URL that designates a source document or message for the information quoted. This attribute is intended to point to information explaining the context or the reference for the quote.'
           }
         ],
-        permittedContent: 'Flow content.'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       cite: {
         comment: 'The <cite> HTML element is used to mark up the title of a cited creative work. The reference may be in an abbreviated form according to context-appropriate conventions related to citation metadata.',
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       dd: {
         comment: 'The <dd> HTML element provides the description, definition, or value for the preceding term (<dt>) in a description list (<dl>).',
@@ -415,32 +338,32 @@ const elements = {
             comment: 'If the value of this attribute is set to yes, the definition text will not wrap. The default value is no.'
           }
         ],
-        permittedContent: 'Flow content.'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       dt: {
         comment: 'The <dt> HTML element specifies a term in a description or definition list, and as such must be used inside a <dl> element. It is usually followed by a <dd> element; however, multiple <dt> elements in a row indicate several terms that are all defined by the immediate next <dd> element.',
         attributes: [],
-        permittedContent: 'Flow content, but with no <header>,\n <footer>, sectioning content or heading content\n descendants.'
+        permittedContent: 'Exclude<Exclude<Exclude<Exclude<SkruvHTMLFlowContentGroup, SkruvFooterHTMLElement>, SkruvHeaderHTMLElement>, SkruvHTMLSectioningContentGroup>, SkruvHTMLHeadingContentGroup>'
       },
       dl: {
         comment: 'The <dl> HTML element represents a description list. The element encloses a list of groups of terms (specified using the <dt> element) and descriptions (provided by <dd> elements). Common uses for this element are to implement a glossary or to display metadata (a list of key-value pairs).',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvDtHTMLElement | SkruvDdHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement'
       },
       div: {
         comment: 'The <div> HTML element is the generic container for flow content. It has no effect on the content or layout until styled in some way using CSS (e.g. styling is directly applied to it, or some kind of layout model like Flexbox is applied to its parent element).',
         attributes: [],
-        permittedContent: 'Flow content.Or (in WHATWG HTML): If the parent is a\n <dl> element: one or more\n <dt> elements followed by one or more\n <dd> elements, optionally intermixed with\n <script> and\n <template> elements.'
+        permittedContent: 'SkruvHTMLFlowContentGroup | SkruvDtHTMLElement | SkruvDdHTMLElement'
       },
       figcaption: {
         comment: 'The <figcaption> HTML element represents a caption or legend describing the rest of the contents of its parent <figure> element.',
         attributes: [],
-        permittedContent: 'Flow content.'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       figure: {
         comment: 'The <figure> HTML element represents self-contained content, potentially with an optional caption, which is specified using the <figcaption> element. The figure, its caption, and its contents are referenced as a single unit.',
         attributes: [],
-        permittedContent: 'A <figcaption> element, followed by\n flow content; or flow content followed by a\n <figcaption> element; or flow content.'
+        permittedContent: 'SkruvFigcaptionHTMLElement | SkruvHTMLFlowContentGroup'
       },
       hr: {
         comment: 'The <hr> HTML element represents a thematic break between paragraph-level elements: for example, a change of scene in a story, or a shift of topic within a section.',
@@ -466,7 +389,7 @@ const elements = {
             comment: 'Sets the length of the rule on the page through a pixel or percentage value.'
           }
         ],
-        permittedContent: 'None; it is a void element.'
+        permittedContent: 'void'
       },
       li: {
         comment: 'The <li> HTML element is used to represent an item in a list. It must be contained in a parent element: an ordered list (<ol>), an unordered list (<ul>), or a menu (<menu>). In menus and unordered lists, list items are usually displayed using bullet points. In ordered lists, they are usually displayed with an ascending counter on the left, such as a number or letter.',
@@ -474,13 +397,9 @@ const elements = {
           {
             name: 'value',
             comment: 'This integer attribute indicates the current ordinal value of the list item as defined by the <ol> element. The only allowed value for this attribute is a number, even if the list is displayed with Roman numerals or letters. List items that follow this one continue numbering from the value set. The value attribute has no meaning for unordered lists (<ul>) or for menus (<menu>).'
-          },
-          {
-            name: 'type',
-            comment: 'This character attribute indicates the numbering type:\n \n a: lowercase letters\n A: uppercase letters\n i: lowercase Roman numerals\n I: uppercase Roman numerals\n 1: numbers\n \n This type overrides the one used by its parent <ol> element, if any.\n \n Note: This attribute has been deprecated; use the CSS list-style-type property instead.'
           }
         ],
-        permittedContent: 'Flow content.'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       ol: {
         comment: 'The <ol> HTML element represents an ordered list of items — typically rendered as a numbered list.',
@@ -492,55 +411,29 @@ const elements = {
           {
             name: 'start',
             comment: 'An integer to start counting from for the list items. Always an Arabic numeral (1, 2, 3, etc.), even when the numbering type is letters or Roman numerals. For example, to start numbering elements from the letter "d" or the Roman numeral "iv," use start="4".'
-          },
-          {
-            name: 'type',
-            comment: 'Sets the numbering type:\n \n a for lowercase letters\n A for uppercase letters\n i for lowercase Roman numerals\n I for uppercase Roman numerals\n 1 for numbers (default)\n \n The specified type is used for the entire list unless a different type attribute is used on an enclosed <li> element.\n \n Note: Unless the type of the list number matters (like legal or technical documents where items are referenced by their number/letter), use the CSS list-style-type property instead.'
           }
         ],
-        permittedContent: 'Zero or more <li>,\n <script> and\n <template> elements.'
+        permittedContent: 'SkruvLiHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement'
       },
       ul: {
         comment: 'The <ul> HTML element represents an unordered list of items, typically rendered as a bulleted list.',
-        attributes: [
-          {
-            name: 'compact',
-            comment: "This Boolean attribute hints that the list should be rendered in a compact style. The interpretation of this attribute depends on the user agent, and it doesn't work in all browsers.\n \n Warning: Do not use this attribute, as it has been deprecated: use CSS instead. To give a similar effect as the compact attribute, the CSS property line-height can be used with a value of 80%."
-          },
-          {
-            name: 'type',
-            comment: 'This attribute sets the bullet style for the list. The values defined under HTML3.2 and the transitional version of HTML 4.0/4.01 are:\n \n circle\n disc\n square\n \n A fourth bullet type has been defined in the WebTV interface, but not all browsers support it: triangle.\n If not present and if no CSS list-style-type property applies to the element, the user agent selects a bullet type depending on the nesting level of the list.\n \n Warning: Do not use this attribute, as it has been deprecated; use the CSS list-style-type property instead.'
-          }
-        ],
-        permittedContent: 'Zero or more <li>,\n <script> and\n <template> elements.'
+        attributes: [],
+        permittedContent: 'SkruvLiHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement'
       },
       menu: {
         comment: 'The <menu> HTML element is described in the HTML specification as a semantic alternative to <ul>, but treated by browsers (and exposed through the accessibility tree) as no different than <ul>. It represents an unordered list of items (which are represented by <li> elements).',
         attributes: [],
-        permittedContent: 'Zero or more occurrences of <li>,\n <script>, and\n <template>.'
+        permittedContent: 'SkruvLiHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement'
       },
       p: {
         comment: 'The <p> HTML element represents a paragraph. Paragraphs are usually represented in visual media as blocks of text separated from adjacent blocks by blank lines and/or first-line indentation, but HTML paragraphs can be any structural grouping of related content, such as images or form fields.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       pre: {
         comment: 'The <pre> HTML element represents preformatted text which is to be presented exactly as written in the HTML file. The text is typically rendered using a non-proportional, or monospaced, font. Whitespace inside this element is displayed as written.',
-        attributes: [
-          {
-            name: 'cols',
-            comment: 'Contains the preferred count of characters that a line should have. It was a non-standard synonym of width. To achieve such an effect, use CSS width instead.'
-          },
-          {
-            name: 'width',
-            comment: 'Contains the preferred count of characters that a line should have. Though technically still implemented, this attribute has no visual effect; to achieve such an effect, use CSS width instead.'
-          },
-          {
-            name: 'wrap',
-            comment: 'Is a hint indicating how the overflow must happen. In modern browser this hint is ignored and no visual effect results in its present; to achieve such an effect, use CSS white-space instead.'
-          }
-        ],
-        permittedContent: 'Phrasing content.'
+        attributes: [],
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       a: {
         comment: 'The <a> HTML element (or anchor element), with its href attribute, creates a hyperlink to web pages, files, email addresses, locations in the same page, or anything else a URL can address.',
@@ -578,22 +471,22 @@ const elements = {
             comment: "Hints at the linked URL's format with a MIME type. No built-in functionality."
           }
         ],
-        permittedContent: 'Transparent, except that no descendant may be\n interactive content or an\n a element, and no descendant may have a specified\n tabindex attribute.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       abbr: {
         comment: 'The <abbr> HTML element represents an abbreviation or acronym.',
         attributes: [],
-        permittedContent: 'Phrasing content'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       b: {
         comment: "The <b> HTML element is used to draw the reader's attention to the element's contents, which are not otherwise granted special importance. This was formerly known as the Boldface element, and most browsers still draw the text in boldface. However, you should not use <b> for styling text or granting importance. If you wish to create boldface text, you should use the CSS font-weight property. If you wish to indicate an element is of special importance, you should use the <strong> element.",
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       bdi: {
         comment: "The <bdi> HTML element tells the browser's bidirectional algorithm to treat the text it contains in isolation from its surrounding text. It's particularly useful when a website dynamically inserts some text and doesn't know the directionality of the text being inserted.",
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       bdo: {
         comment: 'The <bdo> HTML element overrides the current directionality of text, so that the text within is rendered in a different direction.',
@@ -603,17 +496,17 @@ const elements = {
             comment: "The direction in which text should be rendered in this element's contents. Possible values are:\n \n ltr: Indicates that the text should go in a left-to-right direction.\n rtl: Indicates that the text should go in a right-to-left direction."
           }
         ],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       br: {
         comment: 'The <br> HTML element produces a line break in text (carriage-return). It is useful for writing a poem or an address, where the division of lines is significant.',
         attributes: [],
-        permittedContent: 'None; it is a void element.'
+        permittedContent: 'void'
       },
       code: {
         comment: "The <code> HTML element displays its contents styled in a fashion intended to indicate that the text is a short fragment of computer code. By default, the content text is displayed using the user agent's default monospace font.",
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       data: {
         comment: 'The <data> HTML element links a given piece of content with a machine-readable translation. If the content is time- or date-related, the <time> element must be used.',
@@ -623,32 +516,32 @@ const elements = {
             comment: 'This attribute specifies the machine-readable translation of the content of the element.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       dfn: {
         comment: 'The <dfn> HTML element is used to indicate the term being defined within the context of a definition phrase or sentence. The ancestor <p> element, the <dt>/<dd> pairing, or the nearest <section> ancestor of the <dfn> element, is considered to be the definition of the term.',
         attributes: [],
-        permittedContent: 'Phrasing content,\n but no <dfn> element must be a descendant.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       em: {
         comment: 'The <em> HTML element marks text that has stress emphasis. The <em> element can be nested, with each level of nesting indicating a greater degree of emphasis.',
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       i: {
         comment: 'The <i> HTML element represents a range of text that is set off from the normal text for some reason, such as idiomatic text, technical terms, taxonomical designations, among others. Historically, these have been presented using italicized type, which is the original source of the <i> naming of this element.',
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       kbd: {
         comment: 'The <kbd> HTML element represents a span of inline text denoting textual user input from a keyboard, voice input, or any other text entry device. By convention, the user agent defaults to rendering the contents of a <kbd> element using its default monospace font, although this is not mandated by the HTML standard.',
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       mark: {
         comment: "The <mark> HTML element represents text which is marked or highlighted for reference or notation purposes due to the marked passage's relevance in the enclosing context.",
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       q: {
         comment: "The <q> HTML element indicates that the enclosed text is a short inline quotation. Most modern browsers implement this by surrounding the text in quotation marks. This element is intended for short quotations that don't require paragraph breaks; for long quotations use the <blockquote> element.",
@@ -658,57 +551,57 @@ const elements = {
             comment: 'The value of this attribute is a URL that designates a source document or message for the information quoted. This attribute is intended to point to information explaining the context or the reference for the quote.'
           }
         ],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       rp: {
         comment: "The <rp> HTML element is used to provide fall-back parentheses for browsers that do not support display of ruby annotations using the <ruby> element. One <rp> element should enclose each of the opening and closing parentheses that wrap the <rt> element that contains the annotation's text.",
         attributes: [],
-        permittedContent: 'Text'
+        permittedContent: 'string'
       },
       ruby: {
         comment: 'The <ruby> HTML element represents small annotations that are rendered above, below, or next to base text, usually used for showing the pronunciation of East Asian characters. It can also be used for annotating other kinds of text, but this usage is less common.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       rt: {
         comment: 'The <rt> HTML element specifies the ruby text component of a ruby annotation, which is used to provide pronunciation, translation, or transliteration information for East Asian typography. The <rt> element must always be contained within a <ruby> element.',
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       s: {
         comment: 'The <s> HTML element renders text with a strikethrough, or a line through it. Use the <s> element to represent things that are no longer relevant or no longer accurate. However, <s> is not appropriate when indicating document edits; for that, use the <del> and <ins> elements, as appropriate.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       samp: {
         comment: "The <samp> HTML element is used to enclose inline text which represents sample (or quoted) output from a computer program. Its contents are typically rendered using the browser's default monospaced font (such as Courier or Lucida Console).",
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       small: {
         comment: 'The <small> HTML element represents side-comments and small print, like copyright and legal text, independent of its styled presentation. By default, it renders text within it one font-size smaller, such as from small to x-small.',
         attributes: [],
-        permittedContent: 'Phrasing content'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       span: {
         comment: 'The <span> HTML element is a generic inline container for phrasing content, which does not inherently represent anything. It can be used to group elements for styling purposes (using the class or id attributes), or because they share attribute values, such as lang. It should be used only when no other semantic element is appropriate. <span> is very much like a <div> element, but <div> is a block-level element whereas a <span> is an inline-level element.',
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       strong: {
         comment: 'The <strong> HTML element indicates that its contents have strong importance, seriousness, or urgency. Browsers typically render the contents in bold type.',
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       sub: {
         comment: 'The <sub> HTML element specifies inline text which should be displayed as subscript for solely typographical reasons. Subscripts are typically rendered with a lowered baseline using smaller text.',
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       sup: {
         comment: 'The <sup> HTML element specifies inline text which is to be displayed as superscript for solely typographical reasons. Superscripts are usually rendered with a raised baseline using smaller text.',
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       time: {
         comment: 'The <time> HTML element represents a specific period in time. It may include the datetime attribute to translate dates into machine-readable format, allowing for better search engine results or custom features such as reminders.',
@@ -718,22 +611,22 @@ const elements = {
             comment: 'This attribute indicates the time and/or date of the element and must be in one of the formats described below.'
           }
         ],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       u: {
         comment: 'The <u> HTML element represents a span of inline text which should be rendered in a way that indicates that it has a non-textual annotation. This is rendered by default as a simple solid underline, but may be altered using CSS.',
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       var: {
         comment: "The <var> HTML element represents the name of a variable in a mathematical expression or a programming context. It's typically presented using an italicized version of the current typeface, although that behavior is browser-dependent.",
         attributes: [],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       wbr: {
         comment: 'The <wbr> HTML element represents a word break opportunity—a position within text where the browser may optionally break a line, though its line-breaking rules would not otherwise create a break at that location.',
         attributes: [],
-        permittedContent: 'Empty'
+        permittedContent: 'void'
       },
       area: {
         comment: 'The <area> HTML element defines an area inside an image map that has predefined clickable areas. An image map allows geometric areas on an image to be associated with hypertext links.',
@@ -779,7 +672,7 @@ const elements = {
             comment: 'A keyword or author-defined name of the browsing context to display the linked resource.\n The following keywords have special meanings:\n \n \n _self (default): Show the resource in the current browsing context.\n _blank: Show the resource in a new, unnamed browsing context.\n \n _parent: Show the resource in the parent browsing context of the current one, if the current page is inside a frame.\n If there is no parent, acts the same as _self.\n \n \n _top: Show the resource in the topmost browsing context (the browsing context that is an ancestor of the current one and has no parent).\n If there is no parent, acts the same as _self.\n \n \n Use this attribute only if the href attribute is present.\n \n Note: Setting target="_blank" on <area> elements implicitly provides the same rel behavior as setting rel="noopener" which does not set window.opener. See browser compatibility for support status.'
           }
         ],
-        permittedContent: 'None; it is a void element.'
+        permittedContent: 'void'
       },
       audio: {
         comment: 'The <audio> HTML element is used to embed sound content in documents. It may contain one or more audio sources, represented using the src attribute or the <source> element: the browser will choose the most suitable one. It can also be the destination for streamed media, using a MediaStream.',
@@ -821,7 +714,7 @@ const elements = {
             comment: 'The URL of the audio to embed. This is subject to HTTP access controls. This is optional; you may instead use the <source> element within the audio block to specify the audio to embed.'
           }
         ],
-        permittedContent: 'If the element has a src\n attribute: zero or more <track> elements\n followed by transparent content that contains no\n <audio> or <video>\n media elements.Else: zero or more <source>\n elements followed by zero or more <track>\n elements followed by transparent content that contains no\n <audio> or <video>\n media elements.'
+        permittedContent: 'SkruvHTMLTransparentContentGroup | SkruvTrackHTMLElement | SkruvSourceHTMLElement'
       },
       img: {
         comment: 'The <img> HTML element embeds an image into the document.',
@@ -883,7 +776,7 @@ const elements = {
             comment: 'The partial URL (starting with #) of an image map associated with the element.\n \n Note: You cannot use this attribute if the <img> element is inside an <a> or <button> element.'
           }
         ],
-        permittedContent: 'None; it is a void element.'
+        permittedContent: 'void'
       },
       map: {
         comment: 'The <map> HTML element is used with <area> elements to define an image map (a clickable link area).',
@@ -893,7 +786,7 @@ const elements = {
             comment: 'The name attribute gives the map a name so that it can be referenced. The attribute must be present and must have a non-empty value with no space characters. The value of the name attribute must not be equal to the value of the name attribute of another <map> element in the same document. If the id attribute is also specified, both attributes must have the same value.'
           }
         ],
-        permittedContent: 'Any\n transparent\n element.'
+        permittedContent: 'SkruvHTMLTransparentContentGroup'
       },
       track: {
         comment: 'The <track> HTML element is used as a child of the media elements, <audio> and <video>. It lets you specify timed text tracks (or time-based data), for example to automatically handle subtitles. The tracks are formatted in WebVTT format (.vtt files) — Web Video Text Tracks.',
@@ -919,7 +812,7 @@ const elements = {
             comment: 'Language of the track text data. It must be a valid BCP 47 language tag. If the kind attribute is set to subtitles, then srclang must be defined.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'void'
       },
       video: {
         comment: 'The <video> HTML element embeds a media player which supports video playback into the document. You can use <video> for audio content as well, but the <audio> element may provide a more appropriate user experience.',
@@ -981,7 +874,7 @@ const elements = {
             comment: "The width of the video's display area, in CSS pixels (absolute values only; no percentages)."
           }
         ],
-        permittedContent: 'If the element has a src\n attribute: zero or more <track> elements,\n followed by transparent content that contains no media elements–that\n is no <audio> or\n <video>.\n \n \n Else: zero or more <source> elements, followed\n by zero or more <track> elements, followed by\n transparent content that contains no media elements–that is no\n <audio> or <video>.'
+        permittedContent: 'SkruvHTMLTransparentContentGroup | SkruvTrackHTMLElement | SkruvSourceHTMLElement'
       },
       embed: {
         comment: 'The <embed> HTML element embeds external content at the specified point in the document. This content is provided by an external application or other source of interactive content such as a browser plug-in.',
@@ -1003,7 +896,7 @@ const elements = {
             comment: 'The displayed width of the resource, in CSS pixels. This must be an absolute value; percentages are not allowed.'
           }
         ],
-        permittedContent: 'None; it is a void element.'
+        permittedContent: 'void'
       },
       iframe: {
         comment: 'The <iframe> HTML element represents a nested browsing context, embedding another HTML page into the current one.',
@@ -1011,14 +904,6 @@ const elements = {
           {
             name: 'allow',
             comment: "Specifies a Permissions Policy for the <iframe>. The policy defines what features are available to the <iframe> (for example, access to the microphone, camera, battery, web-share, etc.) based on the origin of the request.\n \n Note: A Permissions Policy specified by the allow attribute implements a further restriction on top of the policy specified in the Permissions-Policy header. It doesn't replace it."
-          },
-          {
-            name: 'allowfullscreen',
-            comment: 'Set to true if the <iframe> can activate fullscreen mode by calling the requestFullscreen() method.\n \n Note: This attribute is considered a legacy attribute and redefined as allow="fullscreen".'
-          },
-          {
-            name: 'allowpaymentrequest',
-            comment: 'Set to true if a cross-origin <iframe> should be allowed to invoke the Payment Request API.\n \n Note: This attribute is considered a legacy attribute and redefined as allow="payment".'
           },
           {
             name: 'credentialless',
@@ -1061,7 +946,7 @@ const elements = {
             comment: 'The width of the frame in CSS pixels. Default is 300.'
           }
         ],
-        permittedContent: 'None.'
+        permittedContent: 'void'
       },
       object: {
         comment: 'The <object> HTML element represents an external resource, which can be treated as an image, a nested browsing context, or a resource to be handled by a plugin.',
@@ -1123,12 +1008,12 @@ const elements = {
             comment: 'The width of the display resource, in CSS pixels. — (Absolute values only. NO percentages)'
           }
         ],
-        permittedContent: 'zero or more <param> elements, then\n transparent.'
+        permittedContent: 'SkruvHTMLTransparentContentGroup'
       },
       picture: {
         comment: 'The <picture> HTML element contains zero or more <source> elements and one <img> element to offer alternative versions of an image for different display/device scenarios.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvSourceHTMLElement | SkruvImgHTMLElement'
       },
       source: {
         comment: 'The <source> HTML element specifies multiple media resources for the <picture>, the <audio> element, or the <video> element. It is a void element, meaning that it has no content and does not have a closing tag. It is commonly used to offer the same media content in multiple file formats in order to provide compatibility with a broad range of browsers given their differing support for image file formats and media file formats.',
@@ -1162,7 +1047,7 @@ const elements = {
             comment: "Allowed if the source element's parent is a <picture> element, but not allowed if the source element's parent is an <audio> or <video> element.\n The intrinsic width of the image in pixels. Must be an integer without a unit."
           }
         ],
-        permittedContent: ''
+        permittedContent: 'void'
       },
       portal: {
         comment: 'Experimental: This is an experimental technologyCheck the Browser compatibility table carefully before using this in production.',
@@ -1176,63 +1061,7 @@ const elements = {
             comment: 'The URL of the page to embed.'
           }
         ],
-        permittedContent: ''
-      },
-      svg: {
-        comment: 'The svg element is a container that defines a new coordinate system and viewport. It is used as the outermost element of SVG documents, but it can also be used to embed an SVG fragment inside an SVG or HTML document.',
-        attributes: [
-          {
-            name: 'baseProfile',
-            comment: 'The minimum SVG language profile that the document requires.\n Value type: <string> ; Default value: none; Animatable: no'
-          },
-          {
-            name: 'contentScriptType',
-            comment: 'The default scripting language used by the SVG fragment.\n Value type: <string> ; Default value: application/ecmascript; Animatable: no'
-          },
-          {
-            name: 'contentStyleType',
-            comment: 'The default style sheet language used by the SVG fragment.\n Value type: <string> ; Default value: text/css; Animatable: no'
-          },
-          {
-            name: 'height',
-            comment: 'The displayed height of the rectangular viewport. (Not the height of its coordinate system.)\n Value type: <length>|<percentage> ; Default value: auto; Animatable: yes'
-          },
-          {
-            name: 'preserveAspectRatio',
-            comment: 'How the svg fragment must be deformed if it is displayed with a different aspect ratio.\n Value type: (none| xMinYMin| xMidYMin| xMaxYMin| xMinYMid| xMidYMid| xMaxYMid| xMinYMax| xMidYMax| xMaxYMax) (meet|slice)? ; Default value: xMidYMid meet; Animatable: yes'
-          },
-          {
-            name: 'version',
-            comment: 'Which version of SVG is used for the inner content of the element.\n Value type: <number> ; Default value: none; Animatable: no'
-          },
-          {
-            name: 'viewBox',
-            comment: 'The SVG viewport coordinates for the current SVG fragment.\n Value type: <list-of-numbers> ; Default value: none; Animatable: yes'
-          },
-          {
-            name: 'width',
-            comment: 'The displayed width of the rectangular viewport. (Not the width of its coordinate system.)\n Value type: <length>|<percentage> ; Default value: auto; Animatable: yes'
-          },
-          {
-            name: 'x',
-            comment: 'The displayed x coordinate of the svg container. No effect on outermost svg elements.\n Value type: <length>|<percentage> ; Default value: 0; Animatable: yes'
-          },
-          {
-            name: 'y',
-            comment: 'The displayed y coordinate of the svg container. No effect on outermost svg elements.\n Value type: <length>|<percentage> ; Default value: 0; Animatable: yes'
-          }
-        ],
-        permittedContent: ''
-      },
-      math: {
-        comment: 'The <math> MathML element is the top-level MathML element, used to write a single mathematical formula. It can be placed in HTML content where flow content is permitted.',
-        attributes: [
-          {
-            name: 'display',
-            comment: 'This enumerated attribute specifies how the enclosed MathML markup should be rendered. It can have one of the following values:\n \n block, which means that this element will be displayed in its own block outside the current span of text and with math-style set to normal.\n inline, which means that this element will be displayed inside the current span of text and with math-style set to compact.\n \n If not present, its default value is inline.'
-          }
-        ],
-        permittedContent: ''
+        permittedContent: 'void'
       },
       canvas: {
         comment: 'Use the HTML <canvas> element with either the canvas scripting API or the WebGL API to draw graphics and animations.',
@@ -1242,20 +1071,16 @@ const elements = {
             comment: 'The height of the coordinate space in CSS pixels. Defaults to 150.'
           },
           {
-            name: 'moz-opaque',
-            comment: "Lets the canvas know whether translucency will be a factor. If the canvas knows there's no translucency, painting performance can be optimized. This is only supported by Mozilla-based browsers; use the standardized canvas.getContext('2d', { alpha: false }) instead."
-          },
-          {
             name: 'width',
             comment: 'The width of the coordinate space in CSS pixels. Defaults to 300.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyHTMLContent'
       },
       noscript: {
         comment: 'The <noscript> HTML element defines a section of HTML to be inserted if a script type on the page is unsupported or if scripting is currently turned off in the browser.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'AnyHTMLContent'
       },
       del: {
         comment: 'The <del> HTML element represents a range of text that has been deleted from a document. This can be used when rendering "track changes" or source code diff information, for example. The <ins> element can be used for the opposite purpose: to indicate text that has been added to the document.',
@@ -1269,7 +1094,7 @@ const elements = {
             comment: 'This attribute indicates the time and date of the change and must be a valid date string with an optional time. If the value cannot be parsed as a date with an optional time string, the element does not have an associated timestamp. For the format of the string without a time, see Date strings. The format of the string if it includes both date and time is covered in Local date and time strings.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLTransparentContentGroup'
       },
       ins: {
         comment: 'The <ins> HTML element represents a range of text that has been added to a document. You can use the <del> element to similarly represent a range of text that has been deleted from the document.',
@@ -1283,12 +1108,12 @@ const elements = {
             comment: 'This attribute indicates the time and date of the change and must be a valid date with an optional time string. If the value cannot be parsed as a date with an optional time string, the element does not have an associated timestamp. For the format of the string without a time, see Format of a valid date string. The format of the string if it includes both date and time is covered in Format of a valid local date and time string.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLTransparentContentGroup'
       },
       caption: {
         comment: 'The <caption> HTML element specifies the caption (or title) of a table.',
         attributes: [],
-        permittedContent: 'Flow content.'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       col: {
         comment: 'The <col> HTML element defines a column within a table and is used for defining common semantics on all common cells. It is generally found within a <colgroup> element.',
@@ -1298,7 +1123,7 @@ const elements = {
             comment: 'This attribute contains a positive integer indicating the number of consecutive columns the <col> element spans. If not present, its default value is 1.'
           }
         ],
-        permittedContent: 'None; it is a void element.'
+        permittedContent: 'void'
       },
       colgroup: {
         comment: 'The <colgroup> HTML element defines a group of columns within a table.',
@@ -1308,22 +1133,22 @@ const elements = {
             comment: 'This attribute contains a positive integer indicating the number of consecutive columns the <colgroup> element spans. If not present, its default value is 1.\n The span attribute is not permitted if there are one or more <col> elements within the <colgroup>.'
           }
         ],
-        permittedContent: 'If the span attribute is\n present: none.If\n the attribute is not present: zero or more <col>\n element'
+        permittedContent: 'SkruvColHTMLElement'
       },
       table: {
         comment: 'The <table> HTML element represents tabular data — that is, information presented in a two-dimensional table comprised of rows and columns of cells containing data.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvCaptionHTMLElement | SkruvColgroupHTMLElement | SkruvTheadHTMLElement | SkruvTbodyHTMLElement | SkruvTrHTMLElement | SkruvTfootHTMLElement'
       },
       tbody: {
         comment: 'The <tbody> HTML element encapsulates a set of table rows (<tr> elements), indicating that they comprise the body of the table (<table>).',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvTrHTMLElement'
       },
       tr: {
         comment: "The <tr> HTML element defines a row of cells in a table. The row's cells can then be established using a mix of <td> (data cell) and <th> (header cell) elements.",
         attributes: [],
-        permittedContent: 'Zero or more <td> and/or\n <th> elements;\n script-supporting elements\n (<script> and\n <template>) are also allowed'
+        permittedContent: 'SkruvTdHTMLElement | SkruvThHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement'
       },
       td: {
         comment: 'The <td> HTML element defines a cell of a table that contains data. It participates in the table model.',
@@ -1341,12 +1166,12 @@ const elements = {
             comment: 'This attribute contains a non-negative integer value that indicates for how many rows the cell extends. Its default value is 1; if its value is set to 0, it extends until the end of the table section (<thead>, <tbody>, <tfoot>, even if implicitly defined), that the cell belongs to. Values higher than 65534 are clipped down to 65534.'
           }
         ],
-        permittedContent: 'Flow content.'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       tfoot: {
         comment: 'The <tfoot> HTML element defines a set of rows summarizing the columns of the table.',
         attributes: [],
-        permittedContent: 'Zero or more <tr> elements.'
+        permittedContent: 'SkruvTrHTMLElement'
       },
       th: {
         comment: 'The <th> HTML element defines a cell as the header of a group of table cells. The exact nature of this group is defined by the scope and headers attributes.',
@@ -1372,12 +1197,12 @@ const elements = {
             comment: 'This enumerated attribute defines the cells that the header (defined in the <th>) element relates to. It may have the following values:\n \n row: The header relates to all cells of the row it belongs to.\n col: The header relates to all cells of the column it belongs to.\n rowgroup: The header belongs to a rowgroup and relates to all of its cells.\n colgroup: The header belongs to a colgroup and relates to all of its cells.\n \n If the scope attribute is not specified, or its value is not row, col, or rowgroup, or colgroup, then browsers automatically select the set of cells to which the header cell applies.'
           }
         ],
-        permittedContent: 'Flow content, but with no header, footer, sectioning content, or heading content\n descendants.'
+        permittedContent: 'Exclude<Exclude<Exclude<Exclude<SkruvHTMLFlowContentGroup, SkruvFooterHTMLElement>, SkruvHeaderHTMLElement>, SkruvHTMLSectioningContentGroup>, SkruvHTMLHeadingContentGroup>'
       },
       thead: {
         comment: 'The <thead> HTML element defines a set of rows defining the head of the columns of the table.',
         attributes: [],
-        permittedContent: 'Zero or more <tr> elements.'
+        permittedContent: 'SkruvTrHTMLElement'
       },
       button: {
         comment: 'The <button> HTML element is an interactive element activated by a user with a mouse, keyboard, finger, voice command, or other assistive technology. Once activated, it then performs an action, such as submitting a form or opening a dialog.',
@@ -1439,12 +1264,12 @@ const elements = {
             comment: "Defines the value associated with the button's name when it's submitted with the form data. This value is passed to the server in params when the form is submitted using this button."
           }
         ],
-        permittedContent: 'Phrasing content\n but there must be no\n Interactive content'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       datalist: {
         comment: 'The <datalist> HTML element contains a set of <option> elements that represent the permissible or recommended options available to choose from within other controls.',
         attributes: [],
-        permittedContent: 'Either\n phrasing content\n or zero or more <option> elements.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup | SkruvOptionHTMLElement'
       },
       option: {
         comment: 'The <option> HTML element is used to define an item contained in a <select>, an <optgroup>, or a <datalist> element. As such, <option> can represent menu items in popups and other lists of items in an HTML document.',
@@ -1466,7 +1291,7 @@ const elements = {
             comment: 'The content of this attribute represents the value to be submitted with the form, should this option be selected. If this attribute is omitted, the value is taken from the text content of the option element.'
           }
         ],
-        permittedContent: 'Text, possibly with escaped characters (like\n &eacute;).'
+        permittedContent: 'string'
       },
       fieldset: {
         comment: 'The <fieldset> HTML element is used to group several controls as well as labels (<label>) within a web form.',
@@ -1484,7 +1309,7 @@ const elements = {
             comment: 'The name associated with the group.\n \n Note: The caption for the fieldset is given by the first <legend> element nested inside it.'
           }
         ],
-        permittedContent: 'An optional <legend> element, followed by flow\n content.'
+        permittedContent: 'SkruvLegendHTMLElement'
       },
       label: {
         comment: 'The <label> HTML element represents a caption for an item in a user interface.',
@@ -1494,15 +1319,11 @@ const elements = {
             comment: 'The value of the for attribute must be a single id for a labelable form-related element in the same document as the <label> element. So, any given label element can be associated with only one form control.\n \n Note: To programmatically set the for attribute, use htmlFor.\n \n The first element in the document with an id attribute matching the value of the for attribute is the labeled control for this label element — if the element with that id is actually a labelable element. If it is not a labelable element, then the for attribute has no effect. If there are other elements that also match the id value, later in the document, they are not considered.\n Multiple label elements can be given the same value for their for attribute; doing so causes the associated form control (the form control that for value references) to have multiple labels.\n \n Note: A <label> element can have both a for attribute and a contained control element, as long as the for attribute points to the contained control element.'
           }
         ],
-        permittedContent: 'Phrasing content, but no descendant label elements. No\n labelable\n elements other than the labeled control are allowed.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       form: {
         comment: 'The <form> HTML element represents a document section containing interactive controls for submitting information.',
         attributes: [
-          {
-            name: 'accept',
-            comment: 'Comma-separated content types the server accepts.\n \n Note: This attribute has been deprecated and should not be used. Instead, use the accept attribute on <input type=file> elements.'
-          },
           {
             name: 'accept-charset',
             comment: 'Space-separated character encodings the server accepts. The browser uses them in the order in which they are listed. The default value means the same encoding as the page.\n (In previous versions of HTML, character encodings could also be delimited by commas.)'
@@ -1524,17 +1345,150 @@ const elements = {
             comment: 'Controls the annotations and what kinds of links the form creates. Annotations include external, nofollow, opener, noopener, and noreferrer. Link types include help, prev, next, search, and license. The rel value is a space-separated list of these enumerated values.'
           }
         ],
-        permittedContent: 'Flow content, but not containing <form> elements'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       input: {
         comment: 'The <input> HTML element is used to create interactive controls for web-based forms in order to accept data from the user; a wide variety of types of input data and control widgets are available, depending on the device and user agent. The <input> element is one of the most powerful and complex in all of HTML due to the sheer number of combinations of input types and attributes.',
-        attributes: [],
-        permittedContent: 'None; it is a void element.'
+        attributes: [
+          {
+            name: 'accept',
+            comment: 'Hint for expected file type in file upload controls'
+          },
+          {
+            name: 'alt',
+            comment: 'alt attribute for the image type. Required for accessibility'
+          },
+          {
+            name: 'autocomplete',
+            comment: 'Hint for form autofill feature'
+          },
+          {
+            name: 'capture',
+            comment: 'Media capture input method in file upload controls'
+          },
+          {
+            name: 'checked',
+            comment: 'Whether the command or control is checked'
+          },
+          {
+            name: 'dirname',
+            comment: "Name of form field to use for sending the element's directionality in form submission"
+          },
+          {
+            name: 'disabled',
+            comment: 'Whether the form control is disabled'
+          },
+          {
+            name: 'form',
+            comment: 'Associates the control with a form element'
+          },
+          {
+            name: 'formaction',
+            comment: 'URL to use for form submission'
+          },
+          {
+            name: 'formenctype',
+            comment: 'Form data set encoding type to use for form submission'
+          },
+          {
+            name: 'formmethod',
+            comment: 'HTTP method to use for form submission'
+          },
+          {
+            name: 'formnovalidate',
+            comment: 'Bypass form control validation for form submission'
+          },
+          {
+            name: 'formtarget',
+            comment: 'Browsing context for form submission'
+          },
+          {
+            name: 'height',
+            comment: 'Same as height attribute for <img>; vertical dimension'
+          },
+          {
+            name: 'list',
+            comment: 'Value of the id attribute of the <datalist> of autocomplete options'
+          },
+          {
+            name: 'max',
+            comment: 'Maximum value'
+          },
+          {
+            name: 'maxlength',
+            comment: 'Maximum length (number of characters) of value'
+          },
+          {
+            name: 'min',
+            comment: 'Minimum value'
+          },
+          {
+            name: 'minlength',
+            comment: 'Minimum length (number of characters) of value'
+          },
+          {
+            name: 'multiple',
+            comment: 'Boolean. Whether to allow multiple values'
+          },
+          {
+            name: 'name',
+            comment: 'Name of the form control. Submitted with the form as part of a name/value pair'
+          },
+          {
+            name: 'pattern',
+            comment: 'Pattern the value must match to be valid'
+          },
+          {
+            name: 'placeholder',
+            comment: 'Text that appears in the form control when it has no value set'
+          },
+          {
+            name: 'popovertarget',
+            comment: 'Designates an <input type="button"> as a control for a popover element'
+          },
+          {
+            name: 'popovertargetaction',
+            comment: 'Specifies the action that a popover control should perform'
+          },
+          {
+            name: 'readonly',
+            comment: 'Boolean. The value is not editable'
+          },
+          {
+            name: 'required',
+            comment: 'Boolean. A value is required or must be checked for the form to be submittable'
+          },
+          {
+            name: 'size',
+            comment: 'Size of the control'
+          },
+          {
+            name: 'src',
+            comment: 'Same as src attribute for <img>; address of image resource'
+          },
+          {
+            name: 'step',
+            comment: 'Incremental values that are valid'
+          },
+          {
+            name: 'type',
+            comment: 'Type of form control'
+          },
+          {
+            name: 'value',
+            comment: 'The initial value of the control'
+          },
+          {
+            name: 'width',
+            comment: 'Same as width attribute for <img>'
+          }
+        ],
+        permittedContent: 'void'
       },
       legend: {
         comment: 'The <legend> HTML element represents a caption for the content of its parent <fieldset>.',
         attributes: [],
-        permittedContent: 'Phrasing content\n and\n headings\n (h1–h6 elements).'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup | SkruvH1HTMLElement | SkruvH2HTMLElement | SkruvH3HTMLElement | SkruvH4HTMLElement | SkruvH5HTMLElement | SkruvH6HTMLElement'
       },
       meter: {
         comment: 'The <meter> HTML element represents either a scalar value within a known range or a fractional value.',
@@ -1568,7 +1522,7 @@ const elements = {
             comment: 'This optional attribute is used to explicitly set a <form> owner for the <meter> element. If omitted, the <meter> is associated with its ancestor <form> element or the form association set by the form attribute on another ancestor element, such as on a <fieldset>, if any. If included, the value must be the id of a <form> in the same tree.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       optgroup: {
         comment: 'The <optgroup> HTML element creates a grouping of options within a <select> element.',
@@ -1582,7 +1536,7 @@ const elements = {
             comment: 'The name of the group of options, which the browser can use when labeling the options in the user interface. This attribute is mandatory if this element is used.'
           }
         ],
-        permittedContent: 'Zero or more <option> elements.'
+        permittedContent: 'SkruvOptionHTMLElement'
       },
       select: {
         comment: 'The <select> HTML element represents a control that provides a menu of options.',
@@ -1620,7 +1574,7 @@ const elements = {
             comment: 'If the control is presented as a scrolling list box (e.g. when multiple is specified), this attribute represents the number of rows in the list that should be visible at one time. Browsers are not required to present a select element as a scrolled list box. The default value is 0.\n \n Note: According to the HTML specification, the default value for size should be 1; however, in practice, this has been found to break some websites, and no other browser currently does that, so Mozilla has opted to continue to return 0 for the time being with Firefox.'
           }
         ],
-        permittedContent: 'Zero or more <option> or\n <optgroup> elements.'
+        permittedContent: 'SkruvOptionHTMLElement | HTMLOptGroupElement'
       },
       output: {
         comment: 'The <output> HTML element is a container element into which a site or app can inject the results of a calculation or the outcome of a user action.',
@@ -1638,7 +1592,7 @@ const elements = {
             comment: "The element's name. Used in the form.elements API."
           }
         ],
-        permittedContent: 'Phrasing content.'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       progress: {
         comment: 'The <progress> HTML element displays an indicator showing the completion progress of a task, typically displayed as a progress bar.',
@@ -1652,7 +1606,7 @@ const elements = {
             comment: 'This attribute specifies how much of the task that has been completed. It must be a valid floating point number between 0 and max, or between 0 and 1 if max is omitted. If there is no value attribute, the progress bar is indeterminate; this indicates that an activity is ongoing with no indication of how long it is expected to take.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvHTMLPhrasingContentGroup'
       },
       textarea: {
         comment: 'The <textarea> HTML element represents a multi-line plain-text editing control, useful when you want to allow users to enter a sizeable amount of free-form text, for example a comment on a review or feedback form.',
@@ -1722,7 +1676,7 @@ const elements = {
             comment: 'Indicates how the control should wrap the value for form submission. Possible values are:\n \n hard: The browser automatically inserts line breaks (CR+LF) so that each line is no longer than the width of the control; the cols attribute must be specified for this to take effect\n soft: The browser ensures that all line breaks in the entered value are a CR+LF pair, but no additional line breaks are added to the value.\n off \n Non-standard\n: Like soft but changes appearance to white-space: pre so line segments exceeding cols are not wrapped and the <textarea> becomes horizontally scrollable.\n \n If this attribute is not specified, soft is its default value.'
           }
         ],
-        permittedContent: 'Text'
+        permittedContent: 'string'
       },
       details: {
         comment: 'The <details> HTML element creates a disclosure widget in which information is visible only when the widget is toggled into an "open" state. A summary or label must be provided using the <summary> element.',
@@ -1732,12 +1686,12 @@ const elements = {
             comment: 'This Boolean attribute indicates whether the details — that is, the contents of the <details> element — are currently visible. The details are shown when this attribute exists, or hidden when this attribute is absent. By default this attribute is absent which means the details are not visible.\n \n Note: You have to remove this attribute entirely to make the details hidden. open="false" makes the details visible because this attribute is Boolean.'
           }
         ],
-        permittedContent: 'One <summary> element followed by\n flow content.'
+        permittedContent: 'SkruvSummaryHTMLElement | SkruvHTMLFlowContentGroup'
       },
       summary: {
         comment: "The <summary> HTML element specifies a summary, caption, or legend for a <details> element's disclosure box. Clicking the <summary> element toggles the state of the parent <details> element open and closed.",
         attributes: [],
-        permittedContent: 'Phrasing content\n or one element of\n Heading content'
+        permittedContent: 'SkruvHTMLPhrasingContentGroup | SkruvHTMLHeadingContentGroup'
       },
       dialog: {
         comment: 'The <dialog> HTML element represents a dialog box or other interactive component, such as a dismissible alert, inspector, or subwindow.',
@@ -1747,7 +1701,7 @@ const elements = {
             comment: "Indicates that the dialog is active and can be interacted with. When the open attribute is not set, the dialog shouldn't be shown to the user.\n It is recommended to use the .show() or .showModal() methods to render dialogs, rather than the open attribute. If a <dialog> is opened using the open attribute, it will be non-modal."
           }
         ],
-        permittedContent: 'Flow content'
+        permittedContent: 'SkruvHTMLFlowContentGroup'
       },
       slot: {
         comment: 'The <slot> HTML element—part of the Web Components technology suite—is a placeholder inside a web component that you can fill with your own markup, which lets you create separate DOM trees and present them together.',
@@ -1757,251 +1711,226 @@ const elements = {
             comment: "The slot's name.\n A named slot is a <slot> element with a name attribute."
           }
         ],
-        permittedContent: 'Transparent'
+        permittedContent: 'AnyHTMLContent'
       },
       template: {
         comment: 'The <template> HTML element is a mechanism for holding HTML that is not to be rendered immediately when a page is loaded but may be instantiated subsequently during runtime using JavaScript.',
         attributes: [],
-        permittedContent: 'No restrictions'
-      },
-      acronym: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      big: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      dir: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [
-          {
-            name: 'compact',
-            comment: "This Boolean attribute hints that the list should be rendered in a compact style. The interpretation of this attribute depends on the user agent and it doesn't work in all browsers."
-          }
-        ],
-        permittedContent: ''
-      },
-      font: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [
-          {
-            name: 'color',
-            comment: 'This attribute sets the text color using either a named color or a color specified in the hexadecimal #RRGGBB format.'
-          },
-          {
-            name: 'face',
-            comment: "This attribute contains a comma-separated list of one or more font names. The document text in the default style is rendered in the first font face that the client's browser supports. If no font listed is installed on the local system, the browser typically defaults to the proportional or fixed-width font for that system."
-          },
-          {
-            name: 'size',
-            comment: 'This attribute specifies the font size as either a numeric or relative value. Numeric values range from 1 to 7 with 1 being the smallest and 3 the default. It can be defined using a relative value, like +2 or -3, which sets it relative to 3, the default value.'
-          }
-        ],
-        permittedContent: ''
-      },
-      frame: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [
-          {
-            name: 'src',
-            comment: 'This attribute specifies the document that will be displayed by the frame.'
-          },
-          {
-            name: 'name',
-            comment: "This attribute is used for labeling frames. Without labeling, every link will open in the frame that it's in – the closest parent frame. See the target attribute for more information."
-          },
-          {
-            name: 'noresize',
-            comment: 'This attribute prevents resizing of frames by users.'
-          },
-          {
-            name: 'scrolling',
-            comment: 'This attribute defines the existence of a scrollbar. If this attribute is not used, the browser adds a scrollbar when necessary. There are two choices: "yes" for forcing a scrollbar even when it is not necessary and "no" for forcing no scrollbar even when it is necessary.'
-          },
-          {
-            name: 'marginheight',
-            comment: 'This attribute defines the height of the margin between frames.'
-          },
-          {
-            name: 'marginwidth',
-            comment: 'This attribute defines the width of the margin between frames.'
-          },
-          {
-            name: 'frameborder',
-            comment: "This attribute allows you to specify a frame's border."
-          }
-        ],
-        permittedContent: ''
-      },
-      frameset: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [
-          {
-            name: 'cols',
-            comment: 'This attribute specifies the number and size of horizontal spaces in a frameset.'
-          },
-          {
-            name: 'rows',
-            comment: 'This attribute specifies the number and size of vertical spaces in a frameset.'
-          }
-        ],
-        permittedContent: ''
-      },
-      marquee: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [
-          {
-            name: 'behavior',
-            comment: 'Sets how the text is scrolled within the marquee. Possible values are scroll, slide and alternate. If no value is specified, the default value is scroll.'
-          },
-          {
-            name: 'bgcolor',
-            comment: 'Sets the background color through color name or hexadecimal value.'
-          },
-          {
-            name: 'direction',
-            comment: 'Sets the direction of the scrolling within the marquee. Possible values are left, right, up and down. If no value is specified, the default value is left.'
-          },
-          {
-            name: 'height',
-            comment: 'Sets the height in pixels or percentage value.'
-          },
-          {
-            name: 'hspace',
-            comment: 'Sets the horizontal margin'
-          },
-          {
-            name: 'loop',
-            comment: 'Sets the number of times the marquee will scroll. If no value is specified, the default value is −1, which means the marquee will scroll continuously.'
-          },
-          {
-            name: 'scrollamount',
-            comment: 'Sets the amount of scrolling at each interval in pixels. The default value is 6.'
-          },
-          {
-            name: 'scrolldelay',
-            comment: 'Sets the interval between each scroll movement in milliseconds. The default value is 85. Note that any value smaller than 60 is ignored and the value 60 is used instead unless truespeed is specified.'
-          },
-          {
-            name: 'truespeed',
-            comment: 'By default, scrolldelay values lower than 60 are ignored. If truespeed is present, those values are not ignored.'
-          },
-          {
-            name: 'vspace',
-            comment: 'Sets the vertical margin in pixels or percentage value.'
-          },
-          {
-            name: 'width',
-            comment: 'Sets the width in pixels or percentage value.'
-          }
-        ],
-        permittedContent: ''
-      },
-      menuitem: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [
-          {
-            name: 'checked',
-            comment: 'Boolean attribute which indicates whether the command is selected. May only be used when the type attribute is checkbox or radio.'
-          },
-          {
-            name: 'command',
-            comment: 'Specifies the ID of a separate element, indicating a command to be invoked indirectly. May not be used within a menu item that also includes the attributes checked, disabled, icon, label, radiogroup or type.'
-          },
-          {
-            name: 'default',
-            comment: "This Boolean attribute indicates use of the same command as the menu's subject element (such as a button or input)."
-          },
-          {
-            name: 'disabled',
-            comment: 'Boolean attribute which indicates that the command is not available in the current state. Note that disabled is distinct from hidden; the disabled attribute is appropriate in any context where a change in circumstances might render the command relevant.'
-          },
-          {
-            name: 'icon',
-            comment: 'Image URL, used to provide a picture to represent the command.'
-          },
-          {
-            name: 'label',
-            comment: 'The name of the command as shown to the user. Required when a command attribute is not present.'
-          },
-          {
-            name: 'radiogroup',
-            comment: 'This attribute specifies the name of a group of commands to be toggled as radio buttons when selected. May only be used where the type attribute is radio.'
-          },
-          {
-            name: 'type',
-            comment: 'This attribute indicates the kind of command, and can be one of three values.\n \n command: A regular command with an associated action. This is the missing value default.\n checkbox: Represents a command that can be toggled between two different states.\n radio: Represent one selection from a group of commands that can be toggled as radio buttons.'
-          }
-        ],
-        permittedContent: 'None; it is a void element.'
-      },
-      noframes: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      param: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [
-          {
-            name: 'name',
-            comment: 'Name of the parameter.'
-          },
-          {
-            name: 'value',
-            comment: 'Specifies the value of the parameter.'
-          },
-          {
-            name: 'type',
-            comment: 'Only used if the valuetype is set to ref. Specifies the MIME type of values found at the URI specified by value.'
-          },
-          {
-            name: 'valuetype',
-            comment: "Specifies the type of the value attribute. Possible values are:\n \n data: Default value. The value is passed to the object's implementation as a string.\n ref: The value is a URI to a resource where run-time values are stored.\n object: An ID of another <object> in the same document."
-          }
-        ],
-        permittedContent: 'None; it is a void element.'
-      },
-      plaintext: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      rb: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: 'As a child of a <ruby> element.'
-      },
-      rtc: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: 'Phrasing content\n or <rt> elements.'
-      },
-      strike: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      tt: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: 'Phrasing content.'
-      },
-      xmp: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
+        permittedContent: 'AnyHTMLContent'
       }
     }
   },
   SVG: {
     namespace: 'http://www.w3.org/2000/svg',
+    elementGroups: [
+      {
+        name: 'AnimationElements',
+        children: [
+          'animate',
+          'animateMotion',
+          'animateTransform',
+          'mpath',
+          'set'
+        ]
+      },
+      {
+        name: 'BasicShapes',
+        children: [
+          'circle',
+          'ellipse',
+          'line',
+          'polygon',
+          'polyline',
+          'rect'
+        ]
+      },
+      {
+        name: 'ContainerElements',
+        children: [
+          'a',
+          'defs',
+          'g',
+          'marker',
+          'mask',
+          'pattern',
+          'svg',
+          'switch',
+          'symbol'
+        ]
+      },
+      {
+        name: 'DescriptiveElements',
+        children: [
+          'desc',
+          'metadata',
+          'title'
+        ]
+      },
+      {
+        name: 'FilterPrimitiveElements',
+        children: [
+          'feBlend',
+          'feColorMatrix',
+          'feComponentTransfer',
+          'feComposite',
+          'feConvolveMatrix',
+          'feDiffuseLighting',
+          'feDisplacementMap',
+          'feDropShadow',
+          'feFlood',
+          'feFuncA',
+          'feFuncB',
+          'feFuncG',
+          'feFuncR',
+          'feGaussianBlur',
+          'feImage',
+          'feMerge',
+          'feMergeNode',
+          'feMorphology',
+          'feOffset',
+          'feSpecularLighting',
+          'feTile',
+          'feTurbulence'
+        ]
+      },
+      {
+        name: 'GradientElements',
+        children: [
+          'linearGradient',
+          'radialGradient',
+          'stop'
+        ]
+      },
+      {
+        name: 'GraphicsElements',
+        children: [
+          'circle',
+          'ellipse',
+          'image',
+          'line',
+          'path',
+          'polygon',
+          'polyline',
+          'rect',
+          'text',
+          'use'
+        ]
+      },
+      {
+        name: 'GraphicsReferencingElements',
+        children: [
+          'use'
+        ]
+      },
+      {
+        name: 'LightSourceElements',
+        children: [
+          'feDistantLight',
+          'fePointLight',
+          'feSpotLight'
+        ]
+      },
+      {
+        name: 'NeverRenderedElements',
+        children: [
+          'clipPath',
+          'defs',
+          'linearGradient',
+          'marker',
+          'mask',
+          'metadata',
+          'pattern',
+          'radialGradient',
+          'script',
+          'style',
+          'symbol',
+          'title'
+        ]
+      },
+      {
+        name: 'PaintServerElements',
+        children: [
+          'linearGradient',
+          'pattern',
+          'radialGradient'
+        ]
+      },
+      {
+        name: 'RenderableElements',
+        children: [
+          'a',
+          'circle',
+          'ellipse',
+          'foreignObject',
+          'g',
+          'image',
+          'line',
+          'path',
+          'polygon',
+          'polyline',
+          'rect',
+          'svg',
+          'switch',
+          'symbol',
+          'text',
+          'textPath',
+          'tspan',
+          'use'
+        ]
+      },
+      {
+        name: 'ShapeElements',
+        children: [
+          'circle',
+          'ellipse',
+          'line',
+          'path',
+          'polygon',
+          'polyline',
+          'rect'
+        ]
+      },
+      {
+        name: 'StructuralElements',
+        children: [
+          'defs',
+          'g',
+          'svg',
+          'symbol',
+          'use'
+        ]
+      },
+      {
+        name: 'TextContentElements',
+        children: [
+          'textPath',
+          'text',
+          'tspan'
+        ]
+      },
+      {
+        name: 'TextContentChildElements',
+        children: [
+          'textPath',
+          'tspan'
+        ]
+      },
+      {
+        name: 'UncategorizedElements',
+        children: [
+          'clipPath',
+          'filter',
+          'foreignObject',
+          'script',
+          'style',
+          'view'
+        ]
+      }
+    ],
     elements: {
       a: {
         comment: "The <a> SVG element creates a hyperlink to other web pages, files, locations in the same page, email addresses, or any other URL. It is very similar to HTML's <a> element.",
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'download',
@@ -2034,21 +1963,19 @@ const elements = {
           {
             name: 'type',
             comment: 'A MIME type for the linked URL.\n Value type: <string> ; Default value: none; Animatable: yes'
-          },
-          {
-            name: 'xlink:href',
-            comment: 'The URL or URL fragment that the hyperlink points to. May be required for backwards compatibility for older browsers.\n Value type: <URL> ; Default value: none; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnySVGElement'
       },
       animate: {
         comment: 'The SVG <animate> element provides a way to animate an attribute of an element over time.',
+        extendsAttributes: ['SVGAnimationAttributes'],
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup'
       },
       animateMotion: {
         comment: 'The SVG <animateMotion> element provides a way to define how an element moves along a motion path.',
+        extendsAttributes: ['SVGAnimationAttributes'],
         attributes: [
           {
             name: 'keyPoints',
@@ -2063,15 +1990,17 @@ const elements = {
             comment: 'This attribute defines a rotation applied to the element animated along a path, usually to make it pointing in the direction of the animation.\n Value type: <number>|auto|auto-reverse; Default value: 0; Animatable: no'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup'
       },
       animateTransform: {
         comment: 'The animateTransform element animates a transformation attribute on its target element, thereby allowing animations to control translation, scaling, rotation, and/or skewing.',
+        extendsAttributes: ['SVGAnimationAttributes'],
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup'
       },
       circle: {
         comment: 'The <circle> SVG element is an SVG basic shape, used to draw circles based on a center point and a radius.',
+        extendsAttributes: ['SVGAnimationAttributes'],
         attributes: [
           {
             name: 'cx',
@@ -2090,30 +2019,33 @@ const elements = {
             comment: "The total length for the circle's circumference, in user units.\n Value type: <number> ; Default value: none; Animatable: yes"
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGAnimationElementsGroup | SkruvSVGDescriptiveElementsGroup'
       },
       clipPath: {
         comment: 'The <clipPath> SVG element defines a clipping path, to be used by the clip-path property.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'clipPathUnits',
             comment: 'Defines the coordinate system for the contents of the <clipPath> element.\n Value type: userSpaceOnUse|objectBoundingBox ; Default value: userSpaceOnUse; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvTextSVGElement | SkruvUseSVGElement'
       },
       defs: {
         comment: 'The <defs> element is used to store graphical objects that will be used at a later time. Objects created inside a <defs> element are not rendered directly. To display them you have to reference them (with a <use> element for example).',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'AnySVGElement'
       },
       desc: {
         comment: 'The <desc> element provides an accessible, long-text description of any SVG container element or graphics element.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'AnySVGElement'
       },
       ellipse: {
         comment: 'The <ellipse> element is an SVG basic shape, used to create ellipses based on a center coordinate, and both their x and y radius.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'cx',
@@ -2136,50 +2068,102 @@ const elements = {
             comment: 'This attribute lets specify the total length for the path, in user units.\n Value type: <number> ; Default value: none; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup'
       },
       feBlend: {
         comment: 'The <feBlend> SVG filter primitive composes two objects together ruled by a certain blending mode. This is similar to what is known from image editing software when blending two layers. The mode is defined by the mode attribute.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' },
+          { name: 'in2' },
+          { name: 'mode' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feColorMatrix: {
         comment: "The <feColorMatrix> SVG filter element changes colors based on a transformation matrix. Every pixel's color value [R,G,B,A] is matrix multiplied by a 5 by 5 color matrix to create new color [R',G',B',A'].",
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' },
+          { name: 'type' },
+          { name: 'values' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feComponentTransfer: {
         comment: 'The <feComponentTransfer> SVG filter primitive performs color-component-wise remapping of data for each pixel. It allows operations like brightness adjustment, contrast adjustment, color balance or thresholding.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' }
+        ],
+        permittedContent: 'SkruvFefuncaSVGElement | SkruvFefuncbSVGElement | SkruvFefuncgSVGElement | SkruvFefuncrSVGElement'
       },
       feComposite: {
         comment: 'The <feComposite> SVG filter primitive performs the combination of two input images pixel-wise in image space using one of the Porter-Duff compositing operations: over, in, atop, out, xor, lighter, or arithmetic.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' },
+          { name: 'in2' },
+          { name: 'operator' },
+          { name: 'k1' },
+          { name: 'k2' },
+          { name: 'k3' },
+          { name: 'k4' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feConvolveMatrix: {
         comment: 'The <feConvolveMatrix> SVG filter primitive applies a matrix convolution filter effect. A convolution combines pixels in the input image with neighboring pixels to produce a resulting image. A wide variety of imaging operations can be achieved through convolutions, including blurring, edge detection, sharpening, embossing and beveling.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' },
+          { name: 'order' },
+          { name: 'kernelMatrix' },
+          { name: 'divisor' },
+          { name: 'bias' },
+          { name: 'targetX' },
+          { name: 'targetY' },
+          { name: 'edgeMode' },
+          { name: 'kernelUnitLength' },
+          { name: 'preserveAlpha' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feDiffuseLighting: {
         comment: 'The <feDiffuseLighting> SVG filter primitive lights an image using the alpha channel as a bump map. The resulting image, which is an RGBA opaque image, depends on the light color, light position and surface geometry of the input bump map.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' },
+          { name: 'surfaceScale' },
+          { name: 'diffuseConstant' },
+          { name: 'kernelUnitLength' }
+        ],
+        permittedContent: 'SkruvSVGLightSourceElementsGroup | SkruvSVGDescriptiveElementsGroup'
       },
       feDisplacementMap: {
         comment: 'The <feDisplacementMap> SVG filter primitive uses the pixel values from the image from in2 to spatially displace the image from in.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' },
+          { name: 'in2' },
+          { name: 'scale' },
+          { name: 'xChannelSelector' },
+          { name: 'yChannelSelector' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feDistantLight: {
         comment: 'The <feDistantLight> filter primitive defines a distant light source that can be used within a lighting filter primitive: <feDiffuseLighting> or <feSpecularLighting>.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'azimuth' },
+          { name: 'elevation' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feDropShadow: {
         comment: 'The SVG <feDropShadow> filter primitive creates a drop shadow of the input image. It can only be used inside a <filter> element.',
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
         attributes: [
           {
             name: 'dx',
@@ -2194,95 +2178,169 @@ const elements = {
             comment: 'This attribute defines the standard deviation for the blur operation in the drop shadow.\n Value type: <number>; Default value: 2; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvScriptSVGElement'
       },
       feFlood: {
         comment: 'The <feFlood> SVG filter primitive fills the filter subregion with the color and opacity defined by flood-color and flood-opacity.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'flood-color' },
+          { name: 'flood-opacity' }
+
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feFuncA: {
         comment: 'The <feFuncA> SVG filter primitive defines the transfer function for the alpha component of the input graphic of its parent <feComponentTransfer> element.',
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feFuncB: {
         comment: 'The <feFuncB> SVG filter primitive defines the transfer function for the blue component of the input graphic of its parent <feComponentTransfer> element.',
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feFuncG: {
         comment: 'The <feFuncG> SVG filter primitive defines the transfer function for the green component of the input graphic of its parent <feComponentTransfer> element.',
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feFuncR: {
         comment: 'The <feFuncR> SVG filter primitive defines the transfer function for the red component of the input graphic of its parent <feComponentTransfer> element.',
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feGaussianBlur: {
         comment: 'The <feGaussianBlur> SVG filter primitive blurs the input image by the amount specified in stdDeviation, which defines the bell-curve.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' },
+          { name: 'stdDeviation' },
+          { name: 'edgeMode' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feImage: {
         comment: 'The <feImage> SVG filter primitive fetches image data from an external source and provides the pixel data as output (meaning if the external source is an SVG image, it is rasterized.)',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'crossorigin' },
+          { name: 'preserveAspectRatio' }
+
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvAnimatetransformSVGElement'
       },
       feMerge: {
         comment: 'The <feMerge> SVG element allows filter effects to be applied concurrently instead of sequentially. This is achieved by other filters storing their output via the result attribute and then accessing it in a <feMergeNode> child.',
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvFemergenodeSVGElement'
       },
       feMergeNode: {
         comment: 'The feMergeNode takes the result of another filter to be processed by its parent <feMerge>.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feMorphology: {
         comment: 'The <feMorphology> SVG filter primitive is used to erode or dilate the input image. Its usefulness lies especially in fattening or thinning effects.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' },
+          { name: 'operator' },
+          { name: 'radius' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feOffset: {
         comment: 'The <feOffset> SVG filter primitive allows to offset the input image. The input image as a whole is offset by the values specified in the dx and dy attributes.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' },
+          { name: 'dx' },
+          { name: 'dy' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       fePointLight: {
         comment: 'The <fePointLight> filter primitive defines a light source which allows to create a point light effect. It that can be used within a lighting filter primitive: <feDiffuseLighting> or <feSpecularLighting>.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'x' },
+          { name: 'y' },
+          { name: 'z' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feSpecularLighting: {
         comment: 'The <feSpecularLighting> SVG filter primitive lights a source graphic using the alpha channel as a bump map. The resulting image is an RGBA image based on the light color. The lighting calculation follows the standard specular component of the Phong lighting model. The resulting image depends on the light color, light position and surface geometry of the input bump map. The result of the lighting calculation is added. The filter primitive assumes that the viewer is at infinity in the z direction.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' },
+          { name: 'surfaceScale' },
+          { name: 'specularConstant' },
+          { name: 'specularExponent' },
+          { name: 'kernelUnitLength' }
+        ],
+        permittedContent: 'SkruvSVGLightSourceElementsGroup | SkruvSVGDescriptiveElementsGroup'
       },
       feSpotLight: {
         comment: 'The <feSpotLight> SVG filter primitive defines a light source that can be used to create a spotlight effect.\n It is used within a lighting filter primitive: <feDiffuseLighting> or <feSpecularLighting>.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'x' },
+          { name: 'y' },
+          { name: 'z' },
+          { name: 'pointsAtX' },
+          { name: 'pointsAtY' },
+          { name: 'pointsAtZ' },
+          { name: 'specularExponent' },
+          { name: 'limitingConeAngle' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feTile: {
         comment: 'The <feTile> SVG filter primitive allows to fill a target rectangle with a repeated, tiled pattern of an input image. The effect is similar to the one of a <pattern>.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'in' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       feTurbulence: {
         comment: 'The <feTurbulence> SVG filter primitive creates an image using the Perlin turbulence function. It allows the synthesis of artificial textures like clouds or marble. The resulting image will fill the entire filter primitive subregion.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes', 'SVGFilterAttributes'],
+        attributes: [
+          { name: 'baseFrequency' },
+          { name: 'numOctaves' },
+          { name: 'seed' },
+          { name: 'stitchTiles' },
+          { name: 'type' }
+        ],
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       filter: {
         comment: 'The <filter> SVG element defines a custom filter effect by grouping atomic filter primitives. It is never rendered itself, but must be used by the filter attribute on SVG elements, or the filter CSS property for SVG/HTML elements.',
-        attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes'],
+        attributes: [
+          { name: 'x' },
+          { name: 'y' },
+          { name: 'width' },
+          { name: 'height' },
+          { name: 'filterUnits' },
+          { name: 'primitiveUnits' }
+        ],
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvSVGFilterPrimitiveElementsGroup | SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       foreignObject: {
         comment: 'The <foreignObject> SVG element includes elements from a different XML namespace. In the context of a browser, it is most likely (X)HTML.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'height',
@@ -2301,20 +2359,23 @@ const elements = {
             comment: 'The y coordinate of the foreignObject.\n Value type: <length>|<percentage> ; Default value: 0; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyContent'
       },
       g: {
         comment: 'The <g> SVG element is a container used to group other SVG elements.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'AnySVGContent'
       },
       image: {
         comment: 'The <image> SVG element includes images inside SVG documents. It can display raster image files or other SVG files.',
         attributes: [],
-        permittedContent: ''
+        extendsAttributes: ['SVGPresentationAttributes'],
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup'
       },
       line: {
         comment: 'The <line> element is an SVG basic shape used to create a line connecting two points.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'x1',
@@ -2337,10 +2398,11 @@ const elements = {
             comment: 'Defines the total path length in user units.\n Value type: <number> ; Default value: none; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup'
       },
       linearGradient: {
         comment: 'The <linearGradient> element lets authors define linear gradients to apply to other SVG elements.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'gradientUnits',
@@ -2367,10 +2429,6 @@ const elements = {
             comment: 'This attribute defines the x coordinate of the ending point of the vector gradient along which the linear gradient is drawn.\n Value type: <length-percentage> | <number>; Default value: 100%; Animatable: yes'
           },
           {
-            name: 'xlink:href',
-            comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.An <IRI> reference to another <linearGradient> element that will be used as a template.\n Value type: <IRI> ; Default value: none; Animatable: yes'
-          },
-          {
             name: 'y1',
             comment: 'This attribute defines the y coordinate of the starting point of the vector gradient along which the linear gradient is drawn.\n Value type: <length-percentage> | <number>; Default value: 0%; Animatable: yes'
           },
@@ -2379,10 +2437,11 @@ const elements = {
             comment: 'This attribute defines the y coordinate of the ending point of the vector gradient along which the linear gradient is drawn.\n Value type: <length-percentage> | <number>; Default value: 0%; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvAnimateSVGElement | SkruvAnimatetransformSVGElement | SkruvSetSVGElement | SkruvStopSVGElement'
       },
       marker: {
         comment: 'The <marker> element defines a graphic used for drawing arrowheads or polymarkers on a given <path>, <line>, <polyline> or <polygon> element.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'markerHeight',
@@ -2417,10 +2476,11 @@ const elements = {
             comment: 'This attribute defines the bound of the SVG viewport for the current SVG fragment.\n Value type: <list-of-numbers> ; Default value: none; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnySVGElement'
       },
       mask: {
         comment: 'The <mask> element defines an alpha mask for compositing the current object into the background. A mask is used/referenced using the mask property.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'height',
@@ -2447,20 +2507,21 @@ const elements = {
             comment: 'This attribute defines the width of the masking area.\n Value type: <length> ; Default value: 120%; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnySVGElement'
       },
       metadata: {
         comment: 'The <metadata> SVG element adds metadata to SVG content. Metadata is structured information about data. The contents of <metadata> should be elements from other XML namespaces such as RDF, FOAF, etc.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'AnyElement'
       },
       mpath: {
         comment: 'The <mpath> sub-element for the <animateMotion> element provides the ability to reference an external <path> element as the definition of a motion path.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup'
       },
       path: {
         comment: 'The <path> SVG element is the generic element to define a shape. All the basic shapes can be created with a path element.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'd',
@@ -2471,10 +2532,11 @@ const elements = {
             comment: 'This attribute lets authors specify the total length for the path, in user units.\n Value type: <number> ; Default value: none; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup'
       },
       pattern: {
         comment: 'The <pattern> element defines a graphics object which can be redrawn at repeated x- and y-coordinate intervals ("tiled") to cover an area.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'height',
@@ -2513,18 +2575,15 @@ const elements = {
             comment: 'This attribute determines the x coordinate shift of the pattern tile.\n Value type: <length>|<percentage> ; Default value: 0; Animatable: yes'
           },
           {
-            name: 'xlink:href',
-            comment: 'This attribute references a template pattern that provides default values for the <pattern> attributes.\n Value type: <URL>; Default value: none; Animatable: yes\n \n \n Note: For browsers implementing href, if both href and xlink:href are set, xlink:href will be ignored and only href will be used.'
-          },
-          {
             name: 'y',
             comment: 'This attribute determines the y coordinate shift of the pattern tile.\n Value type: <length>|<percentage> ; Default value: 0; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnySVGElement'
       },
       polygon: {
         comment: 'The <polygon> element defines a closed shape consisting of a set of connected straight line segments. The last point is connected to the first point.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'points',
@@ -2535,10 +2594,11 @@ const elements = {
             comment: 'This attribute lets specify the total length for the path, in user units.\n Value type: <number> ; Default value: none; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup'
       },
       polyline: {
         comment: "The <polyline> SVG element is an SVG basic shape that creates straight lines connecting several points. Typically a polyline is used to create open shapes as the last point doesn't have to be connected to the first point. For closed shapes see the <polygon> element.",
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'points',
@@ -2549,10 +2609,11 @@ const elements = {
             comment: 'This attribute lets specify the total length for the path, in user units.\n Value type: <number> ; Default value: none; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup'
       },
       radialGradient: {
         comment: 'The <radialGradient> element lets authors define radial gradients that can be applied to fill or stroke of graphical elements.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'cx',
@@ -2593,16 +2654,13 @@ const elements = {
           {
             name: 'spreadMethod',
             comment: 'This attribute indicates how the gradient behaves if it starts or ends inside the bounds of the shape containing the gradient.\n Value type: pad|reflect|repeat ; Default value: pad; Animatable: yes'
-          },
-          {
-            name: 'xlink:href',
-            comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.An <IRI> reference to another <radialGradient> element that will be used as a template.\n Value type: <IRI> ; Default value: none; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvAnimateSVGElement | SkruvAnimatetransformSVGElement | SkruvSetSVGElement | SkruvStopSVGElement'
       },
       rect: {
         comment: 'The <rect> element is a basic SVG shape that draws rectangles, defined by their position, width, and height. The rectangles may have their corners rounded.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'x',
@@ -2633,7 +2691,7 @@ const elements = {
             comment: "The total length of the rectangle's perimeter, in user units.\n Value type: <number> ; Default value: none; Animatable: yes"
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup'
       },
       script: {
         comment: 'The SVG script element allows to add scripts to an SVG document.',
@@ -2649,26 +2707,24 @@ const elements = {
           {
             name: 'type',
             comment: 'This attribute defines type of the script language to use.\n Value type: <string>; Default value: application/ecmascript; Animatable: no'
-          },
-          {
-            name: 'xlink:href',
-            comment: 'The URL to the script to load.\n Value type: <URL> ; Default value: none; Animatable: no'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'string'
       },
       set: {
         comment: 'The SVG <set> element provides a simple means of just setting the value of an attribute for a specified duration.',
+        extendsAttributes: ['SVGAnimationAttributes'],
         attributes: [
           {
             name: 'to',
             comment: 'This attribute defines the value to be applied to the target attribute for the duration of the animation. The value must match the requirements of the target attribute.\n Value type: <anything>; Default value: none; Animatable: no'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup'
       },
       stop: {
         comment: 'The SVG <stop> element defines a color and its position to use on a gradient. This element is always a child of a <linearGradient> or <radialGradient> element.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'offset',
@@ -2683,7 +2739,7 @@ const elements = {
             comment: 'This attribute defines the opacity of the gradient stop. It can be used as a CSS property.\n Value type: <opacity>; Default value: 1; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvAnimateSVGElement | SkruvSetSVGElement'
       },
       style: {
         comment: 'The SVG <style> element allows style sheets to be embedded directly within SVG content.',
@@ -2701,10 +2757,11 @@ const elements = {
             comment: 'This attribute the title of the style sheet which can be used to switch between alternate style sheets.\n Value type: <string>; Default value: none; Animatable: no'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'string'
       },
       svg: {
         comment: 'The svg element is a container that defines a new coordinate system and viewport. It is used as the outermost element of SVG documents, but it can also be used to embed an SVG fragment inside an SVG or HTML document.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'baseProfile',
@@ -2747,15 +2804,17 @@ const elements = {
             comment: 'The displayed y coordinate of the svg container. No effect on outermost svg elements.\n Value type: <length>|<percentage> ; Default value: 0; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnySVGElement'
       },
       switch: {
         comment: 'The <switch> SVG element evaluates any requiredFeatures, requiredExtensions and systemLanguage attributes on its direct child elements in order, and then renders the first child where these attributes evaluate to true.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'AnySVGElement'
       },
       symbol: {
         comment: 'The <symbol> element is used to define graphical template objects which can be instantiated by a <use> element.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'height',
@@ -2790,10 +2849,11 @@ const elements = {
             comment: 'This attribute determines the y coordinate of the symbol.\n Value type: <length>|<percentage> ; Default value: 0; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnySVGElement'
       },
       text: {
         comment: "The SVG <text> element draws a graphics element consisting of text. It's possible to apply a gradient, pattern, clipping path, mask, or filter to <text>, like any other SVG graphics element.",
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'x',
@@ -2824,10 +2884,11 @@ const elements = {
             comment: 'A width that the text should be scaled to fit.\n Value type: <length>|<percentage> ; Default value: none; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnySVGElement'
       },
       textPath: {
         comment: 'To render text along the shape of a <path>, enclose the text in a <textPath> element that has an href attribute with a reference to the <path> element.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'href',
@@ -2862,15 +2923,16 @@ const elements = {
             comment: 'The width of the space into which the text will render.\n Value type: <length>|<percentage>|<number> ; Default value: auto; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnySVGElement'
       },
       title: {
         comment: 'The <title> element provides an accessible, short-text description of any SVG container element or graphics element.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'AnySVGElement'
       },
       tspan: {
         comment: 'The SVG <tspan> element defines a subtext within a <text> element or another <tspan> element. It allows for adjustment of the style and/or position of that subtext as needed.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'x',
@@ -2901,18 +2963,15 @@ const elements = {
             comment: 'A width that the text should be scaled to fit.\n Value type: <length>|<percentage> ; Default value: none; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvASVGElement | SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTspanSVGElement'
       },
       use: {
         comment: 'The <use> element takes nodes from within the SVG document, and duplicates them somewhere else.\n The effect is the same as if the nodes were deeply cloned into a non-exposed DOM, then pasted where the use element is, much like cloned template elements.',
+        extendsAttributes: ['SVGPresentationAttributes'],
         attributes: [
           {
             name: 'href',
             comment: 'The URL to an element/fragment that needs to be duplicated.Value type: <URL> ; Default value: none; Animatable: yes'
-          },
-          {
-            name: 'xlink:href',
-            comment: 'An <IRI> reference to an element/fragment that needs to be duplicated. If both href and xlink:href are present, the value given by href is used.Value type: <IRI> ; Default value: none; Animatable: yes'
           },
           {
             name: 'x',
@@ -2931,77 +2990,15 @@ const elements = {
             comment: 'The height of the use element.Value type: <length> ; Default value: 0; Animatable: yes'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup'
       },
       view: {
         comment: 'A view is a defined way to view the image, like a zoom level or a detail view.',
-        attributes: [],
-        permittedContent: ''
-      },
-      'missing-glyph': {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      font: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      'font-face': {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      'font-face-format': {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      'font-face-name': {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      'font-face-src': {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      'font-face-uri': {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      hkern: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      vkern: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      glyph: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      glyphRef: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      tref: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
-      },
-      cursor: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [],
-        permittedContent: ''
+        attributes: [
+          { name: 'viewBox' },
+          { name: 'preserveAspectRatio' }
+        ],
+        permittedContent: 'AnySVGElement'
       }
     }
   },
@@ -3016,21 +3013,7 @@ const elements = {
             comment: 'This enumerated attribute specifies how the enclosed MathML markup should be rendered. It can have one of the following values:\n \n block, which means that this element will be displayed in its own block outside the current span of text and with math-style set to normal.\n inline, which means that this element will be displayed inside the current span of text and with math-style set to compact.\n \n If not present, its default value is inline.'
           }
         ],
-        permittedContent: ''
-      },
-      maction: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [
-          {
-            name: 'actiontype',
-            comment: "The action which specifies what happens for this element. Special behavior\n for the following values were implemented by some browsers:\n \n \n statusline: If there is a click on the expression or the reader moves the pointer over it, the message is sent to the browser's status line. The syntax is: <maction actiontype=\"statusline\"> expression message </maction>.\n \n toggle: When there is a click on the subexpression, the rendering alternates the display of selected subexpressions. Therefore each click increments the selection value.\n The syntax is: <maction actiontype=\"toggle\" selection=\"positive-integer\" > expression1 expression2 expressionN </maction>."
-          },
-          {
-            name: 'selection',
-            comment: 'The child element currently visible, only taken into account for actiontype="toggle" or non-standard actiontype values. The default value is 1, which is the first child element.'
-          }
-        ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       semantics: {
         comment: 'The <semantics> MathML element associates annotations with a MathML expression, for example its text source as a lightweight markup language or mathematical meaning expressed in a special XML dialect. Typically, its structure is:',
@@ -3044,40 +3027,22 @@ const elements = {
             comment: 'The location of an external source for semantic information.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       menclose: {
         comment: 'Non-standard: This feature is non-standard and is not on a standards track. Do not use it on production sites facing the Web: it will not work for every user. There may also be large incompatibilities between implementations and the behavior may change in the future.',
         attributes: [
           {
             name: 'notation',
-            comment: 'A list of notations, separated by white space, to apply to the child elements. The symbols are each drawn as if the others are not present, and therefore may overlap. Possible values are:\n \n \n \n Value\n Sample Rendering\n Rendering in your browser\n Description\n \n \n \n \n longdiv (default)\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n long division symbol\n \n \n actuarial\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n actuarial symbol\n \n \n box\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n box\n \n \n roundedbox\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n rounded box\n \n \n circle\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n circle\n \n \n left\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n line to the left of the contents\n \n \n right\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n line to the right of the contents\n \n \n top\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n line above of the contents\n \n \n bottom\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n line below of the contents\n \n \n updiagonalstrike\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n strikeout line through contents from lower left to upper right\n \n \n downdiagonalstrike\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n strikeout line through contents from upper left to lower right\n \n \n verticalstrike\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n vertical strikeout line through contents\n \n \n horizontalstrike\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n horizontal strikeout line through contents\n \n \n madruwb\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n Arabic factorial symbol\n \n \n updiagonalarrow\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n diagonal arrow\n \n \n phasorangle\n \n \n \n \n \n \n \n a\n 2\n \n +\n \n b\n 2\n \n \n \n \n phasor angle'
+            comment: 'A list of notations, separated by white space, to apply to the child elements. The symbols are each drawn as if the others are not present, and therefore may overlap.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       merror: {
         comment: 'The <merror> MathML element is used to display contents as error messages. The intent of this element is to provide a standard way for programs that generate MathML from other input to report syntax errors.',
         attributes: [],
-        permittedContent: ''
-      },
-      mfenced: {
-        comment: 'Deprecated: This feature is no longer recommended. Though some browsers might still support it, it may have already been removed from the relevant web standards, may be in the process of being dropped, or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible; see the compatibility table at the bottom of this page to guide your decision. Be aware that this feature may cease to work at any time.',
-        attributes: [
-          {
-            name: 'close',
-            comment: 'A string for the closing delimiter. The default value is ")" and any white space is trimmed.'
-          },
-          {
-            name: 'open',
-            comment: 'A string for the opening delimiter. The default value is "(" and any white space is trimmed.'
-          },
-          {
-            name: 'separators',
-            comment: 'A sequence of zero or more characters to be used for different separators, optionally divided by white space, which is ignored. The default value is ",". By specifying more than one character, it is possible to set different separators for each argument in the expression. If there are too many separators, all excess is ignored. If there are too few separators in the expression, the last specified separator is repeated.'
-          }
-        ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       mfrac: {
         comment: 'The <mfrac> MathML element is used to display fractions. It can also be used\n to mark up fraction-like objects such as\n binomial coefficients\n and Legendre symbols.',
@@ -3095,12 +3060,12 @@ const elements = {
             comment: 'The alignment of the numerator over the fraction. Possible values are: left, center (default), and right.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       mi: {
         comment: 'The <mi> MathML element indicates that the content should be rendered as an identifier such as function names, variables or symbolic constants. You can also have arbitrary text in it to mark up terms.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'string'
       },
       mmultiscripts: {
         comment: 'The <mmultiscripts> MathML element is used to attach an arbitrary number of subscripts and superscripts to an expression at once, generalizing the <msubsup> element. Scripts can be either prescripts (placed before the expression) or postscripts (placed after it).',
@@ -3114,12 +3079,12 @@ const elements = {
             comment: 'A <length-percentage> indicating the minimum amount to shift the baseline of the superscript up.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       mn: {
         comment: 'The <mn> MathML element represents a numeric literal which is normally a sequence of digits with a possible separator (a dot or a comma). However, it is also allowed to have arbitrary text in it which is actually a numeric quantity, for example "eleven".',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'number'
       },
       mo: {
         comment: 'The <mo> MathML element represents an operator in a broad sense. Besides operators in strict mathematical meaning, this element also includes "operators" like parentheses, separators like comma and semicolon, or "absolute value" bars.',
@@ -3169,7 +3134,7 @@ const elements = {
             comment: 'A <boolean> indicating whether a stretchy operator should be vertically symmetric around the imaginary math axis (centered fraction line).'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'string'
       },
       mover: {
         comment: 'The <mover> MathML element is used to attach an accent or a limit over an expression. Use the following syntax: <mover> base overscript </mover>',
@@ -3179,7 +3144,7 @@ const elements = {
             comment: 'A <boolean> indicating whether the over script should be treated as an accent (i.e. drawn bigger and closer to the base expression).'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       mpadded: {
         comment: 'The <mpadded> MathML element is used to add extra padding and to set the general adjustment of position and size of enclosed contents.',
@@ -3205,22 +3170,22 @@ const elements = {
             comment: 'A <length-percentage> indicating the desired depth (below the baseline) of the <mpadded> element.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       mphantom: {
         comment: 'The <mphantom> MathML element is rendered invisibly, but dimensions (such as height, width, and baseline position) are still kept.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       mroot: {
         comment: 'The <mroot> MathML element is used to display roots with an explicit index. Two arguments are accepted, which leads to the syntax: <mroot> base index </mroot>.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       mrow: {
         comment: 'The <mrow> MathML element is used to group sub-expressions, which usually contain one or more operators with their respective operands (such as <mi> and <mn>). This element renders as a horizontal row containing its arguments.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       ms: {
         comment: 'The <ms> MathML element represents a string literal meant to be interpreted by programming languages and computer algebra systems.',
@@ -3234,7 +3199,7 @@ const elements = {
             comment: 'The closing quote to enclose the content. The default value is &quot;.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'string'
       },
       mspace: {
         comment: 'The <mspace> MathML element is used to display a blank space, whose size is set by its attributes.',
@@ -3252,36 +3217,16 @@ const elements = {
             comment: 'A <length-percentage> indicating the desired width of the space.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'void'
       },
       msqrt: {
         comment: 'The <msqrt> MathML element is used to display square roots (no index is displayed). The square root accepts only one argument, which leads to the following syntax: <msqrt> base </msqrt>.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       mstyle: {
         comment: 'The <mstyle> MathML element is used to change the style of its children.',
         attributes: [
-          {
-            name: 'background',
-            comment: 'Use background-color instead.'
-          },
-          {
-            name: 'color',
-            comment: 'Use color instead.'
-          },
-          {
-            name: 'fontsize',
-            comment: 'Use font-size instead.'
-          },
-          {
-            name: 'fontstyle',
-            comment: 'Use font-style instead.'
-          },
-          {
-            name: 'fontweight',
-            comment: 'Use font-weight instead.'
-          },
           {
             name: 'scriptminsize',
             comment: 'Specifies a minimum font size allowed due to changes in scriptlevel. The default value is 8pt.'
@@ -3291,7 +3236,7 @@ const elements = {
             comment: 'Specifies the multiplier to be used to adjust font size due to changes in scriptlevel. The default value is 0.71.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       msub: {
         comment: 'The <msub> MathML element is used to attach a subscript to an expression.',
@@ -3301,7 +3246,7 @@ const elements = {
             comment: 'A <length-percentage> indicating the minimum amount to shift the baseline of the subscript down.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       msup: {
         comment: 'The <msup> MathML element is used to attach a superscript to an expression.',
@@ -3311,7 +3256,7 @@ const elements = {
             comment: 'A <length-percentage> indicating the minimum amount to shift the baseline of the superscript up.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       msubsup: {
         comment: 'The <msubsup> MathML element is used to attach both a subscript and a superscript, together, to an expression.',
@@ -3325,7 +3270,7 @@ const elements = {
             comment: 'A <length-percentage> indicating the minimum amount to shift the baseline of the superscript up.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       mtable: {
         comment: 'The <mtable> MathML element allows you to create tables or matrices. Its children are <mtr> elements (representing rows), each of them having <mtd> elements as its children (representing cells). These elements are similar to <table>, <tr> and <td> elements of HTML.',
@@ -3371,7 +3316,7 @@ const elements = {
             comment: 'A <length-percentage> indicating the width of the entire table.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvMtrMathMLElement'
       },
       mtd: {
         comment: 'The <mtd> MathML element represents a cell in a table or a matrix. It may only appear in a <mtr> element. This element is similar to the <td> element of HTML.',
@@ -3393,12 +3338,12 @@ const elements = {
             comment: 'Specifies the vertical alignment of this cell and overrides values specified by <mtable> or <mtr>.\n Possible values are: axis, baseline, bottom, center and top.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       mtext: {
         comment: 'The <mtext> MathML element is used to render arbitrary text with no notational meaning, such as comments or annotations.',
         attributes: [],
-        permittedContent: ''
+        permittedContent: 'string'
       },
       mtr: {
         comment: 'The <mtr> MathML element represents a row in a table or a matrix. It may only appear in a <mtable> element and its children are <mtd> elements representing cells. This element is similar to the <tr> element of HTML.',
@@ -3412,7 +3357,7 @@ const elements = {
             comment: 'Overrides the vertical alignment of cells specified by <mtable> for this row. Possible values are: axis, baseline, bottom, center and top.'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'SkruvMtdMathMLElement'
       },
       munder: {
         comment: 'The <munder> MathML element is used to attach an accent or a limit under an expression. It uses the following syntax: <munder> base underscript </munder>',
@@ -3422,7 +3367,7 @@ const elements = {
             comment: 'A <boolean> indicating whether the under script should be treated as an accent (i.e. drawn bigger and closer to the base expression).'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       },
       munderover: {
         comment: 'The <munderover> MathML element is used to attach accents or limits both under and over an expression.',
@@ -3436,24 +3381,37 @@ const elements = {
             comment: 'A <boolean> indicating whether the under script should be treated as an accent (i.e. drawn bigger and closer to the base expression).'
           }
         ],
-        permittedContent: ''
+        permittedContent: 'AnyMathMLElement'
       }
     }
   },
   Atom: {
     namespace: 'http://www.w3.org/2005/Atom',
     elements: {
-      feed: { comment: '', permittedContent: '', attributes: [] },
-      id: { comment: '', permittedContent: '', attributes: [] },
-      title: { comment: '', permittedContent: '', attributes: [{ name: 'type' }] },
-      updated: { comment: '', permittedContent: '', attributes: [] },
-      author: { comment: '', permittedContent: '', attributes: [] },
-      name: { comment: '', permittedContent: '', attributes: [] },
-      uri: { comment: '', permittedContent: '', attributes: [] },
-      email: { comment: '', permittedContent: '', attributes: [] },
+      feed: {
+        comment: '',
+        permittedContent: 'SkruvIdAtomElement | SkruvTitleAtomElement | SkruvUpdatedAtomElement | SkruvAuthorAtomElement | SkruvLinkAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvLogoAtomElement | SkruvRightsAtomElement | SkruvSubtitleAtomElement',
+        attributes: []
+      },
+      entry: {
+        comment: '',
+        permittedContent: 'SkruvAuthorAtomElement | SkruvContentAtomElement | SkruvLinkAtomElement | SkruvSummaryAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvPublishedAtomElement | SkruvRightsAtomElement | SkruvSourceAtomElement',
+        attributes: []
+      },
+      id: { comment: '', permittedContent: 'string', attributes: [] },
+      title: { comment: '', permittedContent: 'string', attributes: [{ name: 'type' }] },
+      updated: { comment: '', permittedContent: 'string', attributes: [] },
+      author: {
+        comment: '',
+        permittedContent: 'SkruvNameAtomElement | SkruvUriAtomElement | SkruvEmailAtomElement',
+        attributes: []
+      },
+      name: { comment: '', permittedContent: 'string', attributes: [] },
+      uri: { comment: '', permittedContent: 'string', attributes: [] },
+      email: { comment: '', permittedContent: 'string', attributes: [] },
       link: {
         comment: '',
-        permittedContent: '',
+        permittedContent: 'void',
         attributes: [
           { name: 'href' },
           { name: 'rel' },
@@ -3465,30 +3423,86 @@ const elements = {
       },
       category: {
         comment: '',
-        permittedContent: '',
+        permittedContent: 'void',
         attributes: [
           { name: 'term' },
           { name: 'scheme' },
           { name: 'label' }
         ]
       },
-      contributor: { comment: '', permittedContent: '', attributes: [] },
-      generator: { comment: '', permittedContent: '', attributes: [] },
-      icon: { comment: '', permittedContent: '', attributes: [] },
-      logo: { comment: '', permittedContent: '', attributes: [] },
-      rights: { comment: '', permittedContent: '', attributes: [{ name: 'type' }] },
-      subtitle: { comment: '', permittedContent: '', attributes: [] },
+      contributor: {
+        comment: '',
+        permittedContent: 'SkruvNameAtomElement | SkruvUriAtomElement | SkruvEmailAtomElement',
+        attributes: []
+      },
+      generator: {
+        comment: '',
+        permittedContent: 'string',
+        attributes: [
+          { name: 'uri' },
+          { name: 'version' }
+        ]
+      },
+      icon: { comment: '', permittedContent: 'string', attributes: [] },
+      logo: { comment: '', permittedContent: 'string', attributes: [] },
+      rights: { comment: '', permittedContent: 'string', attributes: [{ name: 'type' }] },
+      subtitle: { comment: '', permittedContent: 'string', attributes: [] },
       content: {
         comment: '',
-        permittedContent: '',
+        permittedContent: 'string',
         attributes: [
           { name: 'type' },
           { name: 'src' }
         ]
       },
-      summary: { comment: '', permittedContent: '', attributes: [{ name: 'type' }] },
-      published: { comment: '', permittedContent: '', attributes: [] },
-      source: { comment: '', permittedContent: '', attributes: [] }
+      summary: { comment: '', permittedContent: 'string', attributes: [{ name: 'type' }] },
+      published: { comment: '', permittedContent: 'string', attributes: [] },
+      source: { comment: '', permittedContent: 'AnyMathMLContent', attributes: [] }
+    }
+  },
+  Sitemap: {
+    namespace: 'http://www.sitemaps.org/schemas/sitemap/0.9',
+    elements: {
+      urlset: {
+        comment: '',
+        permittedContent: 'SkruvUrlSitemapElement',
+        attributes: []
+      },
+      url: {
+        comment: '',
+        permittedContent: 'SkruvLocSitemapElement | SkruvLastmodSitemapElement | SkruvChangefreqSitemapElement | SkruvPrioritySitemapElement',
+        attributes: []
+      },
+      loc: {
+        comment: '',
+        permittedContent: 'string',
+        attributes: []
+      },
+      lastmod: {
+        comment: '',
+        permittedContent: 'string',
+        attributes: []
+      },
+      changefreq: {
+        comment: '',
+        permittedContent: 'string',
+        attributes: []
+      },
+      priority: {
+        comment: '',
+        permittedContent: 'string',
+        attributes: []
+      },
+      sitemapindex: {
+        comment: '',
+        permittedContent: 'SkruvSitemapSitemapElement',
+        attributes: []
+      },
+      sitemap: {
+        comment: '',
+        permittedContent: 'SkruvLocSitemapElement | SkruvLastmodSitemapElement',
+        attributes: []
+      }
     }
   }
 }
@@ -3518,6 +3532,7 @@ const types = {
   media: 'string',
   integrity: 'string',
   hreflang: 'string',
+  uri: 'string',
   type: 'string',
   imageSrcset: 'string',
   imageSizes: 'string',
@@ -3689,53 +3704,243 @@ const types = {
   maxlength: 'number',
   minlength: 'number',
   readonly: 'boolean',
-  nomodule: 'boolean'
+  nomodule: 'boolean',
+
+  manifest: 'string | number | boolean',
+  xmlns: 'string | number | boolean',
+  profile: 'string | number | boolean',
+  nonce: 'string | number | boolean',
+  prefetch: 'string | number | boolean',
+  nowrap: 'string | number | boolean',
+  noshade: 'string | number | boolean',
+  controlslist: 'string | number | boolean',
+  disableremoteplayback: 'string | number | boolean',
+  elementtiming: 'string | number | boolean',
+  disablepictureinpicture: 'string | number | boolean',
+  credentialless: 'string | number | boolean',
+  csp: 'string | number | boolean',
+  classid: 'string | number | boolean',
+  codebase: 'string | number | boolean',
+  codetype: 'string | number | boolean',
+  capture: 'string | number | boolean',
+  autocorrect: 'string | number | boolean',
+
+  keyPoints: 'string | number | boolean',
+  path: 'string | number | boolean',
+  rotate: 'string | number | boolean',
+  cx: 'string | number | boolean',
+  cy: 'string | number | boolean',
+  r: 'string | number | boolean',
+  pathLength: 'string | number | boolean',
+  clipPathUnits: 'string | number | boolean',
+  rx: 'string | number | boolean',
+  ry: 'string | number | boolean',
+  in: 'string | number | boolean',
+  in2: 'string | number | boolean',
+  mode: 'string | number | boolean',
+  values: 'string | number | boolean',
+  operator: 'string | number | boolean',
+  k1: 'string | number | boolean',
+  k2: 'string | number | boolean',
+  k3: 'string | number | boolean',
+  k4: 'string | number | boolean',
+  order: 'string | number | boolean',
+  kernelMatrix: 'string | number | boolean',
+  divisor: 'string | number | boolean',
+  bias: 'string | number | boolean',
+  targetX: 'string | number | boolean',
+  targetY: 'string | number | boolean',
+  edgeMode: 'string | number | boolean',
+  kernelUnitLength: 'string | number | boolean',
+  preserveAlpha: 'string | number | boolean',
+  surfaceScale: 'string | number | boolean',
+  diffuseConstant: 'string | number | boolean',
+  scale: 'string | number | boolean',
+  xChannelSelector: 'string | number | boolean',
+  yChannelSelector: 'string | number | boolean',
+  azimuth: 'string | number | boolean',
+  elevation: 'string | number | boolean',
+  dx: 'string | number | boolean',
+  dy: 'string | number | boolean',
+  stdDeviation: 'string | number | boolean',
+  'flood-color': 'string | number | boolean',
+  'flood-opacity': 'string | number | boolean',
+  preserveAspectRatio: 'string | number | boolean',
+  radius: 'string | number | boolean',
+  d: 'string | number | boolean',
+  x: 'string | number | boolean',
+  y: 'string | number | boolean',
+  z: 'string | number | boolean',
+  specularConstant: 'string | number | boolean',
+  specularExponent: 'string | number | boolean',
+  pointsAtX: 'string | number | boolean',
+  pointsAtY: 'string | number | boolean',
+  pointsAtZ: 'string | number | boolean',
+  limitingConeAngle: 'string | number | boolean',
+  baseFrequency: 'string | number | boolean',
+  numOctaves: 'string | number | boolean',
+  seed: 'string | number | boolean',
+  stitchTiles: 'string | number | boolean',
+  x1: 'string | number | boolean',
+  x2: 'string | number | boolean',
+  y1: 'string | number | boolean',
+  y2: 'string | number | boolean',
+  gradientUnits: 'string | number | boolean',
+  gradientTransform: 'string | number | boolean',
+  spreadMethod: 'string | number | boolean',
+  markerHeight: 'string | number | boolean',
+  markerUnits: 'string | number | boolean',
+  markerWidth: 'string | number | boolean',
+  orient: 'string | number | boolean',
+  refX: 'string | number | boolean',
+  refY: 'string | number | boolean',
+  viewBox: 'string | number | boolean',
+  maskContentUnits: 'string | number | boolean',
+  maskUnits: 'string | number | boolean',
+  patternContentUnits: 'string | number | boolean',
+  patternTransform: 'string | number | boolean',
+  patternUnits: 'string | number | boolean',
+  points: 'string | number | boolean',
+  fr: 'string | number | boolean',
+  fx: 'string | number | boolean',
+  fy: 'string | number | boolean',
+  to: 'string | number | boolean',
+  offset: 'string | number | boolean',
+  'stop-color': 'string | number | boolean',
+  'stop-opacity': 'string | number | boolean',
+  baseProfile: 'string | number | boolean',
+  contentScriptType: 'string | number | boolean',
+  contentStyleType: 'string | number | boolean',
+  lengthAdjust: 'string | number | boolean',
+  side: 'string | number | boolean',
+  spacing: 'string | number | boolean',
+  startOffset: 'string | number | boolean',
+  textLength: 'string | number | boolean',
+  filterUnits: 'string | number | boolean',
+  primitiveUnits: 'string | number | boolean',
+
+  display: 'string | number | boolean',
+  notation: 'string | number | boolean',
+  denomalign: 'string | number | boolean',
+  linethickness: 'string | number | boolean',
+  numalign: 'string | number | boolean',
+  subscriptshift: 'string | number | boolean',
+  superscriptshift: 'string | number | boolean',
+  accent: 'string | number | boolean',
+  fence: 'string | number | boolean',
+  largeop: 'string | number | boolean',
+  lspace: 'string | number | boolean',
+  maxsize: 'string | number | boolean',
+  minsize: 'string | number | boolean',
+  movablelimits: 'string | number | boolean',
+  rspace: 'string | number | boolean',
+  separator: 'string | number | boolean',
+  stretchy: 'string | number | boolean',
+  symmetric: 'string | number | boolean',
+  depth: 'string | number | boolean',
+  voffset: 'string | number | boolean',
+  lquote: 'string | number | boolean',
+  rquote: 'string | number | boolean',
+  scriptminsize: 'string | number | boolean',
+  scriptsizemultiplier: 'string | number | boolean',
+  columnalign: 'string | number | boolean',
+  columnlines: 'string | number | boolean',
+  columnspacing: 'string | number | boolean',
+  columnspan: 'string | number | boolean',
+  framespacing: 'string | number | boolean',
+  rowalign: 'string | number | boolean',
+  rowlines: 'string | number | boolean',
+  rowspacing: 'string | number | boolean',
+  accentunder: 'string | number | boolean',
+
+  length: 'string | number | boolean',
+  term: 'string | number | boolean'
+
 }
 
+// @ts-ignore
 const camelize = s => s.replace(/-./g, x => x[1].toUpperCase())
 
+// @ts-ignore
 const toElementName = e => camelize(e.charAt(0).toUpperCase() + e.substr(1).toLowerCase())
 
-const interfaces = Object.keys(elements).map(k => {
-  const ns = elements[k].namespace
-  return Object.keys(elements[k].elements).map(c => `
-${elements[k].elements[c].comment ? '/** ' + elements[k].elements[c].comment.split(/\n/).map(e => e.trim())
-.join('\n * \n * ') + ' */' : ''}
-export interface Skruv${toElementName(c)}${k}Element extends ${k}Vnode<'${c}', ${document.createElementNS(ns, c).constructor.name}, {${elements[k].elements[c].attributes.map(e => `
+const interfaces = Object.entries(elements).map(([k, v]) => {
+  const ns = v.namespace
+  return Object.entries(v.elements).map(([c, e]) => `
 ${e.comment ? '/** ' + e.comment.split(/\n/).map(e => e.trim())
-.join('\n * \n * ') + ' */' : ''}
-'${e.name}'?: ${types[e.name] || 'UNKNOWN'} | undefined`).join('')}
-}, Any${k}Content> {}`)
+      .join('\n * \n * ') + ' */' : ''}
+export interface Skruv${toElementName(c)}${k}Element extends ${k}Vnode<'${c}', ${document.createElementNS(ns, c).constructor.name}, AsyncContent<{${e.attributes.map(e => `
+${
+        // @ts-ignore
+        e?.comment ? `/**
+ * ` +
+          // @ts-ignore
+          e.comment.split(/\n/).map(e => e.trim())
+            .join('\n * \n * ') + `
+ */` : ''}
+'${
+        // @ts-ignore
+        e.name}'?: ${types[e.name] || 'UNKNOWN'} | false`).join('')}
+} ${
+  // @ts-ignore
+  e.extendsAttributes ? ' & ' + e.extendsAttributes.join(' & ') + '>' : '>'}, ${e.permittedContent === 'void' ? e.permittedContent : `AsyncContent<${e.permittedContent} | string | number | boolean>`}> {}`)
     .join('\n') + `
-export type Any${k}Element = ${Object.keys(elements[k].elements).map(c => `Skruv${toElementName(c)}${k}Element`)
-.join(' | ')}
+
+${
+  // @ts-ignore
+  !v.elementGroups ? '' : v.elementGroups.map(e => `type Skruv${k}${e.name}Group = ${e.children.map(c => `Skruv${toElementName(c)}${k}Element`).join(' | ')}`).join('\n\n')}
+
+export type Any${k}Element = ${Object.entries(v.elements).map(([c, e]) => `Skruv${toElementName(c)}${k}Element`)
+      .join(' | ')} | SkruvCommentElement | SkruvRawElement | SkruvMetaElement
 export type Any${k}Content = Any${k}Element | string | number | boolean | Any${k}Content[] | AsyncGenerator<Any${k}Content> | Promise<Any${k}Content> | (() => Any${k}Content)
+
 `
 })
   .join('\n') + `
+
+export type AsyncContent<T> = T | T[] | AsyncGenerator<T> | Promise<T> | (() => AsyncGenerator<T>) | (() => T)
+
+export interface SkruvMathHTMLElement extends SkruvMathMathMLElement {}
+export interface SkruvSvgHTMLElement extends SkruvSvgSVGElement {}
 
 export interface SkruvCommentElement extends HTMLVnode<'#comment', Element, {}, AnyHTMLContent> {}
 export interface SkruvRawElement extends HTMLVnode<'#raw', Element, {}, AnyHTMLContent> {}
 export interface SkruvMetaElement extends HTMLVnode<'#meta', Element, {}, AnyHTMLContent> {}
 
+type SkruvTitleElement = SkruvTitleHTMLElement & SkruvTitleSVGElement & SkruvTitleAtomElement
+type SkruvScriptElement = SkruvScriptHTMLElement & SkruvScriptSVGElement
+type SkruvStyleElement = SkruvStyleHTMLElement & SkruvStyleSVGElement
+type SkruvLinkElement = SkruvLinkHTMLElement & SkruvLinkAtomElement
+type SkruvAElement = SkruvAHTMLElement & SkruvASVGElement
+type SkruvSourceElement = SkruvSourceHTMLElement & SkruvSourceAtomElement
+type SkruvSummaryElement = SkruvSummaryHTMLElement & SkruvSummaryAtomElement
+
 export type AnyElement = ${Object.keys(elements).map(k => `Any${k}Element`)
-.join(' | ')} | SkruvCommentElement | SkruvRawElement | SkruvMetaElement
+    .join(' | ')} | SkruvCommentElement | SkruvRawElement | SkruvMetaElement
 export type AnyContent = ${Object.keys(elements).map(k => `Any${k}Content`)
-.join(' | ')}
+    .join(' | ')}
 export type ElementMap = {
-  ${Object.keys(elements).map(k => Object.keys(elements[k].elements).map(c => `${elements[k].elements[c].comment ? '/** ' + elements[k].elements[c].comment.split(/\n/).map(e => e.trim())
-.join('\n * \n * ') + ' */' : ''}
-  '${c}': (...c: Skruv${toElementName(c)}${k}Element['c']) => Skruv${toElementName(c)}${k}Element`)
-.join('\n'))
-.join('\n')}
-'#comment': (...c: SkruvCommentElement['c']) => SkruvCommentElement
-'#raw': (...c: SkruvRawElement['c']) => SkruvRawElement
-'#meta': (...c: SkruvMetaElement['c']) => SkruvMetaElement
+  ${
+  // @ts-ignore
+  Object.entries(elements).map(([k, v]) => Object.entries(v.elements)
+    .map(([c, e]) => `${e.comment ? `/**
+ * ` + e.comment.split(/\n/).map(e => e.trim())
+        .join('\n * \n * ') + `
+ */` : ''}
+  '${['title', 'script', 'style', 'link', 'a', 'source', 'summary'].includes(c) && k !== 'HTML' ? `${k.toLowerCase()}${toElementName(c)}` : c}': (...c: Skruv${toElementName(c)}${k}Element['c']) => Skruv${toElementName(c)}${k}Element`)
+    .join('\n'))
+    .join('\n')}
+
+    // These are special elements that skruv uses for SSR purposes
+    '#comment': (...c: SkruvCommentElement['c']) => SkruvCommentElement
+    '#raw': (...c: SkruvRawElement['c']) => SkruvRawElement
+    '#meta': (...c: SkruvMetaElement['c']) => SkruvMetaElement
 } & CustomElements
 `
+// @ts-ignore
 copy(`
 // TODO: To do this properly would require https://github.com/microsoft/TypeScript/issues/43826 as we need to always return a type with the generator/proxy but be able to set the original type (or any other type).
-//@ts-ignore: TODO: TS thinks we want innerKey as a type
+// @ts-ignore: TODO: TS thinks we want innerKey as a type
 export type State<T> = T & AsyncGenerator<T> & { [key in keyof T]: State<T[key]> } & { getGenerator: (innerKey: string | number) => State<T[innerKey]>, toJSON: () => T };
 
 // Vnode/DOM types
@@ -3756,38 +3961,174 @@ type SkruvAdditionalAttributes<T> = {
 }
 
 interface HTMLGlobalAttributes {
-  class?: string | undefined
-  id?: string | undefined
-  slot?: string | undefined
-  accesskey?: string | undefined
-  autocapitalize?: 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters' | undefined
-  autofocus?: boolean | undefined
-  contenteditable?: '' | 'true' | 'plaintext-only' | 'false'
-  dir?: 'ltr' | 'rtl' | 'auto' | undefined
-  draggable?: 'true' | 'false' | 'auto' | undefined
-  enterkeyhint?: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | undefined
-  hidden?: 'until-found' | 'hidden' | '' | undefined
-  inert?: boolean | undefined
-  inputmode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search' | undefined
-  // "is" is special, see the spec
-  // is: string
-  itemid?: URL | undefined
-  itemprop?: string | undefined
-  itemref?: string | undefined // this needs to be a space separated list of valid ID's in the document
-  itemscope?: boolean | undefined
-  itemtype?: string | undefined // this needs to be a space separated list of valid URL's
-  lang?: string | undefined
-  nonce?: string | undefined
-  popover?: 'auto' | '' | 'manual' | undefined
-  spellcheck?: boolean | undefined
-  style?: string | undefined
-  tabindex?: number | undefined
-  title?: string | undefined
-  translate?: 'yes' | '' | 'no' | undefined
+  'class'?: string | undefined
+  'id'?: string | undefined
+  'slot'?: string | undefined
+  'accesskey'?: string | undefined
+  'autocapitalize'?: 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters' | undefined
+  'autofocus'?: boolean | undefined
+  'contenteditable'?: '' | 'true' | 'plaintext-only' | 'false'
+  'dir'?: 'ltr' | 'rtl' | 'auto' | undefined
+  'draggable'?: 'true' | 'false' | 'auto' | undefined
+  'enterkeyhint'?: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | undefined
+  'hidden'?: 'until-found' | 'hidden' | '' | undefined
+  'inert'?: boolean | undefined
+  'inputmode'?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search' | undefined
+    // "is" is special, see the spec
+  '// is'?: string
+  'itemid'?: URL | undefined
+  'itemprop'?: string | undefined
+  'itemref'?: string | undefined // this needs to be a space separated list of valid ID's in the document
+  'itemscope'?: boolean | undefined
+  'itemtype'?: string | undefined // this needs to be a space separated list of valid URL's
+  'lang'?: string | undefined
+  'nonce'?: string | undefined
+  'popover'?: 'auto' | '' | 'manual' | undefined
+  'spellcheck'?: boolean | undefined
+  'style'?: string | undefined
+  'tabindex'?: number | undefined
+  'title'?: string | undefined
+  'translate'?: 'yes' | '' | 'no' | undefined
+  }
+  
+  interface SVGGlobalAttributes {
+  'class'?: string | undefined
+  'style'?: string | undefined
+  'id'?: string | undefined
+  'lang'?: string | undefined
+  'tabindex'?: number | undefined
+  'xml:base'?: string | undefined
+  'xml:lang'?: string | undefined
+  'xml:space'?: 'default' | 'preserve' | undefined
+  'requiredExtensions'?: string | undefined
+  'requiredFeatures'?: string | undefined
+  'systemLanguage'?: string | undefined
+  }
+  
+  interface SVGPresentationAttributes {
+  'alignment-baseline'?: string | number | undefined;
+  'baseline-shift'?: string | number | undefined;
+  'clip'?: string | number | undefined;
+  'clip-path'?: string | number | undefined;
+  'clip-rule'?: string | number | undefined;
+  'color'?: string | number | undefined;
+  'color-interpolation'?: string | number | undefined;
+  'color-interpolation-filters'?: string | number | undefined;
+  'color-profile'?: string | number | undefined;
+  'color-rendering'?: string | number | undefined;
+  'cursor'?: string | number | undefined;
+  'direction'?: string | number | undefined;
+  'display'?: string | number | undefined;
+  'dominant-baseline'?: string | number | undefined;
+  'enable-background'?: string | number | undefined;
+  'fill'?: string | number | undefined;
+  'fill-opacity'?: string | number | undefined;
+  'fill-rule'?: string | number | undefined;
+  'filter'?: string | number | undefined;
+  'flood-color'?: string | number | undefined;
+  'flood-opacity'?: string | number | undefined;
+  'font-family'?: string | number | undefined;
+  'font-size'?: string | number | undefined;
+  'font-size-adjust'?: string | number | undefined;
+  'font-stretch'?: string | number | undefined;
+  'font-style'?: string | number | undefined;
+  'font-variant'?: string | number | undefined;
+  'font-weight'?: string | number | undefined;
+  'glyph-orientation-horizontal'?: string | number | undefined;
+  'glyph-orientation-vertical'?: string | number | undefined;
+  'image-rendering'?: string | number | undefined;
+  'kerning'?: string | number | undefined;
+  'letter-spacing'?: string | number | undefined;
+  'lighting-color'?: string | number | undefined;
+  'marker-end'?: string | number | undefined;
+  'marker-mid'?: string | number | undefined;
+  'marker-start'?: string | number | undefined;
+  'mask'?: string | number | undefined;
+  'opacity'?: string | number | undefined;
+  'overflow'?: string | number | undefined;
+  'pointer-events'?: string | number | undefined;
+  'shape-rendering'?: string | number | undefined;
+  'stop-color'?: string | number | undefined;
+  'stop-opacity'?: string | number | undefined;
+  'stroke'?: string | number | undefined;
+  'stroke-dasharray'?: string | number | undefined;
+  'stroke-dashoffset'?: string | number | undefined;
+  'stroke-linecap'?: string | number | undefined;
+  'stroke-linejoin'?: string | number | undefined;
+  'stroke-miterlimit'?: string | number | undefined;
+  'stroke-opacity'?: string | number | undefined;
+  'stroke-width'?: string | number | undefined;
+  'text-anchor'?: string | number | undefined;
+  'text-decoration'?: string | number | undefined;
+  'text-rendering'?: string | number | undefined;
+  'transform'?: string | number | undefined;
+  'transform-origin'?: string | number | undefined;
+  'unicode-bidi'?: string | number | undefined;
+  'vector-effect'?: string | number | undefined;
+  'visibility'?: string | number | undefined;
+  'word-spacing'?: string | number | undefined;
+  'writing-mode'?: string | number | undefined;
+  }
+  
+  interface SVGFilterAttributes {
+  'height'?: string | number | undefined;
+  'result'?: string | number | undefined;
+  'width'?: string | number | undefined;
+  'x'?: string | number | undefined;
+  'y'?: string | number | undefined;
+  'type'?: string | number | undefined;
+  'tableValues'?: string | number | undefined;
+  'slope'?: string | number | undefined;
+  'intercept'?: string | number | undefined;
+  'amplitude'?: string | number | undefined;
+  'exponent'?: string | number | undefined;
+  'offset'?: string | number | undefined;
+  }
+  
+  interface SVGAnimationAttributes {
+  'href'?: string | number | undefined;
+  'attributeType'?: string | number | undefined;
+  'attributeName'?: string | number | undefined;
+  'begin'?: string | number | undefined;
+  'dur'?: string | number | undefined;
+  'end'?: string | number | undefined;
+  'min'?: string | number | undefined;
+  'max'?: string | number | undefined;
+  'restart'?: string | number | undefined;
+  'repeatCount'?: string | number | undefined;
+  'repeatDur'?: string | number | undefined;
+  'fill'?: string | number | undefined;
+  'calcMode'?: string | number | undefined;
+  'values'?: string | number | undefined;
+  'keyTimes'?: string | number | undefined;
+  'keySplines'?: string | number | undefined;
+  'from'?: string | number | undefined;
+  'to'?: string | number | undefined;
+  'by'?: string | number | undefined;
+  'autoReverse'?: string | number | undefined;
+  'accelerate'?: string | number | undefined;
+  'decelerate'?: string | number | undefined;
+  'additive'?: string | number | undefined;
+  'accumulate'?: string | number | undefined;
+  }
+  
+interface MathMLGlobalAttributes {
+  class?: string | number | undefined;
+  dir?: string | number | undefined;
+  id?: string | number | undefined;
+  mathbackground?: string | number | undefined;
+  mathcolor?: string | number | undefined;
+  mathsize?: string | number | undefined;
+  mathvariant?: string | number | undefined;
+  nonce?: string | number | undefined;
+  scriptlevel?: string | number | undefined;
+  style?: string | number | undefined;
+  tabindex?: string | number | undefined;
 }
 
-interface SVGGlobalAttributes { }
-interface MathMLGlobalAttributes { }
+interface AtomGlobalAttributes {}
+
+interface SitemapGlobalAttributes {}
 
 type HTMLEvents<T> = { [key in keyof HTMLElementEventMap as \`on\${key}\`]?: ((e: (HTMLElementEventMap[key] & { currentTarget: T })) => void) }
 type SVGEvents<T> = { [key in keyof SVGElementEventMap as \`on\${key}\`]?: ((e: (SVGElementEventMap[key] & { currentTarget: T })) => void) }
@@ -3831,6 +4172,14 @@ export type AtomVnode<N, T, A, C> = {
   c: [(A & { isSkruvDom?: false }| C)?, ...C[]]
   r?: () => boolean
 }
+
+export type SitemapVnode<N, T, A, C> = {
+  isSkruvDom: true
+  t: N
+  c: [(A & { isSkruvDom?: false }| C)?, ...C[]]
+  r?: () => boolean
+}
+
 export type attributes = HTMLAttributes<Record<string, string | number | boolean | object | Function>, HTMLElement> | SVGAttributes<Record<string, string | number | boolean | object | Function>, SVGElement> | MathMLAttributes<Record<string, string | number | boolean | object | Function>, MathMLElement>
 
 export type Vnode = AnyElement
@@ -3842,4 +4191,21 @@ export type getHTMLVnode<N, T, A, C> = (...args: [(HTMLAttributes<T, A> | C), ..
 
 // TODO: describe unions of title, script, style, link, a, source, summary, font. Exclude math, svg from HTML
 
-` + interfaces)
+export type keyedMap = WeakMap<Element|object, Element|object>
+export type oldKeysMap = WeakMap<Element, object>
+export type attributesMap = WeakMap<Element, Record<string, Function|string|boolean|object>>
+export type domCacheObj = Record<string, Element>
+export type AnyRealElement = HTMLElement | SVGElement | MathMLElement
+
+export type voidCheck = void
+
+` + interfaces
+    // @ts-ignore
+    .replaceAll(/ \* \n \* \n/g, ' * \n')
+    .replaceAll(/ \* \n \* \n/g, ' * \n')
+    .replaceAll(/ \* \n \* \n/g, ' * \n')
+    .replaceAll(/ \* \n \* \n/g, ' * \n')
+)
+
+// TODO: Add math to all allowed html content
+// TODO: Add math and all html to foreignObject

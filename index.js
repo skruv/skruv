@@ -1,20 +1,17 @@
-// TODO: Define a basic Element class to satisfy TS
 const htmlNS = 'http://www.w3.org/1999/xhtml'
 const svgNS = 'http://www.w3.org/2000/svg'
 const mathmlNS = 'http://www.w3.org/1998/Math/MathML'
-// This namespace is not generally understood by browsers, so only used in minidom
-// const atomNS = 'http://www.w3.org/2005/Atom'
-/** @type {WeakMap<Element|object, Element|object>} */
+/** @type {import("./skruv").keyedMap} */
 const keyed = new WeakMap()
-/** @type {WeakMap<Element, object>} */
+/** @type {import("./skruv").oldKeysMap} */
 const oldKeys = new WeakMap()
-/** @type {WeakMap<Element, Record<string, function|string|boolean|object>>} */
+/** @type {import("./skruv").attributesMap} */
 const attributesMap = new WeakMap()
-/** @type {Record<string, Element>} */
+/** @type {import("./skruv").domCacheObj} */
 const domCache = {}
 /**
- * @param {import("./utils/stateType").Vnode} current
- * @param {Element} currentNode
+ * @param {import("./skruv").Vnode} current
+ * @param {import("./skruv").AnyRealElement} currentNode
  * @param {ParentNode?} parentNode
  * @param {string} ns
  */
@@ -72,10 +69,10 @@ export const render = (
   // This needs to come after the .r callback is registered since it should apply to child nodes, not the current node.
   // TODO: How to handle things that are named the same in multiple namespaces (like title in both HTML and SVG)
   if (current.t === 'foreignObject') { ns = htmlNS }
-  /** @type {import("./utils/stateType").Vnode[]} */
+  /** @type {import("./skruv").Vnode[]} */
   // @ts-ignore
   let children = current.c.flat(Infinity)
-  /** @type {import("./utils/stateType").attributes} */
+  /** @type {import("./skruv").attributes} */
   // @ts-ignore
   let attributes = {}
   if (children[0]?.constructor === Object && !children[0]?.isSkruvDom) {
@@ -114,14 +111,16 @@ export const render = (
         // @ts-ignore We have to index the element for custom elements or setting checked/selected/value
         currentNode[key] = value
       }
-      if (value) {
+      if (value !== undefined) {
         currentNode.setAttribute(key, '' + value)
       } else {
         currentNode.removeAttribute(key)
       }
       oldAttributes[key] = value
-      continue
     }
+  }
+  for (const key of currentNode.getAttributeNames().filter(e => !Object.keys(attributes).includes(e))) {
+    currentNode.removeAttribute(key)
   }
   if (!children.length && currentNode.childNodes.length) {
     if (attributes['data-skruv-wait-for-not-empty']) {
@@ -185,5 +184,5 @@ export const render = (
   }
 }
 
-/** @type {import("./utils/stateType").ElementMap} */ // @ts-ignore
+/** @type {import("./skruv").ElementMap} */ // @ts-ignore
 export const elementFactory = new Proxy({}, { get: (_, t) => (...c) => ({ isSkruvDom: true, t, c }) })
