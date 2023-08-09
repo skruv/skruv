@@ -1,4 +1,4 @@
-import './index.js'
+import './utilityTypes'
 
 /** @type {Record<string,string>} */
 const reactMappings = {

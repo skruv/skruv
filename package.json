@@ -17,7 +17,8 @@
   "exports": {
     ".": {
       "import": "./index.js",
-      "default": "./index.js"
+      "default": "./index.js",
+      "types": "./types.d.ts"
     },
     "./utils/css.js": "./utils/css.js",
     "./utils/cssom.js": "./utils/cssom.js",
@@ -54,7 +55,7 @@
     "node-ssr": "npm run build-ssr && (cd ./examples/ssr && node ./node-ssr.js)",
     "pre-release": "npm run build && npm run test && npm run lint -- --fix && npm run typecheck && gzip -9kf index.min.js && brotli -Zkf index.min.js && du --apparent-size --bytes index.min.j* index.js && rm -f index.min.js.{gz,br}",
     "test": "node --test --experimental-test-coverage --test-reporter=spec",
-    "typecheck": "rm -rf types && tsc"
+    "typecheck": "rm -rf types.d.ts && tsc"
   },
   "devDependencies": {
     "esbuild": "^0.14.48",
