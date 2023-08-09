@@ -27,12 +27,13 @@
     "build-jsx": "(cd examples/jsx && node ../../utils/bundle.js index.jsx index.min.js)",
     "build-ssr": "(cd examples/ssr && node ../../utils/bundle.js index.js index.min.js && node ../../utils/ssg.js 'https://skruv.io' index.min.js index.html)",
     "build-todo": "(cd examples/todo && node ../../utils/bundle.js index.jsx index.min.js)",
+    "cleanup": "find . -maxdepth 1 -iname '*.d.ts' -delete && find utils examples tests -iname '*.d.ts' -delete && find . -maxdepth 1 -iname '*.map' -delete && find utils examples tests -iname '*.map' -delete && find . -maxdepth 1 -iname '*.min.js' -delete && find utils examples tests -iname '*.min.js' -delete",
     "deno-ssr": "npm run build-ssr && (cd ./examples/ssr && deno run --allow-net --allow-read ./deno-ssr.js)",
     "lint": "eslint . --ext js,jsx,json",
-    "pre-release": "npm run build && npm run test && npm run lint -- --fix && npm run typecheck && gzip -9kf skruv.min.js && brotli -Zkf skruv.min.js && du --apparent-size --bytes skruv.min.j* skruv.js && rm -f skruv.min.js.{gz,br}",
+    "pre-release": "npm run cleanup && npm run build && npm run test && npm run lint -- --fix && npm run typecheck && gzip -9kf skruv.min.js && brotli -Zkf skruv.min.js && du --apparent-size --bytes skruv.min.j* skruv.js && rm -f skruv.min.js.{gz,br}",
     "ssr": "npm run build-ssr && (cd ./examples/ssr && node ../../utils/ssr.js index.min.js)",
     "test": "node --test --experimental-test-coverage --test-reporter=spec",
-    "typecheck": "find . -maxdepth 1 -iname '*.d.ts' -delete && find utils examples tests -iname '*.d.ts' -delete && find . -maxdepth 1 -iname '*.d.ts.map' -delete && find utils examples tests -iname '*.d.ts.map' -delete && tsc"
+    "typecheck": "tsc"
   },
   "devDependencies": {
     "esbuild": "^0.14.48",
