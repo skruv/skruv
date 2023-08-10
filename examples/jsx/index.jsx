@@ -6,6 +6,10 @@ const styles = /* css */`
     background: #0f0f0f;
   }
 `
+// eslint-disable-next-line no-unused-vars
+const Component = props => (
+  <div label={props.a}>{props.children}</div>
+)
 
 render(
   <html lang="en-US">
@@ -18,6 +22,9 @@ render(
       </head>
     </>
     <body>
+      <Component a="A component attribute">
+        <p>A component child</p>
+      </Component>
       <div>
         <p>Hello world</p>
       </div>
