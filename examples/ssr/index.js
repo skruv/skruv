@@ -3,7 +3,8 @@ import { css, cssTextGenerator } from '../../utils/css.js'
 import { createState } from '../../utils/state.js'
 import { hydrationPromise, syncify } from '../../utils/syncify.js'
 
-const { html, head, title, meta, link, body, main, h1, form, label, input, button, ol, li, a, style, script } = elementFactory
+// eslint-disable-next-line max-len
+const { html, head, title, meta, link, body, main, h1, form, label, input, button, ol, li, a, style, script, '#raw': raw, '#comment': comment, '#meta': metaRaw } = elementFactory
 
 const state = createState({
   todos: ['Write todos']
@@ -76,6 +77,12 @@ const dom = syncify(
           }
         }
       ),
+      raw('test'),
+      comment('test'),
+      metaRaw({
+        'http-equiv': 'x-test',
+        content: 'test'
+      }),
       // @ts-expect-error
       !!globalThis.skruvSSRScript && script({ type: 'module' }, globalThis.skruvSSRScript)
     )

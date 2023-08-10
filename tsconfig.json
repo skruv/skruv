@@ -22,7 +22,7 @@
   "exclude": [
     // htm uses remote modules
     "examples/htm/*",
-    // typescript does not seem to understand this package being imported into itself
+    // TODO: typescript does not seem to understand this package being imported into itself
     "tests/jsx.test.js",
     "examples/todo/*",
     "examples/jsx/*",

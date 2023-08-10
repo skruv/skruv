@@ -14,7 +14,7 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
 * Small:
   <!-- * [Smallest js framework in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html) -->
   * ~200 LOC
-  * 1kb minified and compressed (1116b with brotli, 1262b with gzip, 2689b uncompressed)
+  * 1kb minified and compressed (1189b with brotli, 1354b with gzip, 2945b uncompressed)
 * Usable without bundling/compilation/transpilation
 * Supports SVG & MathML
 <!-- * [Plenty fast enough](https://krausest.github.io/js-framework-benchmark/index.html) -->
@@ -176,7 +176,7 @@ doRender()
 
 ## Docs
 
-The core of skruv is the render function. It takes a structure created by elementFactory and optionally which DOM node to write to.
+The core of skruv is the render function. It takes a structure created by elementFactory and optionally which DOM node to write to. It has built in support and typings for HTML, SVG, MathML, Atom feeds and sitemaps. For usage in SSR you can also create comments can be created by using the element name `#comment` and raw output with `#raw`. Headers can be set using `#meta` with the special header `status` being used to set http status.
 
 Besides the normal attributes there are the following:
  * data-skruv-key: Any object/array, will be used to allow the element to move (instead of being recreated) and will be shallow-diffed on updates to allow for skipping re-rendering this node if not changed. If you want to keep children injected by other libraries make sure to not change the key.
@@ -245,6 +245,9 @@ render(
 {% include_relative examples/jsx/index.md %}
 Compiled with esbuild:
 `esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js` or with the included bundler script to allow for http imports and css template minification.
+
+By default skruv JSX mimics normal HTML. If you want to use react-style attribute names (like onClick, className, etc.) you can install skruv-react and set the `--jsx-import-source` to it. I recommend to just use the built in one, since the mappings to react-like names adds both size and the style is inconsistent (sometimes it uses the same names as DOM, sometimes its different like onFullScreen/onFullscreen and sometimes it remaps one name to another like onChange actually being oninput).
+
 ```jsx
 import { render } from 'skruv'
 

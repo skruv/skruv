@@ -88,6 +88,10 @@ export class HTMLElement extends Element {
 }
 export class SVGElement extends Element {
 }
+export class AtomElement extends Element {
+}
+export class SitemapElement extends Element {
+}
 export class MathMLElement extends Element {
 }
 export class HTMLOptionElement extends HTMLElement {

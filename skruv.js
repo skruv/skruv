@@ -1,6 +1,4 @@
 const htmlNS = 'http://www.w3.org/1999/xhtml'
-const svgNS = 'http://www.w3.org/2000/svg'
-const mathmlNS = 'http://www.w3.org/1998/Math/MathML'
 /** @type {import("./utilityTypes").keyedMap} */
 const keyed = new WeakMap()
 /** @type {import("./utilityTypes").oldKeysMap} */
@@ -44,8 +42,10 @@ export const render = (
       // @ts-expect-error: When this is a textnode we will only use it for text, so this should be fine
       currentNode = document.createTextNode('' + current)
     } else {
-      if (current.t === 'svg') { ns = svgNS }
-      if (current.t === 'math') { ns = mathmlNS }
+      if (current.t === 'svg') { ns = 'http://www.w3.org/2000/svg' }
+      if (current.t === 'math') { ns = 'http://www.w3.org/1998/Math/MathML' }
+      if (current.t === 'feed') { ns = 'http://www.w3.org/2005/Atom' }
+      if (current.t === 'urlset' || current.t === 'sitemapindex') { ns = 'https://www.sitemaps.org/schemas/sitemap/0.9' }
       // @ts-expect-error: All the nodes are actually elements, since the domCache only contains elements
       currentNode = (domCache[current.t] || (domCache[current.t] = document.createElementNS(ns, current.t))).cloneNode(false)
     }
@@ -77,6 +77,7 @@ export const render = (
   /** @type {import("./utilityTypes").Vnode[]} */
   // @ts-expect-error
   let children = current.c.flat(Infinity)
+  if (!globalThis?.isSkruvSSR) { children = children.filter(c => c?.t?.[0] !== '#') }
   /** @type {import("./utilityTypes").attributes} */
   // @ts-expect-error
   let attributes = {}
