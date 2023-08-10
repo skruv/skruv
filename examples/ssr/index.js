@@ -4,7 +4,7 @@ import { createState } from '../../utils/state.js'
 import { hydrationPromise, syncify } from '../../utils/syncify.js'
 
 // eslint-disable-next-line max-len
-const { html, head, title, meta, link, body, main, h1, form, label, input, button, ol, li, a, style, script, 'skruv-raw': raw, 'skruv-comment': comment, 'skruv-header': header } = elementFactory
+const { html, head, title, meta, link, body, main, h1, form, label, input, button, ol, li, a, style, script, skruvText: raw, skruvComment: comment, skruvHeader: header } = elementFactory
 
 const state = createState({
   todos: ['Write todos']

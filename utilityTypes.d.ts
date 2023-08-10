@@ -5018,11 +5018,11 @@ export interface SkruvMathHTMLElement extends SkruvMathMathMLElement {
 }
 export interface SkruvSvgHTMLElement extends SkruvSvgSVGElement {
 }
-export interface SkruvCommentElement extends HTMLVnode<'skruv-comment', {}, AnyContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> {
+export interface SkruvCommentElement extends HTMLVnode<'skruvComment', {}, AnyContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> {
 }
-export interface SkruvRawElement extends HTMLVnode<'skruv-raw', {}, AnyContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> {
+export interface SkruvRawElement extends HTMLVnode<'skruvText', {}, AnyContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> {
 }
-export interface SkruvHeaderElement extends HTMLVnode<'skruv-header', {
+export interface SkruvHeaderElement extends HTMLVnode<'skruvHeader', {
     'name': string | number;
     'value': string;
 }, void> {
@@ -5883,9 +5883,9 @@ export type ElementMap = {
     'priority': (...c: SkruvPrioritySitemapElement['c']) => SkruvPrioritySitemapElement;
     'sitemapindex': (...c: SkruvSitemapindexSitemapElement['c']) => SkruvSitemapindexSitemapElement;
     'sitemap': (...c: SkruvSitemapSitemapElement['c']) => SkruvSitemapSitemapElement;
-    'skruv-comment': (...c: SkruvCommentElement['c']) => SkruvCommentElement;
-    'skruv-raw': (...c: SkruvRawElement['c']) => SkruvRawElement;
-    'skruv-header': (...c: SkruvHeaderElement['c']) => SkruvHeaderElement;
+    'skruvComment': (...c: SkruvCommentElement['c']) => SkruvCommentElement;
+    'skruvText': (...c: SkruvRawElement['c']) => SkruvRawElement;
+    'skruvHeader': (...c: SkruvHeaderElement['c']) => SkruvHeaderElement;
 } & CustomElements;
 export {};
 //# sourceMappingURL=utilityTypes.d.ts.map
