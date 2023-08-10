@@ -5023,8 +5023,8 @@ export interface SkruvCommentElement extends HTMLVnode<'skruv-comment', {}, AnyC
 export interface SkruvRawElement extends HTMLVnode<'skruv-raw', {}, AnyContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> {
 }
 export interface SkruvHeaderElement extends HTMLVnode<'skruv-header', {
-    'name'?: string | number;
-    'value'?: string;
+    'name': string | number;
+    'value': string;
 }, void> {
 }
 export type AnyElement = AnyHTMLElement | AnySVGElement | AnyMathMLElement | AnyAtomElement | AnySitemapElement | SkruvCommentElement | SkruvRawElement | SkruvHeaderElement;

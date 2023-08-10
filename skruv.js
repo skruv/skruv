@@ -77,7 +77,7 @@ export const render = (
   /** @type {import("./utilityTypes").Vnode[]} */
   // @ts-expect-error
   let children = current.c.flat(Infinity)
-  if (!globalThis?.isSkruvSSR) { children = children.filter(c => c?.t?.startsWith('skruv-')) }
+  if (!globalThis?.isSkruvSSR) { children = children.filter(c => !c?.t?.startsWith('skruv-')) }
   /** @type {import("./utilityTypes").attributes} */
   // @ts-expect-error
   let attributes = {}
