@@ -77,7 +77,6 @@ export const render = (
   /** @type {import("./utilityTypes").Vnode[]} */
   // @ts-expect-error
   let children = current.c.flat(Infinity)
-  // TODO: SkruvHeader SkruvComment SkruvText
   if (!globalThis?.isSkruvSSR) { children = children.filter(c => !c?.t?.startsWith('skruv')) }
   /** @type {import("./utilityTypes").attributes} */
   // @ts-expect-error
