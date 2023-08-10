@@ -20,7 +20,7 @@ test('loader', async () => {
               await wait(500)
               yield div('finished!')
             },
-            div({ 'data-skruv-finished': false }, 'Loading content')
+            div({ skruvFinished: false }, 'Loading content')
           )
         )
       )
@@ -33,7 +33,7 @@ test('loader', async () => {
   await wait(400)
   assert.strictEqual(
     document.documentElement.innerHTML,
-    '<!DOCTYPE html><html><body><div data-skruv-finished="false">Loading content</div></body></html>'
+    '<!DOCTYPE html><html><body><div skruvFinished="false">Loading content</div></body></html>'
   )
   await hydrationPromise
   assert.strictEqual(

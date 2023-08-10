@@ -4,7 +4,7 @@ import waitGen from './waitGen.js'
 
 /**
  * Adds a loader after waiting for the component for 300ms.
- * The loader can be something like div({ "data-skruv-finished": false }, "Loading content");
+ * The loader can be something like div({ "skruvFinished": false }, "Loading content");
  *
  * @param {() => AsyncGenerator<Vnode|boolean|string>} component
  * @param {Vnode} loader

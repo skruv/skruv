@@ -21,7 +21,7 @@ test('update on state update: Array', async () => {
           async function * () {
             for await (const currentState of state) {
               yield div({
-                'data-skruv-after-create': e => {
+                skruvAfterCreate: e => {
                   // @ts-expect-error: TODO: Check what HTMLElements are assignable to different element classes
                   elem = e
                 }

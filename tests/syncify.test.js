@@ -23,7 +23,7 @@ const a = {
         async function * () {
           yield {
             c: [{
-              'data-skruv-finished': false
+              skruvFinished: false
             }]
           }
           await wait(10)

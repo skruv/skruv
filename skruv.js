@@ -93,8 +93,8 @@ export const render = (
     }
     for (const [key, value] of Object.entries(attributes)) {
       if (('' + oldAttributes[key]) === ('' + value)) { continue }
-      if (key === 'data-skruv-key') { continue }
-      if (key === 'data-skruv-after-create') {
+      if (key === 'skruvKey') { continue }
+      if (key === 'skruvAfterCreate') {
         // Run after we have processed all the attributes and children
         setTimeout(() => value(currentNode), 0)
         oldAttributes[key] = value
@@ -130,7 +130,7 @@ export const render = (
     currentNode.removeAttribute(key)
   }
   if (!children.length && currentNode.childNodes.length) {
-    if (attributes['data-skruv-wait-for-not-empty']) {
+    if (attributes.skruvWaitForNotEmpty) {
       return
     }
     currentNode.replaceChildren()
@@ -147,7 +147,7 @@ export const render = (
     let keyedNode
     if (children[i]?.c) {
       // @ts-expect-error
-      keyedNode = keyed.get(children[i].c[0]?.['data-skruv-key'])
+      keyedNode = keyed.get(children[i].c[0]?.skruvKey)
       if (keyedNode) {
         // @ts-expect-error
         if (keyedNode !== currentNode.childNodes[i]) {
@@ -155,7 +155,7 @@ export const render = (
           if (keyedNode === currentNode.childNodes[i + 1]) {
             currentNode.removeChild(currentNode.childNodes[i])
           // @ts-expect-error
-          } else if (currentNode.childNodes[i] && keyed.get(children[i + 1]?.c?.[0]?.['data-skruv-key']) === currentNode.childNodes[i]) {
+          } else if (currentNode.childNodes[i] && keyed.get(children[i + 1]?.c?.[0]?.skruvKey) === currentNode.childNodes[i]) {
             // @ts-expect-error
             currentNode.insertBefore(keyedNode, currentNode.childNodes[i])
           } else if (currentNode.childNodes[i]) {
@@ -167,15 +167,15 @@ export const render = (
           }
         }
         // @ts-expect-error
-        forceFull = children[i].c[0]['data-skruv-key'] !== oldKeys.get(currentNode.childNodes[i])
+        forceFull = children[i].c[0].skruvKey !== oldKeys.get(currentNode.childNodes[i])
         if (!forceFull) {
           const lastKeyCopy = keyed.get(currentNode.childNodes[i])
           if (lastKeyCopy) {
             let noChange = true
             // @ts-expect-error
-            for (const k in children[i].c[0]['data-skruv-key']) {
+            for (const k in children[i].c[0].skruvKey) {
               // @ts-expect-error
-              if (children[i].c[0]['data-skruv-key'][k] !== lastKeyCopy[k]) {
+              if (children[i].c[0].skruvKey[k] !== lastKeyCopy[k]) {
                 noChange = false
               }
             }
@@ -189,10 +189,10 @@ export const render = (
     // @ts-expect-error: This will be fine since if the node is of the wrong type a new one is created
     render(children[i], currentNode.childNodes[i] || false, currentNode, ns, forceFull)
   }
-  if (attributes['data-skruv-key']) {
-    keyed.set(attributes['data-skruv-key'], currentNode)
-    oldKeys.set(currentNode, attributes['data-skruv-key'])
-    keyed.set(currentNode, { ...attributes['data-skruv-key'] })
+  if (attributes.skruvKey) {
+    keyed.set(attributes.skruvKey, currentNode)
+    oldKeys.set(currentNode, attributes.skruvKey)
+    keyed.set(currentNode, { ...attributes.skruvKey })
   }
 }
 

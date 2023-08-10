@@ -13,23 +13,23 @@ test('key', async () => {
   render(
     html(
       body(
-        div({ 'data-skruv-key': testKeys[0] }, 'Key0'),
-        div({ 'data-skruv-key': testKeys[1] }, 'Key1'),
-        div({ 'data-skruv-key': testKeys[2] }, 'Key2'),
-        div({ 'data-skruv-key': testKeys[3] }, 'Key3'),
-        div({ 'data-skruv-key': testKeys[4] }, 'Key4'),
-        div({ 'data-skruv-key': testKeys[5] }, 'Key5'),
-        div({ 'data-skruv-key': testKeys[6] }, 'Key6'),
-        div({ 'data-skruv-key': testKeys[7] }, 'Key7'),
-        div({ 'data-skruv-key': testKeys[8] }, 'Key8'),
-        div({ 'data-skruv-key': testKeys[9] }, 'Key9')
+        div({ skruvKey: testKeys[0] }, 'Key0'),
+        div({ skruvKey: testKeys[1] }, 'Key1'),
+        div({ skruvKey: testKeys[2] }, 'Key2'),
+        div({ skruvKey: testKeys[3] }, 'Key3'),
+        div({ skruvKey: testKeys[4] }, 'Key4'),
+        div({ skruvKey: testKeys[5] }, 'Key5'),
+        div({ skruvKey: testKeys[6] }, 'Key6'),
+        div({ skruvKey: testKeys[7] }, 'Key7'),
+        div({ skruvKey: testKeys[8] }, 'Key8'),
+        div({ skruvKey: testKeys[9] }, 'Key9')
       ),
       // Check that we don't purge any children not created by skruv unless key changes
-      div({ 'data-skruv-key': arrayKey, 'data-skruv-after-create': /** @param {HTMLElement} e */ async e => { e.textContent = 'arrayKey' } }, '')
+      div({ skruvKey: arrayKey, skruvAfterCreate: /** @param {HTMLElement} e */ async e => { e.textContent = 'arrayKey' } }, '')
     )
   )
 
-  // Microsleep to allow the scheduled data-skruv-after-create to run
+  // Microsleep to allow the scheduled skruvAfterCreate to run
   await wait(0)
   const initialElements = [...document.documentElement.childNodes[0].childNodes]
   const arrayKeyedElem = document.documentElement.childNodes[1]
@@ -38,16 +38,16 @@ test('key', async () => {
   render(
     html(
       body(
-        div({ 'data-skruv-key': testKeys[9] }, 'Key9'),
-        div({ 'data-skruv-key': testKeys[1] }, 'Key1-update'),
-        div({ 'data-skruv-key': testKeys[2] }, 'Key2'),
-        div({ 'data-skruv-key': testKeys[3] }, 'Key3'),
-        div({ 'data-skruv-key': testKeys[4] }, 'Key4'),
-        div({ 'data-skruv-key': testKeys[5] }, 'Key5'),
-        div({ 'data-skruv-key': testKeys[6] }, 'Key6'),
-        div({ 'data-skruv-key': testKeys[7] }, 'Key7'),
-        div({ 'data-skruv-key': testKeys[8] }, 'Key8'),
-        div({ 'data-skruv-key': testKeys[0] }, 'Key0')
+        div({ skruvKey: testKeys[9] }, 'Key9'),
+        div({ skruvKey: testKeys[1] }, 'Key1-update'),
+        div({ skruvKey: testKeys[2] }, 'Key2'),
+        div({ skruvKey: testKeys[3] }, 'Key3'),
+        div({ skruvKey: testKeys[4] }, 'Key4'),
+        div({ skruvKey: testKeys[5] }, 'Key5'),
+        div({ skruvKey: testKeys[6] }, 'Key6'),
+        div({ skruvKey: testKeys[7] }, 'Key7'),
+        div({ skruvKey: testKeys[8] }, 'Key8'),
+        div({ skruvKey: testKeys[0] }, 'Key0')
       )
     )
   )
@@ -61,17 +61,17 @@ test('key', async () => {
     html(
       body(
         div(),
-        div({ 'data-skruv-key': testKeys[2] }, 'Key2'),
-        div({ 'data-skruv-key': testKeys[3] }, 'Key3'),
-        div({ 'data-skruv-key': testKeys[4] }, 'Key4'),
-        div({ 'data-skruv-key': testKeys[5] }, 'Key5'),
-        div({ 'data-skruv-key': testKeys[6] }, 'Key6'),
-        div({ 'data-skruv-key': testKeys[7] }, 'Key7'),
-        div({ 'data-skruv-key': testKeys[8] }, 'Key8'),
+        div({ skruvKey: testKeys[2] }, 'Key2'),
+        div({ skruvKey: testKeys[3] }, 'Key3'),
+        div({ skruvKey: testKeys[4] }, 'Key4'),
+        div({ skruvKey: testKeys[5] }, 'Key5'),
+        div({ skruvKey: testKeys[6] }, 'Key6'),
+        div({ skruvKey: testKeys[7] }, 'Key7'),
+        div({ skruvKey: testKeys[8] }, 'Key8'),
         div()
       ),
-      div({ 'data-skruv-key': testKeys[9] }, 'Key9-noupdate'),
-      div({ 'data-skruv-key': arrayKey })
+      div({ skruvKey: testKeys[9] }, 'Key9-noupdate'),
+      div({ skruvKey: arrayKey })
     )
   )
   assert(initialElements[9] === document.documentElement.childNodes[1])
@@ -86,17 +86,17 @@ test('key', async () => {
     html(
       body(
         div(),
-        div({ 'data-skruv-key': testKeys[2] }, 'Key2'),
-        div({ 'data-skruv-key': testKeys[3] }, 'Key3'),
-        div({ 'data-skruv-key': testKeys[4] }, 'Key4'),
-        div({ 'data-skruv-key': testKeys[5] }, 'Key5'),
-        div({ 'data-skruv-key': testKeys[6] }, 'Key6'),
-        div({ 'data-skruv-key': testKeys[7] }, 'Key7'),
-        div({ 'data-skruv-key': testKeys[8] }, 'Key8'),
+        div({ skruvKey: testKeys[2] }, 'Key2'),
+        div({ skruvKey: testKeys[3] }, 'Key3'),
+        div({ skruvKey: testKeys[4] }, 'Key4'),
+        div({ skruvKey: testKeys[5] }, 'Key5'),
+        div({ skruvKey: testKeys[6] }, 'Key6'),
+        div({ skruvKey: testKeys[7] }, 'Key7'),
+        div({ skruvKey: testKeys[8] }, 'Key8'),
         div()
       ),
-      div({ 'data-skruv-key': testKeys[9] }, 'Key9-noupdate'),
-      div({ 'data-skruv-key': arrayKey }, 'arrayKey-update')
+      div({ skruvKey: testKeys[9] }, 'Key9-noupdate'),
+      div({ skruvKey: arrayKey }, 'arrayKey-update')
     )
   )
   assert(document.documentElement.childNodes[2] === arrayKeyedElem)
@@ -108,17 +108,17 @@ test('key', async () => {
     html(
       body(
         div(),
-        div({ 'data-skruv-key': testKeys[2] }, 'Key2'),
-        div({ 'data-skruv-key': testKeys[4] }, 'Key4'),
-        div({ 'data-skruv-key': testKeys[5] }, 'Key5'),
-        div({ 'data-skruv-key': testKeys[6] }, 'Key6'),
-        div({ 'data-skruv-key': testKeys[7] }, 'Key7'),
-        div({ 'data-skruv-key': testKeys[8] }, 'Key8'),
+        div({ skruvKey: testKeys[2] }, 'Key2'),
+        div({ skruvKey: testKeys[4] }, 'Key4'),
+        div({ skruvKey: testKeys[5] }, 'Key5'),
+        div({ skruvKey: testKeys[6] }, 'Key6'),
+        div({ skruvKey: testKeys[7] }, 'Key7'),
+        div({ skruvKey: testKeys[8] }, 'Key8'),
         div()
       ),
-      div({ 'data-skruv-key': testKeys[9] }, 'Key9-noupdate'),
-      div({ 'data-skruv-key': testKeys[3] }, 'Key3'),
-      div({ 'data-skruv-key': arrayKey }, 'arrayKey-update'),
+      div({ skruvKey: testKeys[9] }, 'Key9-noupdate'),
+      div({ skruvKey: testKeys[3] }, 'Key3'),
+      div({ skruvKey: arrayKey }, 'arrayKey-update'),
       elementFactory.skruvComment(['Testing a comment, with special chars!<>"&\'']),
       elementFactory.skruvText(
         div('text nodes are removed when rendering to html')
