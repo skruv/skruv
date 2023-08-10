@@ -448,8 +448,8 @@ export const toHTML = (vDom, context, headers) => {
     return vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join(
       ''
     )
-  } else if (vDom.nodeName.toLowerCase() === '#meta') {
-    headers[vDom.attributes['http-equiv']] = vDom.attributes?.content
+  } else if (vDom.nodeName.toLowerCase() === '#header') {
+    headers[vDom.attributes.name] = vDom.attributes?.value
     return vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join(
       ''
     )
