@@ -177,9 +177,12 @@ doRender()
 The core of skruv is the render function. It takes a structure created by elementFactory and optionally which DOM node to write to. It has built in support and typings for HTML, SVG, MathML, Atom feeds ([why not RSS?](https://nullprogram.com/blog/2013/09/23/)) and sitemaps. Since some elements exist in multiple namespaces these elements are prefixed with their type: `svgA` `svgScript` `svgStyle` `svgTitle` `atomTitle` `atomLink` `atomSummary` `atomSource`. For usage in SSR you can also create comments using the element name `skruvComment` and raw output with `skruvText` (useful if you want to output stuff like a robots.txt or JSON at the root node). All elements starting with `skruv` will be skipped in client side rendering. Headers can be set using the `skruvHeader` element using the attributes name and value with the special header `status` being used to set http status.
 
 Besides the normal attributes there are the following:
+ * `data-skruv-wait-for-not-empty`: If you swap one generator for another or similar async work you might want to keep the old children until new ones are ready to prevent flicker. Tag the parent element with `data-skruv-wait-for-not-empty: true` and skruv will not clear the dom children until there are new children to render. Use only when you know an element should never be without children.
+#### TODO: Rename to skruvKey
  * `data-skruv-key`: Any object/array, will be used to allow the element to move (instead of being recreated) and will be shallow-diffed on updates to allow for skipping re-rendering this node if not changed. If you want to keep children injected by other libraries make sure to not change the key.
+#### TODO: Rename to skruvFinished
  * `data-skruv-finished`: If you want to mark the result of a async task as incomplete (like for example a loader icon) you can give it the attribute `data-skruv-finished: false` and it will not be considered complete until we get a new element without that attribute.
- * `data-skruv-wait-for-not-empty`: If you swap one generator for another or similar async work you might want to keep the old children until new ones are ready to prevent flicker. Tag the parent element with `data-skruv-wait-for-not-empty: true` and skruv will not clear the dom children until there are new children to render.
+#### TODO: Rename to skruvAfterCreate
  * `data-skruv-after-create`: A function called with the element after it is created, with the element as its argument. Useful for attaching other libraries to the dom node. If you want the same thing but for removal you can set a timer in the callback and check `document.documentElement.contains()`.
 
 Utilities:
