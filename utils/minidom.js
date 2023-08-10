@@ -410,17 +410,20 @@ export const toHTML = (vDom, context, headers) => {
     }
     if (vDom.nodeName === 'svg') {
       headers['content-type'] = 'mage/svg+xml'
+      return `<?xml version="1.0" encoding="UTF-8"?>${toHTML(vDom, 'root', headers)}`
     }
     if (vDom.nodeName === 'math') {
       headers['content-type'] = 'application/mathml+xml'
+      return `<?xml version="1.0" encoding="UTF-8"?>${toHTML(vDom, 'root', headers)}`
     }
     if (vDom.nodeName === 'feed') {
       headers['content-type'] = 'application/atom+xml'
+      return `<?xml version="1.0" encoding="UTF-8"?>${toHTML(vDom, 'root', headers)}`
     }
     if (vDom.nodeName === 'urlset' || vDom.nodeName === 'sitemapindex') {
       headers['content-type'] = 'application/xml'
+      return `<?xml version="1.0" encoding="UTF-8"?>${toHTML(vDom, 'root', headers)}`
     }
-    return `<?xml version="1.0" encoding="UTF-8"?>${toHTML(vDom, 'root', headers)}`
   }
 
   if (
