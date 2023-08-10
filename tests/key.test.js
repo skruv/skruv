@@ -123,8 +123,8 @@ test('key', async () => {
       elementFactory['#raw'](
         div('raw nodes are removed when rendering to html')
       ),
-      elementFactory['#meta']({ 'http-equiv': 'X-My-Header', content: '1' }),
-      elementFactory['#meta']({ 'http-equiv': 'X-My-Other-Header', content: '2' })
+      elementFactory['#header']({ name: 'X-My-Header', value: '1' }),
+      elementFactory['#header']({ name: 'X-My-Other-Header', value: '2' })
     )
   )
   assert(document.documentElement.childNodes[2] === initialElements[3])
