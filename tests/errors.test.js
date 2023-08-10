@@ -20,12 +20,12 @@ test('errors', async () => {
               yield * (async function * () {
                 for await (const state of sub) {
                   if (state.elem === 0) { yield div() }
-                  if (state.elem === 1) { throw new Error('Shit went real') }
+                  if (state.elem === 1) { throw new Error('Oh no') }
                 }
               })()
             } catch (e) {
               if (e instanceof Error) {
-                yield div({ class: 'error' }, e?.message + '!!!')
+                yield div({ class: 'error' }, e?.message + '!')
               }
             }
           }
@@ -43,7 +43,7 @@ test('errors', async () => {
   await wait(1)
   assert.strictEqual(
     document.documentElement.innerHTML,
-    '<!DOCTYPE html><html><body><div class="error">Shit went real!!!</div></body></html>'
+    '<!DOCTYPE html><html><body><div class="error">Oh no!</div></body></html>'
   )
   assert.throws(() => {
     render(html(), new HTMLElement())

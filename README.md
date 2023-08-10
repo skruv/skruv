@@ -16,7 +16,7 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
   * ~200 LOC
   * 1kb minified and compressed (1189b with brotli, 1354b with gzip, 2945b uncompressed)
 * Usable without bundling/compilation/transpilation
-* Supports SVG & MathML
+* Supports HTML, SVG, MathML, Atom feeds and sitemaps
 <!-- * [Plenty fast enough](https://krausest.github.io/js-framework-benchmark/index.html) -->
 * [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
 * Optional helper utilities for
@@ -173,16 +173,14 @@ const doRender = () => render(
 doRender()
 ```
 
-
 ## Docs
-
-The core of skruv is the render function. It takes a structure created by elementFactory and optionally which DOM node to write to. It has built in support and typings for HTML, SVG, MathML, Atom feeds and sitemaps. For usage in SSR you can also create comments can be created by using the element name `skruv-comment` and raw output with `skruv-raw`. Headers can be set using the `skruv-header` element using the attributes name and value with the special header `status` being used to set http status.
+The core of skruv is the render function. It takes a structure created by elementFactory and optionally which DOM node to write to. It has built in support and typings for HTML, SVG, MathML, Atom feeds ([why not RSS?](https://nullprogram.com/blog/2013/09/23/)) and sitemaps. Since some elements exist in multiple namespaces these elements are prefixed with their type: `svgA` `svgScript` `svgStyle` `svgTitle` `atomTitle` `atomLink` `atomSummary` `atomSource`. For usage in SSR you can also create comments using the element name `skruv-comment` and raw output with `skruv-raw` (useful if you want to output stuff like a robots.txt or raw JSON). Headers can be set using the `skruv-header` element using the attributes name and value with the special header `status` being used to set http status.
 
 Besides the normal attributes there are the following:
- * data-skruv-key: Any object/array, will be used to allow the element to move (instead of being recreated) and will be shallow-diffed on updates to allow for skipping re-rendering this node if not changed. If you want to keep children injected by other libraries make sure to not change the key.
- * data-skruv-finished: If you want to mark the result of a async task as incomplete (like for example a loader icon) you can give it the attribute `data-skruv-finished: false` and it will not be considered complete until we get a new element without that attribute.
- * data-skruv-wait-for-not-empty: If you swap one generator for another or similar async work you might want to keep the old children until new ones are ready to prevent flicker. Tag the parent element with `data-skruv-wait-for-not-empty: true` and skruv will not clear the dom children until there are new children to render.
- * data-skruv-after-create: A function called with the element after it is created, with the element as its argument. Useful for attaching other libraries to the dom node.
+ * `data-skruv-key`: Any object/array, will be used to allow the element to move (instead of being recreated) and will be shallow-diffed on updates to allow for skipping re-rendering this node if not changed. If you want to keep children injected by other libraries make sure to not change the key.
+ * `data-skruv-finished`: If you want to mark the result of a async task as incomplete (like for example a loader icon) you can give it the attribute `data-skruv-finished: false` and it will not be considered complete until we get a new element without that attribute.
+ * `data-skruv-wait-for-not-empty`: If you swap one generator for another or similar async work you might want to keep the old children until new ones are ready to prevent flicker. Tag the parent element with `data-skruv-wait-for-not-empty: true` and skruv will not clear the dom children until there are new children to render.
+ * `data-skruv-after-create`: A function called with the element after it is created, with the element as its argument. Useful for attaching other libraries to the dom node. If you want the same thing but for removal you can set a timer in the callback and check `document.documentElement.contains()`.
 
 Utilities:
  * css.js: If you want to use scoped css you can import the css [tagged template function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) and it's corresponding cssTextGenerator. The result of the `css`\`` call is a classname and cssTextGenerator will resolve with the full css for the application, prefixed with the classname for each scope. The styles are deduplicated so you can use it in components that you might use in multiple places.
@@ -193,7 +191,7 @@ Utilities:
     * You modify the state by using normal methods (including things like [`delete`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete), [`splice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice), etc.).
     * Where you want to subscribe to state changes you use [for-await-of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of).
     * You can subscribe to sub-objects with `for await (const bar of state.foo.bar)`.
-    * As a shortcut you can call state.getGenerator(key) to subscribe to and output a single value.
+    * As a shortcut you can call `state.getGenerator`(key) to subscribe to and output a single value.
       * This is useful to output primitive values (like strings/numbers etc.) in for example text or attributes without requiring a whole generator function
  * minidom.js: SSR/SSG examples are bundled in this repo, they use the minidom utility to polyfill what is needed to use skruv in node/deno and serialize the DOM to HTML.
     * uses cssom.js (ported from https://github.com/NV/CSSOM) to polyfill the CSS object model to work with css.js
@@ -412,8 +410,6 @@ const dom = syncify(
 export const doRender = async () => {
   await hydrationPromise
   render(dom)
-  // Microsleep to allow for rendering to finish
-  await new Promise(resolve => setTimeout(resolve, 0))
 }
 
 doRender()
@@ -439,6 +435,8 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
 * [ ] SSR/SSG fetcher cache example
 * [ ] Automated tests with all MDN examples
 * [ ] Testing:
+  * [ ] Sitemaps
+  * [ ] Raw output
   * [ ] All the generators
   * [ ] Proper HTTP testing of the SSR stuff, including performance
 * [ ] Loader example:

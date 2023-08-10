@@ -4,14 +4,11 @@ import '../utils/minidom.js'
 import assert from 'node:assert'
 import test from 'node:test'
 
-import wait from '../utils/generators/waitPromise.js'
-
 test('minidom', async () => {
   // @ts-expect-error: minidom makes locations constructible
   globalThis.location = new Location('http://127.0.0.1:8000/')
   const frontend = await import('../examples/ssr/index.js')
   await frontend.default()
-  await wait(1)
   assert.strictEqual(
     document.documentElement.innerHTML,
     // eslint-disable-next-line max-len

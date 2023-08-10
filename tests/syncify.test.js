@@ -1,6 +1,7 @@
 import assert from 'node:assert'
 import test from 'node:test'
 
+import wait from '../utils/generators/waitPromise.js'
 import { hydrationPromise, syncify } from '../utils/syncify.js'
 
 const internalFunc1 = () => { }
@@ -9,11 +10,11 @@ const internalFunc2 = () => { }
 const a = {
   a: new Promise(resolve => resolve('a')),
   b: async function * () {
-    await new Promise(resolve => setTimeout(() => resolve(''), 5))
+    await wait(10)
     yield 'b'
   },
   ai: (async function * () {
-    await new Promise(resolve => setTimeout(() => resolve(''), 10))
+    await wait(10)
     yield 'ai'
   })(),
   d: [
@@ -25,9 +26,9 @@ const a = {
               'data-skruv-finished': false
             }]
           }
-          await new Promise(resolve => setTimeout(() => resolve(''), 10))
+          await wait(10)
           yield {
-            a: new Promise(resolve => setTimeout(() => resolve('a'), 10))
+            a: wait(10, 'a')
           }
         }
       ]
@@ -71,6 +72,6 @@ test('syncify', async () => {
   }
   // @ts-expect-error
   syncify(newObj).r = () => false
-  await new Promise(resolve => setTimeout(() => resolve(''), 1))
+  await wait(1)
   assert.strictEqual(syncify(newObj).i, 0)
 })
