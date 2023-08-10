@@ -5399,9 +5399,9 @@ export type AsyncContent<T> = T | T[] | AsyncGenerator<T> | Promise<T> | (() => 
 export interface SkruvMathHTMLElement extends SkruvMathMathMLElement { }
 export interface SkruvSvgHTMLElement extends SkruvSvgSVGElement { }
 
-export interface SkruvCommentElement extends HTMLVnode<'#comment', {}, AnyContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> { }
-export interface SkruvRawElement extends HTMLVnode<'#raw', {}, AnyContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> { }
-export interface SkruvHeaderElement extends HTMLVnode<'#header', {
+export interface SkruvCommentElement extends HTMLVnode<'skruv-comment', {}, AnyContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> { }
+export interface SkruvRawElement extends HTMLVnode<'skruv-raw', {}, AnyContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> { }
+export interface SkruvHeaderElement extends HTMLVnode<'skruv-header', {
   'name'?: string | number
   'value'?: string
 }, void> { }
@@ -6293,7 +6293,7 @@ export type ElementMap = {
   'sitemap': (...c: SkruvSitemapSitemapElement['c']) => SkruvSitemapSitemapElement
 
   // These are special elements that skruv uses for SSR purposes
-  '#comment': (...c: SkruvCommentElement['c']) => SkruvCommentElement
-  '#raw': (...c: SkruvRawElement['c']) => SkruvRawElement
-  '#header': (...c: SkruvHeaderElement['c']) => SkruvHeaderElement
+  'skruv-comment': (...c: SkruvCommentElement['c']) => SkruvCommentElement
+  'skruv-raw': (...c: SkruvRawElement['c']) => SkruvRawElement
+  'skruv-header': (...c: SkruvHeaderElement['c']) => SkruvHeaderElement
 } & CustomElements
