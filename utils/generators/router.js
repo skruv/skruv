@@ -26,7 +26,6 @@ export default async function * router (state) {
     const routeState = res.body[0].data
 
     // Handle routing arguments in path
-    // TODO: ROUTING: Check how this handles slashes within route variables
     const pathsplit = url.pathname.split('/')
     routeState.arguments = routeState.path.split('/').reduce(
       /**
