@@ -247,7 +247,20 @@ export namespace JSX {
 
 export const Fragment = '#fragment'
 
+const aliases = {
+  'svgA': 'a',
+  'svgScript': 'script',
+  'svgStyle': 'style',
+  'svgTitle': 'title',
+  'atomTitle': 'title',
+  'atomLink': 'link',
+  'atomSummary': 'summary',
+  'atomSource': 'source'
+}
+
 export const jsxs = (nodeName: string | Function, attributes = { children: [] }) => {
+  // @ts-ignore
+  nodeName = aliases[nodeName] || nodeName
   if (nodeName === Fragment && attributes.children) { return attributes.children }
   if (nodeName === Fragment) { return [] }
   if (typeof nodeName === "function") return nodeName(attributes, attributes.children)
