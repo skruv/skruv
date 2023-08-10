@@ -162,14 +162,14 @@ export class Element {
 
   /** @returns {Element} */
   cloneNode () {
-    if (this.nodeName === '#comment') { return new Comment(this.data) }
+    if (this.nodeName === 'skruv-comment') { return new Comment(this.data) }
     if (this.nodeName === '#text') { return new Text(this.data) }
     // @ts-expect-error: We need to clone this element
     return new this.constructor(this.nodeName)
   }
 
   get children () {
-    return this.childNodes.filter(e => e.nodeName !== '#text' && e.nodeName !== '#comment')
+    return this.childNodes.filter(e => e.nodeName !== '#text' && e.nodeName !== 'skruv-comment')
   }
 
   get innerHTML () {
@@ -209,7 +209,7 @@ export class Text extends Element {
 
 export class Comment extends Element {
   constructor (data = '') {
-    super('#comment')
+    super('skruv-comment')
     /** @type {string} */
     this.data = data
   }
@@ -439,16 +439,16 @@ export const toHTML = (vDom, context, headers) => {
     return vDom.data.replace('</style>', '<\\/style>')
   } else if (vDom.nodeName.toLowerCase() === '#text') {
     return escapeHtml(vDom.data)
-  } else if (vDom.nodeName.toLowerCase() === '#comment') {
+  } else if (vDom.nodeName.toLowerCase() === 'skruv-comment') {
     return `<!--${escapeHtml(
       vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join('')
     )
       }-->`
-  } else if (vDom.nodeName.toLowerCase() === '#raw') {
+  } else if (vDom.nodeName.toLowerCase() === 'skruv-raw') {
     return vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join(
       ''
     )
-  } else if (vDom.nodeName.toLowerCase() === '#header') {
+  } else if (vDom.nodeName.toLowerCase() === 'skruv-header') {
     headers[vDom.attributes.name] = vDom.attributes?.value
     return vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join(
       ''

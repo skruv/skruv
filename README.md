@@ -176,7 +176,7 @@ doRender()
 
 ## Docs
 
-The core of skruv is the render function. It takes a structure created by elementFactory and optionally which DOM node to write to. It has built in support and typings for HTML, SVG, MathML, Atom feeds and sitemaps. For usage in SSR you can also create comments can be created by using the element name `#comment` and raw output with `#raw`. Headers can be set using the `#header` element using the attributes name and value with the special header `status` being used to set http status.
+The core of skruv is the render function. It takes a structure created by elementFactory and optionally which DOM node to write to. It has built in support and typings for HTML, SVG, MathML, Atom feeds and sitemaps. For usage in SSR you can also create comments can be created by using the element name `skruv-comment` and raw output with `skruv-raw`. Headers can be set using the `skruv-header` element using the attributes name and value with the special header `status` being used to set http status.
 
 Besides the normal attributes there are the following:
  * data-skruv-key: Any object/array, will be used to allow the element to move (instead of being recreated) and will be shallow-diffed on updates to allow for skipping re-rendering this node if not changed. If you want to keep children injected by other libraries make sure to not change the key.
