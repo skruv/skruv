@@ -162,14 +162,14 @@ export class Element {
 
   /** @returns {Element} */
   cloneNode () {
-    if (this.nodeName === 'skruv-comment') { return new Comment(this.data) }
+    if (this.nodeName === 'skruvComment') { return new Comment(this.data) }
     if (this.nodeName === '#text') { return new Text(this.data) }
     // @ts-expect-error: We need to clone this element
     return new this.constructor(this.nodeName)
   }
 
   get children () {
-    return this.childNodes.filter(e => e.nodeName !== '#text' && e.nodeName !== 'skruv-comment')
+    return this.childNodes.filter(e => e.nodeName !== '#text' && e.nodeName !== 'skruvComment')
   }
 
   get innerHTML () {
@@ -209,7 +209,7 @@ export class Text extends Element {
 
 export class Comment extends Element {
   constructor (data = '') {
-    super('skruv-comment')
+    super('skruvComment')
     /** @type {string} */
     this.data = data
   }
@@ -409,7 +409,7 @@ export const toHTML = (vDom, context, headers) => {
       return `<!DOCTYPE html>${toHTML(vDom, 'root', headers)}`
     }
     if (vDom.nodeName === 'svg') {
-      headers['content-type'] = 'mage/svg+xml'
+      headers['content-type'] = 'image/svg+xml'
       return `<?xml version="1.0" encoding="UTF-8"?>${toHTML(vDom, 'root', headers)}`
     }
     if (vDom.nodeName === 'math') {
@@ -442,16 +442,16 @@ export const toHTML = (vDom, context, headers) => {
     return vDom.data.replace('</style>', '<\\/style>')
   } else if (vDom.nodeName.toLowerCase() === '#text') {
     return escapeHtml(vDom.data)
-  } else if (vDom.nodeName.toLowerCase() === 'skruv-comment') {
+  } else if (vDom.nodeName.toLowerCase() === 'skruvcomment') {
     return `<!--${escapeHtml(
       vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join('')
     )
       }-->`
-  } else if (vDom.nodeName.toLowerCase() === 'skruv-raw') {
+  } else if (vDom.nodeName.toLowerCase() === 'skruvtext') {
     return vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join(
       ''
     )
-  } else if (vDom.nodeName.toLowerCase() === 'skruv-header') {
+  } else if (vDom.nodeName.toLowerCase() === 'skruvheader') {
     headers[vDom.attributes.name] = vDom.attributes?.value
     return vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join(
       ''

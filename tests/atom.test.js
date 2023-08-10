@@ -7,7 +7,7 @@ import { elementFactory, render } from '../skruv.js'
 
 const { feed, atomTitle: title, entry } = elementFactory
 
-test('svg', async () => {
+test('atom', async () => {
   render(
     feed(
       title('Test'),

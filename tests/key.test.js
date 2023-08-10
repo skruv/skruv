@@ -119,12 +119,12 @@ test('key', async () => {
       div({ 'data-skruv-key': testKeys[9] }, 'Key9-noupdate'),
       div({ 'data-skruv-key': testKeys[3] }, 'Key3'),
       div({ 'data-skruv-key': arrayKey }, 'arrayKey-update'),
-      elementFactory['skruv-comment'](['Testing a comment, with special chars!<>"&\'']),
-      elementFactory['skruv-raw'](
+      elementFactory.skruvComment(['Testing a comment, with special chars!<>"&\'']),
+      elementFactory.skruvText(
         div('raw nodes are removed when rendering to html')
       ),
-      elementFactory['skruv-header']({ name: 'X-My-Header', value: '1' }),
-      elementFactory['skruv-header']({ name: 'X-My-Other-Header', value: '2' })
+      elementFactory.skruvHeader({ name: 'X-My-Header', value: '1' }),
+      elementFactory.skruvHeader({ name: 'X-My-Other-Header', value: '2' })
     )
   )
   assert(document.documentElement.childNodes[2] === initialElements[3])

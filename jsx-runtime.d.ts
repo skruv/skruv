@@ -233,15 +233,15 @@ export declare namespace JSX {
         'priority': util.SkruvPrioritySitemapAttributes;
         'sitemapindex': util.SkruvSitemapindexSitemapAttributes;
         'sitemap': util.SkruvSitemapSitemapAttributes;
-        'skruv-header': util.AsyncContent<{
+        'skruvHeader': util.AsyncContent<{
             'name': string | number;
             'value': string;
             isSkruvDom?: false;
         }>;
-        'skruv-comment': util.AsyncContent<{
+        'skruvComment': util.AsyncContent<{
             isSkruvDom?: false;
         }>;
-        'skruv-raw': util.AsyncContent<{
+        'skruvText': util.AsyncContent<{
             isSkruvDom?: false;
         }>;
         [elemName: string]: any;
