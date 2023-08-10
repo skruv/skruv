@@ -248,18 +248,10 @@ export declare namespace JSX {
     }
 }
 export declare const Fragment = "#fragment";
-export declare const jsxs: (nodeName: string, attributes?: {
+export declare const jsxs: (nodeName: string | Function, attributes?: {
     children: never[];
-}) => never[] | {
-    isSkruvDom: boolean;
-    t: string;
-    c: {}[];
-};
-export declare const jsx: (nodeName: string, attributes?: {
+}) => any;
+export declare const jsx: (nodeName: string | Function, attributes?: {
     children: never[];
-}) => never[] | {
-    isSkruvDom: boolean;
-    t: string;
-    c: {}[];
-};
+}) => any;
 //# sourceMappingURL=jsx-runtime.d.ts.map

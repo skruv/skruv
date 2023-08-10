@@ -247,9 +247,10 @@ export namespace JSX {
 
 export const Fragment = '#fragment'
 
-export const jsxs = (nodeName: string, attributes = { children: [] }) => {
+export const jsxs = (nodeName: string | Function, attributes = { children: [] }) => {
   if (nodeName === Fragment && attributes.children) { return attributes.children }
   if (nodeName === Fragment) { return [] }
+  if (typeof nodeName === "function") return nodeName(attributes, attributes.children)
   const { children, ...attrs } = attributes
   if (children) { return { isSkruvDom: true, t: nodeName, c: [attrs || {}, children] } }
   return { isSkruvDom: true, t: nodeName, c: [attrs || {}] }
