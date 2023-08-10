@@ -239,7 +239,7 @@ export type attributes = HTMLAttributes<Record<string, string | number | boolean
 export type Vnode = AnyElement
 export type children = Vnode['c']
 
-type CustomElements = { [id: `${string}-${string}`]: getHTMLVnode<Record<string, string | number | boolean | object | Function>, HTMLElement, typeof id, Vnode | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> }
+type CustomElements = { [id: `${string}-${string}`]: getHTMLVnode<Record<string, string | number | boolean | object | Function>, HTMLElement, typeof id, Vnode | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> }
 
 export type getHTMLVnode<N, T, A, C> = (...args: [(HTMLAttributes<T, A> | C), ...C[]]) => HTMLVnode<N, HTMLAttributes<T, A>, C>
 
@@ -267,7 +267,7 @@ export type SkruvHtmlHTMLAttributes = AsyncContent<HTMLAttributes<HTMLHtmlElemen
   'xmlns'?: string | number | boolean | false
 }>>
 
-export interface SkruvHtmlHTMLElement extends HTMLVnode<'html', SkruvHtmlHTMLAttributes, AsyncContent<AnyHTMLContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvHtmlHTMLElement extends HTMLVnode<'html', SkruvHtmlHTMLAttributes, AsyncContent<AnyHTMLContent | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <base> HTML element specifies the base URL to use for all relative URLs in a document. There can be only one <base> element in a document. */
 export type SkruvBaseHTMLAttributes = AsyncContent<HTMLAttributes<HTMLBaseElement, {
@@ -301,12 +301,12 @@ export type SkruvHeadHTMLAttributes = AsyncContent<HTMLAttributes<HTMLHeadElemen
   'profile'?: string | number | boolean | false
 }>>
 
-export interface SkruvHeadHTMLElement extends HTMLVnode<'head', SkruvHeadHTMLAttributes, AsyncContent<SkruvHTMLMetadataContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvHeadHTMLElement extends HTMLVnode<'head', SkruvHeadHTMLAttributes, AsyncContent<SkruvHTMLMetadataContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <title> HTML element defines the document's title that is shown in a browser's title bar or a page's tab. It only contains text; tags within the element are ignored. */
 export type SkruvTitleHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTitleElement, {}>>
 
-export interface SkruvTitleHTMLElement extends HTMLVnode<'title', SkruvTitleHTMLAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTitleHTMLElement extends HTMLVnode<'title', SkruvTitleHTMLAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <script> HTML element is used to embed executable code or data; this is typically used to embed or refer to JavaScript code. The <script> element can also be used with other languages, such as WebGL's GLSL shader programming language and JSON. */
 export type SkruvScriptHTMLAttributes = AsyncContent<HTMLAttributes<HTMLScriptElement, {
@@ -498,7 +498,7 @@ export type SkruvScriptHTMLAttributes = AsyncContent<HTMLAttributes<HTMLScriptEl
   'blocking'?: 'render' | false
 }>>
 
-export interface SkruvScriptHTMLElement extends HTMLVnode<'script', SkruvScriptHTMLAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvScriptHTMLElement extends HTMLVnode<'script', SkruvScriptHTMLAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <style> HTML element contains style information for a document, or part of a document. It contains CSS, which is applied to the contents of the document containing the <style> element. */
 export type SkruvStyleHTMLAttributes = AsyncContent<HTMLAttributes<HTMLStyleElement, {
@@ -524,7 +524,7 @@ export type SkruvStyleHTMLAttributes = AsyncContent<HTMLAttributes<HTMLStyleElem
   'blocking'?: 'render' | false
 }>>
 
-export interface SkruvStyleHTMLElement extends HTMLVnode<'style', SkruvStyleHTMLAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvStyleHTMLElement extends HTMLVnode<'style', SkruvStyleHTMLAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <link> HTML element specifies relationships between the current document and an external resource.
  * 
@@ -1007,87 +1007,87 @@ export interface SkruvMetaHTMLElement extends HTMLVnode<'meta', SkruvMetaHTMLAtt
 /** The <body> HTML element represents the content of an HTML document. There can be only one <body> element in a document. */
 export type SkruvBodyHTMLAttributes = AsyncContent<HTMLAttributes<HTMLBodyElement, {}>>
 
-export interface SkruvBodyHTMLElement extends HTMLVnode<'body', SkruvBodyHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvBodyHTMLElement extends HTMLVnode<'body', SkruvBodyHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <address> HTML element indicates that the enclosed HTML provides contact information for a person or people, or for an organization. */
 export type SkruvAddressHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvAddressHTMLElement extends HTMLVnode<'address', SkruvAddressHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvAddressHTMLElement extends HTMLVnode<'address', SkruvAddressHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <article> HTML element represents a self-contained composition in a document, page, application, or site, which is intended to be independently distributable or reusable (e.g., in syndication). Examples include: a forum post, a magazine or newspaper article, or a blog entry, a product card, a user-submitted comment, an interactive widget or gadget, or any other independent item of content. */
 export type SkruvArticleHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvArticleHTMLElement extends HTMLVnode<'article', SkruvArticleHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvArticleHTMLElement extends HTMLVnode<'article', SkruvArticleHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <aside> HTML element represents a portion of a document whose content is only indirectly related to the document's main content. Asides are frequently presented as sidebars or call-out boxes. */
 export type SkruvAsideHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvAsideHTMLElement extends HTMLVnode<'aside', SkruvAsideHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvAsideHTMLElement extends HTMLVnode<'aside', SkruvAsideHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <footer> HTML element represents a footer for its nearest ancestor sectioning content or sectioning root element. A <footer> typically contains information about the author of the section, copyright data or links to related documents. */
 export type SkruvFooterHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvFooterHTMLElement extends HTMLVnode<'footer', SkruvFooterHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFooterHTMLElement extends HTMLVnode<'footer', SkruvFooterHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <h1> to <h6> HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest. */
 export type SkruvH1HTMLAttributes = AsyncContent<HTMLAttributes<HTMLHeadingElement, {}>>
 
-export interface SkruvH1HTMLElement extends HTMLVnode<'h1', SkruvH1HTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvH1HTMLElement extends HTMLVnode<'h1', SkruvH1HTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <h1> to <h6> HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest. */
 export type SkruvH2HTMLAttributes = AsyncContent<HTMLAttributes<HTMLHeadingElement, {}>>
 
-export interface SkruvH2HTMLElement extends HTMLVnode<'h2', SkruvH2HTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvH2HTMLElement extends HTMLVnode<'h2', SkruvH2HTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <h1> to <h6> HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest. */
 export type SkruvH3HTMLAttributes = AsyncContent<HTMLAttributes<HTMLHeadingElement, {}>>
 
-export interface SkruvH3HTMLElement extends HTMLVnode<'h3', SkruvH3HTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvH3HTMLElement extends HTMLVnode<'h3', SkruvH3HTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <h1> to <h6> HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest. */
 export type SkruvH4HTMLAttributes = AsyncContent<HTMLAttributes<HTMLHeadingElement, {}>>
 
-export interface SkruvH4HTMLElement extends HTMLVnode<'h4', SkruvH4HTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvH4HTMLElement extends HTMLVnode<'h4', SkruvH4HTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <h1> to <h6> HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest. */
 export type SkruvH5HTMLAttributes = AsyncContent<HTMLAttributes<HTMLHeadingElement, {}>>
 
-export interface SkruvH5HTMLElement extends HTMLVnode<'h5', SkruvH5HTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvH5HTMLElement extends HTMLVnode<'h5', SkruvH5HTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <h1> to <h6> HTML elements represent six levels of section headings. <h1> is the highest section level and <h6> is the lowest. */
 export type SkruvH6HTMLAttributes = AsyncContent<HTMLAttributes<HTMLHeadingElement, {}>>
 
-export interface SkruvH6HTMLElement extends HTMLVnode<'h6', SkruvH6HTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvH6HTMLElement extends HTMLVnode<'h6', SkruvH6HTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <header> HTML element represents introductory content, typically a group of introductory or navigational aids. It may contain some heading elements but also a logo, a search form, an author name, and other elements. */
 export type SkruvHeaderHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvHeaderHTMLElement extends HTMLVnode<'header', SkruvHeaderHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvHeaderHTMLElement extends HTMLVnode<'header', SkruvHeaderHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <hgroup> HTML element represents a heading and related content. It groups a single <h1>–<h6> element with one or more <p>. */
 export type SkruvHgroupHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvHgroupHTMLElement extends HTMLVnode<'hgroup', SkruvHgroupHTMLAttributes, AsyncContent<SkruvPHTMLElement | SkruvH1HTMLElement | SkruvH2HTMLElement | SkruvH3HTMLElement | SkruvH4HTMLElement | SkruvH5HTMLElement | SkruvH6HTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvHgroupHTMLElement extends HTMLVnode<'hgroup', SkruvHgroupHTMLAttributes, AsyncContent<SkruvPHTMLElement | SkruvH1HTMLElement | SkruvH2HTMLElement | SkruvH3HTMLElement | SkruvH4HTMLElement | SkruvH5HTMLElement | SkruvH6HTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <main> HTML element represents the dominant content of the <body> of a document. The main content area consists of content that is directly related to or expands upon the central topic of a document, or the central functionality of an application. */
 export type SkruvMainHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvMainHTMLElement extends HTMLVnode<'main', SkruvMainHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMainHTMLElement extends HTMLVnode<'main', SkruvMainHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <nav> HTML element represents a section of a page whose purpose is to provide navigation links, either within the current document or to other documents. Common examples of navigation sections are menus, tables of contents, and indexes. */
 export type SkruvNavHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvNavHTMLElement extends HTMLVnode<'nav', SkruvNavHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvNavHTMLElement extends HTMLVnode<'nav', SkruvNavHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <section> HTML element represents a generic standalone section of a document, which doesn't have a more specific semantic element to represent it. Sections should always have a heading, with very few exceptions. */
 export type SkruvSectionHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvSectionHTMLElement extends HTMLVnode<'section', SkruvSectionHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSectionHTMLElement extends HTMLVnode<'section', SkruvSectionHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <search> HTML element is a container representing the parts of the document or application with form controls or other content related to performing a search or filtering operation. The <search> element semantically identifies the purpose of the element's contents as having search or filtering capabilities. The search or filtering functionality can be for the website or application, the current web page or document, or the entire Internet or subsection thereof. */
 export type SkruvSearchHTMLAttributes = AsyncContent<HTMLAttributes<HTMLUnknownElement, {}>>
 
-export interface SkruvSearchHTMLElement extends HTMLVnode<'search', SkruvSearchHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSearchHTMLElement extends HTMLVnode<'search', SkruvSearchHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <blockquote> HTML element indicates that the enclosed text is an extended quotation. Usually, this is rendered visually by indentation (see Notes for how to change it). A URL for the source of the quotation may be given using the cite attribute, while a text representation of the source can be given using the <cite> element. */
 export type SkruvBlockquoteHTMLAttributes = AsyncContent<HTMLAttributes<HTMLQuoteElement, {
@@ -1097,12 +1097,12 @@ export type SkruvBlockquoteHTMLAttributes = AsyncContent<HTMLAttributes<HTMLQuot
   'cite'?: string | false
 }>>
 
-export interface SkruvBlockquoteHTMLElement extends HTMLVnode<'blockquote', SkruvBlockquoteHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvBlockquoteHTMLElement extends HTMLVnode<'blockquote', SkruvBlockquoteHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <cite> HTML element is used to mark up the title of a cited creative work. The reference may be in an abbreviated form according to context-appropriate conventions related to citation metadata. */
 export type SkruvCiteHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvCiteHTMLElement extends HTMLVnode<'cite', SkruvCiteHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvCiteHTMLElement extends HTMLVnode<'cite', SkruvCiteHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <dd> HTML element provides the description, definition, or value for the preceding term (<dt>) in a description list (<dl>). */
 export type SkruvDdHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {
@@ -1112,32 +1112,32 @@ export type SkruvDdHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {
   'nowrap'?: string | number | boolean | false
 }>>
 
-export interface SkruvDdHTMLElement extends HTMLVnode<'dd', SkruvDdHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvDdHTMLElement extends HTMLVnode<'dd', SkruvDdHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <dt> HTML element specifies a term in a description or definition list, and as such must be used inside a <dl> element. It is usually followed by a <dd> element; however, multiple <dt> elements in a row indicate several terms that are all defined by the immediate next <dd> element. */
 export type SkruvDtHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvDtHTMLElement extends HTMLVnode<'dt', SkruvDtHTMLAttributes, AsyncContent<Exclude<Exclude<Exclude<Exclude<SkruvHTMLFlowContentGroup, SkruvFooterHTMLElement>, SkruvHeaderHTMLElement>, SkruvHTMLSectioningContentGroup>, SkruvHTMLHeadingContentGroup> | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvDtHTMLElement extends HTMLVnode<'dt', SkruvDtHTMLAttributes, AsyncContent<Exclude<Exclude<Exclude<Exclude<SkruvHTMLFlowContentGroup, SkruvFooterHTMLElement>, SkruvHeaderHTMLElement>, SkruvHTMLSectioningContentGroup>, SkruvHTMLHeadingContentGroup> | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <dl> HTML element represents a description list. The element encloses a list of groups of terms (specified using the <dt> element) and descriptions (provided by <dd> elements). Common uses for this element are to implement a glossary or to display metadata (a list of key-value pairs). */
 export type SkruvDlHTMLAttributes = AsyncContent<HTMLAttributes<HTMLDListElement, {}>>
 
-export interface SkruvDlHTMLElement extends HTMLVnode<'dl', SkruvDlHTMLAttributes, AsyncContent<SkruvDtHTMLElement | SkruvDdHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvDlHTMLElement extends HTMLVnode<'dl', SkruvDlHTMLAttributes, AsyncContent<SkruvDtHTMLElement | SkruvDdHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <div> HTML element is the generic container for flow content. It has no effect on the content or layout until styled in some way using CSS (e.g. styling is directly applied to it, or some kind of layout model like Flexbox is applied to its parent element). */
 export type SkruvDivHTMLAttributes = AsyncContent<HTMLAttributes<HTMLDivElement, {}>>
 
-export interface SkruvDivHTMLElement extends HTMLVnode<'div', SkruvDivHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvDtHTMLElement | SkruvDdHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvDivHTMLElement extends HTMLVnode<'div', SkruvDivHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvDtHTMLElement | SkruvDdHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <figcaption> HTML element represents a caption or legend describing the rest of the contents of its parent <figure> element. */
 export type SkruvFigcaptionHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvFigcaptionHTMLElement extends HTMLVnode<'figcaption', SkruvFigcaptionHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFigcaptionHTMLElement extends HTMLVnode<'figcaption', SkruvFigcaptionHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <figure> HTML element represents self-contained content, potentially with an optional caption, which is specified using the <figcaption> element. The figure, its caption, and its contents are referenced as a single unit. */
 export type SkruvFigureHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvFigureHTMLElement extends HTMLVnode<'figure', SkruvFigureHTMLAttributes, AsyncContent<SkruvFigcaptionHTMLElement | SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFigureHTMLElement extends HTMLVnode<'figure', SkruvFigureHTMLAttributes, AsyncContent<SkruvFigcaptionHTMLElement | SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <hr> HTML element represents a thematic break between paragraph-level elements: for example, a change of scene in a story, or a shift of topic within a section. */
 export type SkruvHrHTMLAttributes = AsyncContent<HTMLAttributes<HTMLHRElement, {
@@ -1173,7 +1173,7 @@ export type SkruvLiHTMLAttributes = AsyncContent<HTMLAttributes<HTMLLIElement, {
   'value'?: number | string | false
 }>>
 
-export interface SkruvLiHTMLElement extends HTMLVnode<'li', SkruvLiHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvLiHTMLElement extends HTMLVnode<'li', SkruvLiHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <ol> HTML element represents an ordered list of items — typically rendered as a numbered list. */
 export type SkruvOlHTMLAttributes = AsyncContent<HTMLAttributes<HTMLOListElement, {
@@ -1187,27 +1187,27 @@ export type SkruvOlHTMLAttributes = AsyncContent<HTMLAttributes<HTMLOListElement
   'start'?: number | false
 }>>
 
-export interface SkruvOlHTMLElement extends HTMLVnode<'ol', SkruvOlHTMLAttributes, AsyncContent<SkruvLiHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvOlHTMLElement extends HTMLVnode<'ol', SkruvOlHTMLAttributes, AsyncContent<SkruvLiHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <ul> HTML element represents an unordered list of items, typically rendered as a bulleted list. */
 export type SkruvUlHTMLAttributes = AsyncContent<HTMLAttributes<HTMLUListElement, {}>>
 
-export interface SkruvUlHTMLElement extends HTMLVnode<'ul', SkruvUlHTMLAttributes, AsyncContent<SkruvLiHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvUlHTMLElement extends HTMLVnode<'ul', SkruvUlHTMLAttributes, AsyncContent<SkruvLiHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <menu> HTML element is described in the HTML specification as a semantic alternative to <ul>, but treated by browsers (and exposed through the accessibility tree) as no different than <ul>. It represents an unordered list of items (which are represented by <li> elements). */
 export type SkruvMenuHTMLAttributes = AsyncContent<HTMLAttributes<HTMLMenuElement, {}>>
 
-export interface SkruvMenuHTMLElement extends HTMLVnode<'menu', SkruvMenuHTMLAttributes, AsyncContent<SkruvLiHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMenuHTMLElement extends HTMLVnode<'menu', SkruvMenuHTMLAttributes, AsyncContent<SkruvLiHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <p> HTML element represents a paragraph. Paragraphs are usually represented in visual media as blocks of text separated from adjacent blocks by blank lines and/or first-line indentation, but HTML paragraphs can be any structural grouping of related content, such as images or form fields. */
 export type SkruvPHTMLAttributes = AsyncContent<HTMLAttributes<HTMLParagraphElement, {}>>
 
-export interface SkruvPHTMLElement extends HTMLVnode<'p', SkruvPHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvPHTMLElement extends HTMLVnode<'p', SkruvPHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <pre> HTML element represents preformatted text which is to be presented exactly as written in the HTML file. The text is typically rendered using a non-proportional, or monospaced, font. Whitespace inside this element is displayed as written. */
 export type SkruvPreHTMLAttributes = AsyncContent<HTMLAttributes<HTMLPreElement, {}>>
 
-export interface SkruvPreHTMLElement extends HTMLVnode<'pre', SkruvPreHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvPreHTMLElement extends HTMLVnode<'pre', SkruvPreHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <a> HTML element (or anchor element), with its href attribute, creates a hyperlink to web pages, files, email addresses, locations in the same page, or anything else a URL can address. */
 export type SkruvAHTMLAttributes = AsyncContent<HTMLAttributes<HTMLAnchorElement, {
@@ -1331,22 +1331,22 @@ export type SkruvAHTMLAttributes = AsyncContent<HTMLAttributes<HTMLAnchorElement
   'type'?: string | false
 }>>
 
-export interface SkruvAHTMLElement extends HTMLVnode<'a', SkruvAHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvAHTMLElement extends HTMLVnode<'a', SkruvAHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <abbr> HTML element represents an abbreviation or acronym. */
 export type SkruvAbbrHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvAbbrHTMLElement extends HTMLVnode<'abbr', SkruvAbbrHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvAbbrHTMLElement extends HTMLVnode<'abbr', SkruvAbbrHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <b> HTML element is used to draw the reader's attention to the element's contents, which are not otherwise granted special importance. This was formerly known as the Boldface element, and most browsers still draw the text in boldface. However, you should not use <b> for styling text or granting importance. If you wish to create boldface text, you should use the CSS font-weight property. If you wish to indicate an element is of special importance, you should use the <strong> element. */
 export type SkruvBHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvBHTMLElement extends HTMLVnode<'b', SkruvBHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvBHTMLElement extends HTMLVnode<'b', SkruvBHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <bdi> HTML element tells the browser's bidirectional algorithm to treat the text it contains in isolation from its surrounding text. It's particularly useful when a website dynamically inserts some text and doesn't know the directionality of the text being inserted. */
 export type SkruvBdiHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvBdiHTMLElement extends HTMLVnode<'bdi', SkruvBdiHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvBdiHTMLElement extends HTMLVnode<'bdi', SkruvBdiHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <bdo> HTML element overrides the current directionality of text, so that the text within is rendered in a different direction. */
 export type SkruvBdoHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {
@@ -1362,7 +1362,7 @@ export type SkruvBdoHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {
   'dir'?: string | false
 }>>
 
-export interface SkruvBdoHTMLElement extends HTMLVnode<'bdo', SkruvBdoHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvBdoHTMLElement extends HTMLVnode<'bdo', SkruvBdoHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <br> HTML element produces a line break in text (carriage-return). It is useful for writing a poem or an address, where the division of lines is significant. */
 export type SkruvBrHTMLAttributes = AsyncContent<HTMLAttributes<HTMLBRElement, {}>>
@@ -1372,7 +1372,7 @@ export interface SkruvBrHTMLElement extends HTMLVnode<'br', SkruvBrHTMLAttribute
 /** The <code> HTML element displays its contents styled in a fashion intended to indicate that the text is a short fragment of computer code. By default, the content text is displayed using the user agent's default monospace font. */
 export type SkruvCodeHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvCodeHTMLElement extends HTMLVnode<'code', SkruvCodeHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvCodeHTMLElement extends HTMLVnode<'code', SkruvCodeHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <data> HTML element links a given piece of content with a machine-readable translation. If the content is time- or date-related, the <time> element must be used. */
 export type SkruvDataHTMLAttributes = AsyncContent<HTMLAttributes<HTMLDataElement, {
@@ -1382,32 +1382,32 @@ export type SkruvDataHTMLAttributes = AsyncContent<HTMLAttributes<HTMLDataElemen
   'value'?: number | string | false
 }>>
 
-export interface SkruvDataHTMLElement extends HTMLVnode<'data', SkruvDataHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvDataHTMLElement extends HTMLVnode<'data', SkruvDataHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <dfn> HTML element is used to indicate the term being defined within the context of a definition phrase or sentence. The ancestor <p> element, the <dt>/<dd> pairing, or the nearest <section> ancestor of the <dfn> element, is considered to be the definition of the term. */
 export type SkruvDfnHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvDfnHTMLElement extends HTMLVnode<'dfn', SkruvDfnHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvDfnHTMLElement extends HTMLVnode<'dfn', SkruvDfnHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <em> HTML element marks text that has stress emphasis. The <em> element can be nested, with each level of nesting indicating a greater degree of emphasis. */
 export type SkruvEmHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvEmHTMLElement extends HTMLVnode<'em', SkruvEmHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvEmHTMLElement extends HTMLVnode<'em', SkruvEmHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <i> HTML element represents a range of text that is set off from the normal text for some reason, such as idiomatic text, technical terms, taxonomical designations, among others. Historically, these have been presented using italicized type, which is the original source of the <i> naming of this element. */
 export type SkruvIHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvIHTMLElement extends HTMLVnode<'i', SkruvIHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvIHTMLElement extends HTMLVnode<'i', SkruvIHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <kbd> HTML element represents a span of inline text denoting textual user input from a keyboard, voice input, or any other text entry device. By convention, the user agent defaults to rendering the contents of a <kbd> element using its default monospace font, although this is not mandated by the HTML standard. */
 export type SkruvKbdHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvKbdHTMLElement extends HTMLVnode<'kbd', SkruvKbdHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvKbdHTMLElement extends HTMLVnode<'kbd', SkruvKbdHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mark> HTML element represents text which is marked or highlighted for reference or notation purposes due to the marked passage's relevance in the enclosing context. */
 export type SkruvMarkHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvMarkHTMLElement extends HTMLVnode<'mark', SkruvMarkHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMarkHTMLElement extends HTMLVnode<'mark', SkruvMarkHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <q> HTML element indicates that the enclosed text is a short inline quotation. Most modern browsers implement this by surrounding the text in quotation marks. This element is intended for short quotations that don't require paragraph breaks; for long quotations use the <blockquote> element. */
 export type SkruvQHTMLAttributes = AsyncContent<HTMLAttributes<HTMLQuoteElement, {
@@ -1417,57 +1417,57 @@ export type SkruvQHTMLAttributes = AsyncContent<HTMLAttributes<HTMLQuoteElement,
   'cite'?: string | false
 }>>
 
-export interface SkruvQHTMLElement extends HTMLVnode<'q', SkruvQHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvQHTMLElement extends HTMLVnode<'q', SkruvQHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <rp> HTML element is used to provide fall-back parentheses for browsers that do not support display of ruby annotations using the <ruby> element. One <rp> element should enclose each of the opening and closing parentheses that wrap the <rt> element that contains the annotation's text. */
 export type SkruvRpHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvRpHTMLElement extends HTMLVnode<'rp', SkruvRpHTMLAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvRpHTMLElement extends HTMLVnode<'rp', SkruvRpHTMLAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <ruby> HTML element represents small annotations that are rendered above, below, or next to base text, usually used for showing the pronunciation of East Asian characters. It can also be used for annotating other kinds of text, but this usage is less common. */
 export type SkruvRubyHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvRubyHTMLElement extends HTMLVnode<'ruby', SkruvRubyHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvRubyHTMLElement extends HTMLVnode<'ruby', SkruvRubyHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <rt> HTML element specifies the ruby text component of a ruby annotation, which is used to provide pronunciation, translation, or transliteration information for East Asian typography. The <rt> element must always be contained within a <ruby> element. */
 export type SkruvRtHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvRtHTMLElement extends HTMLVnode<'rt', SkruvRtHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvRtHTMLElement extends HTMLVnode<'rt', SkruvRtHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <s> HTML element renders text with a strikethrough, or a line through it. Use the <s> element to represent things that are no longer relevant or no longer accurate. However, <s> is not appropriate when indicating document edits; for that, use the <del> and <ins> elements, as appropriate. */
 export type SkruvSHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvSHTMLElement extends HTMLVnode<'s', SkruvSHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSHTMLElement extends HTMLVnode<'s', SkruvSHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <samp> HTML element is used to enclose inline text which represents sample (or quoted) output from a computer program. Its contents are typically rendered using the browser's default monospaced font (such as Courier or Lucida Console). */
 export type SkruvSampHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvSampHTMLElement extends HTMLVnode<'samp', SkruvSampHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSampHTMLElement extends HTMLVnode<'samp', SkruvSampHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <small> HTML element represents side-comments and small print, like copyright and legal text, independent of its styled presentation. By default, it renders text within it one font-size smaller, such as from small to x-small. */
 export type SkruvSmallHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvSmallHTMLElement extends HTMLVnode<'small', SkruvSmallHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSmallHTMLElement extends HTMLVnode<'small', SkruvSmallHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <span> HTML element is a generic inline container for phrasing content, which does not inherently represent anything. It can be used to group elements for styling purposes (using the class or id attributes), or because they share attribute values, such as lang. It should be used only when no other semantic element is appropriate. <span> is very much like a <div> element, but <div> is a block-level element whereas a <span> is an inline-level element. */
 export type SkruvSpanHTMLAttributes = AsyncContent<HTMLAttributes<HTMLSpanElement, {}>>
 
-export interface SkruvSpanHTMLElement extends HTMLVnode<'span', SkruvSpanHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSpanHTMLElement extends HTMLVnode<'span', SkruvSpanHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <strong> HTML element indicates that its contents have strong importance, seriousness, or urgency. Browsers typically render the contents in bold type. */
 export type SkruvStrongHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvStrongHTMLElement extends HTMLVnode<'strong', SkruvStrongHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvStrongHTMLElement extends HTMLVnode<'strong', SkruvStrongHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <sub> HTML element specifies inline text which should be displayed as subscript for solely typographical reasons. Subscripts are typically rendered with a lowered baseline using smaller text. */
 export type SkruvSubHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvSubHTMLElement extends HTMLVnode<'sub', SkruvSubHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSubHTMLElement extends HTMLVnode<'sub', SkruvSubHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <sup> HTML element specifies inline text which is to be displayed as superscript for solely typographical reasons. Superscripts are usually rendered with a raised baseline using smaller text. */
 export type SkruvSupHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvSupHTMLElement extends HTMLVnode<'sup', SkruvSupHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSupHTMLElement extends HTMLVnode<'sup', SkruvSupHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <time> HTML element represents a specific period in time. It may include the datetime attribute to translate dates into machine-readable format, allowing for better search engine results or custom features such as reminders. */
 export type SkruvTimeHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTimeElement, {
@@ -1477,17 +1477,17 @@ export type SkruvTimeHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTimeElemen
   'datetime'?: string | false
 }>>
 
-export interface SkruvTimeHTMLElement extends HTMLVnode<'time', SkruvTimeHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTimeHTMLElement extends HTMLVnode<'time', SkruvTimeHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <u> HTML element represents a span of inline text which should be rendered in a way that indicates that it has a non-textual annotation. This is rendered by default as a simple solid underline, but may be altered using CSS. */
 export type SkruvUHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvUHTMLElement extends HTMLVnode<'u', SkruvUHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvUHTMLElement extends HTMLVnode<'u', SkruvUHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <var> HTML element represents the name of a variable in a mathematical expression or a programming context. It's typically presented using an italicized version of the current typeface, although that behavior is browser-dependent. */
 export type SkruvVarHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvVarHTMLElement extends HTMLVnode<'var', SkruvVarHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvVarHTMLElement extends HTMLVnode<'var', SkruvVarHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <wbr> HTML element represents a word break opportunity—a position within text where the browser may optionally break a line, though its line-breaking rules would not otherwise create a break at that location. */
 export type SkruvWbrHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
@@ -1748,7 +1748,7 @@ export type SkruvAudioHTMLAttributes = AsyncContent<HTMLAttributes<HTMLAudioElem
   'src'?: string | false
 }>>
 
-export interface SkruvAudioHTMLElement extends HTMLVnode<'audio', SkruvAudioHTMLAttributes, AsyncContent<SkruvHTMLTransparentContentGroup | SkruvTrackHTMLElement | SkruvSourceHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvAudioHTMLElement extends HTMLVnode<'audio', SkruvAudioHTMLAttributes, AsyncContent<SkruvHTMLTransparentContentGroup | SkruvTrackHTMLElement | SkruvSourceHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <img> HTML element embeds an image into the document. */
 export type SkruvImgHTMLAttributes = AsyncContent<HTMLAttributes<HTMLImageElement, {
@@ -2010,7 +2010,7 @@ export type SkruvMapHTMLAttributes = AsyncContent<HTMLAttributes<HTMLMapElement,
   'name'?: string | false
 }>>
 
-export interface SkruvMapHTMLElement extends HTMLVnode<'map', SkruvMapHTMLAttributes, AsyncContent<SkruvHTMLTransparentContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMapHTMLElement extends HTMLVnode<'map', SkruvMapHTMLAttributes, AsyncContent<SkruvHTMLTransparentContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <track> HTML element is used as a child of the media elements, <audio> and <video>. It lets you specify timed text tracks (or time-based data), for example to automatically handle subtitles. The tracks are formatted in WebVTT format (.vtt files) — Web Video Text Tracks. */
 export type SkruvTrackHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTrackElement, {
@@ -2216,7 +2216,7 @@ export type SkruvVideoHTMLAttributes = AsyncContent<HTMLAttributes<HTMLVideoElem
   'width'?: number | string | false
 }>>
 
-export interface SkruvVideoHTMLElement extends HTMLVnode<'video', SkruvVideoHTMLAttributes, AsyncContent<SkruvHTMLTransparentContentGroup | SkruvTrackHTMLElement | SkruvSourceHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvVideoHTMLElement extends HTMLVnode<'video', SkruvVideoHTMLAttributes, AsyncContent<SkruvHTMLTransparentContentGroup | SkruvTrackHTMLElement | SkruvSourceHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <embed> HTML element embeds external content at the specified point in the document. This content is provided by an external application or other source of interactive content such as a browser plug-in. */
 export type SkruvEmbedHTMLAttributes = AsyncContent<HTMLAttributes<HTMLEmbedElement, {
@@ -2430,12 +2430,12 @@ export type SkruvObjectHTMLAttributes = AsyncContent<HTMLAttributes<HTMLObjectEl
   'width'?: number | string | false
 }>>
 
-export interface SkruvObjectHTMLElement extends HTMLVnode<'object', SkruvObjectHTMLAttributes, AsyncContent<SkruvHTMLTransparentContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvObjectHTMLElement extends HTMLVnode<'object', SkruvObjectHTMLAttributes, AsyncContent<SkruvHTMLTransparentContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <picture> HTML element contains zero or more <source> elements and one <img> element to offer alternative versions of an image for different display/device scenarios. */
 export type SkruvPictureHTMLAttributes = AsyncContent<HTMLAttributes<HTMLPictureElement, {}>>
 
-export interface SkruvPictureHTMLElement extends HTMLVnode<'picture', SkruvPictureHTMLAttributes, AsyncContent<SkruvSourceHTMLElement | SkruvImgHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvPictureHTMLElement extends HTMLVnode<'picture', SkruvPictureHTMLAttributes, AsyncContent<SkruvSourceHTMLElement | SkruvImgHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <source> HTML element specifies multiple media resources for the <picture>, the <audio> element, or the <video> element. It is a void element, meaning that it has no content and does not have a closing tag. It is commonly used to offer the same media content in multiple file formats in order to provide compatibility with a broad range of browsers given their differing support for image file formats and media file formats. */
 export type SkruvSourceHTMLAttributes = AsyncContent<HTMLAttributes<HTMLSourceElement, {
@@ -2521,12 +2521,12 @@ export type SkruvCanvasHTMLAttributes = AsyncContent<HTMLAttributes<HTMLCanvasEl
   'width'?: number | string | false
 }>>
 
-export interface SkruvCanvasHTMLElement extends HTMLVnode<'canvas', SkruvCanvasHTMLAttributes, AsyncContent<AnyHTMLContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvCanvasHTMLElement extends HTMLVnode<'canvas', SkruvCanvasHTMLAttributes, AsyncContent<AnyHTMLContent | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <noscript> HTML element defines a section of HTML to be inserted if a script type on the page is unsupported or if scripting is currently turned off in the browser. */
 export type SkruvNoscriptHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvNoscriptHTMLElement extends HTMLVnode<'noscript', SkruvNoscriptHTMLAttributes, AsyncContent<AnyHTMLContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvNoscriptHTMLElement extends HTMLVnode<'noscript', SkruvNoscriptHTMLAttributes, AsyncContent<AnyHTMLContent | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <del> HTML element represents a range of text that has been deleted from a document. This can be used when rendering "track changes" or source code diff information, for example. The <ins> element can be used for the opposite purpose: to indicate text that has been added to the document. */
 export type SkruvDelHTMLAttributes = AsyncContent<HTMLAttributes<HTMLModElement, {
@@ -2540,7 +2540,7 @@ export type SkruvDelHTMLAttributes = AsyncContent<HTMLAttributes<HTMLModElement,
   'datetime'?: string | false
 }>>
 
-export interface SkruvDelHTMLElement extends HTMLVnode<'del', SkruvDelHTMLAttributes, AsyncContent<SkruvHTMLTransparentContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvDelHTMLElement extends HTMLVnode<'del', SkruvDelHTMLAttributes, AsyncContent<SkruvHTMLTransparentContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <ins> HTML element represents a range of text that has been added to a document. You can use the <del> element to similarly represent a range of text that has been deleted from the document. */
 export type SkruvInsHTMLAttributes = AsyncContent<HTMLAttributes<HTMLModElement, {
@@ -2554,12 +2554,12 @@ export type SkruvInsHTMLAttributes = AsyncContent<HTMLAttributes<HTMLModElement,
   'datetime'?: string | false
 }>>
 
-export interface SkruvInsHTMLElement extends HTMLVnode<'ins', SkruvInsHTMLAttributes, AsyncContent<SkruvHTMLTransparentContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvInsHTMLElement extends HTMLVnode<'ins', SkruvInsHTMLAttributes, AsyncContent<SkruvHTMLTransparentContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <caption> HTML element specifies the caption (or title) of a table. */
 export type SkruvCaptionHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTableCaptionElement, {}>>
 
-export interface SkruvCaptionHTMLElement extends HTMLVnode<'caption', SkruvCaptionHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvCaptionHTMLElement extends HTMLVnode<'caption', SkruvCaptionHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <col> HTML element defines a column within a table and is used for defining common semantics on all common cells. It is generally found within a <colgroup> element. */
 export type SkruvColHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTableColElement, {
@@ -2581,22 +2581,22 @@ export type SkruvColgroupHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTableC
   'span'?: number | false
 }>>
 
-export interface SkruvColgroupHTMLElement extends HTMLVnode<'colgroup', SkruvColgroupHTMLAttributes, AsyncContent<SkruvColHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvColgroupHTMLElement extends HTMLVnode<'colgroup', SkruvColgroupHTMLAttributes, AsyncContent<SkruvColHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <table> HTML element represents tabular data — that is, information presented in a two-dimensional table comprised of rows and columns of cells containing data. */
 export type SkruvTableHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTableElement, {}>>
 
-export interface SkruvTableHTMLElement extends HTMLVnode<'table', SkruvTableHTMLAttributes, AsyncContent<SkruvCaptionHTMLElement | SkruvColgroupHTMLElement | SkruvTheadHTMLElement | SkruvTbodyHTMLElement | SkruvTrHTMLElement | SkruvTfootHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTableHTMLElement extends HTMLVnode<'table', SkruvTableHTMLAttributes, AsyncContent<SkruvCaptionHTMLElement | SkruvColgroupHTMLElement | SkruvTheadHTMLElement | SkruvTbodyHTMLElement | SkruvTrHTMLElement | SkruvTfootHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <tbody> HTML element encapsulates a set of table rows (<tr> elements), indicating that they comprise the body of the table (<table>). */
 export type SkruvTbodyHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTableSectionElement, {}>>
 
-export interface SkruvTbodyHTMLElement extends HTMLVnode<'tbody', SkruvTbodyHTMLAttributes, AsyncContent<SkruvTrHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTbodyHTMLElement extends HTMLVnode<'tbody', SkruvTbodyHTMLAttributes, AsyncContent<SkruvTrHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <tr> HTML element defines a row of cells in a table. The row's cells can then be established using a mix of <td> (data cell) and <th> (header cell) elements. */
 export type SkruvTrHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTableRowElement, {}>>
 
-export interface SkruvTrHTMLElement extends HTMLVnode<'tr', SkruvTrHTMLAttributes, AsyncContent<SkruvTdHTMLElement | SkruvThHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTrHTMLElement extends HTMLVnode<'tr', SkruvTrHTMLAttributes, AsyncContent<SkruvTdHTMLElement | SkruvThHTMLElement | SkruvScriptHTMLElement | SkruvTemplateHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <td> HTML element defines a cell of a table that contains data. It participates in the table model. */
 export type SkruvTdHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTableCellElement, {
@@ -2614,12 +2614,12 @@ export type SkruvTdHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTableCellEle
   'rowspan'?: number | false
 }>>
 
-export interface SkruvTdHTMLElement extends HTMLVnode<'td', SkruvTdHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTdHTMLElement extends HTMLVnode<'td', SkruvTdHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <tfoot> HTML element defines a set of rows summarizing the columns of the table. */
 export type SkruvTfootHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTableSectionElement, {}>>
 
-export interface SkruvTfootHTMLElement extends HTMLVnode<'tfoot', SkruvTfootHTMLAttributes, AsyncContent<SkruvTrHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTfootHTMLElement extends HTMLVnode<'tfoot', SkruvTfootHTMLAttributes, AsyncContent<SkruvTrHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <th> HTML element defines a cell as the header of a group of table cells. The exact nature of this group is defined by the scope and headers attributes. */
 export type SkruvThHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTableCellElement, {
@@ -2659,12 +2659,12 @@ export type SkruvThHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTableCellEle
   'scope'?: string | false
 }>>
 
-export interface SkruvThHTMLElement extends HTMLVnode<'th', SkruvThHTMLAttributes, AsyncContent<Exclude<Exclude<Exclude<Exclude<SkruvHTMLFlowContentGroup, SkruvFooterHTMLElement>, SkruvHeaderHTMLElement>, SkruvHTMLSectioningContentGroup>, SkruvHTMLHeadingContentGroup> | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvThHTMLElement extends HTMLVnode<'th', SkruvThHTMLAttributes, AsyncContent<Exclude<Exclude<Exclude<Exclude<SkruvHTMLFlowContentGroup, SkruvFooterHTMLElement>, SkruvHeaderHTMLElement>, SkruvHTMLSectioningContentGroup>, SkruvHTMLHeadingContentGroup> | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <thead> HTML element defines a set of rows defining the head of the columns of the table. */
 export type SkruvTheadHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTableSectionElement, {}>>
 
-export interface SkruvTheadHTMLElement extends HTMLVnode<'thead', SkruvTheadHTMLAttributes, AsyncContent<SkruvTrHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTheadHTMLElement extends HTMLVnode<'thead', SkruvTheadHTMLAttributes, AsyncContent<SkruvTrHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <button> HTML element is an interactive element activated by a user with a mouse, keyboard, finger, voice command, or other assistive technology. Once activated, it then performs an action, such as submitting a form or opening a dialog. */
 export type SkruvButtonHTMLAttributes = AsyncContent<HTMLAttributes<HTMLButtonElement, {
@@ -2798,12 +2798,12 @@ export type SkruvButtonHTMLAttributes = AsyncContent<HTMLAttributes<HTMLButtonEl
   'value'?: number | string | false
 }>>
 
-export interface SkruvButtonHTMLElement extends HTMLVnode<'button', SkruvButtonHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvButtonHTMLElement extends HTMLVnode<'button', SkruvButtonHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <datalist> HTML element contains a set of <option> elements that represent the permissible or recommended options available to choose from within other controls. */
 export type SkruvDatalistHTMLAttributes = AsyncContent<HTMLAttributes<HTMLDataListElement, {}>>
 
-export interface SkruvDatalistHTMLElement extends HTMLVnode<'datalist', SkruvDatalistHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvOptionHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvDatalistHTMLElement extends HTMLVnode<'datalist', SkruvDatalistHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvOptionHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <option> HTML element is used to define an item contained in a <select>, an <optgroup>, or a <datalist> element. As such, <option> can represent menu items in popups and other lists of items in an HTML document. */
 export type SkruvOptionHTMLAttributes = AsyncContent<HTMLAttributes<HTMLOptionElement, {
@@ -2825,7 +2825,7 @@ export type SkruvOptionHTMLAttributes = AsyncContent<HTMLAttributes<HTMLOptionEl
   'value'?: number | string | false
 }>>
 
-export interface SkruvOptionHTMLElement extends HTMLVnode<'option', SkruvOptionHTMLAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvOptionHTMLElement extends HTMLVnode<'option', SkruvOptionHTMLAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <fieldset> HTML element is used to group several controls as well as labels (<label>) within a web form. */
 export type SkruvFieldsetHTMLAttributes = AsyncContent<HTMLAttributes<HTMLFieldSetElement, {
@@ -2847,7 +2847,7 @@ export type SkruvFieldsetHTMLAttributes = AsyncContent<HTMLAttributes<HTMLFieldS
   'name'?: string | false
 }>>
 
-export interface SkruvFieldsetHTMLElement extends HTMLVnode<'fieldset', SkruvFieldsetHTMLAttributes, AsyncContent<SkruvLegendHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFieldsetHTMLElement extends HTMLVnode<'fieldset', SkruvFieldsetHTMLAttributes, AsyncContent<SkruvLegendHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <label> HTML element represents a caption for an item in a user interface. */
 export type SkruvLabelHTMLAttributes = AsyncContent<HTMLAttributes<HTMLLabelElement, {
@@ -2871,7 +2871,7 @@ export type SkruvLabelHTMLAttributes = AsyncContent<HTMLAttributes<HTMLLabelElem
   'for'?: string | false
 }>>
 
-export interface SkruvLabelHTMLElement extends HTMLVnode<'label', SkruvLabelHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvLabelHTMLElement extends HTMLVnode<'label', SkruvLabelHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <form> HTML element represents a document section containing interactive controls for submitting information. */
 export type SkruvFormHTMLAttributes = AsyncContent<HTMLAttributes<HTMLFormElement, {
@@ -2915,7 +2915,7 @@ export type SkruvFormHTMLAttributes = AsyncContent<HTMLAttributes<HTMLFormElemen
   'rel'?: string | false
 }>>
 
-export interface SkruvFormHTMLElement extends HTMLVnode<'form', SkruvFormHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFormHTMLElement extends HTMLVnode<'form', SkruvFormHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <input> HTML element is used to create interactive controls for web-based forms in order to accept data from the user; a wide variety of types of input data and control widgets are available, depending on the device and user agent. The <input> element is one of the most powerful and complex in all of HTML due to the sheer number of combinations of input types and attributes. */
 export type SkruvInputHTMLAttributes = AsyncContent<HTMLAttributes<HTMLInputElement, {
@@ -3058,7 +3058,7 @@ export interface SkruvInputHTMLElement extends HTMLVnode<'input', SkruvInputHTML
 /** The <legend> HTML element represents a caption for the content of its parent <fieldset>. */
 export type SkruvLegendHTMLAttributes = AsyncContent<HTMLAttributes<HTMLLegendElement, {}>>
 
-export interface SkruvLegendHTMLElement extends HTMLVnode<'legend', SkruvLegendHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvH1HTMLElement | SkruvH2HTMLElement | SkruvH3HTMLElement | SkruvH4HTMLElement | SkruvH5HTMLElement | SkruvH6HTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvLegendHTMLElement extends HTMLVnode<'legend', SkruvLegendHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvH1HTMLElement | SkruvH2HTMLElement | SkruvH3HTMLElement | SkruvH4HTMLElement | SkruvH5HTMLElement | SkruvH6HTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <meter> HTML element represents either a scalar value within a known range or a fractional value. */
 export type SkruvMeterHTMLAttributes = AsyncContent<HTMLAttributes<HTMLMeterElement, {
@@ -3096,7 +3096,7 @@ export type SkruvMeterHTMLAttributes = AsyncContent<HTMLAttributes<HTMLMeterElem
   'form'?: string | false
 }>>
 
-export interface SkruvMeterHTMLElement extends HTMLVnode<'meter', SkruvMeterHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMeterHTMLElement extends HTMLVnode<'meter', SkruvMeterHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <optgroup> HTML element creates a grouping of options within a <select> element. */
 export type SkruvOptgroupHTMLAttributes = AsyncContent<HTMLAttributes<HTMLOptGroupElement, {
@@ -3110,7 +3110,7 @@ export type SkruvOptgroupHTMLAttributes = AsyncContent<HTMLAttributes<HTMLOptGro
   'label'?: string | false
 }>>
 
-export interface SkruvOptgroupHTMLElement extends HTMLVnode<'optgroup', SkruvOptgroupHTMLAttributes, AsyncContent<SkruvOptionHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvOptgroupHTMLElement extends HTMLVnode<'optgroup', SkruvOptgroupHTMLAttributes, AsyncContent<SkruvOptionHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <select> HTML element represents a control that provides a menu of options. */
 export type SkruvSelectHTMLAttributes = AsyncContent<HTMLAttributes<HTMLSelectElement, {
@@ -3154,7 +3154,7 @@ export type SkruvSelectHTMLAttributes = AsyncContent<HTMLAttributes<HTMLSelectEl
   'size'?: string | false
 }>>
 
-export interface SkruvSelectHTMLElement extends HTMLVnode<'select', SkruvSelectHTMLAttributes, AsyncContent<SkruvOptionHTMLElement | HTMLOptGroupElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSelectHTMLElement extends HTMLVnode<'select', SkruvSelectHTMLAttributes, AsyncContent<SkruvOptionHTMLElement | HTMLOptGroupElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <output> HTML element is a container element into which a site or app can inject the results of a calculation or the outcome of a user action. */
 export type SkruvOutputHTMLAttributes = AsyncContent<HTMLAttributes<HTMLOutputElement, {
@@ -3174,7 +3174,7 @@ export type SkruvOutputHTMLAttributes = AsyncContent<HTMLAttributes<HTMLOutputEl
   'name'?: string | false
 }>>
 
-export interface SkruvOutputHTMLElement extends HTMLVnode<'output', SkruvOutputHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvOutputHTMLElement extends HTMLVnode<'output', SkruvOutputHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <progress> HTML element displays an indicator showing the completion progress of a task, typically displayed as a progress bar. */
 export type SkruvProgressHTMLAttributes = AsyncContent<HTMLAttributes<HTMLProgressElement, {
@@ -3188,7 +3188,7 @@ export type SkruvProgressHTMLAttributes = AsyncContent<HTMLAttributes<HTMLProgre
   'value'?: number | string | false
 }>>
 
-export interface SkruvProgressHTMLElement extends HTMLVnode<'progress', SkruvProgressHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvProgressHTMLElement extends HTMLVnode<'progress', SkruvProgressHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <textarea> HTML element represents a multi-line plain-text editing control, useful when you want to allow users to enter a sizeable amount of free-form text, for example a comment on a review or feedback form. */
 export type SkruvTextareaHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTextAreaElement, {
@@ -3314,7 +3314,7 @@ export type SkruvTextareaHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTextAr
   'wrap'?: string | false
 }>>
 
-export interface SkruvTextareaHTMLElement extends HTMLVnode<'textarea', SkruvTextareaHTMLAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTextareaHTMLElement extends HTMLVnode<'textarea', SkruvTextareaHTMLAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <details> HTML element creates a disclosure widget in which information is visible only when the widget is toggled into an "open" state. A summary or label must be provided using the <summary> element. */
 export type SkruvDetailsHTMLAttributes = AsyncContent<HTMLAttributes<HTMLDetailsElement, {
@@ -3328,12 +3328,12 @@ export type SkruvDetailsHTMLAttributes = AsyncContent<HTMLAttributes<HTMLDetails
   'open'?: boolean | false
 }>>
 
-export interface SkruvDetailsHTMLElement extends HTMLVnode<'details', SkruvDetailsHTMLAttributes, AsyncContent<SkruvSummaryHTMLElement | SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvDetailsHTMLElement extends HTMLVnode<'details', SkruvDetailsHTMLAttributes, AsyncContent<SkruvSummaryHTMLElement | SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <summary> HTML element specifies a summary, caption, or legend for a <details> element's disclosure box. Clicking the <summary> element toggles the state of the parent <details> element open and closed. */
 export type SkruvSummaryHTMLAttributes = AsyncContent<HTMLAttributes<HTMLElement, {}>>
 
-export interface SkruvSummaryHTMLElement extends HTMLVnode<'summary', SkruvSummaryHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvHTMLHeadingContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSummaryHTMLElement extends HTMLVnode<'summary', SkruvSummaryHTMLAttributes, AsyncContent<SkruvHTMLPhrasingContentGroup | SkruvHTMLHeadingContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <dialog> HTML element represents a dialog box or other interactive component, such as a dismissible alert, inspector, or subwindow. */
 export type SkruvDialogHTMLAttributes = AsyncContent<HTMLAttributes<HTMLDialogElement, {
@@ -3345,7 +3345,7 @@ export type SkruvDialogHTMLAttributes = AsyncContent<HTMLAttributes<HTMLDialogEl
   'open'?: boolean | false
 }>>
 
-export interface SkruvDialogHTMLElement extends HTMLVnode<'dialog', SkruvDialogHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvDialogHTMLElement extends HTMLVnode<'dialog', SkruvDialogHTMLAttributes, AsyncContent<SkruvHTMLFlowContentGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <slot> HTML element—part of the Web Components technology suite—is a placeholder inside a web component that you can fill with your own markup, which lets you create separate DOM trees and present them together. */
 export type SkruvSlotHTMLAttributes = AsyncContent<HTMLAttributes<HTMLSlotElement, {
@@ -3357,12 +3357,12 @@ export type SkruvSlotHTMLAttributes = AsyncContent<HTMLAttributes<HTMLSlotElemen
   'name'?: string | false
 }>>
 
-export interface SkruvSlotHTMLElement extends HTMLVnode<'slot', SkruvSlotHTMLAttributes, AsyncContent<AnyHTMLContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSlotHTMLElement extends HTMLVnode<'slot', SkruvSlotHTMLAttributes, AsyncContent<AnyHTMLContent | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <template> HTML element is a mechanism for holding HTML that is not to be rendered immediately when a page is loaded but may be instantiated subsequently during runtime using JavaScript. */
 export type SkruvTemplateHTMLAttributes = AsyncContent<HTMLAttributes<HTMLTemplateElement, {}>>
 
-export interface SkruvTemplateHTMLElement extends HTMLVnode<'template', SkruvTemplateHTMLAttributes, AsyncContent<AnyHTMLContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTemplateHTMLElement extends HTMLVnode<'template', SkruvTemplateHTMLAttributes, AsyncContent<AnyHTMLContent | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 type SkruvHTMLTransparentContentGroup = SkruvAHTMLElement | SkruvInsHTMLElement | SkruvDelHTMLElement | SkruvObjectHTMLElement | SkruvVideoHTMLElement | SkruvAudioHTMLElement | SkruvMapHTMLElement | SkruvNoscriptHTMLElement | SkruvSlotHTMLElement | SkruvCanvasHTMLElement
 
@@ -3382,8 +3382,8 @@ type SkruvHTMLEmbeddedContentGroup = SkruvAudioHTMLElement | SkruvCanvasHTMLElem
 
 type SkruvHTMLOtherContentGroup = SkruvHtmlHTMLElement | SkruvHeadHTMLElement | SkruvBodyHTMLElement | SkruvLiHTMLElement | SkruvDlHTMLElement | SkruvDtHTMLElement | SkruvDdHTMLElement | SkruvFigcaptionHTMLElement | SkruvRtHTMLElement | SkruvRpHTMLElement | SkruvSourceHTMLElement | SkruvTrackHTMLElement | SkruvCaptionHTMLElement | SkruvColgroupHTMLElement | SkruvColHTMLElement | SkruvTbodyHTMLElement | SkruvTheadHTMLElement | SkruvTfootHTMLElement | SkruvTrHTMLElement | SkruvTdHTMLElement | SkruvThHTMLElement | SkruvOptgroupHTMLElement | SkruvOptionHTMLElement | SkruvLegendHTMLElement | SkruvSummaryHTMLElement
 
-export type AnyHTMLElement = SkruvHtmlHTMLElement | SkruvBaseHTMLElement | SkruvHeadHTMLElement | SkruvTitleHTMLElement | SkruvScriptHTMLElement | SkruvStyleHTMLElement | SkruvLinkHTMLElement | SkruvMetaHTMLElement | SkruvBodyHTMLElement | SkruvAddressHTMLElement | SkruvArticleHTMLElement | SkruvAsideHTMLElement | SkruvFooterHTMLElement | SkruvH1HTMLElement | SkruvH2HTMLElement | SkruvH3HTMLElement | SkruvH4HTMLElement | SkruvH5HTMLElement | SkruvH6HTMLElement | SkruvHeaderHTMLElement | SkruvHgroupHTMLElement | SkruvMainHTMLElement | SkruvNavHTMLElement | SkruvSectionHTMLElement | SkruvSearchHTMLElement | SkruvBlockquoteHTMLElement | SkruvCiteHTMLElement | SkruvDdHTMLElement | SkruvDtHTMLElement | SkruvDlHTMLElement | SkruvDivHTMLElement | SkruvFigcaptionHTMLElement | SkruvFigureHTMLElement | SkruvHrHTMLElement | SkruvLiHTMLElement | SkruvOlHTMLElement | SkruvUlHTMLElement | SkruvMenuHTMLElement | SkruvPHTMLElement | SkruvPreHTMLElement | SkruvAHTMLElement | SkruvAbbrHTMLElement | SkruvBHTMLElement | SkruvBdiHTMLElement | SkruvBdoHTMLElement | SkruvBrHTMLElement | SkruvCodeHTMLElement | SkruvDataHTMLElement | SkruvDfnHTMLElement | SkruvEmHTMLElement | SkruvIHTMLElement | SkruvKbdHTMLElement | SkruvMarkHTMLElement | SkruvQHTMLElement | SkruvRpHTMLElement | SkruvRubyHTMLElement | SkruvRtHTMLElement | SkruvSHTMLElement | SkruvSampHTMLElement | SkruvSmallHTMLElement | SkruvSpanHTMLElement | SkruvStrongHTMLElement | SkruvSubHTMLElement | SkruvSupHTMLElement | SkruvTimeHTMLElement | SkruvUHTMLElement | SkruvVarHTMLElement | SkruvWbrHTMLElement | SkruvAreaHTMLElement | SkruvAudioHTMLElement | SkruvImgHTMLElement | SkruvMapHTMLElement | SkruvTrackHTMLElement | SkruvVideoHTMLElement | SkruvEmbedHTMLElement | SkruvIframeHTMLElement | SkruvObjectHTMLElement | SkruvPictureHTMLElement | SkruvSourceHTMLElement | SkruvPortalHTMLElement | SkruvCanvasHTMLElement | SkruvNoscriptHTMLElement | SkruvDelHTMLElement | SkruvInsHTMLElement | SkruvCaptionHTMLElement | SkruvColHTMLElement | SkruvColgroupHTMLElement | SkruvTableHTMLElement | SkruvTbodyHTMLElement | SkruvTrHTMLElement | SkruvTdHTMLElement | SkruvTfootHTMLElement | SkruvThHTMLElement | SkruvTheadHTMLElement | SkruvButtonHTMLElement | SkruvDatalistHTMLElement | SkruvOptionHTMLElement | SkruvFieldsetHTMLElement | SkruvLabelHTMLElement | SkruvFormHTMLElement | SkruvInputHTMLElement | SkruvLegendHTMLElement | SkruvMeterHTMLElement | SkruvOptgroupHTMLElement | SkruvSelectHTMLElement | SkruvOutputHTMLElement | SkruvProgressHTMLElement | SkruvTextareaHTMLElement | SkruvDetailsHTMLElement | SkruvSummaryHTMLElement | SkruvDialogHTMLElement | SkruvSlotHTMLElement | SkruvTemplateHTMLElement | SkruvCommentElement | SkruvRawElement | SkruvHeaderElement
-export type AnyHTMLContent = AnyHTMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean | AnyHTMLContent[] | AsyncGenerator<AnyHTMLContent> | Promise<AnyHTMLContent> | (() => AnyHTMLContent)
+export type AnyHTMLElement = SkruvHtmlHTMLElement | SkruvBaseHTMLElement | SkruvHeadHTMLElement | SkruvTitleHTMLElement | SkruvScriptHTMLElement | SkruvStyleHTMLElement | SkruvLinkHTMLElement | SkruvMetaHTMLElement | SkruvBodyHTMLElement | SkruvAddressHTMLElement | SkruvArticleHTMLElement | SkruvAsideHTMLElement | SkruvFooterHTMLElement | SkruvH1HTMLElement | SkruvH2HTMLElement | SkruvH3HTMLElement | SkruvH4HTMLElement | SkruvH5HTMLElement | SkruvH6HTMLElement | SkruvHeaderHTMLElement | SkruvHgroupHTMLElement | SkruvMainHTMLElement | SkruvNavHTMLElement | SkruvSectionHTMLElement | SkruvSearchHTMLElement | SkruvBlockquoteHTMLElement | SkruvCiteHTMLElement | SkruvDdHTMLElement | SkruvDtHTMLElement | SkruvDlHTMLElement | SkruvDivHTMLElement | SkruvFigcaptionHTMLElement | SkruvFigureHTMLElement | SkruvHrHTMLElement | SkruvLiHTMLElement | SkruvOlHTMLElement | SkruvUlHTMLElement | SkruvMenuHTMLElement | SkruvPHTMLElement | SkruvPreHTMLElement | SkruvAHTMLElement | SkruvAbbrHTMLElement | SkruvBHTMLElement | SkruvBdiHTMLElement | SkruvBdoHTMLElement | SkruvBrHTMLElement | SkruvCodeHTMLElement | SkruvDataHTMLElement | SkruvDfnHTMLElement | SkruvEmHTMLElement | SkruvIHTMLElement | SkruvKbdHTMLElement | SkruvMarkHTMLElement | SkruvQHTMLElement | SkruvRpHTMLElement | SkruvRubyHTMLElement | SkruvRtHTMLElement | SkruvSHTMLElement | SkruvSampHTMLElement | SkruvSmallHTMLElement | SkruvSpanHTMLElement | SkruvStrongHTMLElement | SkruvSubHTMLElement | SkruvSupHTMLElement | SkruvTimeHTMLElement | SkruvUHTMLElement | SkruvVarHTMLElement | SkruvWbrHTMLElement | SkruvAreaHTMLElement | SkruvAudioHTMLElement | SkruvImgHTMLElement | SkruvMapHTMLElement | SkruvTrackHTMLElement | SkruvVideoHTMLElement | SkruvEmbedHTMLElement | SkruvIframeHTMLElement | SkruvObjectHTMLElement | SkruvPictureHTMLElement | SkruvSourceHTMLElement | SkruvPortalHTMLElement | SkruvCanvasHTMLElement | SkruvNoscriptHTMLElement | SkruvDelHTMLElement | SkruvInsHTMLElement | SkruvCaptionHTMLElement | SkruvColHTMLElement | SkruvColgroupHTMLElement | SkruvTableHTMLElement | SkruvTbodyHTMLElement | SkruvTrHTMLElement | SkruvTdHTMLElement | SkruvTfootHTMLElement | SkruvThHTMLElement | SkruvTheadHTMLElement | SkruvButtonHTMLElement | SkruvDatalistHTMLElement | SkruvOptionHTMLElement | SkruvFieldsetHTMLElement | SkruvLabelHTMLElement | SkruvFormHTMLElement | SkruvInputHTMLElement | SkruvLegendHTMLElement | SkruvMeterHTMLElement | SkruvOptgroupHTMLElement | SkruvSelectHTMLElement | SkruvOutputHTMLElement | SkruvProgressHTMLElement | SkruvTextareaHTMLElement | SkruvDetailsHTMLElement | SkruvSummaryHTMLElement | SkruvDialogHTMLElement | SkruvSlotHTMLElement | SkruvTemplateHTMLElement | SkruvCommentElement | SkruvTextElement | SkruvHeaderElement
+export type AnyHTMLContent = AnyHTMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean | AnyHTMLContent[] | AsyncGenerator<AnyHTMLContent> | Promise<AnyHTMLContent> | (() => AnyHTMLContent)
 
 /** The <a> SVG element creates a hyperlink to other web pages, files, locations in the same page, email addresses, or any other URL. It is very similar to HTML's <a> element. */
 export type SkruvASVGAttributes = AsyncContent<SVGAttributes<SVGAElement, {
@@ -3437,13 +3437,13 @@ export type SkruvASVGAttributes = AsyncContent<SVGAttributes<SVGAElement, {
   'type'?: string | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvASVGElement extends SVGVnode<'a', SkruvASVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvASVGElement extends SVGVnode<'a', SkruvASVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The SVG <animate> element provides a way to animate an attribute of an element over time. */
 export type SkruvAnimateSVGAttributes = AsyncContent<SVGAttributes<SVGAnimateElement, {
 } & SVGAnimationAttributes>>
 
-export interface SkruvAnimateSVGElement extends SVGVnode<'animate', SkruvAnimateSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvAnimateSVGElement extends SVGVnode<'animate', SkruvAnimateSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The SVG <animateMotion> element provides a way to define how an element moves along a motion path. */
 export type SkruvAnimatemotionSVGAttributes = AsyncContent<SVGAttributes<SVGAnimateMotionElement, {
@@ -3467,13 +3467,13 @@ export type SkruvAnimatemotionSVGAttributes = AsyncContent<SVGAttributes<SVGAnim
   'rotate'?: string | number | boolean | false
 } & SVGAnimationAttributes>>
 
-export interface SkruvAnimatemotionSVGElement extends SVGVnode<'animateMotion', SkruvAnimatemotionSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvAnimatemotionSVGElement extends SVGVnode<'animateMotion', SkruvAnimatemotionSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The animateTransform element animates a transformation attribute on its target element, thereby allowing animations to control translation, scaling, rotation, and/or skewing. */
 export type SkruvAnimatetransformSVGAttributes = AsyncContent<SVGAttributes<SVGAnimateTransformElement, {
 } & SVGAnimationAttributes>>
 
-export interface SkruvAnimatetransformSVGElement extends SVGVnode<'animateTransform', SkruvAnimatetransformSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvAnimatetransformSVGElement extends SVGVnode<'animateTransform', SkruvAnimatetransformSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <circle> SVG element is an SVG basic shape, used to draw circles based on a center point and a radius. */
 export type SkruvCircleSVGAttributes = AsyncContent<SVGAttributes<SVGCircleElement, {
@@ -3503,7 +3503,7 @@ export type SkruvCircleSVGAttributes = AsyncContent<SVGAttributes<SVGCircleEleme
   'pathLength'?: string | number | boolean | false
 } & SVGAnimationAttributes>>
 
-export interface SkruvCircleSVGElement extends SVGVnode<'circle', SkruvCircleSVGAttributes, AsyncContent<SkruvSVGAnimationElementsGroup | SkruvSVGDescriptiveElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvCircleSVGElement extends SVGVnode<'circle', SkruvCircleSVGAttributes, AsyncContent<SkruvSVGAnimationElementsGroup | SkruvSVGDescriptiveElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <clipPath> SVG element defines a clipping path, to be used by the clip-path property. */
 export type SkruvClippathSVGAttributes = AsyncContent<SVGAttributes<SVGClipPathElement, {
@@ -3515,18 +3515,18 @@ export type SkruvClippathSVGAttributes = AsyncContent<SVGAttributes<SVGClipPathE
   'clipPathUnits'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvClippathSVGElement extends SVGVnode<'clipPath', SkruvClippathSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvTextSVGElement | SkruvUseSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvClippathSVGElement extends SVGVnode<'clipPath', SkruvClippathSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvTextSVGElement | SkruvUseSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <defs> element is used to store graphical objects that will be used at a later time. Objects created inside a <defs> element are not rendered directly. To display them you have to reference them (with a <use> element for example). */
 export type SkruvDefsSVGAttributes = AsyncContent<SVGAttributes<SVGDefsElement, {
 } & SVGPresentationAttributes>>
 
-export interface SkruvDefsSVGElement extends SVGVnode<'defs', SkruvDefsSVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvDefsSVGElement extends SVGVnode<'defs', SkruvDefsSVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <desc> element provides an accessible, long-text description of any SVG container element or graphics element. */
 export type SkruvDescSVGAttributes = AsyncContent<SVGAttributes<SVGDescElement, {}>>
 
-export interface SkruvDescSVGElement extends SVGVnode<'desc', SkruvDescSVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvDescSVGElement extends SVGVnode<'desc', SkruvDescSVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <ellipse> element is an SVG basic shape, used to create ellipses based on a center coordinate, and both their x and y radius. */
 export type SkruvEllipseSVGAttributes = AsyncContent<SVGAttributes<SVGEllipseElement, {
@@ -3562,7 +3562,7 @@ export type SkruvEllipseSVGAttributes = AsyncContent<SVGAttributes<SVGEllipseEle
   'pathLength'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvEllipseSVGElement extends SVGVnode<'ellipse', SkruvEllipseSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvEllipseSVGElement extends SVGVnode<'ellipse', SkruvEllipseSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feBlend> SVG filter primitive composes two objects together ruled by a certain blending mode. This is similar to what is known from image editing software when blending two layers. The mode is defined by the mode attribute. */
 export type SkruvFeblendSVGAttributes = AsyncContent<SVGAttributes<SVGFEBlendElement, {
@@ -3574,7 +3574,7 @@ export type SkruvFeblendSVGAttributes = AsyncContent<SVGAttributes<SVGFEBlendEle
   'mode'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFeblendSVGElement extends SVGVnode<'feBlend', SkruvFeblendSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFeblendSVGElement extends SVGVnode<'feBlend', SkruvFeblendSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feColorMatrix> SVG filter element changes colors based on a transformation matrix. Every pixel's color value [R,G,B,A] is matrix multiplied by a 5 by 5 color matrix to create new color [R',G',B',A']. */
 export type SkruvFecolormatrixSVGAttributes = AsyncContent<SVGAttributes<SVGFEColorMatrixElement, {
@@ -3586,7 +3586,7 @@ export type SkruvFecolormatrixSVGAttributes = AsyncContent<SVGAttributes<SVGFECo
   'values'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFecolormatrixSVGElement extends SVGVnode<'feColorMatrix', SkruvFecolormatrixSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFecolormatrixSVGElement extends SVGVnode<'feColorMatrix', SkruvFecolormatrixSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feComponentTransfer> SVG filter primitive performs color-component-wise remapping of data for each pixel. It allows operations like brightness adjustment, contrast adjustment, color balance or thresholding. */
 export type SkruvFecomponenttransferSVGAttributes = AsyncContent<SVGAttributes<SVGFEComponentTransferElement, {
@@ -3594,7 +3594,7 @@ export type SkruvFecomponenttransferSVGAttributes = AsyncContent<SVGAttributes<S
   'in'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFecomponenttransferSVGElement extends SVGVnode<'feComponentTransfer', SkruvFecomponenttransferSVGAttributes, AsyncContent<SkruvFefuncaSVGElement | SkruvFefuncbSVGElement | SkruvFefuncgSVGElement | SkruvFefuncrSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFecomponenttransferSVGElement extends SVGVnode<'feComponentTransfer', SkruvFecomponenttransferSVGAttributes, AsyncContent<SkruvFefuncaSVGElement | SkruvFefuncbSVGElement | SkruvFefuncgSVGElement | SkruvFefuncrSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feComposite> SVG filter primitive performs the combination of two input images pixel-wise in image space using one of the Porter-Duff compositing operations: over, in, atop, out, xor, lighter, or arithmetic. */
 export type SkruvFecompositeSVGAttributes = AsyncContent<SVGAttributes<SVGFECompositeElement, {
@@ -3614,7 +3614,7 @@ export type SkruvFecompositeSVGAttributes = AsyncContent<SVGAttributes<SVGFEComp
   'k4'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFecompositeSVGElement extends SVGVnode<'feComposite', SkruvFecompositeSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFecompositeSVGElement extends SVGVnode<'feComposite', SkruvFecompositeSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feConvolveMatrix> SVG filter primitive applies a matrix convolution filter effect. A convolution combines pixels in the input image with neighboring pixels to produce a resulting image. A wide variety of imaging operations can be achieved through convolutions, including blurring, edge detection, sharpening, embossing and beveling. */
 export type SkruvFeconvolvematrixSVGAttributes = AsyncContent<SVGAttributes<SVGFEConvolveMatrixElement, {
@@ -3640,7 +3640,7 @@ export type SkruvFeconvolvematrixSVGAttributes = AsyncContent<SVGAttributes<SVGF
   'preserveAlpha'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFeconvolvematrixSVGElement extends SVGVnode<'feConvolveMatrix', SkruvFeconvolvematrixSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFeconvolvematrixSVGElement extends SVGVnode<'feConvolveMatrix', SkruvFeconvolvematrixSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feDiffuseLighting> SVG filter primitive lights an image using the alpha channel as a bump map. The resulting image, which is an RGBA opaque image, depends on the light color, light position and surface geometry of the input bump map. */
 export type SkruvFediffuselightingSVGAttributes = AsyncContent<SVGAttributes<SVGFEDiffuseLightingElement, {
@@ -3654,7 +3654,7 @@ export type SkruvFediffuselightingSVGAttributes = AsyncContent<SVGAttributes<SVG
   'kernelUnitLength'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFediffuselightingSVGElement extends SVGVnode<'feDiffuseLighting', SkruvFediffuselightingSVGAttributes, AsyncContent<SkruvSVGLightSourceElementsGroup | SkruvSVGDescriptiveElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFediffuselightingSVGElement extends SVGVnode<'feDiffuseLighting', SkruvFediffuselightingSVGAttributes, AsyncContent<SkruvSVGLightSourceElementsGroup | SkruvSVGDescriptiveElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feDisplacementMap> SVG filter primitive uses the pixel values from the image from in2 to spatially displace the image from in. */
 export type SkruvFedisplacementmapSVGAttributes = AsyncContent<SVGAttributes<SVGFEDisplacementMapElement, {
@@ -3670,7 +3670,7 @@ export type SkruvFedisplacementmapSVGAttributes = AsyncContent<SVGAttributes<SVG
   'yChannelSelector'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFedisplacementmapSVGElement extends SVGVnode<'feDisplacementMap', SkruvFedisplacementmapSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFedisplacementmapSVGElement extends SVGVnode<'feDisplacementMap', SkruvFedisplacementmapSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feDistantLight> filter primitive defines a distant light source that can be used within a lighting filter primitive: <feDiffuseLighting> or <feSpecularLighting>. */
 export type SkruvFedistantlightSVGAttributes = AsyncContent<SVGAttributes<SVGFEDistantLightElement, {
@@ -3680,7 +3680,7 @@ export type SkruvFedistantlightSVGAttributes = AsyncContent<SVGAttributes<SVGFED
   'elevation'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFedistantlightSVGElement extends SVGVnode<'feDistantLight', SkruvFedistantlightSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFedistantlightSVGElement extends SVGVnode<'feDistantLight', SkruvFedistantlightSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The SVG <feDropShadow> filter primitive creates a drop shadow of the input image. It can only be used inside a <filter> element. */
 export type SkruvFedropshadowSVGAttributes = AsyncContent<SVGAttributes<SVGFEDropShadowElement, {
@@ -3704,7 +3704,7 @@ export type SkruvFedropshadowSVGAttributes = AsyncContent<SVGAttributes<SVGFEDro
   'stdDeviation'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFedropshadowSVGElement extends SVGVnode<'feDropShadow', SkruvFedropshadowSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvScriptSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFedropshadowSVGElement extends SVGVnode<'feDropShadow', SkruvFedropshadowSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvScriptSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feFlood> SVG filter primitive fills the filter subregion with the color and opacity defined by flood-color and flood-opacity. */
 export type SkruvFefloodSVGAttributes = AsyncContent<SVGAttributes<SVGFEFloodElement, {
@@ -3714,31 +3714,31 @@ export type SkruvFefloodSVGAttributes = AsyncContent<SVGAttributes<SVGFEFloodEle
   'flood-opacity'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFefloodSVGElement extends SVGVnode<'feFlood', SkruvFefloodSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFefloodSVGElement extends SVGVnode<'feFlood', SkruvFefloodSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feFuncA> SVG filter primitive defines the transfer function for the alpha component of the input graphic of its parent <feComponentTransfer> element. */
 export type SkruvFefuncaSVGAttributes = AsyncContent<SVGAttributes<SVGFEFuncAElement, {
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFefuncaSVGElement extends SVGVnode<'feFuncA', SkruvFefuncaSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFefuncaSVGElement extends SVGVnode<'feFuncA', SkruvFefuncaSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feFuncB> SVG filter primitive defines the transfer function for the blue component of the input graphic of its parent <feComponentTransfer> element. */
 export type SkruvFefuncbSVGAttributes = AsyncContent<SVGAttributes<SVGFEFuncBElement, {
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFefuncbSVGElement extends SVGVnode<'feFuncB', SkruvFefuncbSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFefuncbSVGElement extends SVGVnode<'feFuncB', SkruvFefuncbSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feFuncG> SVG filter primitive defines the transfer function for the green component of the input graphic of its parent <feComponentTransfer> element. */
 export type SkruvFefuncgSVGAttributes = AsyncContent<SVGAttributes<SVGFEFuncGElement, {
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFefuncgSVGElement extends SVGVnode<'feFuncG', SkruvFefuncgSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFefuncgSVGElement extends SVGVnode<'feFuncG', SkruvFefuncgSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feFuncR> SVG filter primitive defines the transfer function for the red component of the input graphic of its parent <feComponentTransfer> element. */
 export type SkruvFefuncrSVGAttributes = AsyncContent<SVGAttributes<SVGFEFuncRElement, {
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFefuncrSVGElement extends SVGVnode<'feFuncR', SkruvFefuncrSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFefuncrSVGElement extends SVGVnode<'feFuncR', SkruvFefuncrSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feGaussianBlur> SVG filter primitive blurs the input image by the amount specified in stdDeviation, which defines the bell-curve. */
 export type SkruvFegaussianblurSVGAttributes = AsyncContent<SVGAttributes<SVGFEGaussianBlurElement, {
@@ -3750,7 +3750,7 @@ export type SkruvFegaussianblurSVGAttributes = AsyncContent<SVGAttributes<SVGFEG
   'edgeMode'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFegaussianblurSVGElement extends SVGVnode<'feGaussianBlur', SkruvFegaussianblurSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFegaussianblurSVGElement extends SVGVnode<'feGaussianBlur', SkruvFegaussianblurSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feImage> SVG filter primitive fetches image data from an external source and provides the pixel data as output (meaning if the external source is an SVG image, it is rasterized.) */
 export type SkruvFeimageSVGAttributes = AsyncContent<SVGAttributes<SVGFEImageElement, {
@@ -3760,13 +3760,13 @@ export type SkruvFeimageSVGAttributes = AsyncContent<SVGAttributes<SVGFEImageEle
   'preserveAspectRatio'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFeimageSVGElement extends SVGVnode<'feImage', SkruvFeimageSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvAnimatetransformSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFeimageSVGElement extends SVGVnode<'feImage', SkruvFeimageSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvAnimatetransformSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feMerge> SVG element allows filter effects to be applied concurrently instead of sequentially. This is achieved by other filters storing their output via the result attribute and then accessing it in a <feMergeNode> child. */
 export type SkruvFemergeSVGAttributes = AsyncContent<SVGAttributes<SVGFEMergeElement, {
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFemergeSVGElement extends SVGVnode<'feMerge', SkruvFemergeSVGAttributes, AsyncContent<SkruvFemergenodeSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFemergeSVGElement extends SVGVnode<'feMerge', SkruvFemergeSVGAttributes, AsyncContent<SkruvFemergenodeSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The feMergeNode takes the result of another filter to be processed by its parent <feMerge>. */
 export type SkruvFemergenodeSVGAttributes = AsyncContent<SVGAttributes<SVGFEMergeNodeElement, {
@@ -3774,7 +3774,7 @@ export type SkruvFemergenodeSVGAttributes = AsyncContent<SVGAttributes<SVGFEMerg
   'in'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFemergenodeSVGElement extends SVGVnode<'feMergeNode', SkruvFemergenodeSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFemergenodeSVGElement extends SVGVnode<'feMergeNode', SkruvFemergenodeSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feMorphology> SVG filter primitive is used to erode or dilate the input image. Its usefulness lies especially in fattening or thinning effects. */
 export type SkruvFemorphologySVGAttributes = AsyncContent<SVGAttributes<SVGFEMorphologyElement, {
@@ -3786,7 +3786,7 @@ export type SkruvFemorphologySVGAttributes = AsyncContent<SVGAttributes<SVGFEMor
   'radius'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFemorphologySVGElement extends SVGVnode<'feMorphology', SkruvFemorphologySVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFemorphologySVGElement extends SVGVnode<'feMorphology', SkruvFemorphologySVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feOffset> SVG filter primitive allows to offset the input image. The input image as a whole is offset by the values specified in the dx and dy attributes. */
 export type SkruvFeoffsetSVGAttributes = AsyncContent<SVGAttributes<SVGFEOffsetElement, {
@@ -3798,7 +3798,7 @@ export type SkruvFeoffsetSVGAttributes = AsyncContent<SVGAttributes<SVGFEOffsetE
   'dy'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFeoffsetSVGElement extends SVGVnode<'feOffset', SkruvFeoffsetSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFeoffsetSVGElement extends SVGVnode<'feOffset', SkruvFeoffsetSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <fePointLight> filter primitive defines a light source which allows to create a point light effect. It that can be used within a lighting filter primitive: <feDiffuseLighting> or <feSpecularLighting>. */
 export type SkruvFepointlightSVGAttributes = AsyncContent<SVGAttributes<SVGFEPointLightElement, {
@@ -3810,7 +3810,7 @@ export type SkruvFepointlightSVGAttributes = AsyncContent<SVGAttributes<SVGFEPoi
   'z'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFepointlightSVGElement extends SVGVnode<'fePointLight', SkruvFepointlightSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFepointlightSVGElement extends SVGVnode<'fePointLight', SkruvFepointlightSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feSpecularLighting> SVG filter primitive lights a source graphic using the alpha channel as a bump map. The resulting image is an RGBA image based on the light color. The lighting calculation follows the standard specular component of the Phong lighting model. The resulting image depends on the light color, light position and surface geometry of the input bump map. The result of the lighting calculation is added. The filter primitive assumes that the viewer is at infinity in the z direction. */
 export type SkruvFespecularlightingSVGAttributes = AsyncContent<SVGAttributes<SVGFESpecularLightingElement, {
@@ -3826,7 +3826,7 @@ export type SkruvFespecularlightingSVGAttributes = AsyncContent<SVGAttributes<SV
   'kernelUnitLength'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFespecularlightingSVGElement extends SVGVnode<'feSpecularLighting', SkruvFespecularlightingSVGAttributes, AsyncContent<SkruvSVGLightSourceElementsGroup | SkruvSVGDescriptiveElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFespecularlightingSVGElement extends SVGVnode<'feSpecularLighting', SkruvFespecularlightingSVGAttributes, AsyncContent<SkruvSVGLightSourceElementsGroup | SkruvSVGDescriptiveElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feSpotLight> SVG filter primitive defines a light source that can be used to create a spotlight effect.
  * 
@@ -3850,7 +3850,7 @@ export type SkruvFespotlightSVGAttributes = AsyncContent<SVGAttributes<SVGFESpot
   'limitingConeAngle'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFespotlightSVGElement extends SVGVnode<'feSpotLight', SkruvFespotlightSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFespotlightSVGElement extends SVGVnode<'feSpotLight', SkruvFespotlightSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feTile> SVG filter primitive allows to fill a target rectangle with a repeated, tiled pattern of an input image. The effect is similar to the one of a <pattern>. */
 export type SkruvFetileSVGAttributes = AsyncContent<SVGAttributes<SVGFETileElement, {
@@ -3858,7 +3858,7 @@ export type SkruvFetileSVGAttributes = AsyncContent<SVGAttributes<SVGFETileEleme
   'in'?: string | number | boolean | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFetileSVGElement extends SVGVnode<'feTile', SkruvFetileSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFetileSVGElement extends SVGVnode<'feTile', SkruvFetileSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <feTurbulence> SVG filter primitive creates an image using the Perlin turbulence function. It allows the synthesis of artificial textures like clouds or marble. The resulting image will fill the entire filter primitive subregion. */
 export type SkruvFeturbulenceSVGAttributes = AsyncContent<SVGAttributes<SVGFETurbulenceElement, {
@@ -3874,7 +3874,7 @@ export type SkruvFeturbulenceSVGAttributes = AsyncContent<SVGAttributes<SVGFETur
   'type'?: string | false
 } & SVGPresentationAttributes & SVGFilterAttributes>>
 
-export interface SkruvFeturbulenceSVGElement extends SVGVnode<'feTurbulence', SkruvFeturbulenceSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFeturbulenceSVGElement extends SVGVnode<'feTurbulence', SkruvFeturbulenceSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <filter> SVG element defines a custom filter effect by grouping atomic filter primitives. It is never rendered itself, but must be used by the filter attribute on SVG elements, or the filter CSS property for SVG/HTML elements. */
 export type SkruvFilterSVGAttributes = AsyncContent<SVGAttributes<SVGFilterElement, {
@@ -3892,7 +3892,7 @@ export type SkruvFilterSVGAttributes = AsyncContent<SVGAttributes<SVGFilterEleme
   'primitiveUnits'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvFilterSVGElement extends SVGVnode<'filter', SkruvFilterSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGFilterPrimitiveElementsGroup | SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFilterSVGElement extends SVGVnode<'filter', SkruvFilterSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGFilterPrimitiveElementsGroup | SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <foreignObject> SVG element includes elements from a different XML namespace. In the context of a browser, it is most likely (X)HTML. */
 export type SkruvForeignobjectSVGAttributes = AsyncContent<SVGAttributes<SVGForeignObjectElement, {
@@ -3922,19 +3922,19 @@ export type SkruvForeignobjectSVGAttributes = AsyncContent<SVGAttributes<SVGFore
   'y'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvForeignobjectSVGElement extends SVGVnode<'foreignObject', SkruvForeignobjectSVGAttributes, AsyncContent<AnyContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvForeignobjectSVGElement extends SVGVnode<'foreignObject', SkruvForeignobjectSVGAttributes, AsyncContent<AnyContent | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <g> SVG element is a container used to group other SVG elements. */
 export type SkruvGSVGAttributes = AsyncContent<SVGAttributes<SVGGElement, {
 } & SVGPresentationAttributes>>
 
-export interface SkruvGSVGElement extends SVGVnode<'g', SkruvGSVGAttributes, AsyncContent<AnySVGContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvGSVGElement extends SVGVnode<'g', SkruvGSVGAttributes, AsyncContent<AnySVGContent | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <image> SVG element includes images inside SVG documents. It can display raster image files or other SVG files. */
 export type SkruvImageSVGAttributes = AsyncContent<SVGAttributes<SVGImageElement, {
 } & SVGPresentationAttributes>>
 
-export interface SkruvImageSVGElement extends SVGVnode<'image', SkruvImageSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvImageSVGElement extends SVGVnode<'image', SkruvImageSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <line> element is an SVG basic shape used to create a line connecting two points. */
 export type SkruvLineSVGAttributes = AsyncContent<SVGAttributes<SVGLineElement, {
@@ -3970,7 +3970,7 @@ export type SkruvLineSVGAttributes = AsyncContent<SVGAttributes<SVGLineElement, 
   'pathLength'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvLineSVGElement extends SVGVnode<'line', SkruvLineSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvLineSVGElement extends SVGVnode<'line', SkruvLineSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <linearGradient> element lets authors define linear gradients to apply to other SVG elements. */
 export type SkruvLineargradientSVGAttributes = AsyncContent<SVGAttributes<SVGLinearGradientElement, {
@@ -4024,7 +4024,7 @@ export type SkruvLineargradientSVGAttributes = AsyncContent<SVGAttributes<SVGLin
   'y2'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvLineargradientSVGElement extends SVGVnode<'linearGradient', SkruvLineargradientSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvAnimateSVGElement | SkruvAnimatetransformSVGElement | SkruvSetSVGElement | SkruvStopSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvLineargradientSVGElement extends SVGVnode<'linearGradient', SkruvLineargradientSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvAnimateSVGElement | SkruvAnimatetransformSVGElement | SkruvSetSVGElement | SkruvStopSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <marker> element defines a graphic used for drawing arrowheads or polymarkers on a given <path>, <line>, <polyline> or <polygon> element. */
 export type SkruvMarkerSVGAttributes = AsyncContent<SVGAttributes<SVGMarkerElement, {
@@ -4078,7 +4078,7 @@ export type SkruvMarkerSVGAttributes = AsyncContent<SVGAttributes<SVGMarkerEleme
   'viewBox'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvMarkerSVGElement extends SVGVnode<'marker', SkruvMarkerSVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMarkerSVGElement extends SVGVnode<'marker', SkruvMarkerSVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mask> element defines an alpha mask for compositing the current object into the background. A mask is used/referenced using the mask property. */
 export type SkruvMaskSVGAttributes = AsyncContent<SVGAttributes<SVGMaskElement, {
@@ -4120,17 +4120,17 @@ export type SkruvMaskSVGAttributes = AsyncContent<SVGAttributes<SVGMaskElement, 
   'width'?: number | string | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvMaskSVGElement extends SVGVnode<'mask', SkruvMaskSVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMaskSVGElement extends SVGVnode<'mask', SkruvMaskSVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <metadata> SVG element adds metadata to SVG content. Metadata is structured information about data. The contents of <metadata> should be elements from other XML namespaces such as RDF, FOAF, etc. */
 export type SkruvMetadataSVGAttributes = AsyncContent<SVGAttributes<SVGMetadataElement, {}>>
 
-export interface SkruvMetadataSVGElement extends SVGVnode<'metadata', SkruvMetadataSVGAttributes, AsyncContent<AnyElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMetadataSVGElement extends SVGVnode<'metadata', SkruvMetadataSVGAttributes, AsyncContent<AnyElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mpath> sub-element for the <animateMotion> element provides the ability to reference an external <path> element as the definition of a motion path. */
 export type SkruvMpathSVGAttributes = AsyncContent<SVGAttributes<SVGMPathElement, {}>>
 
-export interface SkruvMpathSVGElement extends SVGVnode<'mpath', SkruvMpathSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMpathSVGElement extends SVGVnode<'mpath', SkruvMpathSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <path> SVG element is the generic element to define a shape. All the basic shapes can be created with a path element. */
 export type SkruvPathSVGAttributes = AsyncContent<SVGAttributes<SVGPathElement, {
@@ -4148,7 +4148,7 @@ export type SkruvPathSVGAttributes = AsyncContent<SVGAttributes<SVGPathElement, 
   'pathLength'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvPathSVGElement extends SVGVnode<'path', SkruvPathSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvPathSVGElement extends SVGVnode<'path', SkruvPathSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <pattern> element defines a graphics object which can be redrawn at repeated x- and y-coordinate intervals ("tiled") to cover an area. */
 export type SkruvPatternSVGAttributes = AsyncContent<SVGAttributes<SVGPatternElement, {
@@ -4220,7 +4220,7 @@ export type SkruvPatternSVGAttributes = AsyncContent<SVGAttributes<SVGPatternEle
   'y'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvPatternSVGElement extends SVGVnode<'pattern', SkruvPatternSVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvPatternSVGElement extends SVGVnode<'pattern', SkruvPatternSVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <polygon> element defines a closed shape consisting of a set of connected straight line segments. The last point is connected to the first point. */
 export type SkruvPolygonSVGAttributes = AsyncContent<SVGAttributes<SVGPolygonElement, {
@@ -4238,7 +4238,7 @@ export type SkruvPolygonSVGAttributes = AsyncContent<SVGAttributes<SVGPolygonEle
   'pathLength'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvPolygonSVGElement extends SVGVnode<'polygon', SkruvPolygonSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvPolygonSVGElement extends SVGVnode<'polygon', SkruvPolygonSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <polyline> SVG element is an SVG basic shape that creates straight lines connecting several points. Typically a polyline is used to create open shapes as the last point doesn't have to be connected to the first point. For closed shapes see the <polygon> element. */
 export type SkruvPolylineSVGAttributes = AsyncContent<SVGAttributes<SVGPolylineElement, {
@@ -4256,7 +4256,7 @@ export type SkruvPolylineSVGAttributes = AsyncContent<SVGAttributes<SVGPolylineE
   'pathLength'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvPolylineSVGElement extends SVGVnode<'polyline', SkruvPolylineSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvPolylineSVGElement extends SVGVnode<'polyline', SkruvPolylineSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <radialGradient> element lets authors define radial gradients that can be applied to fill or stroke of graphical elements. */
 export type SkruvRadialgradientSVGAttributes = AsyncContent<SVGAttributes<SVGRadialGradientElement, {
@@ -4322,7 +4322,7 @@ export type SkruvRadialgradientSVGAttributes = AsyncContent<SVGAttributes<SVGRad
   'spreadMethod'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvRadialgradientSVGElement extends SVGVnode<'radialGradient', SkruvRadialgradientSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvAnimateSVGElement | SkruvAnimatetransformSVGElement | SkruvSetSVGElement | SkruvStopSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvRadialgradientSVGElement extends SVGVnode<'radialGradient', SkruvRadialgradientSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvAnimateSVGElement | SkruvAnimatetransformSVGElement | SkruvSetSVGElement | SkruvStopSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <rect> element is a basic SVG shape that draws rectangles, defined by their position, width, and height. The rectangles may have their corners rounded. */
 export type SkruvRectSVGAttributes = AsyncContent<SVGAttributes<SVGRectElement, {
@@ -4370,7 +4370,7 @@ export type SkruvRectSVGAttributes = AsyncContent<SVGAttributes<SVGRectElement, 
   'pathLength'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvRectSVGElement extends SVGVnode<'rect', SkruvRectSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvRectSVGElement extends SVGVnode<'rect', SkruvRectSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The SVG script element allows to add scripts to an SVG document. */
 export type SkruvScriptSVGAttributes = AsyncContent<SVGAttributes<SVGScriptElement, {
@@ -4394,7 +4394,7 @@ export type SkruvScriptSVGAttributes = AsyncContent<SVGAttributes<SVGScriptEleme
   'type'?: string | false
 }>>
 
-export interface SkruvScriptSVGElement extends SVGVnode<'script', SkruvScriptSVGAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvScriptSVGElement extends SVGVnode<'script', SkruvScriptSVGAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The SVG <set> element provides a simple means of just setting the value of an attribute for a specified duration. */
 export type SkruvSetSVGAttributes = AsyncContent<SVGAttributes<SVGSetElement, {
@@ -4406,7 +4406,7 @@ export type SkruvSetSVGAttributes = AsyncContent<SVGAttributes<SVGSetElement, {
   'to'?: string | number | boolean | false
 } & SVGAnimationAttributes>>
 
-export interface SkruvSetSVGElement extends SVGVnode<'set', SkruvSetSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSetSVGElement extends SVGVnode<'set', SkruvSetSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The SVG <stop> element defines a color and its position to use on a gradient. This element is always a child of a <linearGradient> or <radialGradient> element. */
 export type SkruvStopSVGAttributes = AsyncContent<SVGAttributes<SVGStopElement, {
@@ -4430,7 +4430,7 @@ export type SkruvStopSVGAttributes = AsyncContent<SVGAttributes<SVGStopElement, 
   'stop-opacity'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvStopSVGElement extends SVGVnode<'stop', SkruvStopSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvStopSVGElement extends SVGVnode<'stop', SkruvStopSVGAttributes, AsyncContent<SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The SVG <style> element allows style sheets to be embedded directly within SVG content. */
 export type SkruvStyleSVGAttributes = AsyncContent<SVGAttributes<SVGStyleElement, {
@@ -4454,7 +4454,7 @@ export type SkruvStyleSVGAttributes = AsyncContent<SVGAttributes<SVGStyleElement
   'title'?: string | false
 }>>
 
-export interface SkruvStyleSVGElement extends SVGVnode<'style', SkruvStyleSVGAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvStyleSVGElement extends SVGVnode<'style', SkruvStyleSVGAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The svg element is a container that defines a new coordinate system and viewport. It is used as the outermost element of SVG documents, but it can also be used to embed an SVG fragment inside an SVG or HTML document. */
 export type SkruvSvgSVGAttributes = AsyncContent<SVGAttributes<SVGSVGElement, {
@@ -4520,13 +4520,13 @@ export type SkruvSvgSVGAttributes = AsyncContent<SVGAttributes<SVGSVGElement, {
   'y'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvSvgSVGElement extends SVGVnode<'svg', SkruvSvgSVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSvgSVGElement extends SVGVnode<'svg', SkruvSvgSVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <switch> SVG element evaluates any requiredFeatures, requiredExtensions and systemLanguage attributes on its direct child elements in order, and then renders the first child where these attributes evaluate to true. */
 export type SkruvSwitchSVGAttributes = AsyncContent<SVGAttributes<SVGSwitchElement, {
 } & SVGPresentationAttributes>>
 
-export interface SkruvSwitchSVGElement extends SVGVnode<'switch', SkruvSwitchSVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSwitchSVGElement extends SVGVnode<'switch', SkruvSwitchSVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <symbol> element is used to define graphical template objects which can be instantiated by a <use> element. */
 export type SkruvSymbolSVGAttributes = AsyncContent<SVGAttributes<SVGSymbolElement, {
@@ -4580,7 +4580,7 @@ export type SkruvSymbolSVGAttributes = AsyncContent<SVGAttributes<SVGSymbolEleme
   'y'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvSymbolSVGElement extends SVGVnode<'symbol', SkruvSymbolSVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSymbolSVGElement extends SVGVnode<'symbol', SkruvSymbolSVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The SVG <text> element draws a graphics element consisting of text. It's possible to apply a gradient, pattern, clipping path, mask, or filter to <text>, like any other SVG graphics element. */
 export type SkruvTextSVGAttributes = AsyncContent<SVGAttributes<SVGTextElement, {
@@ -4628,7 +4628,7 @@ export type SkruvTextSVGAttributes = AsyncContent<SVGAttributes<SVGTextElement, 
   'textLength'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvTextSVGElement extends SVGVnode<'text', SkruvTextSVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTextSVGElement extends SVGVnode<'text', SkruvTextSVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** To render text along the shape of a <path>, enclose the text in a <textPath> element that has an href attribute with a reference to the <path> element. */
 export type SkruvTextpathSVGAttributes = AsyncContent<SVGAttributes<SVGTextPathElement, {
@@ -4682,12 +4682,12 @@ export type SkruvTextpathSVGAttributes = AsyncContent<SVGAttributes<SVGTextPathE
   'textLength'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvTextpathSVGElement extends SVGVnode<'textPath', SkruvTextpathSVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTextpathSVGElement extends SVGVnode<'textPath', SkruvTextpathSVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <title> element provides an accessible, short-text description of any SVG container element or graphics element. */
 export type SkruvTitleSVGAttributes = AsyncContent<SVGAttributes<SVGTitleElement, {}>>
 
-export interface SkruvTitleSVGElement extends SVGVnode<'title', SkruvTitleSVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTitleSVGElement extends SVGVnode<'title', SkruvTitleSVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The SVG <tspan> element defines a subtext within a <text> element or another <tspan> element. It allows for adjustment of the style and/or position of that subtext as needed. */
 export type SkruvTspanSVGAttributes = AsyncContent<SVGAttributes<SVGTSpanElement, {
@@ -4735,7 +4735,7 @@ export type SkruvTspanSVGAttributes = AsyncContent<SVGAttributes<SVGTSpanElement
   'textLength'?: string | number | boolean | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvTspanSVGElement extends SVGVnode<'tspan', SkruvTspanSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvASVGElement | SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTspanSVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTspanSVGElement extends SVGVnode<'tspan', SkruvTspanSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvASVGElement | SkruvAnimateSVGElement | SkruvSetSVGElement | SkruvTspanSVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <use> element takes nodes from within the SVG document, and duplicates them somewhere else.
  * 
@@ -4763,7 +4763,7 @@ export type SkruvUseSVGAttributes = AsyncContent<SVGAttributes<SVGUseElement, {
   'height'?: string | false
 } & SVGPresentationAttributes>>
 
-export interface SkruvUseSVGElement extends SVGVnode<'use', SkruvUseSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvUseSVGElement extends SVGVnode<'use', SkruvUseSVGAttributes, AsyncContent<SkruvSVGDescriptiveElementsGroup | SkruvSVGAnimationElementsGroup | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** A view is a defined way to view the image, like a zoom level or a detail view. */
 export type SkruvViewSVGAttributes = AsyncContent<SVGAttributes<SVGViewElement, {
@@ -4773,7 +4773,7 @@ export type SkruvViewSVGAttributes = AsyncContent<SVGAttributes<SVGViewElement, 
   'preserveAspectRatio'?: string | number | boolean | false
 }>>
 
-export interface SkruvViewSVGElement extends SVGVnode<'view', SkruvViewSVGAttributes, AsyncContent<AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvViewSVGElement extends SVGVnode<'view', SkruvViewSVGAttributes, AsyncContent<AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 type SkruvSVGAnimationElementsGroup = SkruvAnimateSVGElement | SkruvAnimatemotionSVGElement | SkruvAnimatetransformSVGElement | SkruvMpathSVGElement | SkruvSetSVGElement
 
@@ -4809,8 +4809,8 @@ type SkruvSVGTextContentChildElementsGroup = SkruvTextpathSVGElement | SkruvTspa
 
 type SkruvSVGUncategorizedElementsGroup = SkruvClippathSVGElement | SkruvFilterSVGElement | SkruvForeignobjectSVGElement | SkruvScriptSVGElement | SkruvStyleSVGElement | SkruvViewSVGElement
 
-export type AnySVGElement = SkruvASVGElement | SkruvAnimateSVGElement | SkruvAnimatemotionSVGElement | SkruvAnimatetransformSVGElement | SkruvCircleSVGElement | SkruvClippathSVGElement | SkruvDefsSVGElement | SkruvDescSVGElement | SkruvEllipseSVGElement | SkruvFeblendSVGElement | SkruvFecolormatrixSVGElement | SkruvFecomponenttransferSVGElement | SkruvFecompositeSVGElement | SkruvFeconvolvematrixSVGElement | SkruvFediffuselightingSVGElement | SkruvFedisplacementmapSVGElement | SkruvFedistantlightSVGElement | SkruvFedropshadowSVGElement | SkruvFefloodSVGElement | SkruvFefuncaSVGElement | SkruvFefuncbSVGElement | SkruvFefuncgSVGElement | SkruvFefuncrSVGElement | SkruvFegaussianblurSVGElement | SkruvFeimageSVGElement | SkruvFemergeSVGElement | SkruvFemergenodeSVGElement | SkruvFemorphologySVGElement | SkruvFeoffsetSVGElement | SkruvFepointlightSVGElement | SkruvFespecularlightingSVGElement | SkruvFespotlightSVGElement | SkruvFetileSVGElement | SkruvFeturbulenceSVGElement | SkruvFilterSVGElement | SkruvForeignobjectSVGElement | SkruvGSVGElement | SkruvImageSVGElement | SkruvLineSVGElement | SkruvLineargradientSVGElement | SkruvMarkerSVGElement | SkruvMaskSVGElement | SkruvMetadataSVGElement | SkruvMpathSVGElement | SkruvPathSVGElement | SkruvPatternSVGElement | SkruvPolygonSVGElement | SkruvPolylineSVGElement | SkruvRadialgradientSVGElement | SkruvRectSVGElement | SkruvScriptSVGElement | SkruvSetSVGElement | SkruvStopSVGElement | SkruvStyleSVGElement | SkruvSvgSVGElement | SkruvSwitchSVGElement | SkruvSymbolSVGElement | SkruvTextSVGElement | SkruvTextpathSVGElement | SkruvTitleSVGElement | SkruvTspanSVGElement | SkruvUseSVGElement | SkruvViewSVGElement | SkruvCommentElement | SkruvRawElement | SkruvHeaderElement
-export type AnySVGContent = AnySVGElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean | AnySVGContent[] | AsyncGenerator<AnySVGContent> | Promise<AnySVGContent> | (() => AnySVGContent)
+export type AnySVGElement = SkruvASVGElement | SkruvAnimateSVGElement | SkruvAnimatemotionSVGElement | SkruvAnimatetransformSVGElement | SkruvCircleSVGElement | SkruvClippathSVGElement | SkruvDefsSVGElement | SkruvDescSVGElement | SkruvEllipseSVGElement | SkruvFeblendSVGElement | SkruvFecolormatrixSVGElement | SkruvFecomponenttransferSVGElement | SkruvFecompositeSVGElement | SkruvFeconvolvematrixSVGElement | SkruvFediffuselightingSVGElement | SkruvFedisplacementmapSVGElement | SkruvFedistantlightSVGElement | SkruvFedropshadowSVGElement | SkruvFefloodSVGElement | SkruvFefuncaSVGElement | SkruvFefuncbSVGElement | SkruvFefuncgSVGElement | SkruvFefuncrSVGElement | SkruvFegaussianblurSVGElement | SkruvFeimageSVGElement | SkruvFemergeSVGElement | SkruvFemergenodeSVGElement | SkruvFemorphologySVGElement | SkruvFeoffsetSVGElement | SkruvFepointlightSVGElement | SkruvFespecularlightingSVGElement | SkruvFespotlightSVGElement | SkruvFetileSVGElement | SkruvFeturbulenceSVGElement | SkruvFilterSVGElement | SkruvForeignobjectSVGElement | SkruvGSVGElement | SkruvImageSVGElement | SkruvLineSVGElement | SkruvLineargradientSVGElement | SkruvMarkerSVGElement | SkruvMaskSVGElement | SkruvMetadataSVGElement | SkruvMpathSVGElement | SkruvPathSVGElement | SkruvPatternSVGElement | SkruvPolygonSVGElement | SkruvPolylineSVGElement | SkruvRadialgradientSVGElement | SkruvRectSVGElement | SkruvScriptSVGElement | SkruvSetSVGElement | SkruvStopSVGElement | SkruvStyleSVGElement | SkruvSvgSVGElement | SkruvSwitchSVGElement | SkruvSymbolSVGElement | SkruvTextSVGElement | SkruvTextpathSVGElement | SkruvTitleSVGElement | SkruvTspanSVGElement | SkruvUseSVGElement | SkruvViewSVGElement | SkruvCommentElement | SkruvTextElement | SkruvHeaderElement
+export type AnySVGContent = AnySVGElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean | AnySVGContent[] | AsyncGenerator<AnySVGContent> | Promise<AnySVGContent> | (() => AnySVGContent)
 
 /** The <math> MathML element is the top-level MathML element, used to write a single mathematical formula. It can be placed in HTML content where flow content is permitted. */
 export type SkruvMathMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -4830,7 +4830,7 @@ export type SkruvMathMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElem
   'display'?: string | number | boolean | false
 }>>
 
-export interface SkruvMathMathMLElement extends MathMLVnode<'math', SkruvMathMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMathMathMLElement extends MathMLVnode<'math', SkruvMathMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <semantics> MathML element associates annotations with a MathML expression, for example its text source as a lightweight markup language or mathematical meaning expressed in a special XML dialect. Typically, its structure is: */
 export type SkruvSemanticsMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -4844,7 +4844,7 @@ export type SkruvSemanticsMathMLAttributes = AsyncContent<MathMLAttributes<MathM
   'src'?: string | false
 }>>
 
-export interface SkruvSemanticsMathMLElement extends MathMLVnode<'semantics', SkruvSemanticsMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSemanticsMathMLElement extends MathMLVnode<'semantics', SkruvSemanticsMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** Non-standard: This feature is non-standard and is not on a standards track. Do not use it on production sites facing the Web: it will not work for every user. There may also be large incompatibilities between implementations and the behavior may change in the future. */
 export type SkruvMencloseMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -4854,12 +4854,12 @@ export type SkruvMencloseMathMLAttributes = AsyncContent<MathMLAttributes<MathML
   'notation'?: string | number | boolean | false
 }>>
 
-export interface SkruvMencloseMathMLElement extends MathMLVnode<'menclose', SkruvMencloseMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMencloseMathMLElement extends MathMLVnode<'menclose', SkruvMencloseMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <merror> MathML element is used to display contents as error messages. The intent of this element is to provide a standard way for programs that generate MathML from other input to report syntax errors. */
 export type SkruvMerrorMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {}>>
 
-export interface SkruvMerrorMathMLElement extends MathMLVnode<'merror', SkruvMerrorMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMerrorMathMLElement extends MathMLVnode<'merror', SkruvMerrorMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mfrac> MathML element is used to display fractions. It can also be used
  * 
@@ -4883,12 +4883,12 @@ export type SkruvMfracMathMLAttributes = AsyncContent<MathMLAttributes<MathMLEle
   'numalign'?: string | number | boolean | false
 }>>
 
-export interface SkruvMfracMathMLElement extends MathMLVnode<'mfrac', SkruvMfracMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMfracMathMLElement extends MathMLVnode<'mfrac', SkruvMfracMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mi> MathML element indicates that the content should be rendered as an identifier such as function names, variables or symbolic constants. You can also have arbitrary text in it to mark up terms. */
 export type SkruvMiMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {}>>
 
-export interface SkruvMiMathMLElement extends MathMLVnode<'mi', SkruvMiMathMLAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMiMathMLElement extends MathMLVnode<'mi', SkruvMiMathMLAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mmultiscripts> MathML element is used to attach an arbitrary number of subscripts and superscripts to an expression at once, generalizing the <msubsup> element. Scripts can be either prescripts (placed before the expression) or postscripts (placed after it). */
 export type SkruvMmultiscriptsMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -4902,12 +4902,12 @@ export type SkruvMmultiscriptsMathMLAttributes = AsyncContent<MathMLAttributes<M
   'superscriptshift'?: string | number | boolean | false
 }>>
 
-export interface SkruvMmultiscriptsMathMLElement extends MathMLVnode<'mmultiscripts', SkruvMmultiscriptsMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMmultiscriptsMathMLElement extends MathMLVnode<'mmultiscripts', SkruvMmultiscriptsMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mn> MathML element represents a numeric literal which is normally a sequence of digits with a possible separator (a dot or a comma). However, it is also allowed to have arbitrary text in it which is actually a numeric quantity, for example "eleven". */
 export type SkruvMnMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {}>>
 
-export interface SkruvMnMathMLElement extends MathMLVnode<'mn', SkruvMnMathMLAttributes, AsyncContent<number | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMnMathMLElement extends MathMLVnode<'mn', SkruvMnMathMLAttributes, AsyncContent<number | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mo> MathML element represents an operator in a broad sense. Besides operators in strict mathematical meaning, this element also includes "operators" like parentheses, separators like comma and semicolon, or "absolute value" bars. */
 export type SkruvMoMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -4957,7 +4957,7 @@ export type SkruvMoMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElemen
   'symmetric'?: string | number | boolean | false
 }>>
 
-export interface SkruvMoMathMLElement extends MathMLVnode<'mo', SkruvMoMathMLAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMoMathMLElement extends MathMLVnode<'mo', SkruvMoMathMLAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mover> MathML element is used to attach an accent or a limit over an expression. Use the following syntax: <mover> base overscript </mover> */
 export type SkruvMoverMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -4967,7 +4967,7 @@ export type SkruvMoverMathMLAttributes = AsyncContent<MathMLAttributes<MathMLEle
   'accent'?: string | number | boolean | false
 }>>
 
-export interface SkruvMoverMathMLElement extends MathMLVnode<'mover', SkruvMoverMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMoverMathMLElement extends MathMLVnode<'mover', SkruvMoverMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mpadded> MathML element is used to add extra padding and to set the general adjustment of position and size of enclosed contents. */
 export type SkruvMpaddedMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -4993,22 +4993,22 @@ export type SkruvMpaddedMathMLAttributes = AsyncContent<MathMLAttributes<MathMLE
   'width'?: number | string | false
 }>>
 
-export interface SkruvMpaddedMathMLElement extends MathMLVnode<'mpadded', SkruvMpaddedMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMpaddedMathMLElement extends MathMLVnode<'mpadded', SkruvMpaddedMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mphantom> MathML element is rendered invisibly, but dimensions (such as height, width, and baseline position) are still kept. */
 export type SkruvMphantomMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {}>>
 
-export interface SkruvMphantomMathMLElement extends MathMLVnode<'mphantom', SkruvMphantomMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMphantomMathMLElement extends MathMLVnode<'mphantom', SkruvMphantomMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mroot> MathML element is used to display roots with an explicit index. Two arguments are accepted, which leads to the syntax: <mroot> base index </mroot>. */
 export type SkruvMrootMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {}>>
 
-export interface SkruvMrootMathMLElement extends MathMLVnode<'mroot', SkruvMrootMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMrootMathMLElement extends MathMLVnode<'mroot', SkruvMrootMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mrow> MathML element is used to group sub-expressions, which usually contain one or more operators with their respective operands (such as <mi> and <mn>). This element renders as a horizontal row containing its arguments. */
 export type SkruvMrowMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {}>>
 
-export interface SkruvMrowMathMLElement extends MathMLVnode<'mrow', SkruvMrowMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMrowMathMLElement extends MathMLVnode<'mrow', SkruvMrowMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <ms> MathML element represents a string literal meant to be interpreted by programming languages and computer algebra systems. */
 export type SkruvMsMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -5022,7 +5022,7 @@ export type SkruvMsMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElemen
   'rquote'?: string | number | boolean | false
 }>>
 
-export interface SkruvMsMathMLElement extends MathMLVnode<'ms', SkruvMsMathMLAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMsMathMLElement extends MathMLVnode<'ms', SkruvMsMathMLAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mspace> MathML element is used to display a blank space, whose size is set by its attributes. */
 export type SkruvMspaceMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -5045,7 +5045,7 @@ export interface SkruvMspaceMathMLElement extends MathMLVnode<'mspace', SkruvMsp
 /** The <msqrt> MathML element is used to display square roots (no index is displayed). The square root accepts only one argument, which leads to the following syntax: <msqrt> base </msqrt>. */
 export type SkruvMsqrtMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {}>>
 
-export interface SkruvMsqrtMathMLElement extends MathMLVnode<'msqrt', SkruvMsqrtMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMsqrtMathMLElement extends MathMLVnode<'msqrt', SkruvMsqrtMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mstyle> MathML element is used to change the style of its children. */
 export type SkruvMstyleMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -5059,7 +5059,7 @@ export type SkruvMstyleMathMLAttributes = AsyncContent<MathMLAttributes<MathMLEl
   'scriptsizemultiplier'?: string | number | boolean | false
 }>>
 
-export interface SkruvMstyleMathMLElement extends MathMLVnode<'mstyle', SkruvMstyleMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMstyleMathMLElement extends MathMLVnode<'mstyle', SkruvMstyleMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <msub> MathML element is used to attach a subscript to an expression. */
 export type SkruvMsubMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -5069,7 +5069,7 @@ export type SkruvMsubMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElem
   'subscriptshift'?: string | number | boolean | false
 }>>
 
-export interface SkruvMsubMathMLElement extends MathMLVnode<'msub', SkruvMsubMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMsubMathMLElement extends MathMLVnode<'msub', SkruvMsubMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <msup> MathML element is used to attach a superscript to an expression. */
 export type SkruvMsupMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -5079,7 +5079,7 @@ export type SkruvMsupMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElem
   'superscriptshift'?: string | number | boolean | false
 }>>
 
-export interface SkruvMsupMathMLElement extends MathMLVnode<'msup', SkruvMsupMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMsupMathMLElement extends MathMLVnode<'msup', SkruvMsupMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <msubsup> MathML element is used to attach both a subscript and a superscript, together, to an expression. */
 export type SkruvMsubsupMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -5093,7 +5093,7 @@ export type SkruvMsubsupMathMLAttributes = AsyncContent<MathMLAttributes<MathMLE
   'superscriptshift'?: string | number | boolean | false
 }>>
 
-export interface SkruvMsubsupMathMLElement extends MathMLVnode<'msubsup', SkruvMsubsupMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMsubsupMathMLElement extends MathMLVnode<'msubsup', SkruvMsubsupMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mtable> MathML element allows you to create tables or matrices. Its children are <mtr> elements (representing rows), each of them having <mtd> elements as its children (representing cells). These elements are similar to <table>, <tr> and <td> elements of HTML. */
 export type SkruvMtableMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -5159,7 +5159,7 @@ export type SkruvMtableMathMLAttributes = AsyncContent<MathMLAttributes<MathMLEl
   'width'?: number | string | false
 }>>
 
-export interface SkruvMtableMathMLElement extends MathMLVnode<'mtable', SkruvMtableMathMLAttributes, AsyncContent<SkruvMtrMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMtableMathMLElement extends MathMLVnode<'mtable', SkruvMtableMathMLAttributes, AsyncContent<SkruvMtrMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mtd> MathML element represents a cell in a table or a matrix. It may only appear in a <mtr> element. This element is similar to the <td> element of HTML. */
 export type SkruvMtdMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -5185,12 +5185,12 @@ export type SkruvMtdMathMLAttributes = AsyncContent<MathMLAttributes<MathMLEleme
   'rowalign'?: string | number | boolean | false
 }>>
 
-export interface SkruvMtdMathMLElement extends MathMLVnode<'mtd', SkruvMtdMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMtdMathMLElement extends MathMLVnode<'mtd', SkruvMtdMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mtext> MathML element is used to render arbitrary text with no notational meaning, such as comments or annotations. */
 export type SkruvMtextMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {}>>
 
-export interface SkruvMtextMathMLElement extends MathMLVnode<'mtext', SkruvMtextMathMLAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMtextMathMLElement extends MathMLVnode<'mtext', SkruvMtextMathMLAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <mtr> MathML element represents a row in a table or a matrix. It may only appear in a <mtable> element and its children are <mtd> elements representing cells. This element is similar to the <tr> element of HTML. */
 export type SkruvMtrMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -5204,7 +5204,7 @@ export type SkruvMtrMathMLAttributes = AsyncContent<MathMLAttributes<MathMLEleme
   'rowalign'?: string | number | boolean | false
 }>>
 
-export interface SkruvMtrMathMLElement extends MathMLVnode<'mtr', SkruvMtrMathMLAttributes, AsyncContent<SkruvMtdMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMtrMathMLElement extends MathMLVnode<'mtr', SkruvMtrMathMLAttributes, AsyncContent<SkruvMtdMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <munder> MathML element is used to attach an accent or a limit under an expression. It uses the following syntax: <munder> base underscript </munder> */
 export type SkruvMunderMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -5214,7 +5214,7 @@ export type SkruvMunderMathMLAttributes = AsyncContent<MathMLAttributes<MathMLEl
   'accentunder'?: string | number | boolean | false
 }>>
 
-export interface SkruvMunderMathMLElement extends MathMLVnode<'munder', SkruvMunderMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMunderMathMLElement extends MathMLVnode<'munder', SkruvMunderMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 /** The <munderover> MathML element is used to attach accents or limits both under and over an expression. */
 export type SkruvMunderoverMathMLAttributes = AsyncContent<MathMLAttributes<MathMLElement, {
@@ -5228,49 +5228,49 @@ export type SkruvMunderoverMathMLAttributes = AsyncContent<MathMLAttributes<Math
   'accentunder'?: string | number | boolean | false
 }>>
 
-export interface SkruvMunderoverMathMLElement extends MathMLVnode<'munderover', SkruvMunderoverMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvMunderoverMathMLElement extends MathMLVnode<'munderover', SkruvMunderoverMathMLAttributes, AsyncContent<AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
-export type AnyMathMLElement = SkruvMathMathMLElement | SkruvSemanticsMathMLElement | SkruvMencloseMathMLElement | SkruvMerrorMathMLElement | SkruvMfracMathMLElement | SkruvMiMathMLElement | SkruvMmultiscriptsMathMLElement | SkruvMnMathMLElement | SkruvMoMathMLElement | SkruvMoverMathMLElement | SkruvMpaddedMathMLElement | SkruvMphantomMathMLElement | SkruvMrootMathMLElement | SkruvMrowMathMLElement | SkruvMsMathMLElement | SkruvMspaceMathMLElement | SkruvMsqrtMathMLElement | SkruvMstyleMathMLElement | SkruvMsubMathMLElement | SkruvMsupMathMLElement | SkruvMsubsupMathMLElement | SkruvMtableMathMLElement | SkruvMtdMathMLElement | SkruvMtextMathMLElement | SkruvMtrMathMLElement | SkruvMunderMathMLElement | SkruvMunderoverMathMLElement | SkruvCommentElement | SkruvRawElement | SkruvHeaderElement
-export type AnyMathMLContent = AnyMathMLElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean | AnyMathMLContent[] | AsyncGenerator<AnyMathMLContent> | Promise<AnyMathMLContent> | (() => AnyMathMLContent)
+export type AnyMathMLElement = SkruvMathMathMLElement | SkruvSemanticsMathMLElement | SkruvMencloseMathMLElement | SkruvMerrorMathMLElement | SkruvMfracMathMLElement | SkruvMiMathMLElement | SkruvMmultiscriptsMathMLElement | SkruvMnMathMLElement | SkruvMoMathMLElement | SkruvMoverMathMLElement | SkruvMpaddedMathMLElement | SkruvMphantomMathMLElement | SkruvMrootMathMLElement | SkruvMrowMathMLElement | SkruvMsMathMLElement | SkruvMspaceMathMLElement | SkruvMsqrtMathMLElement | SkruvMstyleMathMLElement | SkruvMsubMathMLElement | SkruvMsupMathMLElement | SkruvMsubsupMathMLElement | SkruvMtableMathMLElement | SkruvMtdMathMLElement | SkruvMtextMathMLElement | SkruvMtrMathMLElement | SkruvMunderMathMLElement | SkruvMunderoverMathMLElement | SkruvCommentElement | SkruvTextElement | SkruvHeaderElement
+export type AnyMathMLContent = AnyMathMLElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean | AnyMathMLContent[] | AsyncGenerator<AnyMathMLContent> | Promise<AnyMathMLContent> | (() => AnyMathMLContent)
 
 export type SkruvFeedAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvFeedAtomElement extends AtomVnode<'feed', SkruvFeedAtomAttributes, AsyncContent<SkruvIdAtomElement | SkruvTitleAtomElement | SkruvUpdatedAtomElement | SkruvAuthorAtomElement | SkruvLinkAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvLogoAtomElement | SkruvRightsAtomElement | SkruvSubtitleAtomElement | SkruvEntryAtomElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvFeedAtomElement extends AtomVnode<'feed', SkruvFeedAtomAttributes, AsyncContent<SkruvIdAtomElement | SkruvTitleAtomElement | SkruvUpdatedAtomElement | SkruvAuthorAtomElement | SkruvLinkAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvLogoAtomElement | SkruvRightsAtomElement | SkruvSubtitleAtomElement | SkruvEntryAtomElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvEntryAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvEntryAtomElement extends AtomVnode<'entry', SkruvEntryAtomAttributes, AsyncContent<SkruvAuthorAtomElement | SkruvContentAtomElement | SkruvLinkAtomElement | SkruvSummaryAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvPublishedAtomElement | SkruvRightsAtomElement | SkruvSourceAtomElement | SkruvTitleAtomElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvEntryAtomElement extends AtomVnode<'entry', SkruvEntryAtomAttributes, AsyncContent<SkruvAuthorAtomElement | SkruvContentAtomElement | SkruvLinkAtomElement | SkruvSummaryAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvPublishedAtomElement | SkruvRightsAtomElement | SkruvSourceAtomElement | SkruvTitleAtomElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvIdAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvIdAtomElement extends AtomVnode<'id', SkruvIdAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvIdAtomElement extends AtomVnode<'id', SkruvIdAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvTitleAtomAttributes = AsyncContent<AtomAttributes<Element, {
 
   'type'?: string | false
 }>>
 
-export interface SkruvTitleAtomElement extends AtomVnode<'title', SkruvTitleAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvTitleAtomElement extends AtomVnode<'title', SkruvTitleAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvUpdatedAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvUpdatedAtomElement extends AtomVnode<'updated', SkruvUpdatedAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvUpdatedAtomElement extends AtomVnode<'updated', SkruvUpdatedAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvAuthorAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvAuthorAtomElement extends AtomVnode<'author', SkruvAuthorAtomAttributes, AsyncContent<SkruvNameAtomElement | SkruvUriAtomElement | SkruvEmailAtomElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvAuthorAtomElement extends AtomVnode<'author', SkruvAuthorAtomAttributes, AsyncContent<SkruvNameAtomElement | SkruvUriAtomElement | SkruvEmailAtomElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvNameAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvNameAtomElement extends AtomVnode<'name', SkruvNameAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvNameAtomElement extends AtomVnode<'name', SkruvNameAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvUriAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvUriAtomElement extends AtomVnode<'uri', SkruvUriAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvUriAtomElement extends AtomVnode<'uri', SkruvUriAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvEmailAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvEmailAtomElement extends AtomVnode<'email', SkruvEmailAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvEmailAtomElement extends AtomVnode<'email', SkruvEmailAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvLinkAtomAttributes = AsyncContent<AtomAttributes<Element, {
 
@@ -5302,7 +5302,7 @@ export interface SkruvCategoryAtomElement extends AtomVnode<'category', SkruvCat
 
 export type SkruvContributorAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvContributorAtomElement extends AtomVnode<'contributor', SkruvContributorAtomAttributes, AsyncContent<SkruvNameAtomElement | SkruvUriAtomElement | SkruvEmailAtomElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvContributorAtomElement extends AtomVnode<'contributor', SkruvContributorAtomAttributes, AsyncContent<SkruvNameAtomElement | SkruvUriAtomElement | SkruvEmailAtomElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvGeneratorAtomAttributes = AsyncContent<AtomAttributes<Element, {
 
@@ -5311,26 +5311,26 @@ export type SkruvGeneratorAtomAttributes = AsyncContent<AtomAttributes<Element, 
   'version'?: string | false
 }>>
 
-export interface SkruvGeneratorAtomElement extends AtomVnode<'generator', SkruvGeneratorAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvGeneratorAtomElement extends AtomVnode<'generator', SkruvGeneratorAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvIconAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvIconAtomElement extends AtomVnode<'icon', SkruvIconAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvIconAtomElement extends AtomVnode<'icon', SkruvIconAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvLogoAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvLogoAtomElement extends AtomVnode<'logo', SkruvLogoAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvLogoAtomElement extends AtomVnode<'logo', SkruvLogoAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvRightsAtomAttributes = AsyncContent<AtomAttributes<Element, {
 
   'type'?: string | false
 }>>
 
-export interface SkruvRightsAtomElement extends AtomVnode<'rights', SkruvRightsAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvRightsAtomElement extends AtomVnode<'rights', SkruvRightsAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvSubtitleAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvSubtitleAtomElement extends AtomVnode<'subtitle', SkruvSubtitleAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSubtitleAtomElement extends AtomVnode<'subtitle', SkruvSubtitleAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvContentAtomAttributes = AsyncContent<AtomAttributes<Element, {
 
@@ -5339,74 +5339,74 @@ export type SkruvContentAtomAttributes = AsyncContent<AtomAttributes<Element, {
   'src'?: string | false
 }>>
 
-export interface SkruvContentAtomElement extends AtomVnode<'content', SkruvContentAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvContentAtomElement extends AtomVnode<'content', SkruvContentAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvSummaryAtomAttributes = AsyncContent<AtomAttributes<Element, {
 
   'type'?: string | false
 }>>
 
-export interface SkruvSummaryAtomElement extends AtomVnode<'summary', SkruvSummaryAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSummaryAtomElement extends AtomVnode<'summary', SkruvSummaryAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvPublishedAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvPublishedAtomElement extends AtomVnode<'published', SkruvPublishedAtomAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvPublishedAtomElement extends AtomVnode<'published', SkruvPublishedAtomAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvSourceAtomAttributes = AsyncContent<AtomAttributes<Element, {}>>
 
-export interface SkruvSourceAtomElement extends AtomVnode<'source', SkruvSourceAtomAttributes, AsyncContent<AnyMathMLContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSourceAtomElement extends AtomVnode<'source', SkruvSourceAtomAttributes, AsyncContent<AnyMathMLContent | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
-export type AnyAtomElement = SkruvFeedAtomElement | SkruvEntryAtomElement | SkruvIdAtomElement | SkruvTitleAtomElement | SkruvUpdatedAtomElement | SkruvAuthorAtomElement | SkruvNameAtomElement | SkruvUriAtomElement | SkruvEmailAtomElement | SkruvLinkAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvLogoAtomElement | SkruvRightsAtomElement | SkruvSubtitleAtomElement | SkruvContentAtomElement | SkruvSummaryAtomElement | SkruvPublishedAtomElement | SkruvSourceAtomElement | SkruvCommentElement | SkruvRawElement | SkruvHeaderElement
-export type AnyAtomContent = AnyAtomElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean | AnyAtomContent[] | AsyncGenerator<AnyAtomContent> | Promise<AnyAtomContent> | (() => AnyAtomContent)
+export type AnyAtomElement = SkruvFeedAtomElement | SkruvEntryAtomElement | SkruvIdAtomElement | SkruvTitleAtomElement | SkruvUpdatedAtomElement | SkruvAuthorAtomElement | SkruvNameAtomElement | SkruvUriAtomElement | SkruvEmailAtomElement | SkruvLinkAtomElement | SkruvCategoryAtomElement | SkruvContributorAtomElement | SkruvGeneratorAtomElement | SkruvIconAtomElement | SkruvLogoAtomElement | SkruvRightsAtomElement | SkruvSubtitleAtomElement | SkruvContentAtomElement | SkruvSummaryAtomElement | SkruvPublishedAtomElement | SkruvSourceAtomElement | SkruvCommentElement | SkruvTextElement | SkruvHeaderElement
+export type AnyAtomContent = AnyAtomElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean | AnyAtomContent[] | AsyncGenerator<AnyAtomContent> | Promise<AnyAtomContent> | (() => AnyAtomContent)
 
 export type SkruvUrlsetSitemapAttributes = AsyncContent<SitemapAttributes<Element, {}>>
 
-export interface SkruvUrlsetSitemapElement extends SitemapVnode<'urlset', SkruvUrlsetSitemapAttributes, AsyncContent<SkruvUrlSitemapElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvUrlsetSitemapElement extends SitemapVnode<'urlset', SkruvUrlsetSitemapAttributes, AsyncContent<SkruvUrlSitemapElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvUrlSitemapAttributes = AsyncContent<SitemapAttributes<Element, {}>>
 
-export interface SkruvUrlSitemapElement extends SitemapVnode<'url', SkruvUrlSitemapAttributes, AsyncContent<SkruvLocSitemapElement | SkruvLastmodSitemapElement | SkruvChangefreqSitemapElement | SkruvPrioritySitemapElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvUrlSitemapElement extends SitemapVnode<'url', SkruvUrlSitemapAttributes, AsyncContent<SkruvLocSitemapElement | SkruvLastmodSitemapElement | SkruvChangefreqSitemapElement | SkruvPrioritySitemapElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvLocSitemapAttributes = AsyncContent<SitemapAttributes<Element, {}>>
 
-export interface SkruvLocSitemapElement extends SitemapVnode<'loc', SkruvLocSitemapAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvLocSitemapElement extends SitemapVnode<'loc', SkruvLocSitemapAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvLastmodSitemapAttributes = AsyncContent<SitemapAttributes<Element, {}>>
 
-export interface SkruvLastmodSitemapElement extends SitemapVnode<'lastmod', SkruvLastmodSitemapAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvLastmodSitemapElement extends SitemapVnode<'lastmod', SkruvLastmodSitemapAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvChangefreqSitemapAttributes = AsyncContent<SitemapAttributes<Element, {}>>
 
-export interface SkruvChangefreqSitemapElement extends SitemapVnode<'changefreq', SkruvChangefreqSitemapAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvChangefreqSitemapElement extends SitemapVnode<'changefreq', SkruvChangefreqSitemapAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvPrioritySitemapAttributes = AsyncContent<SitemapAttributes<Element, {}>>
 
-export interface SkruvPrioritySitemapElement extends SitemapVnode<'priority', SkruvPrioritySitemapAttributes, AsyncContent<string | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvPrioritySitemapElement extends SitemapVnode<'priority', SkruvPrioritySitemapAttributes, AsyncContent<string | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvSitemapindexSitemapAttributes = AsyncContent<SitemapAttributes<Element, {}>>
 
-export interface SkruvSitemapindexSitemapElement extends SitemapVnode<'sitemapindex', SkruvSitemapindexSitemapAttributes, AsyncContent<SkruvSitemapSitemapElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSitemapindexSitemapElement extends SitemapVnode<'sitemapindex', SkruvSitemapindexSitemapAttributes, AsyncContent<SkruvSitemapSitemapElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
 export type SkruvSitemapSitemapAttributes = AsyncContent<SitemapAttributes<Element, {}>>
 
-export interface SkruvSitemapSitemapElement extends SitemapVnode<'sitemap', SkruvSitemapSitemapAttributes, AsyncContent<SkruvLocSitemapElement | SkruvLastmodSitemapElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
+export interface SkruvSitemapSitemapElement extends SitemapVnode<'sitemap', SkruvSitemapSitemapAttributes, AsyncContent<SkruvLocSitemapElement | SkruvLastmodSitemapElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean>> { }
 
-export type AnySitemapElement = SkruvUrlsetSitemapElement | SkruvUrlSitemapElement | SkruvLocSitemapElement | SkruvLastmodSitemapElement | SkruvChangefreqSitemapElement | SkruvPrioritySitemapElement | SkruvSitemapindexSitemapElement | SkruvSitemapSitemapElement | SkruvCommentElement | SkruvRawElement | SkruvHeaderElement
-export type AnySitemapContent = AnySitemapElement | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean | AnySitemapContent[] | AsyncGenerator<AnySitemapContent> | Promise<AnySitemapContent> | (() => AnySitemapContent)
+export type AnySitemapElement = SkruvUrlsetSitemapElement | SkruvUrlSitemapElement | SkruvLocSitemapElement | SkruvLastmodSitemapElement | SkruvChangefreqSitemapElement | SkruvPrioritySitemapElement | SkruvSitemapindexSitemapElement | SkruvSitemapSitemapElement | SkruvCommentElement | SkruvTextElement | SkruvHeaderElement
+export type AnySitemapContent = AnySitemapElement | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean | AnySitemapContent[] | AsyncGenerator<AnySitemapContent> | Promise<AnySitemapContent> | (() => AnySitemapContent)
 
 export type AsyncContent<T> = T | T[] | AsyncGenerator<T> | Promise<T> | (() => AsyncGenerator<T>) | (() => T)
 
 export interface SkruvMathHTMLElement extends SkruvMathMathMLElement { }
 export interface SkruvSvgHTMLElement extends SkruvSvgSVGElement { }
 
-export interface SkruvCommentElement extends HTMLVnode<'skruvComment', {}, AnyContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> { }
-export interface SkruvRawElement extends HTMLVnode<'skruvText', {}, AnyContent | SkruvRawElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> { }
+export interface SkruvCommentElement extends HTMLVnode<'skruvComment', {}, AnyContent | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> { }
+export interface SkruvTextElement extends HTMLVnode<'skruvText', {}, AnyContent | SkruvTextElement | SkruvCommentElement | SkruvHeaderElement | string | number | boolean> { }
 export interface SkruvHeaderElement extends HTMLVnode<'skruvHeader', {
   'name': string | number
   'value': string
 }, void> { }
 
-export type AnyElement = AnyHTMLElement | AnySVGElement | AnyMathMLElement | AnyAtomElement | AnySitemapElement | SkruvCommentElement | SkruvRawElement | SkruvHeaderElement
+export type AnyElement = AnyHTMLElement | AnySVGElement | AnyMathMLElement | AnyAtomElement | AnySitemapElement | SkruvCommentElement | SkruvTextElement | SkruvHeaderElement
 export type AnyContent = AnyHTMLContent | AnySVGContent | AnyMathMLContent | AnyAtomContent | AnySitemapContent
 export type ElementMap = {
   /**
@@ -6294,6 +6294,6 @@ export type ElementMap = {
 
   // These are special elements that skruv uses for SSR purposes
   'skruvComment': (...c: SkruvCommentElement['c']) => SkruvCommentElement
-  'skruvText': (...c: SkruvRawElement['c']) => SkruvRawElement
+  'skruvText': (...c: SkruvTextElement['c']) => SkruvTextElement
   'skruvHeader': (...c: SkruvHeaderElement['c']) => SkruvHeaderElement
 } & CustomElements

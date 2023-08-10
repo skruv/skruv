@@ -425,10 +425,10 @@ export const toHTML = (vDom, context, headers) => {
       return `<?xml version="1.0" encoding="UTF-8"?>${toHTML(vDom, 'root', headers)}`
     }
   }
-
   if (
-    vDom.nodeName.toLowerCase() === '#text' && context === 'raw'
+    vDom.nodeName.toLowerCase() === '#text'
   ) {
+    // TODO: SECURITY: check escaping
     return vDom.data
   } else if (
     vDom.nodeName.toLowerCase() === '#text' && context === 'script'
