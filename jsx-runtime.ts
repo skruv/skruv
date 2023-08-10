@@ -234,6 +234,9 @@ export namespace JSX {
     'priority': util.SkruvPrioritySitemapAttributes
     'sitemapindex': util.SkruvSitemapindexSitemapAttributes
     'sitemap': util.SkruvSitemapSitemapAttributes
+    '#meta': util.SkruvMetaElement
+    '#comment': util.SkruvCommentElement
+    '#raw': util.SkruvRawElement
     [elemName: string]: any;
   }
 }
