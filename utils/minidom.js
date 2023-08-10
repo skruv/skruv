@@ -36,6 +36,8 @@ const document = {
     if (ns === htmlNS) { return new HTMLElement(nodeName) }
     if (ns === svgNS) { return new SVGElement(nodeName) }
     if (ns === mathmlNS) { return new MathMLElement(nodeName) }
+    if (ns === atomNS) { return new AtomElement(nodeName) }
+    if (ns === sitemapNS) { return new SitemapElement(nodeName) }
     throw new Error('Unkown namespace: ' + ns)
   },
   querySelector: () => null,
@@ -51,7 +53,6 @@ export class Element {
     this.attributes = {}
     /** @type {Element?} */
     this.parentNode = null
-    // TODO: make private
     /** @type {{ [key: string]: function[]; }} */
     this.eventListeners = {}
     this.ownerDocument = document
@@ -192,6 +193,8 @@ export class Element {
 
 export class HTMLElement extends Element { }
 export class SVGElement extends Element { }
+export class AtomElement extends Element { }
+export class SitemapElement extends Element { }
 export class MathMLElement extends Element { }
 export class HTMLOptionElement extends HTMLElement { }
 export class HTMLInputElement extends HTMLElement { }
@@ -254,6 +257,9 @@ globalThis.MathMLElement = MathMLElement
 globalThis.Text = Text
 // @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.Comment = Comment
+
+// global variable to indicate that we are in an SSR setting
+globalThis.isSkruvSSR = true
 
 // Fake EventSource
 export class EventSource {
