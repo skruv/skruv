@@ -92,8 +92,6 @@ const dom = syncify(
 const doRender = async () => {
   await hydrationPromise
   render(dom)
-  // Microsleep to allow for rendering to finish
-  await new Promise(resolve => setTimeout(resolve, 0))
 }
 
 doRender()

@@ -6,7 +6,6 @@
 export const createState = stateObj => {
   const Handler = class Handler {
     constructor () {
-      this._scheduled = false
       this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
     }
 
@@ -14,13 +13,8 @@ export const createState = stateObj => {
       if (this._skruv_parent && this._skruv_parent._resolve) {
         this._skruv_parent._resolve()
       }
-      if (this._scheduled) { return }
-      this._scheduled = true
-      setTimeout(() => {
-        this._skruv_resolve('')
-        this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
-        this._scheduled = false
-      }, 0)
+      this._skruv_resolve('')
+      this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
     }
 
     /**

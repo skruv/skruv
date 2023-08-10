@@ -3,7 +3,7 @@ export default waitPromise;
  * @template T
  * @param {number} time
  * @param {T?} value
- * @returns {Promise<void>}
+ * @returns {Promise<T?>}
  */
-declare function waitPromise<T>(time: number, value?: T | null): Promise<void>;
+declare function waitPromise<T>(time: number, value?: T | null): Promise<T | null>;
 //# sourceMappingURL=waitPromise.d.ts.map
