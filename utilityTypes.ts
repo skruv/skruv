@@ -13,10 +13,10 @@ export type CustomEvents<T> = Record<`on${NotBuiltinEvent}`, (e: CustomEvent & {
 export type DataAttributes = Record<`data-${string}`, string | number | boolean> | {}
 
 export type SkruvAdditionalAttributes<T> = {
-  'data-skruv-after-create'?: (element: T) => void,
-  'data-skruv-key'?: object,
-  'data-skruv-finished'?: boolean,
-  'data-skruv-wait-for-not-empty'?: boolean
+  'skruvAfterCreate'?: (element: T) => void,
+  'skruvKey'?: object,
+  'skruvFinished'?: boolean,
+  'skruvWaitForNotEmpty'?: boolean
 }
 
 interface HTMLGlobalAttributes {

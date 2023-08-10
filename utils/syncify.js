@@ -15,11 +15,11 @@ const waitingGens = new Set()
  * @param {string|number} key
  * @param {Array<any>|Object} parent
  * @param {{r:() => boolean}} cbparent
- * @param {Object|string|number|boolean|{c:[{'data-skruv-finished':boolean}]}} result
+ * @param {Object|string|number|boolean|{c:[{'skruvFinished':boolean}]}} result
  * @returns {boolean}
  */
 const process = (value, key, parent, cbparent, result) => {
-  if (hydrating && !(typeof result === 'object' && 'c' in result && result?.c?.[0]?.['data-skruv-finished'] === false)) {
+  if (hydrating && !(typeof result === 'object' && 'c' in result && result?.c?.[0]?.skruvFinished === false)) {
     waitingGens.delete(value)
     if (!waitingGens.size) {
       hydrationResolve()
@@ -110,7 +110,7 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
       if (
         // @ts-expect-error: TODO: Fix better types for Vnodes (and how to typeguard for them)
         (key[0] === 'o' && key[1] === 'n') || (key === 'r' && parent?.isSkruvDom === true) ||
-        key === 'data-skruv-after-create'
+        key === 'skruvAfterCreate'
       ) {
         // @ts-expect-error
         return value

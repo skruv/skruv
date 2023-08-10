@@ -20,7 +20,7 @@ test('loader', async () => {
               await wait(500)
               yield div('finished!')
             },
-            div({ 'data-skruv-finished': false }, 'Loading content')
+            div({ skruvFinished: false }, 'Loading content')
           )
         )
       )
