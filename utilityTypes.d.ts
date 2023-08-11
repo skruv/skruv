@@ -4477,18 +4477,17 @@ export interface SkruvMathHTMLElement extends SkruvMathMathMLElement {
 }
 export interface SkruvSvgHTMLElement extends SkruvSvgSVGElement {
 }
-export type ReactStringChild = string | number | boolean;
-export type ReactSkruvCommentAttributes = {};
-export interface SkruvCommentElement extends HTMLVnode<'skruvComment', ReactSkruvCommentAttributes, AnyHTMLContent> {
+export type SkruvCommentAttributes = {};
+export interface SkruvCommentElement extends HTMLVnode<'skruvComment', SkruvCommentAttributes, AnyHTMLContent> {
 }
-export type ReactSkruvTextAttributes = {};
-export interface SkruvTextElement extends HTMLVnode<'skruvText', ReactSkruvTextAttributes, AnyHTMLContent> {
+export type SkruvTextAttributes = {};
+export interface SkruvTextElement extends HTMLVnode<'skruvText', SkruvTextAttributes, AnyHTMLContent> {
 }
-export type ReactSkruvHeaderAttributes = {
+export type SkruvHeaderAttributes = {
     'name': string;
     'value': string;
 };
-export interface SkruvHeaderElement extends HTMLVnode<'skruvHeader', ReactSkruvHeaderAttributes, AnyHTMLContent> {
+export interface SkruvHeaderElement extends HTMLVnode<'skruvHeader', SkruvHeaderAttributes, AnyHTMLContent> {
 }
 export type AnyElement = AnyHTMLElement | AnySVGElement | AnyMathMLElement | AnyAtomElement | AnySitemapElement | SkruvCommentElement | SkruvTextElement | SkruvHeaderElement;
 export type AnyContent = AnyHTMLContent | AnySVGContent | AnyMathMLContent | AnyAtomContent | AnySitemapContent;
