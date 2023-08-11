@@ -242,10 +242,9 @@ render(
 ## JSX
 {% include_relative examples/jsx/index.md %}
 Compiled with esbuild:
-`esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=skruv --jsx=automatic index.jsx --outfile=index.js` or with the included bundler script to allow for http imports and css template minification.
+`esbuild --sourcemap --bundle --minify --format=esm --jsx-import-source=@skruv/jsx --jsx=automatic index.jsx --outfile=index.js` or with the included bundler script to allow for http imports and css template minification.
 
-By default skruv JSX mimics normal HTML. If you want to use react-style attribute names (like onClick, className, etc.) you can install skruv-react and set the `--jsx-import-source` to it. I recommend to just use the built in one, since the mappings to react-like names adds both size and the style is inconsistent (sometimes it uses the same names as DOM, sometimes its different like onFullScreen/onFullscreen and sometimes it remaps one name to another like onChange actually being oninput).
-
+By default skruv JSX mimics normal HTML. If you want to use react-style attribute names (like onClick, className, etc.) you can install skruv-react and set the `--jsx-import-source` to it.
 ```jsx
 import { render } from 'skruv'
 
