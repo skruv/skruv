@@ -34,10 +34,12 @@ render(
           <h1>{state.todos.getGenerator(0)}</h1>
           <form
             onsubmit={
-              /** @param {SubmitEvent} e */ e => {
+              e => {
                 e.preventDefault()
-                state.todos.unshift(new FormData(e.target).get('todo'))
-                e.target.reset()
+                const todo = new FormData(e.currentTarget).get('todo')
+                  ?.toString()
+                if (todo !== undefined) { state.todos.unshift(todo) }
+                e.currentTarget.reset()
               }
             }
           >
@@ -50,7 +52,7 @@ render(
                 yield todos.map((todo, i) => (
                   <li>{todo} <a
                     href="#"
-                    onclick={ /** @param {MouseEvent} e */e => {
+                    onclick={e => {
                       e.preventDefault()
                       todos.splice(i, 1)
                     }}

@@ -10,8 +10,8 @@
     "declarationMap": true,
     "moduleResolution": "node",
     "module": "es2020",
-    "jsxFactory": "jsx",
-    "jsxImportSource": "skruv"
+    "jsx": "react-jsx",
+    "jsxImportSource": "@skruv/jsx"
   },
   "include": [
     "global.d.ts",
@@ -20,13 +20,11 @@
     "**/*"
   ],
   "exclude": [
-    // htm uses remote modules
-    "examples/htm/*",
-    // TODO: typescript does not seem to understand this package being imported into itself
+    "examples/jsx/index.min.js",
     "tests/jsx.test.js",
-    "examples/todo/*",
-    "examples/jsx/*",
-    "examples/ssr/*",
-    "node_modules"
+    "examples/ssr/deno-ssr.js",
+    "node_modules",
+    // htm uses remote modules
+    "examples/htm/*"
   ]
 }

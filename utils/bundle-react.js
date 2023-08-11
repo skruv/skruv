@@ -82,7 +82,7 @@ if (!input || !output) {
     sourcemap: 'linked',
     entryPoints: [input],
     jsx: 'automatic',
-    jsxImportSource: '@skruv/jsx',
+    jsxImportSource: '@skruv/jsx-react',
     plugins: [
       httpPlugin,
       minifyCssLiteral

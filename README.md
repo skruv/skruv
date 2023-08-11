@@ -24,7 +24,7 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
   * Async generators or promises as components (syncify.js)
   * SSR/SSG without jsdom/puppeteer (minidom.js)
   * CSS scoping (css.js)
-  * Optionally supports JSX (jsx-runtime.js)
+  * Optionally supports JSX (via `@skurv/jsx` or `@skruv/jsx-react`)
   * or [HTM](https://github.com/developit/htm) as in [htm example](./examples/htm)
   * Bundling/minification (bundle.js, requires esbuild)
 
