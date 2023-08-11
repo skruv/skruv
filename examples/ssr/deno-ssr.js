@@ -1,3 +1,4 @@
+// @ts-nocheck: TODO: do this in a separate repo meant for deno
 /* global Deno Response Location */
 /** @typedef  */
 import { reset, toHTML } from '../../utils/minidom.js'

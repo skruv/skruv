@@ -6,10 +6,8 @@ const styles = /* css */`
     background: #0f0f0f;
   }
 `
-// eslint-disable-next-line no-unused-vars
-const Component = props => (
-  <div label={props.a}>{props.children}</div>
-)
+// @ts-ignore
+const Component = props => (<div label={props.a}>{props.children}</div>)
 
 render(
   <html lang="en-US">
