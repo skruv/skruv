@@ -12,12 +12,13 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
 
 * No dependencies
 * Small:
-  <!-- * [Smallest js framework in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html) -->
+  * [Smallest framework in krausest benchmarks](https://krausest.github.io/js-framework-benchmark/index.html)
   * ~200 LOC
   * 1kb minified and compressed (1191b with brotli, 1353b with gzip, 2845b uncompressed)
 * Usable without bundling/compilation/transpilation
-* Supports HTML, SVG, MathML, Atom feeds and sitemaps
-<!-- * [Plenty fast enough](https://krausest.github.io/js-framework-benchmark/index.html) -->
+* Supports HTML, SVG, MathML, Atom feeds and sitemaps.
+  * Types to validate attributes and children
+* [Plenty fast enough: faster than react and angular, comparable to svelte or preact](https://krausest.github.io/js-framework-benchmark/index.html)
 * [Works with web components](https://github.com/webcomponents/custom-elements-everywhere/pull/2231)
 * Optional helper utilities for
   * State management (state.js)
@@ -427,10 +428,8 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
 
 * [ ] Add router, generatorUtils, loader, etc.
 * [ ] Add template repo
-  * [ ] One basic and one with postgrest backend, nginx frontend and SSR
-* [ ] Make headline example (todo) use all features, including CSS scoping, SSR/SSG, JSX, syncify etc. Show on separate page.
-* [ ] Check why typescript cannot import from its own package (import {render} from 'skruv' does not work) and why its jsx settings do not work
-* [ ] Make react JSX naming conventions opt-in via another repo
+  * [ ] One basic
+  * [ ] One with postgrest backend, nginx frontend and SSR
 * [ ] SSR/SSG fetcher cache example
 * [ ] Automated tests with all MDN examples
 * [ ] Testing:
