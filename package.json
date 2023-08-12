@@ -1,6 +1,6 @@
 {
   "name": "skruv",
-  "version": "0.6.4",
+  "version": "0.7.0",
   "description": "No-dependency, no-build, small JS framework",
   "keywords": [],
   "bugs": {
@@ -36,8 +36,8 @@
     "typecheck": "tsc"
   },
   "devDependencies": {
-    "@skruv/jsx": "^0.1.0",
-    "@skruv/jsx-react": "^0.1.0",
+    "@skruv/jsx": "^0.1.1",
+    "@skruv/jsx-react": "^0.1.1",
     "esbuild": "^0.14.48",
     "eslint": "^8.45.0",
     "eslint-config-standard": "^14.1.1",
