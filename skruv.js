@@ -30,6 +30,17 @@ export const render = (
     if (currentNode) { parentNode.removeChild(currentNode) }
     return
   }
+  if (!globalThis?.isSkruvSSR && current?.t?.toLowerCase() === 'skruvtext' && current?.c?.[0]) {
+    current.r = () => {
+      // @ts-expect-error
+      if (!currentNode || !parentNode.contains(currentNode)) { return false }
+      render(current, currentNode, parentNode, ns)
+      return true
+    }
+    // @ts-expect-error
+    render(current?.c?.[0], currentNode)
+    return
+  }
   const txtNode = (typeof current === 'string' || typeof current === 'number')
   if (
     forceFull ||

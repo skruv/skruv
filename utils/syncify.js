@@ -4,7 +4,8 @@ let hydrationResolve = () => { }
 const hydrationPromise = new Promise(resolve => {
   hydrationResolve = () => {
     hydrating = false
-    setTimeout(() => resolve(''), 0)
+    hydrationResolve = () => {}
+    resolve('')
   }
 })
 const waitingGens = new Set()
@@ -150,7 +151,7 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
       }
     }
     // If we are at the root and did a pass with no async work the promise should resolve
-    if ((root && hydrating && !waitingGens.size) || !hydrating) {
+    if (root && hydrating && !waitingGens.size) {
       hydrationResolve()
     }
     // @ts-expect-error
