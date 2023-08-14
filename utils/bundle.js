@@ -56,7 +56,6 @@ const minifyCssLiteral = {
         contents,
         // Default to TSX to allow for TS and JSX
         // TODO: Check how we can autodetect the correct loader
-        /** @type {esbuild.Loader} */
         loader: 'tsx'
       }
     })

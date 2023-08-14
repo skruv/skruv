@@ -1,11 +1,14 @@
 export default addLoader;
-export type Vnode = import("../../utilityTypes").Vnode;
+export type AnyContent = import("../../utilityTypes").AnyContent;
 /**
  * Adds a loader after waiting for the component for 300ms.
  * The loader can be something like div({ "skruvFinished": false }, "Loading content");
+ * @template T, L
+ * @param  {() => AsyncGenerator<T>} component
+ * @param {L} loader
+ * @param {number} [waitTime = 300]
  *
- * @param {() => AsyncGenerator<Vnode|boolean|string>} component
- * @param {Vnode} loader
+ * @returns {AsyncGenerator<T | L>}
  */
-declare function addLoader(component: () => AsyncGenerator<Vnode | boolean | string>, loader: Vnode): AsyncGenerator<string | boolean | import("../../utilityTypes").AnyElement, void, unknown>;
+declare function addLoader<T, L>(component: () => AsyncGenerator<T, any, any>, loader: L, waitTime?: number | undefined): AsyncGenerator<T | L, any, any>;
 //# sourceMappingURL=addLoader.d.ts.map

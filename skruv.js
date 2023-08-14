@@ -92,13 +92,13 @@ export const render = (
     }
     for (const [key, value] of Object.entries(attributes)) {
       if (('' + oldAttributes[key]) === ('' + value)) { continue }
-      if (key === 'skruvKey') { continue }
       if (key === 'skruvAfterCreate') {
         // Run after we have processed all the attributes and children
         setTimeout(() => value(currentNode), 0)
         oldAttributes[key] = value
         continue
       }
+      if (key.startsWith('skruv')) { continue }
       if (key[0] === 'o' && key[1] === 'n') {
         const evt = key.slice(2)
         if (!oldAttributes[key]) {

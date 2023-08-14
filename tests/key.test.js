@@ -130,7 +130,7 @@ test('key', async () => {
   assert(document.documentElement.childNodes[2] === initialElements[3])
   assert(document.documentElement.childNodes[3] === arrayKeyedElem)
   // eslint-disable-next-line max-len
-  assert.equal(document.documentElement.innerHTML, '<!DOCTYPE html><html><body><div></div><div>Key2</div><div>Key4</div><div>Key5</div><div>Key6</div><div>Key7</div><div>Key8</div><div></div></body><div>Key9</div><div>Key3</div><div>arrayKey-update</div><!--Testing a comment, with special chars!&lt;&gt;&quot;&amp;&#39;--><div>text nodes are removed when rendering to html</div></html>')
+  assert.equal(document.documentElement.innerHTML, '<!DOCTYPE html><html><body><div></div><div>Key2</div><div>Key4</div><div>Key5</div><div>Key6</div><div>Key7</div><div>Key8</div><div></div></body><div>Key9</div><div>Key3</div><div>arrayKey-update</div><!--Testing a comment, with special chars!&lt;&gt;"&\'--><div>text nodes are removed when rendering to html</div></html>')
   const headers = {}
   // @ts-expect-error
   toHTML(document.documentElement, '', headers)

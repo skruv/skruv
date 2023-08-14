@@ -295,65 +295,23 @@ reset()
 
 // HTML rendering utils
 
-// From https://github.com/lechidung/escape/blob/1.4.2/mod.ts
-const matchEscHtmlRx = /["'&<>]/
-/** @param {string} str */
-const escapeHtml = str => {
-  const matchEscHtml = matchEscHtmlRx.exec(str)
-  if (!matchEscHtml) {
-    return str
-  }
-  let escape
-  let html = ''
-  let index = 0
-  let lastIndex = 0
-  for (index = matchEscHtml.index; index < str.length; index++) {
-    switch (str.charCodeAt(index)) {
-      case 34: // "
-        escape = '&quot;'
-        break
-      case 38: // &
-        escape = '&amp;'
-        break
-      case 39: // '
-        escape = '&#39;'
-        break
-      case 60: // <
-        escape = '&lt;'
-        break
-      case 62: // >
-        escape = '&gt;'
-        break
-      default:
-        continue
-    }
-
-    if (lastIndex !== index) {
-      html += str.substring(lastIndex, index)
-    }
-
-    lastIndex = index + 1
-    html += escape
-  }
-
-  return lastIndex !== index ? html + str.substring(lastIndex, index) : html
+/** @param {string} s */
+const escapeHtml = s => {
+  return s.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
 // From https://stackoverflow.com/a/9756789
 /**
  * @param {string} s
- * @param {string | undefined} [preserveCR]
  */
-const quoteattr = (s, preserveCR) => {
-  preserveCR = preserveCR ? '&#13;' : '\n'
-  return ('' + s) /* Forces the conversion to string. */
-    .replace(/&/g, '&amp;') /* This MUST be the 1st replacement. */
+const quoteattr = s => {
+  return s.replace(/&/g, '&amp;') /* This MUST be the 1st replacement. */
     .replace(/'/g, '&apos;') /* The 4 other predefined entities, required. */
     .replace(/"/g, '&quot;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/\r\n/g, preserveCR) /* Must be before the next replacement. */
-    .replace(/[\r\n]/g, preserveCR)
+    .replace(/\r\n/g, '&#13;')
+    .replace(/[\r\n]/g, '&#13;')
 }
 
 const htmlAttr = (/** @type {[string, string]} */[name, value]) =>
@@ -426,27 +384,19 @@ export const toHTML = (vDom, context, headers) => {
     }
   }
   if (
-    vDom.nodeName.toLowerCase() === '#text'
-  ) {
-    // TODO: SECURITY: check escaping
-    return vDom.data
-  } else if (
     vDom.nodeName.toLowerCase() === '#text' && context === 'script'
   ) {
-    // TODO: SECURITY: check escaping on CSS/JS. Or rely on CSP to make it safe
-    return vDom.data.replace('</script>', '<\\/script>')
+    return vDom.data.replace(/<\/script>/g, '<\\/script>')
   } else if (
     vDom.nodeName.toLowerCase() === '#text' && context === 'style'
   ) {
-    // TODO: SECURITY: check escaping on CSS/JS. Or rely on CSP to make it safe
-    return vDom.data.replace('</style>', '<\\/style>')
+    return vDom.data.replace(/<\/style>/g, '<\\/style>')
   } else if (vDom.nodeName.toLowerCase() === '#text') {
     return escapeHtml(vDom.data)
   } else if (vDom.nodeName.toLowerCase() === 'skruvcomment') {
     return `<!--${escapeHtml(
       vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join('')
-    )
-      }-->`
+    )}-->`
   } else if (vDom.nodeName.toLowerCase() === 'skruvtext') {
     return vDom.childNodes.map(e => toHTML(e, vDom.nodeName.toLowerCase(), headers)).join(
       ''
