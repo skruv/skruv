@@ -19,7 +19,8 @@
     "skruv-bundle": "./utils/bundle.js",
     "skruv-bundle-react": "./utils/bundle-react.js",
     "skruv-ssg": "./utils/ssg.js",
-    "skruv-ssr": "./utils/ssr.js"
+    "skruv-ssr": "./utils/ssr.js",
+    "skruv-ssr-dev": "./utils/ssr-dev.js"
   },
   "scripts": {
     "build": "npm run build-ssr && npm run build-index && npm run build-jsx && npm run build-todo",
@@ -38,7 +39,7 @@
   "devDependencies": {
     "@skruv/jsx": "^0.1.1",
     "@skruv/jsx-react": "^0.1.1",
-    "esbuild": "^0.14.48",
+    "esbuild": "^0.19.2",
     "eslint": "^8.45.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.26.0",

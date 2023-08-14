@@ -32,14 +32,13 @@ test('update on array push', async () => {
   sub.arr.push('test3')
   await wait(1)
   assert.strictEqual(document.documentElement.innerHTML, '<!DOCTYPE html><html><body><div>test</div><div>test2</div><div>test3</div></body></html>')
-  // @ts-expect-error: SKRUV_1
   sub.arr = ['test4']
   await wait(1)
   let i = 0;
   (async () => {
+  // @ts-expect-error: SKRUV_1
     for await (const value of sub.arr.getGenerator(0)) {
       if (i === 0) { assert.strictEqual(value, 'test4') }
-      // @ts-expect-error: SKRUV_1
       sub.arr = ['test5']
       if (i === 1) {
         assert.strictEqual(value, 'test5')

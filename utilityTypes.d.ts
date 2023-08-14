@@ -1,7 +1,7 @@
 import { Element, HTMLElement, SVGElement, MathMLElement, HTMLInputElement, HTMLOptionElement } from './utils/minidom';
 export type innerKey = any;
 export type State<T> = T & AsyncGenerator<T> & {
-    [key in keyof T]: State<T[key]>;
+    [key in keyof T]: State<T[key]> | T[key];
 } & {
     getGenerator: (innerKey: string | number) => State<T[innerKey]>;
     toJSON: () => T;
@@ -4664,16 +4664,16 @@ export interface SkruvMathHTMLElement extends SkruvMathMathMLElement {
 export interface SkruvSvgHTMLElement extends SkruvSvgSVGElement {
 }
 export type SkruvCommentAttributes = {};
-export interface SkruvCommentElement extends HTMLVnode<'skruvComment', SkruvCommentAttributes, AnyContent> {
+export interface SkruvCommentElement extends HTMLVnode<'skruvComment', SkruvCommentAttributes, AnyHTMLContent> {
 }
 export type SkruvTextAttributes = {};
-export interface SkruvTextElement extends HTMLVnode<'skruvText', SkruvTextAttributes, AnyContent> {
+export interface SkruvTextElement extends HTMLVnode<'skruvText', SkruvTextAttributes, AnyHTMLContent> {
 }
 export type SkruvHeaderAttributes = {
     'name': string;
     'value': string;
 };
-export interface SkruvHeaderElement extends HTMLVnode<'skruvHeader', SkruvHeaderAttributes, void> {
+export interface SkruvHeaderElement extends HTMLVnode<'skruvHeader', SkruvHeaderAttributes, AnyHTMLContent> {
 }
 export type AnyElement = AnyHTMLElement | AnySVGElement | AnyMathMLElement | AnyAtomElement | AnySitemapElement | SkruvCommentElement | SkruvTextElement | SkruvHeaderElement;
 export type AnyContent = AnyHTMLContent | AnySVGContent | AnyMathMLContent | AnyAtomContent | AnySitemapContent;

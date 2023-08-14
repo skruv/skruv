@@ -1,7 +1,7 @@
 import { Element, HTMLElement, SVGElement, MathMLElement, HTMLInputElement, HTMLOptionElement } from './utils/minidom'
 export type innerKey = any
 // TODO: SKRUV_1: To do this properly would require https://github.com/microsoft/TypeScript/issues/43826 as we need to always return a type with the generator/proxy but be able to set the original type (or any other type).
-export type State<T> = T & AsyncGenerator<T> & { [key in keyof T]: State<T[key]> } & { getGenerator: (innerKey: string | number) => State<T[innerKey]>, toJSON: () => T };
+export type State<T> = T & AsyncGenerator<T> & { [key in keyof T]: State<T[key]> | T[key] } & { getGenerator: (innerKey: string | number) => State<T[innerKey]>, toJSON: () => T };
 
 // Vnode/DOM types
 
@@ -5159,14 +5159,14 @@ export interface SkruvMathHTMLElement extends SkruvMathMathMLElement { }
 export interface SkruvSvgHTMLElement extends SkruvSvgSVGElement { }
 
 export type SkruvCommentAttributes = {}
-export interface SkruvCommentElement extends HTMLVnode<'skruvComment', SkruvCommentAttributes, AnyContent> { }
+export interface SkruvCommentElement extends HTMLVnode<'skruvComment', SkruvCommentAttributes, AnyHTMLContent> { }
 export type SkruvTextAttributes = {}
-export interface SkruvTextElement extends HTMLVnode<'skruvText', SkruvTextAttributes, AnyContent> { }
+export interface SkruvTextElement extends HTMLVnode<'skruvText', SkruvTextAttributes, AnyHTMLContent> { }
 export type SkruvHeaderAttributes = {
   'name': string
   'value': string
 }
-export interface SkruvHeaderElement extends HTMLVnode<'skruvHeader', SkruvHeaderAttributes, void> { }
+export interface SkruvHeaderElement extends HTMLVnode<'skruvHeader', SkruvHeaderAttributes, AnyHTMLContent> { }
 
 export type AnyElement = AnyHTMLElement | AnySVGElement | AnyMathMLElement | AnyAtomElement | AnySitemapElement | SkruvCommentElement | SkruvTextElement | SkruvHeaderElement
 export type AnyContent = AnyHTMLContent | AnySVGContent | AnyMathMLContent | AnyAtomContent | AnySitemapContent

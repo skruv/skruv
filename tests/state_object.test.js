@@ -27,16 +27,13 @@ test('update on object modify', async () => {
     )
   )
   await hydrationPromise
-  // @ts-expect-error: SKRUV_1
   sub.obj.test = 'testvalue'
-  // @ts-expect-error: SKRUV_1
   sub.obj.test2 = 'testvalue2'
   await wait(1)
   assert.strictEqual(
     document.documentElement.innerHTML,
     '<!DOCTYPE html><html><body><div>testvalue</div><div>testvalue2</div></body></html>'
   )
-  // @ts-expect-error: SKRUV_1
   sub.obj = { test3: 'testvalue3' }
   // @ts-expect-error: SKRUV_1
   sub.obj2 = { test3: 'testvalue3' }

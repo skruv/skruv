@@ -33,21 +33,18 @@ test('switch type', async () => {
     document.documentElement.innerHTML,
     '<!DOCTYPE html><html><body><hr/></body></html>'
   )
-  // @ts-expect-error: SKRUV_1
   sub.elem = 1
   await wait(1)
   assert.strictEqual(
     document.documentElement.innerHTML,
     '<!DOCTYPE html><html><body><div data-test="hello"></div><div></div></body></html>'
   )
-  // @ts-expect-error: SKRUV_1
   sub.elem = 2
   await wait(1)
   assert.strictEqual(
     document.documentElement.innerHTML,
     '<!DOCTYPE html><html><body><div></div></body></html>'
   )
-  // @ts-expect-error: SKRUV_1
   sub.elem = 3
   await wait(1)
   assert.strictEqual(

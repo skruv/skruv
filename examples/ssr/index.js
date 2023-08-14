@@ -33,6 +33,7 @@ const styles = css`
 const dom = syncify(
   html({ lang: 'en-US', class: styles },
     head(
+      // @ts-expect-error: SKRUV_1
       title(state.todos.getGenerator(0)),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
       style(cssTextGenerator),
@@ -41,6 +42,7 @@ const dom = syncify(
     ),
     body(
       main(
+        // @ts-expect-error: SKRUV_1
         h1(state.todos.getGenerator(0)),
         form({
           onsubmit: e => {
