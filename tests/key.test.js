@@ -134,5 +134,5 @@ test('key', async () => {
   const headers = {}
   // @ts-expect-error
   toHTML(document.documentElement, '', headers)
-  assert.deepEqual(headers, { 'content-type': 'text/html', 'X-My-Header': '1', 'X-My-Other-Header': '2' })
+  assert.deepEqual(headers, { 'content-type': 'text/html; charset=utf-8', 'X-My-Header': '1', 'X-My-Other-Header': '2' })
 })

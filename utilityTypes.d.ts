@@ -4664,16 +4664,16 @@ export interface SkruvMathHTMLElement extends SkruvMathMathMLElement {
 export interface SkruvSvgHTMLElement extends SkruvSvgSVGElement {
 }
 export type SkruvCommentAttributes = {};
-export interface SkruvCommentElement extends HTMLVnode<'skruvComment', SkruvCommentAttributes, AnyHTMLContent> {
+export interface SkruvCommentElement extends HTMLVnode<'skruvComment', SkruvCommentAttributes, AnyContent> {
 }
 export type SkruvTextAttributes = {};
-export interface SkruvTextElement extends HTMLVnode<'skruvText', SkruvTextAttributes, AnyHTMLContent> {
+export interface SkruvTextElement extends HTMLVnode<'skruvText', SkruvTextAttributes, AnyContent> {
 }
 export type SkruvHeaderAttributes = {
     'name': string;
     'value': string;
 };
-export interface SkruvHeaderElement extends HTMLVnode<'skruvHeader', SkruvHeaderAttributes, AnyHTMLContent> {
+export interface SkruvHeaderElement extends HTMLVnode<'skruvHeader', SkruvHeaderAttributes, void> {
 }
 export type AnyElement = AnyHTMLElement | AnySVGElement | AnyMathMLElement | AnyAtomElement | AnySitemapElement | SkruvCommentElement | SkruvTextElement | SkruvHeaderElement;
 export type AnyContent = AnyHTMLContent | AnySVGContent | AnyMathMLContent | AnyAtomContent | AnySitemapContent;

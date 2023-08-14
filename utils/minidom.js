@@ -361,25 +361,25 @@ export const toHTML = (vDom, context, headers) => {
   }
 
   // If this is the root add a content-type header and the html/xml preamble
-  if (context === '') {
+  if (context === '' || context === 'skruvtext') {
     if (vDom.nodeName === 'html') {
-      headers['content-type'] = 'text/html'
+      headers['content-type'] = 'text/html; charset=utf-8'
       return `<!DOCTYPE html>${toHTML(vDom, 'root', headers)}`
     }
     if (vDom.nodeName === 'svg') {
-      headers['content-type'] = 'image/svg+xml'
+      headers['content-type'] = 'image/svg+xml; charset=utf-8'
       return `<?xml version="1.0" encoding="UTF-8"?>${toHTML(vDom, 'root', headers)}`
     }
     if (vDom.nodeName === 'math') {
-      headers['content-type'] = 'application/mathml+xml'
+      headers['content-type'] = 'application/mathml+xml; charset=utf-8'
       return `<?xml version="1.0" encoding="UTF-8"?>${toHTML(vDom, 'root', headers)}`
     }
     if (vDom.nodeName === 'feed') {
-      headers['content-type'] = 'application/atom+xml'
+      headers['content-type'] = 'application/atom+xml; charset=utf-8'
       return `<?xml version="1.0" encoding="UTF-8"?>${toHTML(vDom, 'root', headers)}`
     }
     if (vDom.nodeName === 'urlset' || vDom.nodeName === 'sitemapindex') {
-      headers['content-type'] = 'application/xml'
+      headers['content-type'] = 'application/xml; charset=utf-8'
       return `<?xml version="1.0" encoding="UTF-8"?>${toHTML(vDom, 'root', headers)}`
     }
   }
