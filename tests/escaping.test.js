@@ -51,18 +51,11 @@ test('minidom escaping', async () => {
   const blns = JSON.parse((await fs.readFile('./tests/blns.json')).toString())
   for (const str of blns) {
     render(
-      html(
-        head({ 'data-str': str.orig }),
-        body(
-          div(str.orig)
-        )
-      )
+      div({ 'data-str': str.orig }, str.orig)
     )
     assert.equal(
       document.documentElement.innerHTML,
-      // eslint-disable-next-line no-useless-escape
-      // eslint-disable-next-line max-len
-      `<!DOCTYPE html><html><head data-str="${str.attr}"></head><body><div>${str.inline}</div></body></html>`
+      `<div data-str="${str.attr}">${str.inline}</div>`
     )
   }
 })

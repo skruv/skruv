@@ -69,11 +69,15 @@ render(
         <main>
           <h1>{state.todos.getGenerator(0)}</h1>
           <form
-            onsubmit={e => {
-              e.preventDefault()
-              state.todos.unshift(new FormData(e.target).get('todo'))
-              e.target.reset()
-            }}
+            onsubmit={
+              e => {
+                e.preventDefault()
+                const todo = new FormData(e.currentTarget).get('todo')
+                  ?.toString()
+                if (todo !== undefined) { state.todos.unshift(todo) }
+                e.currentTarget.reset()
+              }
+            }
           >
             <input name="todo"></input>
             <button>New!</button>
@@ -107,7 +111,7 @@ Same example using just the core library, without bundling. It does mostly the s
 * Directly setting the css in a style element instead of getting a scoped class
 {% include_relative examples/todo-core/index.md %}
 ```js
-import { elementFactory, render } from '../../index.js'
+import { elementFactory, render } from '../../skruv.js'
 
 const { html, head, title, meta, body, main, h1, form, input, button, ol, li, a, style } = elementFactory
 
@@ -144,8 +148,10 @@ const doRender = () => render(
         form({
           onsubmit: e => {
             e.preventDefault()
-            state.todos.unshift(new FormData(e.target).get('todo'))
-            e.target.reset()
+            const todo = new FormData(e.currentTarget).get('todo')
+              ?.toString()
+            if (todo) { state.todos.unshift(todo) }
+            e.currentTarget.reset()
             doRender()
           }
         },
@@ -201,7 +207,7 @@ Utilities:
 ## Scoped CSS
 {% include_relative examples/scopedcss/index.md %}
 ```js
-import { elementFactory, render } from '../../index.js'
+import { elementFactory, render } from '../../skruv.js'
 import { css, cssTextGenerator } from '../../utils/css.js'
 import { syncify } from '../../utils/syncify.js'
 
@@ -238,7 +244,6 @@ render(
     )
   )
 )
-
 ```
 ## JSX
 {% include_relative examples/jsx/index.md %}
@@ -255,6 +260,8 @@ const styles = /* css */`
     background: #0f0f0f;
   }
 `
+// @ts-ignore
+const Component = props => (<div label={props.a}>{props.children}</div>)
 
 render(
   <html lang="en-US">
@@ -267,6 +274,9 @@ render(
       </head>
     </>
     <body>
+      <Component a="A component attribute">
+        <p>A component child</p>
+      </Component>
       <div>
         <p>Hello world</p>
       </div>
@@ -280,58 +290,19 @@ The example folder ssr contains SSR examples for both node and deno. They both u
 
 Since most resulting apps will be very small (this one is under 4kb after compression) we inline it into the html here, but there would be no problem to link the script normally. Weigh the pros and cons for your use-case.
 
-This is the node example (should be easily adaptable to any nodejs server):
-```js
-/* global Location */
-import { readFile } from 'node:fs/promises'
-import { createServer } from 'node:http'
+This is the node ssr server is started with `skruv-ssr ./index.min.js`, look in [utils/ssr.js](utils/ssr.js) to see how it works. It should be easily adaptable to any nodejs server.
 
-import { reset, toHTML } from '../../utils/minidom.js'
-
-const server = createServer()
-server.on('request', async (req, res) => {
-  globalThis.location = new Location(new URL(req.url, `http://${req.headers.host}`))
-    globalThis.skruvSSRScript = await readFile('./index.min.js', 'utf8')
-  const frontend = await import('./index.min.js')
-  await frontend.doRender()
-  const headers = {}
-  const responseBody = toHTML(document.documentElement, '', headers)
-  reset()
-  if (!headers['content-type']) { headers['content-type'] = 'text/html' }
-  res.statusCode = headers.status || 200
-  for (const key in headers) {
-    res.setHeader(key, headers[key])
-  }
-  res.end(responseBody)
-})
-
-server.listen(8000)
-```
-
-Or to just render it to a file:
-```js
-/* global Location */
-import '../../utils/minidom.js'
-
-import { readFile, writeFile } from 'node:fs/promises'
-
-(async () => {
-  globalThis.location = new Location('http://127.0.0.1:8000')
-    globalThis.skruvSSRScript = await readFile('./index.min.js', 'utf8')
-  const frontend = await import('./index.min.js')
-  await frontend.doRender()
-  await writeFile('./index.html', document.documentElement.innerHTML)
-})()
-```
+Or to just render it to a file with `skruv-ssg 'https://skruv.io/' index.min.js index.html` where the arguments are the location to render, the app file and the output path.
 
 The index.js used here looks like this:
 ```js
-import { elementFactory, render } from '../../index.js'
+import { elementFactory, render } from '../../skruv.js'
 import { css, cssTextGenerator } from '../../utils/css.js'
 import { createState } from '../../utils/state.js'
 import { hydrationPromise, syncify } from '../../utils/syncify.js'
 
-const { html, head, title, meta, link, body, main, h1, form, label, input, button, ol, li, a, style, script } = elementFactory
+// eslint-disable-next-line max-len
+const { html, head, title, meta, link, body, main, h1, form, label, input, button, ol, li, a, style, script, skruvText: text, skruvComment: comment, skruvHeader: header } = elementFactory
 
 const state = createState({
   todos: ['Write todos']
@@ -360,6 +331,7 @@ const styles = css`
 const dom = syncify(
   html({ lang: 'en-US', class: styles },
     head(
+      // @ts-expect-error: SKRUV_1
       title(state.todos.getGenerator(0)),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
       style(cssTextGenerator),
@@ -368,12 +340,15 @@ const dom = syncify(
     ),
     body(
       main(
+        // @ts-expect-error: SKRUV_1
         h1(state.todos.getGenerator(0)),
         form({
           onsubmit: e => {
             e.preventDefault()
-            state.todos.unshift(new FormData(e.target).get('todo'))
-            e.target.reset()
+            const todo = new FormData(e.currentTarget).get('todo')
+              ?.toString()
+            if (todo) { state.todos.unshift(todo) }
+            e.currentTarget.reset()
           }
         },
         label(
@@ -402,17 +377,26 @@ const dom = syncify(
           }
         }
       ),
+      text('test'),
+      comment('test'),
+      header({
+        name: 'x-test',
+        value: 'test'
+      }),
+      // @ts-expect-error
       !!globalThis.skruvSSRScript && script({ type: 'module' }, globalThis.skruvSSRScript)
     )
   )
 )
 
-export const doRender = async () => {
+const doRender = async () => {
   await hydrationPromise
   render(dom)
 }
 
 doRender()
+
+export default doRender
 ```
 The important parts are
  * the doRender function which waits for the hydrationPromise from syncify. This makes sure that all async work has finished before rendering, so that we both get a complete document on the server, but also that we don't overwrite any existing parts of the document with incomplete parts on the client.
@@ -474,5 +458,5 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
       }
       const loop = requestAnimationFrame(loopFunc)
     }
-  }, 'Loading content, if stuck here please enable js or contact your friendly webmaster')
+  }, 'Loading content')
 ```
