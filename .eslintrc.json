@@ -68,6 +68,7 @@
     "**/package-lock.json",
     "**/tsconfig.json",
     ".vscode/**",
+    "tests/blns.json",
     "*.min.js",
     "fromMdn.js"
   ],
