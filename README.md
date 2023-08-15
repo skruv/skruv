@@ -202,7 +202,10 @@ Utilities:
       * This is useful to output primitive values (like strings/numbers etc.) in for example text or attributes without requiring a whole generator function
  * minidom.js: SSR/SSG examples are bundled in this repo, they use the minidom utility to polyfill what is needed to use skruv in node/deno and serialize the DOM to HTML.
     * uses cssom.js (ported from https://github.com/NV/CSSOM) to polyfill the CSS object model to work with css.js
- * jsx-runtime.js: jsx-runtime provides the necessary parts to allow for JSX usage via a bundler like esbuild. See example below for details.
+
+Other packages:
+ * [@skruv/jsx](https://www.npmjs.com/package/@skruv/jsx): The default jsx runtime
+ * [@skruv/jsx-react](https://www.npmjs.com/package/@skruv/jsx-react): The default jsx runtime, but with compatability for react-style attributes like className, onClick, etc.
 
 ## Scoped CSS
 {% include_relative examples/scopedcss/index.md %}
@@ -290,7 +293,7 @@ The example folder ssr contains SSR examples for both node and deno. They both u
 
 Since most resulting apps will be very small (this one is under 4kb after compression) we inline it into the html here, but there would be no problem to link the script normally. Weigh the pros and cons for your use-case.
 
-This is the node ssr server is started with `skruv-ssr ./index.min.js`, look in [utils/ssr.js](utils/ssr.js) to see how it works. It should be easily adaptable to any nodejs server.
+This is the node ssr server is started with `skruv-ssr ./index.min.js`, look in [utils/ssr.js](utils/ssr.js) to see how it works. It should be easily adaptable to any nodejs server. `skruv-ssr-dev` is a dev server that behaves similarly to skruv-ssr, but with automatic rebuilding of the source files and live reload run it with `skruv-ssr-dev ./index.ts index.min.js`.
 
 Or to just render it to a file with `skruv-ssg 'https://skruv.io/' index.min.js index.html` where the arguments are the location to render, the app file and the output path.
 
