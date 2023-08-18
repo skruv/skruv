@@ -26,7 +26,7 @@ No-dependency, no-build, small JS view-library/framework-ish-thing.
   * SSR/SSG without jsdom/puppeteer (minidom.js)
   * CSS scoping (css.js)
   * Optionally supports JSX (via `@skurv/jsx` or `@skruv/jsx-react`)
-  * or [HTM](https://github.com/developit/htm) as in [htm example](./examples/htm)
+    * or [HTM](https://github.com/developit/htm) as in [htm example](./examples/htm)
   * Bundling/minification (bundle.js, requires esbuild)
 
 ## Examples
@@ -413,17 +413,23 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
 
 ## TODO:
 
-* [ ] Add router, generatorUtils, loader, etc.
 * [ ] Add template repo
   * [ ] One basic
   * [ ] One with postgrest backend, nginx frontend and SSR
 * [ ] SSR/SSG fetcher cache example
 * [ ] Automated tests with all MDN examples
+* [ ] Docs:
+  * [ ] Loader
+  * [ ] generator utils
+  * [ ] Using alternate DOM implementations (jsDOM, etc.)
 * [ ] Testing:
-  * [ ] Sitemaps
-  * [ ] Raw output
-  * [ ] All the generators
   * [ ] Proper HTTP testing of the SSR stuff, including performance
+* [ ] Generalize and finish:
+  * [ ] Channel (SSE helper)
+  * [ ] Router
+    * Local (via regex) (see example repo)
+    * Remote (via postgrest)
+  * [ ] Fetcher
 * [ ] Loader example:
 ```css
   .loader {
