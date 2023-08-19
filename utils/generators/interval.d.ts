@@ -6,4 +6,3 @@ export default interval;
  * @returns {AsyncGenerator<T>}
  */
 declare function interval<T>(time: number, value: T): AsyncGenerator<T, any, any>;
-//# sourceMappingURL=interval.d.ts.map

@@ -5,4 +5,3 @@ export default fromCallback;
  * @returns {AsyncGenerator<T[]>}
  */
 declare function fromCallback<T>(setupFunc: (value: (value: T[]) => void) => T): AsyncGenerator<T[], any, any>;
-//# sourceMappingURL=fromCallback.d.ts.map

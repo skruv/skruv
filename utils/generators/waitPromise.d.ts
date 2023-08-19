@@ -6,4 +6,3 @@ export default waitPromise;
  * @returns {Promise<T?>}
  */
 declare function waitPromise<T>(time: number, value?: T | null): Promise<T | null>;
-//# sourceMappingURL=waitPromise.d.ts.map

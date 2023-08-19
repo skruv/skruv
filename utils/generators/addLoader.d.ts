@@ -11,4 +11,3 @@ export type AnyContent = import("../../utilityTypes").AnyContent;
  * @returns {AsyncGenerator<T | L>}
  */
 declare function addLoader<T, L>(component: () => AsyncGenerator<T, any, any>, loader: L, waitTime?: number | undefined): AsyncGenerator<T | L, any, any>;
-//# sourceMappingURL=addLoader.d.ts.map

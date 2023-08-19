@@ -5536,4 +5536,3 @@ export type ElementMap = {
     'skruvHeader': (...c: SkruvHeaderElement['c']) => SkruvHeaderElement;
 } & CustomElements;
 export {};
-//# sourceMappingURL=utilityTypes.d.ts.map

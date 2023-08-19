@@ -6,4 +6,3 @@ export default waitGen;
  * @returns {AsyncGenerator<T>}
  */
 declare function waitGen<T>(time: number, value: T): AsyncGenerator<T, any, any>;
-//# sourceMappingURL=waitGen.d.ts.map

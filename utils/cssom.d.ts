@@ -406,4 +406,3 @@ declare function parse(token: string): CSSStyleSheet;
  * @return {CSSStyleSheet}
  */
 declare function clone(stylesheet: CSSStyleSheet): CSSStyleSheet;
-//# sourceMappingURL=cssom.d.ts.map

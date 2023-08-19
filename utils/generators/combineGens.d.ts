@@ -5,4 +5,3 @@ export default combineGens;
  * @returns {AsyncGenerator<T[]>}
  */
 declare function combineGens<T>(...gens: AsyncGenerator<T, any, any>[]): AsyncGenerator<T[], any, any>;
-//# sourceMappingURL=combineGens.d.ts.map

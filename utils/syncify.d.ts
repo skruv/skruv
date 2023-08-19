@@ -10,4 +10,3 @@ export const hydrationPromise: Promise<any>;
 export function syncify<T>(value: string | number | boolean | T | AsyncGenerator<T, any, any> | AsyncIterator<T, any, undefined> | Promise<T> | (() => T), key?: (string | number) | null, parent?: (Array<any> | Object) | null, cbparent?: {
     r: () => boolean;
 } | null, root?: boolean): T;
-//# sourceMappingURL=syncify.d.ts.map

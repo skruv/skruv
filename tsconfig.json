@@ -7,7 +7,7 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "target": "es2018",
-    "declarationMap": true,
+    "declarationMap": false,
     "moduleResolution": "node",
     "module": "es2020",
     "jsx": "react-jsx",

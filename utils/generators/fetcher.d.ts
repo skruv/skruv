@@ -69,4 +69,3 @@ export type SkruvResponse = {
     headers: Headers;
     body: JSONValue;
 };
-//# sourceMappingURL=fetcher.d.ts.map
