@@ -104,3 +104,5 @@ server.on('request', async (req, res) => {
 })
 
 server.listen(process.env.PORT || 8000)
+
+console.log(`listening on http://127.0.0.1:${process.env.PORT || 8000}. Change port with the environment variable PORT`)
