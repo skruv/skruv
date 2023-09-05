@@ -25,6 +25,7 @@
     "examples/ssr/deno-ssr.js",
     "node_modules",
     // htm uses remote modules
-    "examples/htm/*"
+    "examples/htm/*",
+    "examples/todo/*"
   ]
 }
