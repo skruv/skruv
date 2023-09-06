@@ -25,7 +25,7 @@ export const render = (
   if (!parentNode) {
     throw new Error('No parent to render to')
   }
-  if (typeof current === 'boolean' || typeof current === 'undefined') {
+  if (typeof current === 'boolean' || !current) {
     // @ts-expect-error
     if (currentNode) { parentNode.removeChild(currentNode) }
     return
