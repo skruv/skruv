@@ -2,6 +2,7 @@
 import * as esbuild from 'esbuild'
 
 import httpPlugin from './esbuildHttpPlugin.js'
+import inlineFile from './esbuildInlineFile.js'
 import minifyCssLiteral from './esbuildMinifyCssLiteral.js'
 
 // This file is meant to work with both node and deno
@@ -26,6 +27,7 @@ if (!input || !output) {
     jsx: 'automatic',
     jsxImportSource: '@skruv/jsx-react',
     plugins: [
+      inlineFile,
       httpPlugin,
       minifyCssLiteral
     ],

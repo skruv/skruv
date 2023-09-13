@@ -1,14 +1,28 @@
 let hydrating = true
-const generatorResults = new WeakMap()
+let generatorResults = new WeakMap()
 let hydrationResolve = () => { }
-const hydrationPromise = new Promise(resolve => {
+export let hydrationPromise = new Promise(resolve => {
   hydrationResolve = () => {
     hydrating = false
     hydrationResolve = () => {}
     resolve('')
   }
 })
-const waitingGens = new Set()
+let waitingGens = new Set()
+
+export const reset = () => {
+  hydrating = true
+  generatorResults = new WeakMap()
+  hydrationResolve = () => { }
+  hydrationPromise = new Promise(resolve => {
+    hydrationResolve = () => {
+      hydrating = false
+      hydrationResolve = () => {}
+      resolve('')
+    }
+  })
+  waitingGens = new Set()
+}
 
 /**
  * @template T
@@ -44,7 +58,7 @@ const process = (value, key, parent, cbparent, result) => {
  * @param {{r:() => boolean}?} cbparent
  * @returns {T}
  */
-const syncify = (value, key = null, parent = null, cbparent = null, root = true) => {
+export const syncify = (value, key = null, parent = null, cbparent = null, root = true) => {
   if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === null) {
     // @ts-expect-error
     return value
@@ -160,5 +174,3 @@ const syncify = (value, key = null, parent = null, cbparent = null, root = true)
   // @ts-expect-error
   return value
 }
-
-export { hydrationPromise, syncify }

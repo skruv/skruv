@@ -279,7 +279,7 @@ export class EventSource {
 // @ts-expect-error: Type confusion between polyfilled and real elements
 globalThis.EventSource = EventSource
 
-globalThis.addEventListener = () => { }
+if (!globalThis?.addEventListener) { globalThis.addEventListener = () => { } }
 
 // Reset function to get a new global document
 export const reset = () => {

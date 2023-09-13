@@ -6,7 +6,6 @@ import { readFile } from 'node:fs/promises'
 import { createServer } from 'node:http'
 
 import httpPlugin from './esbuildHttpPlugin.js'
-import minifyCssLiteral from './esbuildMinifyCssLiteral.js'
 import { reset, toHTML } from './minidom.js'
 
 // This file is meant to work with both node and deno
@@ -49,7 +48,6 @@ const SSEPlugin = {
     },
     plugins: [
       httpPlugin,
-      minifyCssLiteral,
       SSEPlugin
     ],
     outfile: output
