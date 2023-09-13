@@ -26,6 +26,9 @@ if (!input || !output) {
     entryPoints: [input],
     jsx: 'automatic',
     jsxImportSource: '@skruv/jsx-react',
+    define: {
+      ...JSON.parse(process.env.BUILD_DEFINES || '{}')
+    },
     plugins: [
       inlineFile,
       httpPlugin,
