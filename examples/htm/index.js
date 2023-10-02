@@ -1,7 +1,7 @@
 import htm from 'https://unpkg.com/htm?module'
 
-import { h, render } from '../../index.js'
-const html = htm.bind((type, props, ...children) => h(type, props || {}, children))
+import { elementFactory, render } from '../../skruv.js'
+const html = htm.bind((type, props, ...children) => elementFactory[type](props || {}, children))
 
 const styles = /* css */`
 :root {
