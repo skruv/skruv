@@ -58,7 +58,7 @@ export const render = (
       if (current.t === 'feed') { ns = 'http://www.w3.org/2005/Atom' }
       if (current.t === 'urlset' || current.t === 'sitemapindex') { ns = 'https://www.sitemaps.org/schemas/sitemap/0.9' }
       // @ts-expect-error: All the nodes are actually elements, since the domCache only contains elements
-      currentNode = (domCache[current.t] || (domCache[current.t] = document.createElementNS(ns, current.t))).cloneNode(false)
+      currentNode = (domCache[current.t] ||= document.createElementNS(ns, current.t)).cloneNode(false)
     }
     if (_currentNode) {
       // @ts-expect-error
