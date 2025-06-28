@@ -1,4 +1,7 @@
 {
+  "parserOptions": {
+    "ecmaVersion": 2022
+  },
   "extends": "standard",
   "plugins": [
     "simple-import-sort",
