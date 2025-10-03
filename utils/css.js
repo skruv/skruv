@@ -2,7 +2,9 @@
 
 /** @type {function} */
 let resolveStyles = () => {}
-let promiseStyles = new Promise(resolve => { resolveStyles = resolve })
+let promiseStyles = new Promise((resolve) => {
+  resolveStyles = resolve
+})
 const styleMap = new Map()
 
 // // Example of using webcrypto for hashing. Only works if loaded over https, so not used. Also requires async
@@ -17,11 +19,13 @@ const styleMap = new Map()
  * @param {string} str
  * @returns {string}
  */
-const hash = str => {
+const hash = (str) => {
   let hash = 0
-  if (str.length === 0) { return hash.toString() }
+  if (str.length === 0) {
+    return hash.toString()
+  }
   for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(i)
+    hash = (hash << 5) - hash + str.charCodeAt(i)
     hash |= 0 // Convert to 32bit integer
   }
   return hash.toString()
@@ -34,19 +38,21 @@ const hash = str => {
  * @returns {string}
  */
 export const css = (strings, ...keys) => {
-  const stylesheet = strings.reduce(
-    /**
-     * @param {String[]} prev
-     * @param {String} curr
-     * @returns {String[]}
-     */
-    (prev, curr, i) => {
-      prev.push(curr)
-      prev.push(keys?.[i]?.toString() || '')
-      return prev
-    },
-    []
-  ).join('')
+  const stylesheet = strings
+    .reduce(
+      /**
+       * @param {String[]} prev
+       * @param {String} curr
+       * @returns {String[]}
+       */
+      (prev, curr, i) => {
+        prev.push(curr)
+        prev.push(keys?.[i]?.toString() || "")
+        return prev
+      },
+      [],
+    )
+    .join("")
 
   // The implementation of this is lifted from https://github.com/samthor/scoped with some modifications
   const attrRe = /^\[.*?(?:(["'])(?:.|\\\1)*\1.*)*\]/
@@ -60,19 +66,19 @@ export const css = (strings, ...keys) => {
    * @param {string} prefix prefix to apply
    * @return {?{selector: string, rest: string}}
    */
-  function consumeSelector (raw, prefix) {
+  function consumeSelector(raw, prefix) {
     let i = raw.search(walkSelectorRe)
     if (i === -1) {
       // found literally nothing interesting, success
       return {
         selector: `${prefix} ${raw}`,
-        rest: ''
+        rest: "",
       }
-    } else if (raw[i] === ',') {
+    } else if (raw[i] === ",") {
       // found comma without anything interesting, yield rest
       return {
         selector: `${prefix} ${raw.substring(0, i)}`,
-        rest: raw.substring(i + 1)
+        rest: raw.substring(i + 1),
       }
     }
 
@@ -82,19 +88,18 @@ export const css = (strings, ...keys) => {
 
     let depth = 0
     // eslint-disable-next-line no-labels
-    outer:
-    for (; i < raw.length; ++i) {
+    outer: for (; i < raw.length; ++i) {
       const char = raw[i]
       switch (char) {
-        case '[': {
+        case "[": {
           const match = attrRe.exec(raw.substring(i))
           i += (match ? match[0].length : 1) - 1 // we add 1 every loop
           continue
         }
-        case '(':
+        case "(":
           ++depth
           continue
-        case ':':
+        case ":":
           if (!leftmost) {
             continue // doesn't matter if :scope is here, it'll always be ignored
           } else if (!scopeRe.test(raw.substring(i))) {
@@ -110,7 +115,7 @@ export const css = (strings, ...keys) => {
           scope = true
           --i // we'd skip over next character otherwise
           continue // run loop again
-        case ')':
+        case ")":
           if (depth) {
             --depth
           }
@@ -121,13 +126,13 @@ export const css = (strings, ...keys) => {
       }
 
       switch (char) {
-        case ',':
+        case ",":
           // eslint-disable-next-line no-labels
           break outer
-        case ' ':
-        case '>':
-        case '~':
-        case '+':
+        case " ":
+        case ">":
+        case "~":
+        case "+":
           if (!leftmost) {
             continue
           }
@@ -135,7 +140,7 @@ export const css = (strings, ...keys) => {
       }
     }
 
-    const selector = (scope ? '' : `${prefix} `) + raw.substring(0, i)
+    const selector = (scope ? "" : `${prefix} `) + raw.substring(0, i)
     return { selector, rest: raw.substring(i + 1) }
   }
 
@@ -143,19 +148,19 @@ export const css = (strings, ...keys) => {
    * @param {string} selectorText
    * @param {string} prefix to apply
    */
-  function updateSelectorText (selectorText, prefix) {
+  function updateSelectorText(selectorText, prefix) {
     const found = []
 
     while (selectorText) {
       const consumed = consumeSelector(selectorText, prefix)
       if (consumed === null) {
-        return ':not(*)'
+        return ":not(*)"
       }
       found.push(consumed.selector)
       selectorText = consumed.rest
     }
 
-    return found.join(', ')
+    return found.join(", ")
   }
 
   /**
@@ -164,7 +169,7 @@ export const css = (strings, ...keys) => {
    * @param {!CSSRule} rule
    * @param {string} prefix to apply
    */
-  function upgradeRule (rule, prefix) {
+  function upgradeRule(rule, prefix) {
     if (rule instanceof CSSMediaRule) {
       // upgrade children
       const l = rule.cssRules.length
@@ -189,28 +194,32 @@ export const css = (strings, ...keys) => {
   }
   let sheet
   if (!globalThis?.CSSOM && !globalThis.document?.implementation) {
-    throw new Error('No css parser available. Either add CSSOM to globalThis or run in browser.')
+    throw new Error(
+      "No css parser available. Either add CSSOM to globalThis or run in browser.",
+    )
   }
   if (globalThis?.CSSOM) {
     sheet = CSSOM.parse(stylesheet)
   } else {
     // In FF/Chrome we could create the sheet with new CSSStyleSheet(), but that does not work in safari lower than 16.4 (Released 2023-03-27)
     // TODO: don't recreate each run
-    const styleDoc = globalThis.document.implementation.createHTMLDocument('')
-    const styleElem = styleDoc.createElementNS('http://www.w3.org/1999/xhtml', 'style')
+    const styleDoc = globalThis.document.implementation.createHTMLDocument("")
+    const styleElem = styleDoc.createElementNS(
+      "http://www.w3.org/1999/xhtml",
+      "style",
+    )
     styleElem.innerText = stylesheet
     styleDoc.body.append(styleElem)
     // @ts-expect-error: TODO: Fix this with better typings and by using `new CSSStyleSheet` directly
     sheet = styleElem.sheet
     styleDoc.body.removeChild(styleElem)
   }
-  Array.from(sheet?.cssRules || []).forEach(e =>
+  Array.from(sheet?.cssRules || []).forEach((e) => {
     upgradeRule(e, prefix)
-  )
-  const upgradedStyles = Array.from(sheet?.cssRules || []).map(e =>
-    e.cssText || ''
-  )
-    .join('')
+  })
+  const upgradedStyles = Array.from(sheet?.cssRules || [])
+    .map((e) => e.cssText || "")
+    .join("")
   styleMap.set(scope, upgradedStyles)
   resolveStyles()
   return retval
@@ -219,11 +228,13 @@ export const css = (strings, ...keys) => {
 /**
  * @returns {AsyncGenerator<string>}
  */
-export async function * cssTextGenerator () {
-  yield Array.from(styleMap.values()).join('')
+export async function* cssTextGenerator() {
+  yield Array.from(styleMap.values()).join("")
   while (true) {
     await promiseStyles
-    yield Array.from(styleMap.values()).join('')
-    promiseStyles = new Promise(resolve => { resolveStyles = resolve })
+    yield Array.from(styleMap.values()).join("")
+    promiseStyles = new Promise((resolve) => {
+      resolveStyles = resolve
+    })
   }
 }

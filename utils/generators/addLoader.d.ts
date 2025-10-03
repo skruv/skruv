@@ -10,4 +10,4 @@ export type AnyContent = import("../../utilityTypes").AnyContent;
  *
  * @returns {AsyncGenerator<T | L>}
  */
-declare function addLoader<T, L>(component: () => AsyncGenerator<T, any, any>, loader: L, waitTime?: number | undefined): AsyncGenerator<T | L, any, any>;
+declare function addLoader<T, L>(component: () => AsyncGenerator<T>, loader: L, waitTime?: number): AsyncGenerator<T | L>;

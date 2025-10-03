@@ -207,7 +207,7 @@ Utilities:
   * You can subscribe to sub-objects with `for await (const bar of state.foo.bar)`.
   * As a shortcut you can call `state.getGenerator`(key) to subscribe to and output a single value.
     * This is useful to output primitive values (like strings/numbers etc.) in for example text or attributes without requiring a whole generator function
-* minidom.js: SSR/SSG examples are bundled in this repo, they use the minidom utility to polyfill what is needed to use skruv in node/deno and serialize the DOM to HTML.
+* minidom.js: SSR/SSG examples are bundled in this repo, they use the minidom utility to polyfill what is needed to use skruv in node and serialize the DOM to HTML.
   * uses cssom.js (ported from <https://github.com/NV/CSSOM>) to polyfill the CSS object model to work with css.js
 
 Other packages:
@@ -276,7 +276,7 @@ const styles = /* css */`
     background: #0f0f0f;
   }
 `
-// @ts-ignore
+
 const Component = props => (<div label={props.a}>{props.children}</div>)
 
 render(
@@ -303,7 +303,7 @@ render(
 
 ## SSG/SSR
 
-The example folder ssr contains SSR examples for both node and deno. They both use the minidom util to polyfill a "browser-ish" environment. Primarily it mimics the DOM, the CSS object model, the Location interface, EventSource. It also has utils to stringify the html and reset the DOM.
+The example folder ssr contains SSR examples for node. It uses the minidom util to polyfill a "browser-ish" environment. Primarily it mimics the DOM, the CSS object model, the Location interface, EventSource. It also has utils to stringify the html and reset the DOM.
 
 Since most resulting apps will be very small (this one is under 4kb after compression) we inline it into the html here, but there would be no problem to link the script normally. Weigh the pros and cons for your use-case.
 
@@ -349,7 +349,6 @@ const styles = css`
 const dom = syncify(
   html({ lang: 'en-US', class: styles },
     head(
-      // @ts-expect-error: SKRUV_1
       title(state.todos.getGenerator(0)),
       meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
       style(cssTextGenerator),
@@ -358,7 +357,6 @@ const dom = syncify(
     ),
     body(
       main(
-        // @ts-expect-error: SKRUV_1
         h1(state.todos.getGenerator(0)),
         form({
           onsubmit: e => {
@@ -401,7 +399,6 @@ const dom = syncify(
         name: 'x-test',
         value: 'test'
       }),
-      // @ts-expect-error
       !!globalThis.skruvSSRScript && script({ type: 'module' }, globalThis.skruvSSRScript)
     )
   )
@@ -480,7 +477,6 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
         // https://www.dwitter.net/d/26739
 
         // code from dwitter https://www.dwitter.net/d/17835
-        // @ts-expect-error
         c.width|=f=(X,Y,w)=>X*X+Y*Y<=2e6*S(t/9)**2?w>9&&f(X,Y,w/=2)|f(X+w,Y,w)|f(X,Y+w,w)|f(X+w,Y+w,w):(()=>{x.strokeStyle=color;x.strokeRect(X,Y,w,w)})();f(x.lineWidth=4,4,1072)
         if (document.contains(c)) requestAnimationFrame(loopFunc)
       }

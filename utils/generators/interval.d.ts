@@ -5,4 +5,4 @@ export default interval;
  * @param {T} value
  * @returns {AsyncGenerator<T>}
  */
-declare function interval<T>(time: number, value: T): AsyncGenerator<T, any, any>;
+declare function interval<T>(time: number, value: T): AsyncGenerator<T>;

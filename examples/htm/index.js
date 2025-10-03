@@ -1,9 +1,12 @@
-import htm from 'https://unpkg.com/htm?module'
+import htm from "https://unpkg.com/htm?module"
 
-import { elementFactory, render } from '../../skruv.js'
-const html = htm.bind((type, props, ...children) => elementFactory[type](props || {}, children))
+import { elementFactory, render } from "../../skruv.js"
 
-const styles = /* css */`
+const html = htm.bind((type, props, ...children) =>
+  elementFactory[type](props || {}, children),
+)
+
+const styles = /* css */ `
 :root {
   color: white;
   background: #0f0f0f;

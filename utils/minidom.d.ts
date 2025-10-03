@@ -65,9 +65,9 @@ export class Element {
     setAttribute(name: string | number, value: any): void;
     /**
      * @param {string | number} name
-     * @param {Function} value
+     * @param {Function} _value
      */
-    removeEventListener(name: string | number, value: Function): void;
+    removeEventListener(name: string | number, _value: Function): void;
     /**
      * @param {string | number} name
      * @param {function} value
@@ -75,13 +75,13 @@ export class Element {
     addEventListener(name: string | number, value: Function): void;
     /** @param {Event} event */
     dispatchEvent(event: Event): void;
-    /** @param {Element} node */
-    contains(node: Element): boolean;
+    /** @param {Element} _node */
+    contains(_node: Element): boolean;
     /** @returns {Element} */
     cloneNode(): Element;
     get children(): Element[];
     get innerHTML(): string;
-    set textContent(arg: string);
+    set textContent(data: string);
     get textContent(): string;
 }
 export class HTMLElement extends Element {
@@ -120,7 +120,7 @@ export class EventSource {
      * @param {URL | string} _url
      * @param {EventSourceInit} [_init]
      */
-    constructor(_url: URL | string, _init?: EventSourceInit | undefined);
+    constructor(_url: URL | string, _init?: EventSourceInit);
     CONNECTING: number;
     OPEN: number;
     CLOSED: number;
@@ -154,9 +154,11 @@ export function getContext(): {
     EventSource: typeof EventSource;
     Location: typeof Location;
     URL: {
-        new (url: string | URL, base?: string | URL | undefined): URL;
+        new (url: string | URL, base?: string | URL): URL;
         prototype: URL;
+        canParse(url: string | URL, base?: string | URL): boolean;
         createObjectURL(obj: Blob | MediaSource): string;
+        parse(url: string | URL, base?: string | URL): URL | null;
         revokeObjectURL(url: string): void;
     };
     Element: typeof Element;
@@ -174,13 +176,14 @@ export function getContext(): {
                 parentRule: any;
                 _importants: {};
                 getPropertyValue(name: string): string;
-                setProperty(name: string, value: string, priority?: string | undefined): void;
+                setProperty(name: string, value: string, priority?: string): void;
                 removeProperty(name: string): string;
                 getPropertyCSSValue(): void;
                 getPropertyPriority(name: string): any;
                 getPropertyShorthand(): void;
                 isPropertyImplicit(): void;
-                cssText: string;
+                get cssText(): string;
+                set cssText(text: string);
             };
         };
         CSSRule: {
@@ -209,7 +212,7 @@ export function getContext(): {
         CSSGroupingRule: {
             new (): {
                 cssRules: any[];
-                insertRule(rule: string, index?: number | undefined): number;
+                insertRule(rule: string, index?: number): number;
                 deleteRule(index: number): void;
                 parentRule: any;
                 parentStyleSheet: any;
@@ -236,8 +239,9 @@ export function getContext(): {
             new (): {
                 conditionText: string;
                 cssRules: any[];
-                cssText: any;
-                insertRule(rule: string, index?: number | undefined): number;
+                get cssText(): any;
+                set cssText(cssText: any);
+                insertRule(rule: string, index?: number): number;
                 deleteRule(index: number): void;
                 parentRule: any;
                 parentStyleSheet: any;
@@ -268,17 +272,19 @@ export function getContext(): {
                     parentRule: any;
                     _importants: {};
                     getPropertyValue(name: string): string;
-                    setProperty(name: string, value: string, priority?: string | undefined): void;
+                    setProperty(name: string, value: string, priority?: string): void;
                     removeProperty(name: string): string;
                     getPropertyCSSValue(): void;
                     getPropertyPriority(name: string): any;
                     getPropertyShorthand(): void;
                     isPropertyImplicit(): void;
-                    cssText: string;
+                    get cssText(): string;
+                    set cssText(text: string);
                 };
                 type: number;
-                cssText: string;
-                parse(ruleText: string): any;
+                get cssText(): string;
+                set cssText(cssText: string);
+                parse(ruleText: string): /*elided*/ any;
                 parentRule: any;
                 parentStyleSheet: any;
                 UNKNOWN_RULE: number;
@@ -303,7 +309,8 @@ export function getContext(): {
         MediaList: {
             new (): {
                 length: number;
-                mediaText: string;
+                get mediaText(): string;
+                set mediaText(value: string);
                 appendMedium(medium: string): void;
                 deleteMedium(medium: string): void;
             };
@@ -312,15 +319,17 @@ export function getContext(): {
             new (): {
                 media: {
                     length: number;
-                    mediaText: string;
+                    get mediaText(): string;
+                    set mediaText(value: string);
                     appendMedium(medium: string): void;
                     deleteMedium(medium: string): void;
                 };
                 type: number;
-                conditionText: string;
-                readonly cssText: string;
+                get conditionText(): string;
+                set conditionText(value: string);
+                get cssText(): string;
                 cssRules: any[];
-                insertRule(rule: string, index?: number | undefined): number;
+                insertRule(rule: string, index?: number): number;
                 deleteRule(index: number): void;
                 parentRule: any;
                 parentStyleSheet: any;
@@ -346,10 +355,10 @@ export function getContext(): {
         CSSSupportsRule: {
             new (): {
                 type: number;
-                readonly cssText: string;
+                get cssText(): string;
                 conditionText: string;
                 cssRules: any[];
-                insertRule(rule: string, index?: number | undefined): number;
+                insertRule(rule: string, index?: number): number;
                 deleteRule(index: number): void;
                 parentRule: any;
                 parentStyleSheet: any;
@@ -377,7 +386,8 @@ export function getContext(): {
                 href: string;
                 media: {
                     length: number;
-                    mediaText: string;
+                    get mediaText(): string;
+                    set mediaText(value: string);
                     appendMedium(medium: string): void;
                     deleteMedium(medium: string): void;
                 };
@@ -389,7 +399,8 @@ export function getContext(): {
                     parentStyleSheet: any;
                 };
                 type: number;
-                cssText: string;
+                get cssText(): string;
+                set cssText(cssText: string);
                 parentRule: any;
                 parentStyleSheet: any;
                 UNKNOWN_RULE: number;
@@ -418,16 +429,17 @@ export function getContext(): {
                     parentRule: any;
                     _importants: {};
                     getPropertyValue(name: string): string;
-                    setProperty(name: string, value: string, priority?: string | undefined): void;
+                    setProperty(name: string, value: string, priority?: string): void;
                     removeProperty(name: string): string;
                     getPropertyCSSValue(): void;
                     getPropertyPriority(name: string): any;
                     getPropertyShorthand(): void;
                     isPropertyImplicit(): void;
-                    cssText: string;
+                    get cssText(): string;
+                    set cssText(text: string);
                 };
                 type: number;
-                readonly cssText: string;
+                get cssText(): string;
                 parentRule: any;
                 parentStyleSheet: any;
                 UNKNOWN_RULE: number;
@@ -453,7 +465,7 @@ export function getContext(): {
             new (): {
                 cssRules: any[];
                 type: number;
-                readonly cssText: string;
+                get cssText(): string;
                 parentRule: any;
                 parentStyleSheet: any;
                 UNKNOWN_RULE: number;
@@ -494,7 +506,7 @@ export function getContext(): {
                 name: string;
                 cssRules: any[];
                 type: number;
-                readonly cssText: string;
+                get cssText(): string;
                 parentRule: any;
                 parentStyleSheet: any;
                 UNKNOWN_RULE: number;
@@ -524,16 +536,17 @@ export function getContext(): {
                     parentRule: any;
                     _importants: {};
                     getPropertyValue(name: string): string;
-                    setProperty(name: string, value: string, priority?: string | undefined): void;
+                    setProperty(name: string, value: string, priority?: string): void;
                     removeProperty(name: string): string;
                     getPropertyCSSValue(): void;
                     getPropertyPriority(name: string): any;
                     getPropertyShorthand(): void;
                     isPropertyImplicit(): void;
-                    cssText: string;
+                    get cssText(): string;
+                    set cssText(text: string);
                 };
                 type: number;
-                readonly cssText: string;
+                get cssText(): string;
                 parentRule: any;
                 parentStyleSheet: any;
                 UNKNOWN_RULE: number;
@@ -558,7 +571,8 @@ export function getContext(): {
         MatcherList: {
             new (): {
                 length: number;
-                matcherText: string;
+                get matcherText(): string;
+                set matcherText(value: string);
                 appendMatcher(matcher: string): void;
                 deleteMatcher(matcher: string): void;
             };
@@ -567,13 +581,14 @@ export function getContext(): {
             new (): {
                 matcher: {
                     length: number;
-                    matcherText: string;
+                    get matcherText(): string;
+                    set matcherText(value: string);
                     appendMatcher(matcher: string): void;
                     deleteMatcher(matcher: string): void;
                 };
                 cssRules: any[];
                 type: number;
-                readonly cssText: string;
+                get cssText(): string;
                 parentRule: any;
                 parentStyleSheet: any;
                 UNKNOWN_RULE: number;
@@ -597,7 +612,8 @@ export function getContext(): {
         };
         CSSValue: {
             new (): {
-                cssText: void;
+                get cssText(): void;
+                set cssText(text: void);
                 _getConstructorName(): string;
             };
         };
@@ -606,11 +622,12 @@ export function getContext(): {
                 _token: any;
                 _idx: any;
                 parse(): Object;
-                _parseJSComment(token: any, idx: any): false | Object;
-                _parseJSString(token: any, idx: any, sep: any): false | Object;
-                _parseJSRexExp(token: any, idx: any): false | Object;
+                _parseJSComment(token: any, idx: any): Object | false;
+                _parseJSString(token: any, idx: any, sep: any): Object | false;
+                _parseJSRexExp(token: any, idx: any): Object | false;
                 _findMatchedIdx(token: any, idx: any, sep: any): number;
-                cssText: void;
+                get cssText(): void;
+                set cssText(text: void);
                 _getConstructorName(): string;
             };
         };
@@ -639,15 +656,17 @@ export function getContext(): {
         new (): {
             media: {
                 length: number;
-                mediaText: string;
+                get mediaText(): string;
+                set mediaText(value: string);
                 appendMedium(medium: string): void;
                 deleteMedium(medium: string): void;
             };
             type: number;
-            conditionText: string;
-            readonly cssText: string;
+            get conditionText(): string;
+            set conditionText(value: string);
+            get cssText(): string;
             cssRules: any[];
-            insertRule(rule: string, index?: number | undefined): number;
+            insertRule(rule: string, index?: number): number;
             deleteRule(index: number): void;
             parentRule: any;
             parentStyleSheet: any;
@@ -678,17 +697,19 @@ export function getContext(): {
                 parentRule: any;
                 _importants: {};
                 getPropertyValue(name: string): string;
-                setProperty(name: string, value: string, priority?: string | undefined): void;
+                setProperty(name: string, value: string, priority?: string): void;
                 removeProperty(name: string): string;
                 getPropertyCSSValue(): void;
                 getPropertyPriority(name: string): any;
                 getPropertyShorthand(): void;
                 isPropertyImplicit(): void;
-                cssText: string;
+                get cssText(): string;
+                set cssText(text: string);
             };
             type: number;
-            cssText: string;
-            parse(ruleText: string): any;
+            get cssText(): string;
+            set cssText(cssText: string);
+            parse(ruleText: string): /*elided*/ any;
             parentRule: any;
             parentStyleSheet: any;
             UNKNOWN_RULE: number;

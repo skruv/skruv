@@ -13,16 +13,10 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@skruv/jsx"
   },
-  "include": [
-    "global.d.ts",
-    "utilityTypes.ts",
-    "*",
-    "**/*"
-  ],
+  "include": ["global.d.ts", "utilityTypes.ts", "*", "**/*"],
   "exclude": [
     "examples/jsx/index.min.js",
     "tests/jsx.test.js",
-    "examples/ssr/deno-ssr.js",
     "node_modules",
     // htm uses remote modules
     "examples/htm/*",

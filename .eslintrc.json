@@ -3,11 +3,7 @@
     "ecmaVersion": 2022
   },
   "extends": "standard",
-  "plugins": [
-    "simple-import-sort",
-    "json-format",
-    "import"
-  ],
+  "plugins": ["simple-import-sort", "json-format", "import"],
   "rules": {
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
@@ -19,14 +15,8 @@
         "ignoreUrls": true
       }
     ],
-    "array-element-newline": [
-      "error",
-      "consistent"
-    ],
-    "curly": [
-      "error",
-      "all"
-    ],
+    "array-element-newline": ["error", "consistent"],
+    "curly": ["error", "all"],
     "object-curly-newline": [
       "error",
       {
@@ -39,31 +29,18 @@
         "allowAllPropertiesOnSameLine": true
       }
     ],
-    "one-var-declaration-per-line": [
-      "error"
-    ],
+    "one-var-declaration-per-line": ["error"],
     "newline-per-chained-call": [
       "error",
       {
         "ignoreChainWithDepth": 2
       }
     ],
-    "eol-last": [
-      "error"
-    ],
-    "dot-notation": [
-      "error"
-    ],
-    "no-unused-vars": [
-      "error"
-    ],
-    "import/no-unused-modules": [
-      "error"
-    ],
-    "arrow-parens": [
-      "error",
-      "as-needed"
-    ]
+    "eol-last": ["error"],
+    "dot-notation": ["error"],
+    "no-unused-vars": ["error"],
+    "import/no-unused-modules": ["error"],
+    "arrow-parens": ["error", "as-needed"]
   },
   "ignorePatterns": [
     "**/node_modules/**/*.js",

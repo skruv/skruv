@@ -1,9 +1,9 @@
-import { render } from 'skruv'
-import { css, cssTextGenerator } from 'skruv/utils/css.js'
-import { createState } from 'skruv/utils/state.js'
-import { syncify } from 'skruv/utils/syncify.js'
+import { render } from "skruv"
+import { css, cssTextGenerator } from "skruv/utils/css.js"
+import { createState } from "skruv/utils/state.js"
+import { syncify } from "skruv/utils/syncify.js"
 
-const state = createState({ todos: ['Write todos'] })
+const state = createState({ todos: ["Write todos"] })
 
 const styles = css`
   :scope {
@@ -33,30 +33,33 @@ render(
         <main>
           <h1>{state.todos.getGenerator(0)}</h1>
           <form
-            onsubmit={
-              e => {
-                e.preventDefault()
-                const todo = new FormData(e.currentTarget).get('todo')
-                  ?.toString()
-                if (todo !== undefined) { state.todos.unshift(todo) }
-                e.currentTarget.reset()
+            onsubmit={(e) => {
+              e.preventDefault()
+              const todo = new FormData(e.currentTarget).get("todo")?.toString()
+              if (todo !== undefined) {
+                state.todos.unshift(todo)
               }
-            }
+              e.currentTarget.reset()
+            }}
           >
             <input name="todo"></input>
-            <button>New!</button>
+            <button type="submit">New!</button>
           </form>
           <ol>
-            {async function * () {
+            {async function* () {
               for await (const todos of state.todos) {
                 yield todos.map((todo, i) => (
-                  <li>{todo} <a
-                    href="#"
-                    onclick={e => {
-                      e.preventDefault()
-                      todos.splice(i, 1)
-                    }}
-                  >x</a>
+                  <li>
+                    {todo}{" "}
+                    <a
+                      href="/"
+                      onclick={(e) => {
+                        e.preventDefault()
+                        todos.splice(i, 1)
+                      }}
+                    >
+                      x
+                    </a>
                   </li>
                 ))
               }
@@ -64,6 +67,6 @@ render(
           </ol>
         </main>
       </body>
-    </html>
-  )
+    </html>,
+  ),
 )

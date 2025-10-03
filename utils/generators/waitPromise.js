@@ -5,10 +5,10 @@
  * @returns {Promise<T?>}
  */
 const waitPromise = (time, value = null) =>
-  new Promise(resolve =>
+  new Promise((resolve) =>
     setTimeout(() => {
       resolve(value)
-    }, time)
+    }, time),
   )
 
 export default waitPromise

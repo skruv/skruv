@@ -1,17 +1,16 @@
-import { fetchGenerator } from './fetcher.js'
+import { fetchGenerator } from "./fetcher.js"
 /**
  * @param {{url: string, getGenerator: (arg: string) => string}} state
  */
-export default async function * router (state) {
-  globalThis.addEventListener(
-    'popstate',
-    () => { state.url = globalThis.location?.toString?.() }
-  )
-  const route = async function * () {
-    for await (const url of state.getGenerator('url')) {
+export default async function* router(state) {
+  globalThis.addEventListener("popstate", () => {
+    state.url = globalThis.location?.toString?.()
+  })
+  const route = async function* () {
+    for await (const url of state.getGenerator("url")) {
       yield {
         where: { q: url },
-        table: 'rpc/route_match'
+        table: "rpc/route_match",
       }
     }
   }
@@ -22,12 +21,12 @@ export default async function * router (state) {
       continue
     }
     const queryUrl = new URL(res.request.url, state.url)
-    const url = new URL(queryUrl.searchParams.get('q') || '')
+    const url = new URL(queryUrl.searchParams.get("q") || "")
     const routeState = res.body[0].data
 
     // Handle routing arguments in path
-    const pathsplit = url.pathname.split('/')
-    routeState.arguments = routeState.path.split('/').reduce(
+    const pathsplit = url.pathname.split("/")
+    routeState.arguments = routeState.path.split("/").reduce(
       /**
        * @param {Record<string, string>} p
        * @param {string} c
@@ -41,7 +40,8 @@ export default async function * router (state) {
           p[match[1]] = pathsplit[i]
         }
         return p
-      }, {}
+      },
+      {},
     )
 
     routeState.query = {}

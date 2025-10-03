@@ -5,4 +5,4 @@ export default waitGen;
  * @param {T} value
  * @returns {AsyncGenerator<T>}
  */
-declare function waitGen<T>(time: number, value: T): AsyncGenerator<T, any, any>;
+declare function waitGen<T>(time: number, value: T): AsyncGenerator<T>;

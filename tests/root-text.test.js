@@ -1,18 +1,18 @@
-import '../utils/minidom.js'
+import "../utils/minidom.js"
 
-import assert from 'node:assert'
-import test from 'node:test'
+import assert from "node:assert"
+import test from "node:test"
 
-import { elementFactory, render } from '../skruv.js'
+import { elementFactory, render } from "../skruv.js"
 
 const { skruvText } = elementFactory
 
-test('root-text', async () => {
+test("root-text", async () => {
   render(
     skruvText(`
 User-agent: *
 Allow: /
-`)
+`),
   )
   assert.strictEqual(
     document.documentElement.innerHTML,
@@ -20,6 +20,6 @@ Allow: /
     `
 User-agent: *
 Allow: /
-`
+`,
   )
 })

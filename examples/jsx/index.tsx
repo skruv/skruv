@@ -1,24 +1,24 @@
-import { render } from 'skruv'
+import { render } from "skruv"
 
+// biome-ignore format: Don't add whitespace between comment and template tag
 const styles = /* css */`
   :root {
     color: white;
     background: #0f0f0f;
   }
 `
-// @ts-ignore
-const Component = props => (<div label={props.a}>{props.children}</div>)
+// @ts-expect-error
+const Component = (props) => <div label={props.a}>{props.children}</div>
 
 render(
+  // @ts-expect-error
   <html lang="en-US">
     {/* Fragments work too, but are usually not needed. */}
-    <>
-      <head>
-        <title>jsx</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <style>{styles}</style>
-      </head>
-    </>
+    <head>
+      <title>jsx</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <style>{styles}</style>
+    </head>
     <body>
       <Component a="A component attribute">
         <p>A component child</p>
@@ -27,5 +27,5 @@ render(
         <p>Hello world</p>
       </div>
     </body>
-  </html>
+  </html>,
 )

@@ -1,11 +1,11 @@
 let hydrating = true
 let generatorResults = new WeakMap()
-let hydrationResolve = () => { }
-export let hydrationPromise = new Promise(resolve => {
+let hydrationResolve = () => {}
+export let hydrationPromise = new Promise((resolve) => {
   hydrationResolve = () => {
     hydrating = false
     hydrationResolve = () => {}
-    resolve('')
+    resolve("")
   }
 })
 let waitingGens = new Set()
@@ -13,12 +13,12 @@ let waitingGens = new Set()
 export const reset = () => {
   hydrating = true
   generatorResults = new WeakMap()
-  hydrationResolve = () => { }
-  hydrationPromise = new Promise(resolve => {
+  hydrationResolve = () => {}
+  hydrationPromise = new Promise((resolve) => {
     hydrationResolve = () => {
       hydrating = false
       hydrationResolve = () => {}
-      resolve('')
+      resolve("")
     }
   })
   waitingGens = new Set()
@@ -34,7 +34,14 @@ export const reset = () => {
  * @returns {boolean}
  */
 const process = (value, key, parent, cbparent, result) => {
-  if (hydrating && !(typeof result === 'object' && 'c' in result && result?.c?.[0]?.skruvFinished === false)) {
+  if (
+    hydrating &&
+    !(
+      typeof result === "object" &&
+      "c" in result &&
+      result?.c?.[0]?.skruvFinished === false
+    )
+  ) {
     waitingGens.delete(value)
     if (!waitingGens.size) {
       hydrationResolve()
@@ -58,8 +65,19 @@ const process = (value, key, parent, cbparent, result) => {
  * @param {{r:() => boolean}?} cbparent
  * @returns {T}
  */
-export const syncify = (value, key = null, parent = null, cbparent = null, root = true) => {
-  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === null) {
+export const syncify = (
+  value,
+  key = null,
+  parent = null,
+  cbparent = null,
+  root = true,
+) => {
+  if (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean" ||
+    value === null
+  ) {
     // @ts-expect-error
     return value
   }
@@ -70,22 +88,29 @@ export const syncify = (value, key = null, parent = null, cbparent = null, root 
   }
   if (key && parent && cbparent) {
     if (
-      (typeof value === 'object' && Symbol.asyncIterator in value) ||
-      (typeof value === 'function' && value.constructor.name === 'AsyncGeneratorFunction')
+      (typeof value === "object" && Symbol.asyncIterator in value) ||
+      (typeof value === "function" &&
+        value.constructor.name === "AsyncGeneratorFunction")
     ) {
-      if (hydrating) { waitingGens.add(value) }
-      generatorResults.set(value, null);
-      (async () => {
-        // @ts-expect-error
-        for await (const result of (typeof value === 'function' ? value() : value)) {
-          if (!process(
-            // @ts-expect-error
-            value,
-            key,
-            parent,
-            cbparent,
-            syncify(result, key, parent, cbparent, false)
-          )) {
+      if (hydrating) {
+        waitingGens.add(value)
+      }
+      generatorResults.set(value, null)
+      ;(async () => {
+        for await (const result of typeof value === "function"
+          ? // @ts-expect-error
+            value()
+          : value) {
+          if (
+            !process(
+              // @ts-expect-error
+              value,
+              key,
+              parent,
+              cbparent,
+              syncify(result, key, parent, cbparent, false),
+            )
+          ) {
             break
           }
         }
@@ -94,12 +119,17 @@ export const syncify = (value, key = null, parent = null, cbparent = null, root 
       return null
     }
     if (
-      (typeof value === 'object' && 'then' in value && typeof value.then === 'function') ||
-      (typeof value === 'function' && value.constructor.name === 'AsyncFunction')
+      (typeof value === "object" &&
+        "then" in value &&
+        typeof value.then === "function") ||
+      (typeof value === "function" &&
+        value.constructor.name === "AsyncFunction")
     ) {
-      if (hydrating) { waitingGens.add(value) }
-      generatorResults.set(value, null);
-      (async () => {
+      if (hydrating) {
+        waitingGens.add(value)
+      }
+      generatorResults.set(value, null)
+      ;(async () => {
         process(
           // @ts-expect-error
           value,
@@ -108,24 +138,26 @@ export const syncify = (value, key = null, parent = null, cbparent = null, root 
           cbparent,
           syncify(
             // @ts-expect-error
-            await (typeof value === 'function' ? value() : value),
+            await (typeof value === "function" ? value() : value),
             key,
             parent,
             cbparent,
-            false
-          )
+            false,
+          ),
         )
       })()
       // @ts-expect-error
       return null
     }
-    if (typeof value === 'function') {
+    if (typeof value === "function") {
       // check for eventlisteners or internal functions
       // TODO: Have some sort of way to pass functions to web components, check for - in parent tag name
       if (
         // @ts-expect-error: TODO: Fix better types for Vnodes (and how to typeguard for them)
-        (key[0] === 'o' && key[1] === 'n') || (key === 'r' && parent?.isSkruvDom === true) ||
-        key === 'skruvAfterCreate'
+        (key[0] === "o" && key[1] === "n") ||
+        // @ts-expect-error: TODO: Fix better types for Vnodes (and how to typeguard for them)
+        (key === "r" && parent?.isSkruvDom === true) ||
+        key === "skruvAfterCreate"
       ) {
         // @ts-expect-error
         return value
@@ -136,7 +168,7 @@ export const syncify = (value, key = null, parent = null, cbparent = null, root 
       return newValue
     }
   }
-  if (typeof value === 'object') {
+  if (typeof value === "object") {
     /** @type {{r?:() => boolean}|Array<any>} */
     let newVal = {}
     let cb = newVal

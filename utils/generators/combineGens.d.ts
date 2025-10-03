@@ -4,4 +4,4 @@ export default combineGens;
  * @param  {...AsyncGenerator<T>} gens
  * @returns {AsyncGenerator<T[]>}
  */
-declare function combineGens<T>(...gens: AsyncGenerator<T, any, any>[]): AsyncGenerator<T[], any, any>;
+declare function combineGens<T>(...gens: AsyncGenerator<T>[]): AsyncGenerator<T[]>;

@@ -56,9 +56,9 @@ export type SkruvRequestInitAdditional = {
     allowEmpty?: boolean | undefined;
 };
 export type SkruvRequestInit = RequestInit & SkruvRequestInitAdditional;
-export type JSONValue = string | number | boolean | any[] | {
+export type JSONValue = string | number | boolean | {
     [x: string]: any;
-};
+} | Array<any>;
 export type SkruvResponse = {
     ok: boolean;
     request: {

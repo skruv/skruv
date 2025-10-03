@@ -1,43 +1,43 @@
-import '../utils/minidom.js'
+import "../utils/minidom.js"
 
-import assert from 'node:assert'
-import test from 'node:test'
+import assert from "node:assert"
+import test from "node:test"
 
-import { elementFactory, render } from '../skruv.js'
-import addLoader from '../utils/generators/addLoader.js'
-import wait from '../utils/generators/waitPromise.js'
-import { hydrationPromise, syncify } from '../utils/syncify.js'
+import { elementFactory, render } from "../skruv.js"
+import addLoader from "../utils/generators/addLoader.js"
+import wait from "../utils/generators/waitPromise.js"
+import { hydrationPromise, syncify } from "../utils/syncify.js"
 
 const { body, div, html } = elementFactory
 
-test('loader', async () => {
+test("loader", async () => {
   render(
     syncify(
       html(
         body(
           addLoader(
-            async function * () {
+            async function* () {
               await wait(500)
-              yield div('finished!')
+              yield div("finished!")
             },
-            div({ skruvFinished: false }, 'Loading content')
-          )
-        )
-      )
-    )
+            div({ skruvFinished: false }, "Loading content"),
+          ),
+        ),
+      ),
+    ),
   )
   assert.strictEqual(
     document.documentElement.innerHTML,
-    '<!DOCTYPE html><html><body></body></html>'
+    "<!DOCTYPE html><html><body></body></html>",
   )
   await wait(400)
   assert.strictEqual(
     document.documentElement.innerHTML,
-    '<!DOCTYPE html><html><body><div>Loading content</div></body></html>'
+    "<!DOCTYPE html><html><body><div>Loading content</div></body></html>",
   )
   await hydrationPromise
   assert.strictEqual(
     document.documentElement.innerHTML,
-    '<!DOCTYPE html><html><body><div>finished!</div></body></html>'
+    "<!DOCTYPE html><html><body><div>finished!</div></body></html>",
   )
 })

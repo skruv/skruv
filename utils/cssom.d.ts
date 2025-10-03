@@ -44,7 +44,7 @@ declare class CSSStyleDeclaration {
      * @param {string} [priority=null] "important" or null
      * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleDeclaration-setProperty
      */
-    setProperty(name: string, value: string, priority?: string | undefined): void;
+    setProperty(name: string, value: string, priority?: string): void;
     /**
      *
      * @param {string} name
@@ -66,7 +66,7 @@ declare class CSSStyleDeclaration {
      */
     getPropertyShorthand(): void;
     isPropertyImplicit(): void;
-    set cssText(arg: string);
+    set cssText(text: string);
     get cssText(): string;
 }
 /**
@@ -115,7 +115,7 @@ declare class CSSGroupingRule extends CSSRule {
      * @see https://www.w3.org/TR/cssom-1/#dom-cssgroupingrule-insertrule
      * @return {number} The index within the grouping rule's collection of the newly inserted rule.
      */
-    insertRule(rule: string, index?: number | undefined): number;
+    insertRule(rule: string, index?: number): number;
     /**
      * Used to delete a rule from the grouping rule.
      *
@@ -135,7 +135,7 @@ declare class CSSGroupingRule extends CSSRule {
  */
 declare class CSSConditionRule extends CSSGroupingRule {
     conditionText: string;
-    set cssText(arg: any);
+    set cssText(cssText: any);
     get cssText(): any;
 }
 /**
@@ -147,7 +147,7 @@ declare class CSSStyleRule extends CSSRule {
     selectorText: string;
     style: CSSStyleDeclaration;
     type: number;
-    set cssText(arg: string);
+    set cssText(cssText: string);
     get cssText(): string;
     /**
      * NON-STANDARD
@@ -165,10 +165,10 @@ declare class MediaList {
     /**
      * @param {string} value
      */
-    set mediaText(arg: string);
+    set mediaText(value: string);
     /**
-   * @return {string}
-   */
+     * @return {string}
+     */
     get mediaText(): string;
     /**
      * @param {string} medium
@@ -205,7 +205,7 @@ declare class CSSImportRule extends CSSRule {
     media: MediaList;
     styleSheet: CSSStyleSheet;
     type: number;
-    set cssText(arg: string);
+    set cssText(cssText: string);
     get cssText(): string;
 }
 /**
@@ -237,21 +237,21 @@ declare class StyleSheet {
 declare class CSSStyleSheet extends StyleSheet {
     cssRules: any[];
     /**
-    * Used to insert a new rule into the style sheet. The new rule now becomes part of the cascade.
-    *
-    *   sheet = new Sheet("body {margin: 0}")
-    *   sheet.toString()
-    *   -> "body{margin:0;}"
-    *   sheet.insertRule("img {border: none}", 0)
-    *   -> 0
-    *   sheet.toString()
-    *   -> "img{border:none;}body{margin:0;}"
-    *
-    * @param {string} rule
-    * @param {number} index
-    * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleSheet-insertRule
-    * @return {number} The index within the style sheet's rule collection of the newly inserted rule.
-    */
+     * Used to insert a new rule into the style sheet. The new rule now becomes part of the cascade.
+     *
+     *   sheet = new Sheet("body {margin: 0}")
+     *   sheet.toString()
+     *   -> "body{margin:0;}"
+     *   sheet.insertRule("img {border: none}", 0)
+     *   -> 0
+     *   sheet.toString()
+     *   -> "img{border:none;}body{margin:0;}"
+     *
+     * @param {string} rule
+     * @param {number} index
+     * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleSheet-insertRule
+     * @return {number} The index within the style sheet's rule collection of the newly inserted rule.
+     */
     insertRule(rule: string, index: number): number;
     /**
      * Used to delete a rule from the style sheet.
@@ -296,10 +296,10 @@ declare class MatcherList {
     /**
      * @param {string} value
      */
-    set matcherText(arg: string);
+    set matcherText(value: string);
     /**
-   * @return {string}
-   */
+     * @return {string}
+     */
     get matcherText(): string;
     /**
      * @param {string} matcher
@@ -325,7 +325,7 @@ declare class CSSDocumentRule extends CSSRule {
  * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSValue
  */
 declare class CSSValue {
-    set cssText(arg: void);
+    set cssText(text: void);
     get cssText(): void;
     _getConstructorName(): string;
 }
@@ -351,8 +351,8 @@ declare class CSSValueExpression extends CSSValue {
      *
      * .selector {
      *    zoom: expression(documentElement.clientWidth > 1000 ? '1000px' : 'auto');
-    * }
-    */
+     * }
+     */
     parse(): Object;
     /**
      *

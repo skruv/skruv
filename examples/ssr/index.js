@@ -1,13 +1,34 @@
-import { elementFactory, render } from '../../skruv.js'
-import { css, cssTextGenerator } from '../../utils/css.js'
-import { createState } from '../../utils/state.js'
-import { hydrationPromise, syncify } from '../../utils/syncify.js'
+import { elementFactory, render } from "../../skruv.js"
+import { css, cssTextGenerator } from "../../utils/css.js"
+import { createState } from "../../utils/state.js"
+import { hydrationPromise, syncify } from "../../utils/syncify.js"
 
 // eslint-disable-next-line max-len
-const { html, head, title, meta, link, body, main, h1, form, label, input, button, ol, li, a, style, script, skruvText: text, skruvComment: comment, skruvHeader: header } = elementFactory
+const {
+  html,
+  head,
+  title,
+  meta,
+  link,
+  body,
+  main,
+  h1,
+  form,
+  label,
+  input,
+  button,
+  ol,
+  li,
+  a,
+  style,
+  script,
+  skruvText: text,
+  skruvComment: comment,
+  skruvHeader: header,
+} = elementFactory
 
 const state = createState({
-  todos: ['Write todos']
+  todos: ["Write todos"],
 })
 
 const styles = css`
@@ -31,64 +52,82 @@ const styles = css`
 `
 
 const dom = syncify(
-  html({ lang: 'en-US', class: styles },
+  html(
+    { lang: "en-US", class: styles },
     head(
       // @ts-expect-error: SKRUV_1
       title(state.todos.getGenerator(0)),
-      meta({ name: 'viewport', content: 'width=device-width, initial-scale=1' }),
+      meta({
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
+      }),
       style(cssTextGenerator),
-      link({ rel: 'icon', href: '/icon.svg', type: 'image/svg+xml', sizes: 'any' }),
-      meta({ name: 'description', content: 'Skruv todo-list' })
+      link({
+        rel: "icon",
+        href: "/icon.svg",
+        type: "image/svg+xml",
+        sizes: "any",
+      }),
+      meta({ name: "description", content: "Skruv todo-list" }),
     ),
     body(
       main(
         // @ts-expect-error: SKRUV_1
         h1(state.todos.getGenerator(0)),
-        form({
-          onsubmit: e => {
-            e.preventDefault()
-            const todo = new FormData(e.currentTarget).get('todo')
-              ?.toString()
-            if (todo) { state.todos.unshift(todo) }
-            e.currentTarget.reset()
-          }
-        },
-        label(
-          'What do you need to do?',
-          input({
-            type: 'text',
-            name: 'todo'
-          })
+        form(
+          {
+            onsubmit: (e) => {
+              e.preventDefault()
+              const todo = new FormData(e.currentTarget).get("todo")?.toString()
+              if (todo) {
+                state.todos.unshift(todo)
+              }
+              e.currentTarget.reset()
+            },
+          },
+          label(
+            "What do you need to do?",
+            input({
+              type: "text",
+              name: "todo",
+            }),
+          ),
+          button("New!"),
         ),
-        button('New!')
-        ),
-        async function * () {
+        async function* () {
           for await (const currentState of state) {
             yield ol(
-              currentState.todos.map((todo, i) => li(
-                `${todo} `,
-                a({
-                  href: '#',
-                  onclick: e => {
-                    e.preventDefault()
-                    currentState.todos.splice(i, 1)
-                  }
-                }, 'x')
-              ))
+              currentState.todos.map((todo, i) =>
+                li(
+                  `${todo} `,
+                  a(
+                    {
+                      href: "#",
+                      onclick: (e) => {
+                        e.preventDefault()
+                        currentState.todos.splice(i, 1)
+                      },
+                    },
+                    "x",
+                  ),
+                ),
+              ),
             )
           }
-        }
+        },
       ),
-      text('test'),
-      comment('test'),
+      text("test"),
+      comment("test"),
       header({
-        name: 'x-test',
-        value: 'test'
+        name: "x-test",
+        value: "test",
       }),
       // @ts-expect-error
-      !!globalThis.skruvSSRScript && script({ type: 'module' }, globalThis.skruvSSRScript)
-    )
-  )
+      !!globalThis.skruvSSRScript &&
+        // @ts-expect-error
+        script({ type: "module" }, globalThis.skruvSSRScript),
+    ),
+  ),
 )
 
 const doRender = async () => {

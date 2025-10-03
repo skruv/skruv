@@ -25,7 +25,7 @@
  * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleDeclaration
  */
 class CSSStyleDeclaration {
-  constructor () {
+  constructor() {
     this.length = 0
     this.parentRule = null
 
@@ -40,8 +40,8 @@ class CSSStyleDeclaration {
    * @return {string} the value of the property if it has been explicitly set for this declaration block.
    * Returns the empty string if the property has not been set.
    */
-  getPropertyValue (name) {
-    return this[name] || ''
+  getPropertyValue(name) {
+    return this[name] || ""
   }
 
   /**
@@ -51,7 +51,7 @@ class CSSStyleDeclaration {
    * @param {string} [priority=null] "important" or null
    * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleDeclaration-setProperty
    */
-  setProperty (name, value, priority) {
+  setProperty(name, value, priority) {
     if (this[name]) {
       // Property already exist. Overwrite it.
       var index = Array.prototype.indexOf.call(this, name)
@@ -64,7 +64,7 @@ class CSSStyleDeclaration {
       this[this.length] = name
       this.length++
     }
-    this[name] = value + ''
+    this[name] = `${value}`
     this._importants[name] = priority
   }
 
@@ -75,16 +75,16 @@ class CSSStyleDeclaration {
    * @return {string} the value of the property if it has been explicitly set for this declaration block.
    * Returns the empty string if the property has not been set or the property name does not correspond to a known CSS property.
    */
-  removeProperty (name) {
+  removeProperty(name) {
     if (!(name in this)) {
-      return ''
+      return ""
     }
     var index = Array.prototype.indexOf.call(this, name)
     if (index < 0) {
-      return ''
+      return ""
     }
     var prevValue = this[name]
-    this[name] = ''
+    this[name] = ""
 
     // That's what WebKit and Opera do
     Array.prototype.splice.call(this, index, 1)
@@ -95,7 +95,7 @@ class CSSStyleDeclaration {
     return prevValue
   }
 
-  getPropertyCSSValue () {
+  getPropertyCSSValue() {
     // FIXME
   }
 
@@ -103,8 +103,8 @@ class CSSStyleDeclaration {
    *
    * @param {String} name
    */
-  getPropertyPriority (name) {
-    return this._importants[name] || ''
+  getPropertyPriority(name) {
+    return this._importants[name] || ""
   }
 
   /**
@@ -112,43 +112,47 @@ class CSSStyleDeclaration {
    *   element.style.getPropertyShorthand("overflow-x")
    *   -> "overflow"
    */
-  getPropertyShorthand () {
+  getPropertyShorthand() {
     // FIXME
   }
 
-  isPropertyImplicit () {
+  isPropertyImplicit() {
     // FIXME
   }
 
   // Doesn't work in IE < 9
-  get cssText () {
+  get cssText() {
     var properties = []
     for (var i = 0, length = this.length; i < length; ++i) {
       var name = this[i]
       var value = this.getPropertyValue(name)
       var priority = this.getPropertyPriority(name)
       if (priority) {
-        priority = ' !' + priority
+        priority = ` !${priority}`
       }
-      properties[i] = name + ': ' + value + priority + ';'
+      properties[i] = `${name}: ${value}${priority};`
     }
-    return properties.join(' ')
+    return properties.join(" ")
   }
 
-  set cssText (text) {
+  set cssText(text) {
     var i, name
-    for (i = this.length; i--;) {
+    for (i = this.length; i--; ) {
       name = this[i]
-      this[name] = ''
+      this[name] = ""
     }
     Array.prototype.splice.call(this, 0, this.length)
     this._importants = {}
 
-    var dummyRule = parse('#bogus{' + text + '}').cssRules[0].style
+    var dummyRule = parse(`#bogus{${text}}`).cssRules[0].style
     var length = dummyRule.length
     for (i = 0; i < length; ++i) {
       name = dummyRule[i]
-      this.setProperty(dummyRule[i], dummyRule.getPropertyValue(name), dummyRule.getPropertyPriority(name))
+      this.setProperty(
+        dummyRule[i],
+        dummyRule.getPropertyValue(name),
+        dummyRule.getPropertyPriority(name),
+      )
     }
   }
 }
@@ -158,7 +162,7 @@ class CSSStyleDeclaration {
  * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSRule
  */
 class CSSRule {
-  constructor () {
+  constructor() {
     this.parentRule = null
     this.parentStyleSheet = null
     this.UNKNOWN_RULE = 0 // obsolete
@@ -186,7 +190,7 @@ class CSSRule {
  * @see https://drafts.csswg.org/cssom/#the-cssgroupingrule-interface
  */
 class CSSGroupingRule extends CSSRule {
-  constructor () {
+  constructor() {
     super()
     this.cssRules = []
   }
@@ -207,9 +211,9 @@ class CSSGroupingRule extends CSSRule {
    * @see https://www.w3.org/TR/cssom-1/#dom-cssgroupingrule-insertrule
    * @return {number} The index within the grouping rule's collection of the newly inserted rule.
    */
-  insertRule (rule, index) {
+  insertRule(rule, index) {
     if (index < 0 || index > this.cssRules.length) {
-      throw new RangeError('INDEX_SIZE_ERR')
+      throw new RangeError("INDEX_SIZE_ERR")
     }
     var cssRule = parse(rule).cssRules[0]
     cssRule.parentRule = this
@@ -229,9 +233,9 @@ class CSSGroupingRule extends CSSRule {
    * @param {number} index within the grouping rule's rule list of the rule to remove.
    * @see https://www.w3.org/TR/cssom-1/#dom-cssgroupingrule-deleterule
    */
-  deleteRule (index) {
+  deleteRule(index) {
     if (index < 0 || index >= this.cssRules.length) {
-      throw new RangeError('INDEX_SIZE_ERR')
+      throw new RangeError("INDEX_SIZE_ERR")
     }
     this.cssRules.splice(index, 1)[0].parentRule = null
   }
@@ -241,17 +245,17 @@ class CSSGroupingRule extends CSSRule {
  * @see https://www.w3.org/TR/css-conditional-3/#the-cssconditionrule-interface
  */
 class CSSConditionRule extends CSSGroupingRule {
-  constructor () {
+  constructor() {
     super()
-    this.conditionText = ''
+    this.conditionText = ""
     this.cssRules = []
   }
 
-  set cssText (cssText) {
+  set cssText(cssText) {
     this.cssText = cssText
   }
 
-  get cssText () {
+  get cssText() {
     return this.cssText
   }
 }
@@ -262,25 +266,25 @@ class CSSConditionRule extends CSSGroupingRule {
  * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleRule
  */
 class CSSStyleRule extends CSSRule {
-  constructor () {
+  constructor() {
     super()
-    this.selectorText = ''
+    this.selectorText = ""
     this.style = new CSSStyleDeclaration()
     this.style.parentRule = this
     this.type = 1
   }
 
-  get cssText () {
+  get cssText() {
     var text
     if (this.selectorText) {
-      text = this.selectorText + ' {' + this.style.cssText + '}'
+      text = `${this.selectorText} {${this.style.cssText}}`
     } else {
-      text = ''
+      text = ""
     }
     return text
   }
 
-  set cssText (cssText) {
+  set cssText(cssText) {
     var _rule = new CSSStyleRule()
     var rule = _rule.parse(cssText)
     this.style = rule.style
@@ -293,40 +297,40 @@ class CSSStyleRule extends CSSRule {
    * @param {string} ruleText
    * @return CSSStyleRule
    */
-  parse (ruleText) {
+  parse(ruleText) {
     var i = 0
-    var state = 'selector'
+    var state = "selector"
     var index
     var j = i
-    var buffer = ''
+    var buffer = ""
 
     var SIGNIFICANT_WHITESPACE = {
       selector: true,
-      value: true
+      value: true,
     }
 
     var styleRule = new CSSStyleRule()
-    var name; var
-      priority = ''
+    var name
+    var priority = ""
 
     for (var character; (character = ruleText.charAt(i)); i++) {
       switch (character) {
-        case ' ':
-        case '\t':
-        case '\r':
-        case '\n':
-        case '\f':
+        case " ":
+        case "\t":
+        case "\r":
+        case "\n":
+        case "\f":
           if (SIGNIFICANT_WHITESPACE[state]) {
             // Squash 2 or more white-spaces in the row into 1
             switch (ruleText.charAt(i - 1)) {
-              case ' ':
-              case '\t':
-              case '\r':
-              case '\n':
-              case '\f':
+              case " ":
+              case "\t":
+              case "\r":
+              case "\n":
+              case "\f":
                 break
               default:
-                buffer += ' '
+                buffer += " "
                 break
             }
           }
@@ -354,12 +358,12 @@ class CSSStyleRule extends CSSRule {
           break
 
         // Comment
-        case '/':
-          if (ruleText.charAt(i + 1) === '*') {
+        case "/":
+          if (ruleText.charAt(i + 1) === "*") {
             i += 2
-            index = ruleText.indexOf('*/', i)
+            index = ruleText.indexOf("*/", i)
             if (index === -1) {
-              throw new SyntaxError('Missing */')
+              throw new SyntaxError("Missing */")
             } else {
               i = index + 1
             }
@@ -368,55 +372,55 @@ class CSSStyleRule extends CSSRule {
           }
           break
 
-        case '{':
-          if (state === 'selector') {
+        case "{":
+          if (state === "selector") {
             styleRule.selectorText = buffer.trim()
-            buffer = ''
-            state = 'name'
+            buffer = ""
+            state = "name"
           }
           break
 
-        case ':':
-          if (state === 'name') {
+        case ":":
+          if (state === "name") {
             name = buffer.trim()
-            buffer = ''
-            state = 'value'
+            buffer = ""
+            state = "value"
           } else {
             buffer += character
           }
           break
 
-        case '!':
-          if (state === 'value' && ruleText.indexOf('!important', i) === i) {
-            priority = 'important'
-            i += 'important'.length
+        case "!":
+          if (state === "value" && ruleText.indexOf("!important", i) === i) {
+            priority = "important"
+            i += "important".length
           } else {
             buffer += character
           }
           break
 
-        case ';':
-          if (state === 'value') {
+        case ";":
+          if (state === "value") {
             styleRule.style.setProperty(name, buffer.trim(), priority)
-            priority = ''
-            buffer = ''
-            state = 'name'
+            priority = ""
+            buffer = ""
+            state = "name"
           } else {
             buffer += character
           }
           break
 
-        case '}':
-          if (state === 'value') {
+        case "}":
+          if (state === "value") {
             styleRule.style.setProperty(name, buffer.trim(), priority)
-            priority = ''
-            buffer = ''
-          } else if (state === 'name') {
+            priority = ""
+            buffer = ""
+          } else if (state === "name") {
             break
           } else {
             buffer += character
           }
-          state = 'selector'
+          state = "selector"
           break
 
         default:
@@ -432,23 +436,23 @@ class CSSStyleRule extends CSSRule {
  * @see http://dev.w3.org/csswg/cssom/#the-medialist-interface
  */
 class MediaList {
-  constructor () {
+  constructor() {
     this.length = 0
   }
 
   /**
- * @return {string}
- */
-  get mediaText () {
-    return Array.prototype.join.call(this, ', ')
+   * @return {string}
+   */
+  get mediaText() {
+    return Array.prototype.join.call(this, ", ")
   }
 
   /**
    * @param {string} value
    */
-  set mediaText (value) {
-    var values = value.split(',')
-    var length = this.length = values.length
+  set mediaText(value) {
+    var values = value.split(",")
+    var length = (this.length = values.length)
     for (var i = 0; i < length; i++) {
       this[i] = values[i].trim()
     }
@@ -457,7 +461,7 @@ class MediaList {
   /**
    * @param {string} medium
    */
-  appendMedium (medium) {
+  appendMedium(medium) {
     if (Array.prototype.indexOf.call(this, medium) === -1) {
       this[this.length] = medium
       this.length++
@@ -467,7 +471,7 @@ class MediaList {
   /**
    * @param {string} medium
    */
-  deleteMedium (medium) {
+  deleteMedium(medium) {
     var index = Array.prototype.indexOf.call(this, medium)
     if (index !== -1) {
       Array.prototype.splice.call(this, index, 1)
@@ -480,28 +484,30 @@ class MediaList {
  * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSMediaRule
  */
 class CSSMediaRule extends CSSConditionRule {
-  constructor () {
+  constructor() {
     super()
     this.media = new MediaList()
     this.type = 4
   }
 
   // https://opensource.apple.com/source/WebCore/WebCore-7611.1.21.161.3/css/CSSMediaRule.cpp
-  get conditionText () {
+  get conditionText() {
     return this.media.mediaText
   }
 
-  set conditionText (value) {
-    if (!this.media) { this.media = new MediaList() }
+  set conditionText(value) {
+    if (!this.media) {
+      this.media = new MediaList()
+    }
     this.media.mediaText = value
   }
 
-  get cssText () {
+  get cssText() {
     var cssTexts = []
     for (var i = 0, length = this.cssRules.length; i < length; i++) {
       cssTexts.push(this.cssRules[i].cssText)
     }
-    return '@media ' + this.media.mediaText + ' {' + cssTexts.join('') + '}'
+    return `@media ${this.media.mediaText} {${cssTexts.join("")}}`
   }
 }
 
@@ -509,19 +515,19 @@ class CSSMediaRule extends CSSConditionRule {
  * @see https://drafts.csswg.org/css-conditional-3/#the-csssupportsrule-interface
  */
 class CSSSupportsRule extends CSSConditionRule {
-  constructor () {
+  constructor() {
     super()
     this.type = 12
   }
 
-  get cssText () {
+  get cssText() {
     var cssTexts = []
 
     for (var i = 0, length = this.cssRules.length; i < length; i++) {
       cssTexts.push(this.cssRules[i].cssText)
     }
 
-    return '@supports ' + this.conditionText + ' {' + cssTexts.join('') + '}'
+    return `@supports ${this.conditionText} {${cssTexts.join("")}}`
   }
 }
 
@@ -532,20 +538,26 @@ class CSSSupportsRule extends CSSConditionRule {
  */
 
 class CSSImportRule extends CSSRule {
-  constructor () {
+  constructor() {
     super()
-    this.href = ''
+    this.href = ""
     this.media = new MediaList()
     this.styleSheet = new CSSStyleSheet()
     this.type = 3
   }
 
-  get cssText () {
+  get cssText() {
     var mediaText = this.media.mediaText
-    return '@import url(' + this.href + ')' + (mediaText ? ' ' + mediaText : '') + ';'
+    return (
+      "@import url(" +
+      this.href +
+      ")" +
+      (mediaText ? ` ${mediaText}` : "") +
+      ";"
+    )
   }
 
-  set cssText (cssText) {
+  set cssText(cssText) {
     var i = 0
 
     /**
@@ -555,39 +567,39 @@ class CSSImportRule extends CSSRule {
      *         |
      *         url
      */
-    var state = ''
+    var state = ""
 
-    var buffer = ''
+    var buffer = ""
     var index
     for (var character; (character = cssText.charAt(i)); i++) {
       switch (character) {
-        case ' ':
-        case '\t':
-        case '\r':
-        case '\n':
-        case '\f':
-          if (state === 'after-import') {
-            state = 'url'
+        case " ":
+        case "\t":
+        case "\r":
+        case "\n":
+        case "\f":
+          if (state === "after-import") {
+            state = "url"
           } else {
             buffer += character
           }
           break
 
-        case '@':
-          if (!state && cssText.indexOf('@import', i) === i) {
-            state = 'after-import'
-            i += 'import'.length
-            buffer = ''
+        case "@":
+          if (!state && cssText.indexOf("@import", i) === i) {
+            state = "after-import"
+            i += "import".length
+            buffer = ""
           }
           break
 
-        case 'u':
-          if (state === 'url' && cssText.indexOf('url(', i) === i) {
-            index = cssText.indexOf(')', i + 1)
+        case "u":
+          if (state === "url" && cssText.indexOf("url(", i) === i) {
+            index = cssText.indexOf(")", i + 1)
             if (index === -1) {
-              throw new Error(i + ': ")" not found')
+              throw new Error(`${i}: ")" not found`)
             }
-            i += 'url('.length
+            i += "url(".length
             var url = cssText.slice(i, index)
             if (url[0] === url[url.length - 1]) {
               if (url[0] === '"' || url[0] === "'") {
@@ -596,36 +608,36 @@ class CSSImportRule extends CSSRule {
             }
             this.href = url
             i = index
-            state = 'media'
+            state = "media"
           }
           break
 
         case '"':
-          if (state === 'url') {
+          if (state === "url") {
             index = cssText.indexOf('"', i + 1)
             if (!index) {
-              throw new Error(i + ": '\"' not found")
+              throw new Error(`${i}: '"' not found`)
             }
             this.href = cssText.slice(i + 1, index)
             i = index
-            state = 'media'
+            state = "media"
           }
           break
 
         case "'":
-          if (state === 'url') {
+          if (state === "url") {
             index = cssText.indexOf("'", i + 1)
             if (!index) {
-              throw new Error(i + ': "\'" not found')
+              throw new Error(`${i}: "'" not found`)
             }
             this.href = cssText.slice(i + 1, index)
             i = index
-            state = 'media'
+            state = "media"
           }
           break
 
-        case ';':
-          if (state === 'media') {
+        case ";":
+          if (state === "media") {
             if (buffer) {
               this.media.mediaText = buffer.trim()
             }
@@ -633,7 +645,7 @@ class CSSImportRule extends CSSRule {
           break
 
         default:
-          if (state === 'media') {
+          if (state === "media") {
             buffer += character
           }
           break
@@ -646,7 +658,7 @@ class CSSImportRule extends CSSRule {
  * @see http://dev.w3.org/csswg/cssom/#css-font-face-rule
  */
 class CSSFontFaceRule extends CSSRule {
-  constructor () {
+  constructor() {
     super()
     this.style = new CSSStyleDeclaration()
     this.style.parentRule = this
@@ -656,8 +668,8 @@ class CSSFontFaceRule extends CSSRule {
   // FIXME
   // CSSOM.CSSFontFaceRule.prototype.insertRule = CSSStyleSheet.prototype.insertRule;
   // CSSOM.CSSFontFaceRule.prototype.deleteRule = CSSStyleSheet.prototype.deleteRule;
-  get cssText () {
-    return '@font-face {' + this.style.cssText + '}'
+  get cssText() {
+    return `@font-face {${this.style.cssText}}`
   }
 }
 
@@ -665,7 +677,7 @@ class CSSFontFaceRule extends CSSRule {
  * @see http://www.w3.org/TR/shadow-dom/#host-at-rule
  */
 class CSSHostRule extends CSSRule {
-  constructor () {
+  constructor() {
     super()
     this.cssRules = []
     this.type = 1001
@@ -674,12 +686,12 @@ class CSSHostRule extends CSSRule {
   // FIXME
   // CSSOM.CSSHostRule.prototype.insertRule = CSSStyleSheet.prototype.insertRule;
   // CSSOM.CSSHostRule.prototype.deleteRule = CSSStyleSheet.prototype.deleteRule;
-  get cssText () {
+  get cssText() {
     var cssTexts = []
     for (var i = 0, length = this.cssRules.length; i < length; i++) {
       cssTexts.push(this.cssRules[i].cssText)
     }
-    return '@host {' + cssTexts.join('') + '}'
+    return `@host {${cssTexts.join("")}}`
   }
 }
 
@@ -687,7 +699,7 @@ class CSSHostRule extends CSSRule {
  * @see http://dev.w3.org/csswg/cssom/#the-stylesheet-interface
  */
 class StyleSheet {
-  constructor () {
+  constructor() {
     this.parentStyleSheet = null
   }
 }
@@ -697,30 +709,30 @@ class StyleSheet {
  * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleSheet
  */
 class CSSStyleSheet extends StyleSheet {
-  constructor () {
+  constructor() {
     super()
     this.cssRules = []
   }
 
   /**
-  * Used to insert a new rule into the style sheet. The new rule now becomes part of the cascade.
-  *
-  *   sheet = new Sheet("body {margin: 0}")
-  *   sheet.toString()
-  *   -> "body{margin:0;}"
-  *   sheet.insertRule("img {border: none}", 0)
-  *   -> 0
-  *   sheet.toString()
-  *   -> "img{border:none;}body{margin:0;}"
-  *
-  * @param {string} rule
-  * @param {number} index
-  * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleSheet-insertRule
-  * @return {number} The index within the style sheet's rule collection of the newly inserted rule.
-  */
-  insertRule (rule, index) {
+   * Used to insert a new rule into the style sheet. The new rule now becomes part of the cascade.
+   *
+   *   sheet = new Sheet("body {margin: 0}")
+   *   sheet.toString()
+   *   -> "body{margin:0;}"
+   *   sheet.insertRule("img {border: none}", 0)
+   *   -> 0
+   *   sheet.toString()
+   *   -> "img{border:none;}body{margin:0;}"
+   *
+   * @param {string} rule
+   * @param {number} index
+   * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleSheet-insertRule
+   * @return {number} The index within the style sheet's rule collection of the newly inserted rule.
+   */
+  insertRule(rule, index) {
     if (index < 0 || index > this.cssRules.length) {
-      throw new RangeError('INDEX_SIZE_ERR')
+      throw new RangeError("INDEX_SIZE_ERR")
     }
     var cssRule = parse(rule).cssRules[0]
     cssRule.parentStyleSheet = this
@@ -741,22 +753,22 @@ class CSSStyleSheet extends StyleSheet {
    * @param {number} index within the style sheet's rule list of the rule to remove.
    * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleSheet-deleteRule
    */
-  deleteRule (index) {
+  deleteRule(index) {
     if (index < 0 || index >= this.cssRules.length) {
-      throw new RangeError('INDEX_SIZE_ERR')
+      throw new RangeError("INDEX_SIZE_ERR")
     }
     this.cssRules.splice(index, 1)
   }
 
   /**
- * NON-STANDARD
- * @return {string} serialize stylesheet
- */
-  toString () {
-    var result = ''
+   * NON-STANDARD
+   * @return {string} serialize stylesheet
+   */
+  toString() {
+    var result = ""
     var rules = this.cssRules
     for (var i = 0; i < rules.length; i++) {
-      result += rules[i].cssText + '\n'
+      result += `${rules[i].cssText}\n`
     }
     return result
   }
@@ -767,9 +779,9 @@ class CSSStyleSheet extends StyleSheet {
  * @see http://www.w3.org/TR/css3-animations/#DOM-CSSKeyframesRule
  */
 class CSSKeyframesRule extends CSSRule {
-  constructor () {
+  constructor() {
     super()
-    this.name = ''
+    this.name = ""
     this.cssRules = []
     this.type = 7
   }
@@ -777,12 +789,20 @@ class CSSKeyframesRule extends CSSRule {
   // FIXME
   // CSSOM.CSSKeyframesRule.prototype.insertRule = CSSStyleSheet.prototype.insertRule;
   // CSSOM.CSSKeyframesRule.prototype.deleteRule = CSSStyleSheet.prototype.deleteRule;
-  get cssText () {
+  get cssText() {
     var cssTexts = []
     for (var i = 0, length = this.cssRules.length; i < length; i++) {
-      cssTexts.push('  ' + this.cssRules[i].cssText)
+      cssTexts.push(`  ${this.cssRules[i].cssText}`)
     }
-    return '@' + (this._vendorPrefix || '') + 'keyframes ' + this.name + ' { \n' + cssTexts.join('\n') + '\n}'
+    return (
+      "@" +
+      (this._vendorPrefix || "") +
+      "keyframes " +
+      this.name +
+      " { \n" +
+      cssTexts.join("\n") +
+      "\n}"
+    )
   }
 }
 
@@ -791,9 +811,9 @@ class CSSKeyframesRule extends CSSRule {
  * @see http://www.w3.org/TR/css3-animations/#DOM-CSSKeyframeRule
  */
 class CSSKeyframeRule extends CSSRule {
-  constructor () {
+  constructor() {
     super()
-    this.keyText = ''
+    this.keyText = ""
     this.style = new CSSStyleDeclaration()
     this.style.parentRule = this
     this.type = 8
@@ -802,8 +822,8 @@ class CSSKeyframeRule extends CSSRule {
   // FIXME
   // CSSOM.CSSKeyframeRule.prototype.insertRule = CSSStyleSheet.prototype.insertRule;
   // CSSOM.CSSKeyframeRule.prototype.deleteRule = CSSStyleSheet.prototype.deleteRule;
-  get cssText () {
-    return this.keyText + ' {' + this.style.cssText + '} '
+  get cssText() {
+    return `${this.keyText} {${this.style.cssText}} `
   }
 }
 
@@ -811,24 +831,24 @@ class CSSKeyframeRule extends CSSRule {
  * @see https://developer.mozilla.org/en/CSS/@-moz-document
  */
 class MatcherList {
-  constructor () {
+  constructor() {
     this.length = 0
   }
 
   /**
- * @return {string}
- */
-  get matcherText () {
-    return Array.prototype.join.call(this, ', ')
+   * @return {string}
+   */
+  get matcherText() {
+    return Array.prototype.join.call(this, ", ")
   }
 
   /**
    * @param {string} value
    */
-  set matcherText (value) {
+  set matcherText(value) {
     // just a temporary solution, actually it may be wrong by just split the value with ',', because a url can include ','.
-    var values = value.split(',')
-    var length = this.length = values.length
+    var values = value.split(",")
+    var length = (this.length = values.length)
     for (var i = 0; i < length; i++) {
       this[i] = values[i].trim()
     }
@@ -837,7 +857,7 @@ class MatcherList {
   /**
    * @param {string} matcher
    */
-  appendMatcher (matcher) {
+  appendMatcher(matcher) {
     if (Array.prototype.indexOf.call(this, matcher) === -1) {
       this[this.length] = matcher
       this.length++
@@ -847,7 +867,7 @@ class MatcherList {
   /**
    * @param {string} matcher
    */
-  deleteMatcher (matcher) {
+  deleteMatcher(matcher) {
     var index = Array.prototype.indexOf.call(this, matcher)
     if (index !== -1) {
       Array.prototype.splice.call(this, index, 1)
@@ -861,7 +881,7 @@ class MatcherList {
  */
 
 class CSSDocumentRule extends CSSRule {
-  constructor () {
+  constructor() {
     super()
     this.matcher = new MatcherList()
     this.cssRules = []
@@ -871,12 +891,18 @@ class CSSDocumentRule extends CSSRule {
   // FIXME
   // CSSOM.CSSDocumentRule.prototype.insertRule = CSSStyleSheet.prototype.insertRule;
   // CSSOM.CSSDocumentRule.prototype.deleteRule = CSSStyleSheet.prototype.deleteRule;
-  get cssText () {
+  get cssText() {
     var cssTexts = []
     for (var i = 0, length = this.cssRules.length; i < length; i++) {
       cssTexts.push(this.cssRules[i].cssText)
     }
-    return '@-moz-document ' + this.matcher.matcherText + ' {' + cssTexts.join('') + '}'
+    return (
+      "@-moz-document " +
+      this.matcher.matcherText +
+      " {" +
+      cssTexts.join("") +
+      "}"
+    )
   }
 }
 
@@ -886,19 +912,25 @@ class CSSDocumentRule extends CSSRule {
  */
 class CSSValue {
   // @see: http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSValue
-  set cssText (text) {
+  set cssText(text) {
     var name = this._getConstructorName()
 
-    throw new Error('DOMException: property "cssText" of "' + name + '" is readonly and can not be replaced with "' + text + '"!')
+    throw new Error(
+      'DOMException: property "cssText" of "' +
+        name +
+        '" is readonly and can not be replaced with "' +
+        text +
+        '"!',
+    )
   }
 
-  get cssText () {
+  get cssText() {
     var name = this._getConstructorName()
 
-    throw new Error('getter "cssText" of "' + name + '" is not implemented!')
+    throw new Error(`getter "cssText" of "${name}" is not implemented!`)
   }
 
-  _getConstructorName () {
+  _getConstructorName() {
     var s = this.constructor.toString()
     var c = s.match(/function\s([^(]+)/)
     var name = c[1]
@@ -913,7 +945,7 @@ class CSSValue {
  *
  */
 class CSSValueExpression extends CSSValue {
-  constructor (token, idx) {
+  constructor(token, idx) {
     super()
     this._token = token
     this._idx = idx
@@ -932,15 +964,15 @@ class CSSValueExpression extends CSSValue {
    *
    * .selector {
    *    zoom: expression(documentElement.clientWidth > 1000 ? '1000px' : 'auto');
-  * }
-  */
-  parse () {
+   * }
+   */
+  parse() {
     var token = this._token
     var idx = this._idx
 
-    var character = ''
-    var expression = ''
-    var error = ''
+    var character = ""
+    var expression = ""
+    var error = ""
     var info
     var paren = []
 
@@ -948,34 +980,37 @@ class CSSValueExpression extends CSSValue {
       character = token.charAt(idx)
 
       // end of token
-      if (character === '') {
-        error = 'css expression error: unfinished expression!'
+      if (character === "") {
+        error = "css expression error: unfinished expression!"
         break
       }
 
       switch (character) {
-        case '(':
+        case "(":
           paren.push(character)
           expression += character
           break
 
-        case ')':
+        case ")":
           paren.pop(character)
           expression += character
           break
 
-        case '/':
-          if ((info = this._parseJSComment(token, idx))) { // comment?
+        case "/":
+          if ((info = this._parseJSComment(token, idx))) {
+            // comment?
             if (info.error) {
-              error = 'css expression error: unfinished comment in expression!'
+              error = "css expression error: unfinished comment in expression!"
             } else {
               idx = info.idx
               // ignore the comment
             }
-          } else if ((info = this._parseJSRexExp(token, idx))) { // regexp
+          } else if ((info = this._parseJSRexExp(token, idx))) {
+            // regexp
             idx = info.idx
             expression += info.text
-          } else { // other
+          } else {
+            // other
             expression += character
           }
           break
@@ -983,7 +1018,8 @@ class CSSValueExpression extends CSSValue {
         case "'":
         case '"':
           info = this._parseJSString(token, idx, character)
-          if (info) { // string
+          if (info) {
+            // string
             idx = info.idx
             expression += info.text
           } else {
@@ -1009,12 +1045,12 @@ class CSSValueExpression extends CSSValue {
     var ret
     if (error) {
       ret = {
-        error: error
+        error: error,
       }
     } else {
       ret = {
         idx: idx,
-        expression: expression
+        expression: expression,
       }
     }
 
@@ -1032,19 +1068,21 @@ class CSSValueExpression extends CSSValue {
    *          false
    *
    */
-  _parseJSComment (token, idx) {
+  _parseJSComment(token, idx) {
     var nextChar = token.charAt(idx + 1)
     var text
 
-    if (nextChar === '/' || nextChar === '*') {
+    if (nextChar === "/" || nextChar === "*") {
       var startIdx = idx
       var endIdx
       var commentEndChar
 
-      if (nextChar === '/') { // line comment
-        commentEndChar = '\n'
-      } else if (nextChar === '*') { // block comment
-        commentEndChar = '*/'
+      if (nextChar === "/") {
+        // line comment
+        commentEndChar = "\n"
+      } else if (nextChar === "*") {
+        // block comment
+        commentEndChar = "*/"
       }
 
       endIdx = token.indexOf(commentEndChar, startIdx + 1 + 1)
@@ -1053,12 +1091,12 @@ class CSSValueExpression extends CSSValue {
         text = token.substring(idx, endIdx + 1)
         return {
           idx: endIdx,
-          text: text
+          text: text,
         }
       } else {
-        var error = 'css expression error: unfinished comment in expression!'
+        var error = "css expression error: unfinished comment in expression!"
         return {
-          error: error
+          error: error,
         }
       }
     } else {
@@ -1075,7 +1113,7 @@ class CSSValueExpression extends CSSValue {
    *          false
    *
    */
-  _parseJSString (token, idx, sep) {
+  _parseJSString(token, idx, sep) {
     var endIdx = this._findMatchedIdx(token, idx, sep)
     var text
 
@@ -1086,7 +1124,7 @@ class CSSValueExpression extends CSSValue {
 
       return {
         idx: endIdx,
-        text: text
+        text: text,
       }
     }
   }
@@ -1149,8 +1187,8 @@ class CSSValueExpression extends CSSValue {
         void /a/
 
   */
-  _parseJSRexExp (token, idx) {
-    var before = token.substring(0, idx).replace(/\s+$/, '')
+  _parseJSRexExp(token, idx) {
+    var before = token.substring(0, idx).replace(/\s+$/, "")
     var legalRegx = [
       /^$/,
       /\($/,
@@ -1175,17 +1213,15 @@ class CSSValueExpression extends CSSValue {
       /instanceof$/,
       /new$/,
       /typeof$/,
-      /void$/
+      /void$/,
     ]
 
-    var isLegal = legalRegx.some(function (reg) {
-      return reg.test(before)
-    })
+    var isLegal = legalRegx.some((reg) => reg.test(before))
 
     if (!isLegal) {
       return false
     } else {
-      var sep = '/'
+      var sep = "/"
 
       // same logic as string
       return this._parseJSString(token, idx, sep)
@@ -1199,7 +1235,7 @@ class CSSValueExpression extends CSSValue {
    * @return {Number}
    *
    */
-  _findMatchedIdx (token, idx, sep) {
+  _findMatchedIdx(token, idx, sep) {
     var startIdx = idx
     var endIdx
 
@@ -1208,13 +1244,15 @@ class CSSValueExpression extends CSSValue {
     while (true) {
       endIdx = token.indexOf(sep, startIdx + 1)
 
-      if (endIdx === -1) { // not found
+      if (endIdx === -1) {
+        // not found
         endIdx = NOT_FOUND
         break
       } else {
         var text = token.substring(idx + 1, endIdx)
         var matched = text.match(/\\+$/)
-        if (!matched || matched[0] % 2 === 0) { // not escaped
+        if (!matched || matched[0] % 2 === 0) {
+          // not escaped
           break
         } else {
           startIdx = endIdx
@@ -1223,7 +1261,7 @@ class CSSValueExpression extends CSSValue {
     }
 
     // boundary must be in the same line(js sting or regexp)
-    var nextNewLineIdx = token.indexOf('\n', idx + 1)
+    var nextNewLineIdx = token.indexOf("\n", idx + 1)
     if (nextNewLineIdx < endIdx) {
       endIdx = NOT_FOUND
     }
@@ -1235,7 +1273,7 @@ class CSSValueExpression extends CSSValue {
 /**
  * @param {string} token
  */
-function parse (token) {
+function parse(token) {
   var i = 0
 
   /**
@@ -1249,22 +1287,22 @@ function parse (token) {
     "before-value" or
     "value"
   */
-  var state = 'before-selector'
+  var state = "before-selector"
 
   var index
-  var buffer = ''
+  var buffer = ""
   var valueParenthesisDepth = 0
 
   var SIGNIFICANT_WHITESPACE = {
     selector: true,
     value: true,
-    'value-parenthesis': true,
+    "value-parenthesis": true,
     atRule: true,
-    'importRule-begin': true,
+    "importRule-begin": true,
     importRule: true,
     atBlock: true,
     conditionBlock: true,
-    'documentRule-begin': true
+    "documentRule-begin": true,
   }
 
   var styleSheet = new CSSStyleSheet()
@@ -1280,7 +1318,7 @@ function parse (token) {
   var prevScope
 
   var name
-  var priority = ''
+  var priority = ""
   var styleRule
   var mediaRule
   var supportsRule
@@ -1292,11 +1330,11 @@ function parse (token) {
 
   var atKeyframesRegExp = /@(-(?:\w+-)+)?keyframes/g
 
-  var parseError = function (message) {
-    var lines = token.substring(0, i).split('\n')
+  var parseError = (message) => {
+    var lines = token.substring(0, i).split("\n")
     var lineCount = lines.length
     var charCount = lines.pop().length + 1
-    var error = new Error(message + ' (line ' + lineCount + ', char ' + charCount + ')')
+    var error = new Error(`${message} (line ${lineCount}, char ${charCount})`)
     error.line = lineCount
     /* jshint sub : true */
     error.char = charCount
@@ -1306,11 +1344,11 @@ function parse (token) {
 
   for (var character; (character = token.charAt(i)); i++) {
     switch (character) {
-      case ' ':
-      case '\t':
-      case '\r':
-      case '\n':
-      case '\f':
+      case " ":
+      case "\t":
+      case "\r":
+      case "\n":
+      case "\f":
         if (SIGNIFICANT_WHITESPACE[state]) {
           buffer += character
         }
@@ -1324,15 +1362,15 @@ function parse (token) {
           if (!index) {
             parseError('Unmatched "')
           }
-        } while (token[index - 2] === '\\')
+        } while (token[index - 2] === "\\")
         buffer += token.slice(i, index)
         i = index - 1
         switch (state) {
-          case 'before-value':
-            state = 'value'
+          case "before-value":
+            state = "value"
             break
-          case 'importRule-begin':
-            state = 'importRule'
+          case "importRule-begin":
+            state = "importRule"
             break
         }
         break
@@ -1344,105 +1382,105 @@ function parse (token) {
           if (!index) {
             parseError("Unmatched '")
           }
-        } while (token[index - 2] === '\\')
+        } while (token[index - 2] === "\\")
         buffer += token.slice(i, index)
         i = index - 1
         switch (state) {
-          case 'before-value':
-            state = 'value'
+          case "before-value":
+            state = "value"
             break
-          case 'importRule-begin':
-            state = 'importRule'
+          case "importRule-begin":
+            state = "importRule"
             break
         }
         break
 
       // Comment
-      case '/':
-        if (token.charAt(i + 1) === '*') {
+      case "/":
+        if (token.charAt(i + 1) === "*") {
           i += 2
-          index = token.indexOf('*/', i)
+          index = token.indexOf("*/", i)
           if (index === -1) {
-            parseError('Missing */')
+            parseError("Missing */")
           } else {
             i = index + 1
           }
         } else {
           buffer += character
         }
-        if (state === 'importRule-begin') {
-          buffer += ' '
-          state = 'importRule'
+        if (state === "importRule-begin") {
+          buffer += " "
+          state = "importRule"
         }
         break
 
       // At-rule
-      case '@':
-        if (token.indexOf('@-moz-document', i) === i) {
-          state = 'documentRule-begin'
+      case "@":
+        if (token.indexOf("@-moz-document", i) === i) {
+          state = "documentRule-begin"
           documentRule = new CSSDocumentRule()
           documentRule.__starts = i
-          i += '-moz-document'.length
-          buffer = ''
+          i += "-moz-document".length
+          buffer = ""
           break
-        } else if (token.indexOf('@media', i) === i) {
-          state = 'atBlock'
+        } else if (token.indexOf("@media", i) === i) {
+          state = "atBlock"
           mediaRule = new CSSMediaRule()
           mediaRule.__starts = i
-          i += 'media'.length
-          buffer = ''
+          i += "media".length
+          buffer = ""
           break
-        } else if (token.indexOf('@supports', i) === i) {
-          state = 'conditionBlock'
+        } else if (token.indexOf("@supports", i) === i) {
+          state = "conditionBlock"
           supportsRule = new CSSSupportsRule()
           supportsRule.__starts = i
-          i += 'supports'.length
-          buffer = ''
+          i += "supports".length
+          buffer = ""
           break
-        } else if (token.indexOf('@host', i) === i) {
-          state = 'hostRule-begin'
-          i += 'host'.length
+        } else if (token.indexOf("@host", i) === i) {
+          state = "hostRule-begin"
+          i += "host".length
           hostRule = new CSSHostRule()
           hostRule.__starts = i
-          buffer = ''
+          buffer = ""
           break
-        } else if (token.indexOf('@import', i) === i) {
-          state = 'importRule-begin'
-          i += 'import'.length
-          buffer += '@import'
+        } else if (token.indexOf("@import", i) === i) {
+          state = "importRule-begin"
+          i += "import".length
+          buffer += "@import"
           break
-        } else if (token.indexOf('@font-face', i) === i) {
-          state = 'fontFaceRule-begin'
-          i += 'font-face'.length
+        } else if (token.indexOf("@font-face", i) === i) {
+          state = "fontFaceRule-begin"
+          i += "font-face".length
           fontFaceRule = new CSSFontFaceRule()
           fontFaceRule.__starts = i
-          buffer = ''
+          buffer = ""
           break
         } else {
           atKeyframesRegExp.lastIndex = i
           var matchKeyframes = atKeyframesRegExp.exec(token)
           if (matchKeyframes && matchKeyframes.index === i) {
-            state = 'keyframesRule-begin'
+            state = "keyframesRule-begin"
             keyframesRule = new CSSKeyframesRule()
             keyframesRule.__starts = i
             keyframesRule._vendorPrefix = matchKeyframes[1] // Will come out as undefined if no prefix was found
             i += matchKeyframes[0].length - 1
-            buffer = ''
+            buffer = ""
             break
-          } else if (state === 'selector') {
-            state = 'atRule'
+          } else if (state === "selector") {
+            state = "atRule"
           }
         }
         buffer += character
         break
 
-      case '{':
-        if (state === 'selector' || state === 'atRule') {
+      case "{":
+        if (state === "selector" || state === "atRule") {
           styleRule.selectorText = buffer.trim()
           styleRule.style.__starts = i
-          buffer = ''
-          state = 'before-name'
-        } else if (state === 'atBlock') {
+          buffer = ""
+          state = "before-name"
+        } else if (state === "atBlock") {
           mediaRule.media.mediaText = buffer.trim()
 
           if (parentRule) {
@@ -1451,9 +1489,9 @@ function parse (token) {
 
           currentScope = parentRule = mediaRule
           mediaRule.parentStyleSheet = styleSheet
-          buffer = ''
-          state = 'before-selector'
-        } else if (state === 'conditionBlock') {
+          buffer = ""
+          state = "before-selector"
+        } else if (state === "conditionBlock") {
           supportsRule.conditionText = buffer.trim()
 
           if (parentRule) {
@@ -1462,26 +1500,26 @@ function parse (token) {
 
           currentScope = parentRule = supportsRule
           supportsRule.parentStyleSheet = styleSheet
-          buffer = ''
-          state = 'before-selector'
-        } else if (state === 'hostRule-begin') {
+          buffer = ""
+          state = "before-selector"
+        } else if (state === "hostRule-begin") {
           if (parentRule) {
             ancestorRules.push(parentRule)
           }
 
           currentScope = parentRule = hostRule
           hostRule.parentStyleSheet = styleSheet
-          buffer = ''
-          state = 'before-selector'
-        } else if (state === 'fontFaceRule-begin') {
+          buffer = ""
+          state = "before-selector"
+        } else if (state === "fontFaceRule-begin") {
           if (parentRule) {
             fontFaceRule.parentRule = parentRule
           }
           fontFaceRule.parentStyleSheet = styleSheet
           styleRule = fontFaceRule
-          buffer = ''
-          state = 'before-name'
-        } else if (state === 'keyframesRule-begin') {
+          buffer = ""
+          state = "before-name"
+        } else if (state === "keyframesRule-begin") {
           keyframesRule.name = buffer.trim()
           if (parentRule) {
             ancestorRules.push(parentRule)
@@ -1489,15 +1527,15 @@ function parse (token) {
           }
           keyframesRule.parentStyleSheet = styleSheet
           currentScope = parentRule = keyframesRule
-          buffer = ''
-          state = 'keyframeRule-begin'
-        } else if (state === 'keyframeRule-begin') {
+          buffer = ""
+          state = "keyframeRule-begin"
+        } else if (state === "keyframeRule-begin") {
           styleRule = new CSSKeyframeRule()
           styleRule.keyText = buffer.trim()
           styleRule.__starts = i
-          buffer = ''
-          state = 'before-name'
-        } else if (state === 'documentRule-begin') {
+          buffer = ""
+          state = "before-name"
+        } else if (state === "documentRule-begin") {
           // FIXME: what if this '{' is in the url text of the match function?
           documentRule.matcher.matcherText = buffer.trim()
           if (parentRule) {
@@ -1506,26 +1544,26 @@ function parse (token) {
           }
           currentScope = parentRule = documentRule
           documentRule.parentStyleSheet = styleSheet
-          buffer = ''
-          state = 'before-selector'
+          buffer = ""
+          state = "before-selector"
         }
         break
 
-      case ':':
-        if (state === 'name') {
+      case ":":
+        if (state === "name") {
           name = buffer.trim()
-          buffer = ''
-          state = 'before-value'
+          buffer = ""
+          state = "before-value"
         } else {
           buffer += character
         }
         break
 
-      case '(':
-        if (state === 'value') {
+      case "(":
+        if (state === "value") {
           // ie css expression mode
-          if (buffer.trim() === 'expression') {
-            var info = (new CSSValueExpression(token, i)).parse()
+          if (buffer.trim() === "expression") {
+            var info = new CSSValueExpression(token, i).parse()
 
             if (info.error) {
               parseError(info.error)
@@ -1534,13 +1572,13 @@ function parse (token) {
               i = info.idx
             }
           } else {
-            state = 'value-parenthesis'
+            state = "value-parenthesis"
             // always ensure this is reset to 1 on transition
             // from value to value-parenthesis
             valueParenthesisDepth = 1
             buffer += character
           }
-        } else if (state === 'value-parenthesis') {
+        } else if (state === "value-parenthesis") {
           valueParenthesisDepth++
           buffer += character
         } else {
@@ -1548,42 +1586,45 @@ function parse (token) {
         }
         break
 
-      case ')':
-        if (state === 'value-parenthesis') {
+      case ")":
+        if (state === "value-parenthesis") {
           valueParenthesisDepth--
-          if (valueParenthesisDepth === 0) { state = 'value' }
+          if (valueParenthesisDepth === 0) {
+            state = "value"
+          }
         }
         buffer += character
         break
 
-      case '!':
-        if (state === 'value' && token.indexOf('!important', i) === i) {
-          priority = 'important'
-          i += 'important'.length
+      case "!":
+        if (state === "value" && token.indexOf("!important", i) === i) {
+          priority = "important"
+          i += "important".length
         } else {
           buffer += character
         }
         break
 
-      case ';':
+      case ";":
         switch (state) {
-          case 'value':
+          case "value":
             styleRule.style.setProperty(name, buffer.trim(), priority)
-            priority = ''
-            buffer = ''
-            state = 'before-name'
+            priority = ""
+            buffer = ""
+            state = "before-name"
             break
-          case 'atRule':
-            buffer = ''
-            state = 'before-selector'
+          case "atRule":
+            buffer = ""
+            state = "before-selector"
             break
-          case 'importRule':
+          case "importRule":
             importRule = new CSSImportRule()
-            importRule.parentStyleSheet = importRule.styleSheet.parentStyleSheet = styleSheet
+            importRule.parentStyleSheet =
+              importRule.styleSheet.parentStyleSheet = styleSheet
             importRule.cssText = buffer + character
             styleSheet.cssRules.push(importRule)
-            buffer = ''
-            state = 'before-selector'
+            buffer = ""
+            state = "before-selector"
             break
           default:
             buffer += character
@@ -1591,33 +1632,33 @@ function parse (token) {
         }
         break
 
-      case '}':
+      case "}":
         switch (state) {
-          case 'value':
+          case "value":
             styleRule.style.setProperty(name, buffer.trim(), priority)
-            priority = ''
+            priority = ""
           /* falls through */
-          case 'before-name':
-          case 'name':
+          case "before-name":
+          case "name":
             styleRule.__ends = i + 1
             if (parentRule) {
               styleRule.parentRule = parentRule
             }
             styleRule.parentStyleSheet = styleSheet
             currentScope.cssRules.push(styleRule)
-            buffer = ''
+            buffer = ""
             if (currentScope.constructor === CSSKeyframesRule) {
-              state = 'keyframeRule-begin'
+              state = "keyframeRule-begin"
             } else {
-              state = 'before-selector'
+              state = "before-selector"
             }
             break
-          case 'keyframeRule-begin':
-          case 'before-selector':
-          case 'selector':
+          case "keyframeRule-begin":
+          case "before-selector":
+          case "selector":
             // End of media/supports/document rule.
             if (!parentRule) {
-              parseError('Unexpected }')
+              parseError("Unexpected }")
             }
 
             // Handle rules nested in @media or @supports
@@ -1627,8 +1668,8 @@ function parse (token) {
               parentRule = ancestorRules.pop()
 
               if (
-                parentRule.constructor.name === 'CSSMediaRule' ||
-                parentRule.constructor.name === 'CSSSupportsRule'
+                parentRule.constructor.name === "CSSMediaRule" ||
+                parentRule.constructor.name === "CSSSupportsRule"
               ) {
                 prevScope = currentScope
                 currentScope = parentRule
@@ -1648,27 +1689,27 @@ function parse (token) {
               parentRule = null
             }
 
-            buffer = ''
-            state = 'before-selector'
+            buffer = ""
+            state = "before-selector"
             break
         }
         break
 
       default:
         switch (state) {
-          case 'before-selector':
-            state = 'selector'
+          case "before-selector":
+            state = "selector"
             styleRule = new CSSStyleRule()
             styleRule.__starts = i
             break
-          case 'before-name':
-            state = 'name'
+          case "before-name":
+            state = "name"
             break
-          case 'before-value':
-            state = 'value'
+          case "before-value":
+            state = "value"
             break
-          case 'importRule-begin':
-            state = 'importRule'
+          case "importRule-begin":
+            state = "importRule"
             break
         }
         buffer += character
@@ -1685,7 +1726,7 @@ function parse (token) {
  * @nosideeffects
  * @return {CSSStyleSheet}
  */
-function clone (stylesheet) {
+function clone(stylesheet) {
   var cloned = new CSSStyleSheet()
 
   var rules = stylesheet.cssRules
@@ -1695,36 +1736,36 @@ function clone (stylesheet) {
 
   for (var i = 0, rulesLength = rules.length; i < rulesLength; i++) {
     var rule = rules[i]
-    var ruleClone = cloned.cssRules[i] = new rule.constructor()
+    var ruleClone = (cloned.cssRules[i] = new rule.constructor())
 
     var style = rule.style
     if (style) {
-      var styleClone = ruleClone.style = new CSSStyleDeclaration()
+      var styleClone = (ruleClone.style = new CSSStyleDeclaration())
       for (var j = 0, styleLength = style.length; j < styleLength; j++) {
-        var name = styleClone[j] = style[j]
+        var name = (styleClone[j] = style[j])
         styleClone[name] = style[name]
         styleClone._importants[name] = style.getPropertyPriority(name)
       }
       styleClone.length = style.length
     }
 
-    if (Object.prototype.hasOwnProperty.call(rule, 'keyText')) {
+    if (Object.hasOwn(rule, "keyText")) {
       ruleClone.keyText = rule.keyText
     }
 
-    if (Object.prototype.hasOwnProperty.call(rule, 'selectorText')) {
+    if (Object.hasOwn(rule, "selectorText")) {
       ruleClone.selectorText = rule.selectorText
     }
 
-    if (Object.prototype.hasOwnProperty.call(rule, 'mediaText')) {
+    if (Object.hasOwn(rule, "mediaText")) {
       ruleClone.mediaText = rule.mediaText
     }
 
-    if (Object.prototype.hasOwnProperty.call(rule, 'conditionText')) {
+    if (Object.hasOwn(rule, "conditionText")) {
       ruleClone.conditionText = rule.conditionText
     }
 
-    if (Object.prototype.hasOwnProperty.call(rule, 'cssRules')) {
+    if (Object.hasOwn(rule, "cssRules")) {
       ruleClone.cssRules = clone(rule).cssRules
     }
   }
@@ -1752,5 +1793,5 @@ export default {
   CSSValue,
   CSSValueExpression,
   parse,
-  clone
+  clone,
 }

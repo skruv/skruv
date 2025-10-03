@@ -3,18 +3,22 @@
  * @param {T} stateObj
  * @returns {import("../utilityTypes").State<T>}
  */
-export const createState = stateObj => {
+export const createState = (stateObj) => {
   const Handler = class Handler {
-    constructor () {
-      this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
+    constructor() {
+      this._skruv_promise = new Promise((resolve) => {
+        this._skruv_resolve = resolve
+      })
     }
 
-    _resolve () {
-      if (this._skruv_parent && this._skruv_parent._resolve) {
+    _resolve() {
+      if (this._skruv_parent?._resolve) {
         this._skruv_parent._resolve()
       }
-      this._skruv_resolve('')
-      this._skruv_promise = new Promise(resolve => { this._skruv_resolve = resolve })
+      this._skruv_resolve("")
+      this._skruv_promise = new Promise((resolve) => {
+        this._skruv_resolve = resolve
+      })
     }
 
     /**
@@ -23,8 +27,8 @@ export const createState = stateObj => {
      * @param {any} value
      * @returns {boolean}
      */
-    set (target, key, value) {
-      if (key === '_skruv_parent') {
+    set(target, key, value) {
+      if (key === "_skruv_parent") {
         this._skruv_parent = value
         return true
       }
@@ -42,10 +46,10 @@ export const createState = stateObj => {
      * @param {Proxy} proxy
      * @returns {any}
      */
-    get (target, key, proxy) {
-      if (key === 'getGenerator') {
+    get(target, key, proxy) {
+      if (key === "getGenerator") {
         // @ts-expect-error
-        return key => ({
+        return (key) => ({
           key: [key, target],
           [Symbol.asyncIterator]: () => {
             // If this is the first loop for this sub we should return directly for first value
@@ -59,12 +63,12 @@ export const createState = stateObj => {
                 }
                 // @ts-expect-error
                 return { done: false, value: proxy[key] }
-              }
+              },
             }
-          }
+          },
         })
       }
-      if (key === 'toJSON') {
+      if (key === "toJSON") {
         if (target.constructor === Object) {
           return Object.getOwnPropertyNames(target).reduce((acc, curr) => {
             // @ts-expect-error
@@ -73,7 +77,7 @@ export const createState = stateObj => {
           }, {})
         }
         if (target.constructor === Array) {
-          return target.map(curr => curr?.toJSON || curr)
+          return target.map((curr) => curr?.toJSON || curr)
         }
         return target
       }
@@ -89,7 +93,7 @@ export const createState = stateObj => {
                 booted = true
               }
               return { done: false, value: proxy }
-            }
+            },
           }
         }
       }
@@ -102,7 +106,7 @@ export const createState = stateObj => {
      * @param {string|number} key
      * @returns {boolean}
      */
-    deleteProperty (target, key) {
+    deleteProperty(target, key) {
       // @ts-expect-error
       const res = delete target[key]
       this._resolve()
@@ -115,11 +119,14 @@ export const createState = stateObj => {
      * @param {Record<string,any>|Array<any>} target
      * @returns {any}
      */
-    recurse (path, value, target) {
+    recurse(path, value, target) {
       // check for falsy values
-      if (value && value.constructor) {
-        // @ts-expect-error
-        if (value.constructor === Object && target?.[path]?.constructor === Object) {
+      if (value?.constructor) {
+        if (
+          value.constructor === Object &&
+          // @ts-expect-error
+          target?.[path]?.constructor === Object
+        ) {
           for (const key of Object.getOwnPropertyNames(value)) {
             // @ts-expect-error
             if (target[path][key] !== value[key]) {
@@ -128,9 +135,9 @@ export const createState = stateObj => {
             }
           }
           // @ts-expect-error
-          for (const key of Object.getOwnPropertyNames(target[path])
-            .filter(item => !Object.getOwnPropertyNames(value).includes(item))
-          ) {
+          for (const key of Object.getOwnPropertyNames(target[path]).filter(
+            (item) => !Object.getOwnPropertyNames(value).includes(item),
+          )) {
             // @ts-expect-error
             delete target[path][key]
             this._resolve()
@@ -144,7 +151,10 @@ export const createState = stateObj => {
             // @ts-expect-error
             acc[key] = this.recurse(`${path}.${key}`, value[key])
             // @ts-expect-error
-            if (typeof acc[key] === 'object' && acc[key] !== null) { acc[key]._skruv_parent = subProxy }
+            if (typeof acc[key] === "object" && acc[key] !== null) {
+              // @ts-expect-error
+              acc[key]._skruv_parent = subProxy
+            }
             return acc
           }, {})
           // @ts-expect-error
@@ -157,7 +167,9 @@ export const createState = stateObj => {
           value = value.map((child, key) => {
             // @ts-expect-error
             const newValue = this.recurse(`${path}[${key}]`, child)
-            if (typeof newValue === 'object' && newValue !== null) { newValue._skruv_parent = subProxy }
+            if (typeof newValue === "object" && newValue !== null) {
+              newValue._skruv_parent = subProxy
+            }
             return newValue
           })
           // @ts-expect-error
@@ -175,8 +187,12 @@ export const createState = stateObj => {
   }
 
   // create root proxy
-  // @ts-expect-error
-  const rootProxy = new Proxy(stateObj.constructor === Array ? [] : {}, new Handler('root'))
+  const rootProxy = new Proxy(
+    // @ts-expect-error
+    stateObj.constructor === Array ? [] : {},
+    // @ts-expect-error
+    new Handler("root"),
+  )
   Object.assign(rootProxy, stateObj)
   // @ts-expect-error
   return rootProxy

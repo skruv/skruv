@@ -1,5 +1,6 @@
-import channel from './channel.js'
-import combine from './combineGens.js'
+import channel from "./channel.js"
+import combine from "./combineGens.js"
+
 // TODO: make query builder with join/search support
 // Example: http://localhost.local/api/rpc/objects_search?q=test&language=simple&limit=10&select=*,child:links!links_parent_fkey(created,objects!links_child_fkey(*)),parent:links!links_child_fkey(created,objects!links_parent_fkey(*))
 /**
@@ -9,13 +10,15 @@ import combine from './combineGens.js'
  * @param {select[]} [select]
  * @returns {string}
  */
-const buildSelect = select =>
-  select?.map(v => {
-    if (typeof v === 'object') {
-      return `${v.table}(${buildSelect(v.select)})`
-    }
-    return encodeURIComponent(v)
-  })?.join() || '*'
+const buildSelect = (select) =>
+  select
+    ?.map((v) => {
+      if (typeof v === "object") {
+        return `${v.table}(${buildSelect(v.select)})`
+      }
+      return encodeURIComponent(v)
+    })
+    ?.join() || "*"
 
 /**
  * @typedef {{field: string, condition: string, value: string}} andOr
@@ -33,42 +36,50 @@ const buildSelect = select =>
 /**
  * @param {pgReq} pg
  */
-const objToPgUrl = pg =>
+const objToPgUrl = (pg) =>
   [
-    '/.system/db/',
+    "/.system/db/",
     pg.table,
-    '?select=',
+    "?select=",
     buildSelect(pg?.select),
     pg?.and?.[0]
-      ? `&and=(${pg.and.map(dir =>
-        `${encodeURIComponent(dir.field)}.${encodeURIComponent(dir.condition)
-        }.${encodeURIComponent(dir.value)}`
-      )
-        .join()
-      })`
-      : '',
+      ? `&and=(${pg.and
+          .map(
+            (dir) =>
+              `${encodeURIComponent(dir.field)}.${encodeURIComponent(
+                dir.condition,
+              )}.${encodeURIComponent(dir.value)}`,
+          )
+          .join()})`
+      : "",
     pg?.or?.[0]
-      ? `&or=(${pg.or.map(dir =>
-        `${encodeURIComponent(dir.field)}.${encodeURIComponent(dir.condition)
-        }.${encodeURIComponent(dir.value)}`
-      )
-        .join()
-      })`
-      : '',
+      ? `&or=(${pg.or
+          .map(
+            (dir) =>
+              `${encodeURIComponent(dir.field)}.${encodeURIComponent(
+                dir.condition,
+              )}.${encodeURIComponent(dir.value)}`,
+          )
+          .join()})`
+      : "",
     pg?.order?.[0]
-      ? `&order=${pg.order.map(dir =>
-        `${encodeURIComponent(dir.field)}.${encodeURIComponent(dir.direction)
-        }`
-      )
-        .join(',')
-      }`
-      : '',
-    pg?.limit ? `&limit=${parseInt(pg.limit)}` : '',
-    pg?.offset ? `&offset=${parseInt(pg.offset)}` : '',
-    ...Object.keys(pg?.where || {})
-      .map(k => // @ts-expect-error: Won't happened, but fix anyway
-        `&${encodeURIComponent(k)}=${encodeURIComponent(pg?.where[k])}`)
-  ].join('')
+      ? `&order=${pg.order
+          .map(
+            (dir) =>
+              `${encodeURIComponent(dir.field)}.${encodeURIComponent(
+                dir.direction,
+              )}`,
+          )
+          .join(",")}`
+      : "",
+    pg?.limit ? `&limit=${parseInt(pg.limit, 10)}` : "",
+    pg?.offset ? `&offset=${parseInt(pg.offset, 10)}` : "",
+    ...Object.keys(pg?.where || {}).map(
+      (
+        k, // @ts-expect-error: Won't happened, but fix anyway
+      ) => `&${encodeURIComponent(k)}=${encodeURIComponent(pg?.where[k])}`,
+    ),
+  ].join("")
 
 export class HTTPError extends Error {
   /**
@@ -77,9 +88,9 @@ export class HTTPError extends Error {
    * @param {Headers} headers
    * @param {JSONValue} body
    */
-  constructor (request, status, headers, body) {
-    super('HTTPError')
-    this.name = 'HTTPError'
+  constructor(request, status, headers, body) {
+    super("HTTPError")
+    this.name = "HTTPError"
     this.ok = false
     this.request = request
     this.status = status
@@ -95,9 +106,9 @@ export class HTTPEmptyError extends HTTPError {
    * @param {Headers} headers
    * @param {JSONValue} body
    */
-  constructor (request, status, headers, body) {
+  constructor(request, status, headers, body) {
     super(request, status, headers, body)
-    this.name = 'HTTPEmptyError'
+    this.name = "HTTPEmptyError"
   }
 }
 
@@ -126,68 +137,66 @@ export class HTTPEmptyError extends HTTPError {
  * @returns {Promise<HTTPEmptyError | HTTPError | SkruvResponse | Error>}
  */
 const fetchAndParse = async (req, opt = {}) => {
-  const url = typeof req === 'string' ? req : objToPgUrl(req)
+  const url = typeof req === "string" ? req : objToPgUrl(req)
   let res
   try {
-    // Set the current location as a base since deno does not allow host-less fetch
     res = await fetch(new URL(url, globalThis.location.toString()), opt)
   } catch (e) {
-    if (e instanceof Error) { return e }
-    return new Error('Unknown fetcher error')
+    if (e instanceof Error) {
+      return e
+    }
+    return new Error("Unknown fetcher error")
   }
   if (!res.ok) {
     return new HTTPError(
       { req, url, opt },
       res.status,
       res.headers,
-      await res.text()
+      await res.text(),
     )
   }
-  const contentType = res.headers.get('content-type')
-  if (
-    contentType && contentType.includes('application/') &&
-    contentType.includes('json')
-  ) {
+  const contentType = res.headers.get("content-type")
+  if (contentType?.includes("application/") && contentType.includes("json")) {
     const body = await res.json()
     if (
       !opt.allowEmpty &&
-      (
-        (Array.isArray(body) && !body.length) ||
-        (typeof body === 'object' && !Object.keys(body))
-      )
+      ((Array.isArray(body) && !body.length) ||
+        (typeof body === "object" && !Object.keys(body)))
     ) {
       return new HTTPEmptyError(
         { req, url, opt },
         res.status,
         res.headers,
-        body
+        body,
       )
     }
     return {
       ok: res.ok,
       request: { req, url, opt },
       headers: res.headers,
-      body
+      body,
     }
   } else {
     return {
       ok: res.ok,
       request: { req, url, opt },
       headers: res.headers,
-      body: await res.blob()
-        .then(blob => URL.createObjectURL(blob))
+      body: await res.blob().then((blob) => URL.createObjectURL(blob)),
     }
   }
 }
 /** @param {string | Request | AsyncGenerator<string> | AsyncGenerator<pgReq>} obj */
-const toGenerator = async function * (obj) {
+const toGenerator = async function* (obj) {
   // @ts-expect-error: TODO: Check how to properly check for this
-  if (obj?.[Symbol.asyncIterator]) { yield * obj }
+  if (obj?.[Symbol.asyncIterator]) {
+    // @ts-expect-error: TODO: Check proper return
+    yield* obj
+  }
   yield obj
 }
 
 // Add to the combined generators, and delete the whole cache
-globalThis.addEventListener?.('new_cookie_state', () => {
+globalThis.addEventListener?.("new_cookie_state", () => {
   // TODO: Clear cache and reload all urls
 })
 
@@ -197,9 +206,9 @@ globalThis.addEventListener?.('new_cookie_state', () => {
  * @returns {any}
  */
 export const replacer = (_key, value) => {
-  if (value?.constructor.name === 'Error') {
+  if (value?.constructor.name === "Error") {
     return {
-      type: 'Error',
+      type: "Error",
       name: value.name,
       message: value.message,
       stack: value.stack,
@@ -207,7 +216,7 @@ export const replacer = (_key, value) => {
       request: value.request,
       status: value.status,
       headers: value.headers,
-      body: value.body
+      body: value.body,
     }
   }
   return value
@@ -219,21 +228,16 @@ export const replacer = (_key, value) => {
  * @returns {any}
  */
 const reviver = (_key, value) => {
-  if (value?.name === 'HTTPEmptyError') {
+  if (value?.name === "HTTPEmptyError") {
     return new HTTPEmptyError(
       value.request,
       value.status,
       value.headers,
-      value.body
+      value.body,
     )
   }
-  if (value?.name === 'HTTPError') {
-    return new HTTPError(
-      value.request,
-      value.status,
-      value.headers,
-      value.body
-    )
+  if (value?.name === "HTTPError") {
+    return new HTTPError(value.request, value.status, value.headers, value.body)
   }
   return value
 }
@@ -242,18 +246,16 @@ const reviver = (_key, value) => {
 export const cache = new Map(
   JSON.parse(
     document?.querySelector?.('[type="application/skruvcache+json"]')
-      ?.textContent ||
-    '[]',
-    reviver
-  )
+      ?.textContent || "[]",
+    reviver,
+  ),
 )
 export const idMap = new Map(
   JSON.parse(
     document?.querySelector?.('[type="application/skruvidmap+json"]')
-      ?.textContent ||
-    '[]',
-    reviver
-  )
+      ?.textContent || "[]",
+    reviver,
+  ),
 )
 
 /**
@@ -261,9 +263,12 @@ export const idMap = new Map(
  * @param {SkruvRequestInit} opt
  * @returns {AsyncGenerator<HTTPEmptyError | HTTPError | SkruvResponse>}
  */
-export const fetchGenerator = async function * (_req, opt = {}) {
+export const fetchGenerator = async function* (_req, opt = {}) {
   const reqGen = toGenerator(_req)
-  for await (const [update, req] of combine(channel('https://127.0.0.1/event-source', 'event'), reqGen)) {
+  for await (const [update, req] of combine(
+    channel("https://127.0.0.1/event-source", "event"),
+    reqGen,
+  )) {
     const cacheKey = JSON.stringify({ req, opt })
     const ids = idMap.get(cacheKey) || []
     if (cacheKey?.includes(update?.id) || ids.includes(update?.id)) {
@@ -278,14 +283,18 @@ export const fetchGenerator = async function * (_req, opt = {}) {
           [
             // @ts-expect-error: TODO: Properly check for object
             res.body?.id,
-            ...(Array.isArray(res.body) ? res.body?.map?.(obj => obj.id) : []),
+            ...(Array.isArray(res.body) ? res.body.map((obj) => obj.id) : []),
             ...(Array.isArray(res.body)
-              ? res.body?.filter?.(val => Array.isArray(val))?.map?.(val =>
-                // @ts-expect-error: TODO: Properly check for object
-                val.map(obj => obj?.id)
-              )
-              : [])
-          ].filter(id => !!id)
+              ? res.body
+                  .filter((val) => Array.isArray(val))
+                  .map((val) =>
+                    val.map(
+                      /** @param {{id?: string}} obj */
+                      (obj) => obj?.id,
+                    ),
+                  )
+              : []),
+          ].filter((id) => !!id),
         )
       }
     }
@@ -301,5 +310,6 @@ export const fetchGenerator = async function * (_req, opt = {}) {
  * @returns {Promise<HTTPEmptyError | HTTPError | SkruvResponse>}
  */
 export const fetchSingle = (req, opt) =>
-  fetchGenerator(req, opt).next()
-    .then(res => res.value)
+  fetchGenerator(req, opt)
+    .next()
+    .then((res) => res.value)

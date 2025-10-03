@@ -1,22 +1,17 @@
-import '../utils/minidom.js'
+import "../utils/minidom.js"
 
-import assert from 'node:assert'
-import test from 'node:test'
+import assert from "node:assert"
+import test from "node:test"
 
-import { elementFactory, render } from '../skruv.js'
+import { elementFactory, render } from "../skruv.js"
+
 const { html, body, div } = elementFactory
 
-test('render deep elements', async () => {
-  render(
-    html(
-      body(
-        div(
-          div(
-            div('deep')
-          )
-        )
-      )
-    )
+test("render deep elements", async () => {
+  render(html(body(div(div(div("deep"))))))
+  assert.strictEqual(
+    document.documentElement.childNodes[0].childNodes[0].childNodes[0]
+      .childNodes[0].childNodes[0].textContent,
+    "deep",
   )
-  assert.strictEqual(document.documentElement.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[0].textContent, 'deep')
 })

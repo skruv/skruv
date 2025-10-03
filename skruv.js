@@ -1,4 +1,4 @@
-const htmlNS = 'http://www.w3.org/1999/xhtml'
+const htmlNS = "http://www.w3.org/1999/xhtml"
 /** @type {import("./utilityTypes").keyedMap} */
 const keyed = new WeakMap()
 /** @type {import("./utilityTypes").oldKeysMap} */
@@ -20,20 +20,28 @@ export const render = (
   // @ts-expect-error
   parentNode = currentNode.parentNode,
   ns = htmlNS,
-  forceFull = false
+  forceFull = false,
 ) => {
   if (!parentNode) {
-    throw new Error('No parent to render to')
+    throw new Error("No parent to render to")
   }
-  if (typeof current === 'boolean' || !current) {
-    // @ts-expect-error
-    if (currentNode) { parentNode.removeChild(currentNode) }
+  if (typeof current === "boolean" || !current) {
+    if (currentNode) {
+      // @ts-expect-error
+      parentNode.removeChild(currentNode)
+    }
     return
   }
-  if (!globalThis?.isSkruvSSR && current?.t?.toLowerCase() === 'skruvtext' && current?.c?.[0]) {
+  if (
+    !globalThis?.isSkruvSSR &&
+    current?.t?.toLowerCase() === "skruvtext" &&
+    current?.c?.[0]
+  ) {
     current.r = () => {
       // @ts-expect-error
-      if (!currentNode || !parentNode.contains(currentNode)) { return false }
+      if (!currentNode || !parentNode.contains(currentNode)) {
+        return false
+      }
       render(current, currentNode, parentNode, ns)
       return true
     }
@@ -41,24 +49,37 @@ export const render = (
     render(current?.c?.[0], currentNode)
     return
   }
-  const txtNode = (typeof current === 'string' || typeof current === 'number')
+  const txtNode = typeof current === "string" || typeof current === "number"
   if (
     forceFull ||
     !currentNode ||
-    (txtNode && currentNode.nodeName !== '#text') ||
+    (txtNode && currentNode.nodeName !== "#text") ||
     (!txtNode && currentNode.nodeName.toLowerCase() !== current.t.toLowerCase())
   ) {
     const _currentNode = currentNode
     if (txtNode) {
       // @ts-expect-error: When this is a textnode we will only use it for text, so this should be fine
-      currentNode = document.createTextNode('' + current)
+      currentNode = document.createTextNode(`${current}`)
     } else {
-      if (current.t === 'svg') { ns = 'http://www.w3.org/2000/svg' }
-      if (current.t === 'math') { ns = 'http://www.w3.org/1998/Math/MathML' }
-      if (current.t === 'feed') { ns = 'http://www.w3.org/2005/Atom' }
-      if (current.t === 'urlset' || current.t === 'sitemapindex') { ns = 'https://www.sitemaps.org/schemas/sitemap/0.9' }
+      if (current.t === "svg") {
+        ns = "http://www.w3.org/2000/svg"
+      }
+      if (current.t === "math") {
+        ns = "http://www.w3.org/1998/Math/MathML"
+      }
+      if (current.t === "feed") {
+        ns = "http://www.w3.org/2005/Atom"
+      }
+      if (current.t === "urlset" || current.t === "sitemapindex") {
+        ns = "https://www.sitemaps.org/schemas/sitemap/0.9"
+      }
       // @ts-expect-error: All the nodes are actually elements, since the domCache only contains elements
-      currentNode = (domCache[current.t] ||= document.createElementNS(ns, current.t)).cloneNode(false)
+      // biome-ignore lint/suspicious/noAssignInExpressions: minor optimization
+      currentNode = (domCache[current.t] ||= document.createElementNS(
+        ns,
+        current.t,
+        // @ts-expect-error: All the nodes are actually elements, since the domCache only contains elements
+      )).cloneNode(false)
     }
     if (_currentNode) {
       // @ts-expect-error
@@ -67,28 +88,37 @@ export const render = (
       // @ts-expect-error
       parentNode.appendChild(currentNode)
     }
-    if (txtNode) { return }
+    if (txtNode) {
+      return
+    }
   }
   if (txtNode) {
-    // We do a loose comparison to allow for numbers
-    // eslint-disable-next-line eqeqeq
-    if (currentNode.textContent != current) { currentNode.textContent = '' + current }
+    // biome-ignore lint/suspicious/noDoubleEquals: We do a loose comparison to allow for numbers
+    if (currentNode.textContent != current) {
+      currentNode.textContent = `${current}`
+    }
     return
   }
   if (current.r) {
     current.r = () => {
       // @ts-expect-error
-      if (!currentNode || !parentNode.contains(currentNode)) { return false }
+      if (!currentNode || !parentNode.contains(currentNode)) {
+        return false
+      }
       render(current, currentNode, parentNode, ns)
       return true
     }
   }
   // This needs to come after the .r callback is registered since it should apply to child nodes, not the current node.
-  if (current.t === 'foreignObject') { ns = htmlNS }
+  if (current.t === "foreignObject") {
+    ns = htmlNS
+  }
   /** @type {import("./utilityTypes").Vnode[]} */
   // @ts-expect-error
   let children = current.c.flat(Infinity)
-  if (!globalThis?.isSkruvSSR) { children = children.filter(c => !c?.t?.startsWith('skruv')) }
+  if (!globalThis?.isSkruvSSR) {
+    children = children.filter((c) => !c?.t?.startsWith("skruv"))
+  }
   /** @type {import("./utilityTypes").attributes} */
   // @ts-expect-error
   let attributes = {}
@@ -102,18 +132,24 @@ export const render = (
       attributesMap.set(currentNode, oldAttributes)
     }
     for (const [key, value] of Object.entries(attributes)) {
-      if (('' + oldAttributes[key]) === ('' + value)) { continue }
-      if (key === 'skruvAfterCreate') {
+      if (`${oldAttributes[key]}` === `${value}`) {
+        continue
+      }
+      if (key === "skruvAfterCreate") {
         // Run after we have processed all the attributes and children
         setTimeout(() => value(currentNode), 0)
         oldAttributes[key] = value
         continue
       }
-      if (key.startsWith('skruv')) { continue }
-      if (key[0] === 'o' && key[1] === 'n') {
+      if (key.startsWith("skruv")) {
+        continue
+      }
+      if (key[0] === "o" && key[1] === "n") {
         const evt = key.slice(2)
         if (!oldAttributes[key]) {
-          if (oldAttributes[key]) { currentNode.removeEventListener(evt, value) }
+          if (oldAttributes[key]) {
+            currentNode.removeEventListener(evt, value)
+          }
           currentNode.addEventListener(evt, value)
         } else if (!value) {
           currentNode.removeEventListener(evt, value)
@@ -122,21 +158,25 @@ export const render = (
         continue
       }
       if (
-        (key === 'checked' || key === 'selected' || key === 'value') ||
-        currentNode.nodeName.includes('-') // Support complex data passing for custom elements
+        key === "checked" ||
+        key === "selected" ||
+        key === "value" ||
+        currentNode.nodeName.includes("-") // Support complex data passing for custom elements
       ) {
         // @ts-expect-error We have to index the element for custom elements or setting checked/selected/value
         currentNode[key] = value
       }
       if (value !== undefined) {
-        currentNode.setAttribute(key, '' + value)
+        currentNode.setAttribute(key, `${value}`)
       } else {
         currentNode.removeAttribute(key)
       }
       oldAttributes[key] = value
     }
   }
-  for (const key of currentNode.getAttributeNames().filter(e => !Object.keys(attributes).includes(e))) {
+  for (const key of currentNode
+    .getAttributeNames()
+    .filter((e) => !Object.keys(attributes).includes(e))) {
     currentNode.removeAttribute(key)
   }
   if (!children.length && currentNode.childNodes.length) {
@@ -147,7 +187,7 @@ export const render = (
     return
   }
   if (currentNode.childNodes.length > children.length) {
-    for (let i = (currentNode.childNodes.length - 1); i >= children.length; i--) {
+    for (let i = currentNode.childNodes.length - 1; i >= children.length; i--) {
       currentNode.removeChild(currentNode.childNodes[i])
     }
   }
@@ -164,8 +204,12 @@ export const render = (
           // @ts-expect-error
           if (keyedNode === currentNode.childNodes[i + 1]) {
             currentNode.removeChild(currentNode.childNodes[i])
-          // @ts-expect-error
-          } else if (currentNode.childNodes[i] && keyed.get(children[i + 1]?.c?.[0]?.skruvKey) === currentNode.childNodes[i]) {
+          } else if (
+            currentNode.childNodes[i] &&
+            // @ts-expect-error
+            keyed.get(children[i + 1]?.c?.[0]?.skruvKey) ===
+              currentNode.childNodes[i]
+          ) {
             // @ts-expect-error
             currentNode.insertBefore(keyedNode, currentNode.childNodes[i])
           } else if (currentNode.childNodes[i]) {
@@ -176,8 +220,9 @@ export const render = (
             currentNode.appendChild(keyedNode)
           }
         }
-        // @ts-expect-error
-        forceFull = children[i].c[0].skruvKey !== oldKeys.get(currentNode.childNodes[i])
+        forceFull =
+          // @ts-expect-error
+          children[i].c[0].skruvKey !== oldKeys.get(currentNode.childNodes[i])
         if (!forceFull) {
           const lastKeyCopy = keyed.get(currentNode.childNodes[i])
           if (lastKeyCopy) {
@@ -189,15 +234,23 @@ export const render = (
                 noChange = false
               }
             }
-            if (noChange) { continue }
+            if (noChange) {
+              continue
+            }
           }
         }
       } else {
         forceFull = keyed.has(currentNode.childNodes[i])
       }
     }
-    // @ts-expect-error: This will be fine since if the node is of the wrong type a new one is created
-    render(children[i], currentNode.childNodes[i] || false, currentNode, ns, forceFull)
+    render(
+      children[i],
+      currentNode.childNodes[i] || false,
+      // @ts-expect-error: This will be fine since if the node is of the wrong type a new one is created
+      currentNode,
+      ns,
+      forceFull,
+    )
   }
   if (attributes.skruvKey) {
     keyed.set(attributes.skruvKey, currentNode)
@@ -207,4 +260,12 @@ export const render = (
 }
 
 /** @type {import("./utilityTypes").ElementMap} */ // @ts-expect-error
-export const elementFactory = new Proxy({}, { get: (_, t) => (...c) => ({ isSkruvDom: true, t, c }) })
+export const elementFactory = new Proxy(
+  {},
+  {
+    get:
+      (_, t) =>
+      // @ts-expect-error
+      (...c) => ({ isSkruvDom: true, t, c }),
+  },
+)

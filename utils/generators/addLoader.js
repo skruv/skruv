@@ -1,6 +1,6 @@
 /** @typedef {import("../../utilityTypes").AnyContent} AnyContent */
-import combineGens from './combineGens.js'
-import waitGen from './waitGen.js'
+import combineGens from "./combineGens.js"
+import waitGen from "./waitGen.js"
 
 /**
  * Adds a loader after waiting for the component for 300ms.
@@ -12,8 +12,8 @@ import waitGen from './waitGen.js'
  *
  * @returns {AsyncGenerator<T | L>}
  */
-const addLoader = async function * addLoader (component, loader, waitTime = 300) {
-  /** @type {(T & AsyncGenerator<L>)[]} */ // @ts-ignore
+const addLoader = async function* addLoader(component, loader, waitTime = 300) {
+  /** @type {(T & AsyncGenerator<L>)[]} */ // @ts-expect-error
   const gens = [waitGen(waitTime, loader), component()]
   for await (const [showLoader, loadedComponent] of combineGens(...gens)) {
     if (loadedComponent === undefined && showLoader) {
