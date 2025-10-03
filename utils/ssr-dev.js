@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* global Location */
-import esbuild from 'esbuild'
+import esbuild from 'esbuild-wasm'
 import { randomBytes } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { createServer } from 'node:http'

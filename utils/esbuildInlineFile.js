@@ -6,7 +6,7 @@ const namespace = '_' + Math.random().toString(36)
 const filter = /^inline:/
 
 // Adapted from https://github.com/claviska/esbuild-plugin-inline-import
-/** @type {import('esbuild').Plugin} */
+/** @type {import('esbuild-wasm').Plugin} */
 const inlineFile = {
   name: 'esbuild-inline-plugin',
   setup (build) {

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild-wasm'
 
 import httpPlugin from './esbuildHttpPlugin.js'
 import inlineFile from './esbuildInlineFile.js'

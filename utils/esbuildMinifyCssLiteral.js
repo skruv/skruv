@@ -1,4 +1,4 @@
-import * as esbuild from 'esbuild'
+import * as esbuild from 'esbuild-wasm'
 import { readFile } from 'node:fs/promises'
 
 /** @type {esbuild.Plugin} */

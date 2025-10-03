@@ -1,5 +1,5 @@
 // From https://esbuild.github.io/plugins/#http-plugin
-/** @type {import('esbuild').Plugin} */
+/** @type {import('esbuild-wasm').Plugin} */
 const httpPlugin = {
   name: 'http',
   setup (build) {
