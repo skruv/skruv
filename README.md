@@ -444,6 +444,8 @@ The result can be seen [here](./examples/ssr/) and a non-built version is [here]
     * Local (via regex) (see example repo)
     * Remote (via postgrest)
   * [ ] Fetcher
+* [ ] Switch to wasm biome?
+* [ ] Switch to golang based tsc when it is JSdoc compatible
 * [ ] Loader example:
 
 ```css
